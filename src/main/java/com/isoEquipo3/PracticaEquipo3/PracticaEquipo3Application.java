@@ -17,7 +17,7 @@ public class PracticaEquipo3Application {
 	@RequestMapping("/")
 	@ResponseBody
 	public String home() {
-		return "Hola Mundo";
+		return "Hola MARICARMEN";
 	}
 	
 	@RequestMapping("/bye")
