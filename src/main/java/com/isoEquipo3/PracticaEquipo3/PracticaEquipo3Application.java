@@ -20,4 +20,10 @@ public class PracticaEquipo3Application {
 		return "Hola Mundo";
 	}
 	
+	@RequestMapping("/bye")
+	@ResponseBody
+	public String bye() {
+		return "Adiós Mundo";
+	}
+	
 }
