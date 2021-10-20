@@ -2,6 +2,8 @@ package com.isoEquipo3;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
+
 import org.junit.Test;
 
 /**
