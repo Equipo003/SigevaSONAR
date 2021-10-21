@@ -3,10 +3,15 @@ package com.isoEquipo3.SIGEVA.Model;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Usuario{
     private String idUsuario;
     private String rol;
     private String centroFK;
+    @Id
     private String username;
     private String correo;
     private String hashPassword;
