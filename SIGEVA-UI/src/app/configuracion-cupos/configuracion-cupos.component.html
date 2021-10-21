@@ -1,0 +1,35 @@
+<header>Configuración de los Cupos de Vacunación</header>
+
+<nav></nav>
+
+<section>
+  <form>
+    <fieldset>
+      <legend>Datos a Introducir</legend>
+      <fieldset>
+        <legend>Horarios</legend>
+        <label>Fecha de inicio de la vacunación:</label>
+        <input name = 'fechaInicio' type="datetime-local" [(ngModel)]="fechaInicio"/><br>
+        <label>Duración Jornada:</label><br>
+        <label>Horas:</label>
+        <input name = 'horaInicio' type="number" max="23" min="0" [(ngModel)]="duracionJornadaHoras"/>
+        <label>Minutos:</label>
+        <input name = 'minutoInicio' type="number" max="59" min="0" [(ngModel)]="duracionJornadaMinutos"/><br>
+        <h1>Hora de fin de las jornadas de vacunación: {{fecha | date: 'shortTime'}}</h1>  <button (click)="comprobar()">Calcular hora Fin</button>
+      </fieldset>
+      <fieldset>
+        <legend>Cupos</legend>
+        <label>Duración de los cupos de vacunación (minutos):</label>
+        <input name="duracionMinutos" type="number" min="0" max="59" [(ngModel)]="duracionMinutos"/><br>
+        <label>Numero de pacientes por cupo:</label>
+        <input name = 'numeroPacientes' type="number" [(ngModel)]="numeroPacientes"/><br>
+      </fieldset>
+    </fieldset>
+    <fieldset>
+      <legend>Estadísticas</legend>
+      <h1>Ratio de pacientes/minuto: {{numeroPacientes/duracionMinutos | number: '1.0-1'}}</h1>
+      <h1>Pacientes vacunados por día: {{((12*60)/this.duracionMinutos)*this.numeroPacientes | number: '1.0-0'}}</h1>
+    </fieldset>
+  </form>
+</section>
+
