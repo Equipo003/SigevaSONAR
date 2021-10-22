@@ -13,32 +13,6 @@ target/
 .springBeans
 .sts4-cache
 
-target/**
-*.jar
-*.war
-*.ear
-*.class
-
-# eclipse specific
-*.pydevproject
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -57,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/.metadata/
