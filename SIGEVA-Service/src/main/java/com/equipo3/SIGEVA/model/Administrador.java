@@ -1,9 +1,19 @@
 package com.equipo3.SIGEVA.model;
 
-public class Administrador extends Usuario{
+import java.util.Date;
+import java.util.UUID;
 
-    public Administrador(){
-        super();
-    }
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
+public class Administrador {
+	@Id
+	String idAdministrador;
+	@Field 
+	String idUsuario;
+	public Administrador(String idUsuario) {
+		this.idAdministrador = UUID.randomUUID().toString();
+		this.idUsuario = idUsuario;
+	}
+	
 }

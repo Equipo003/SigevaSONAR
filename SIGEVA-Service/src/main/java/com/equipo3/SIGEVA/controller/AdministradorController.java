@@ -1,47 +1,69 @@
 package com.equipo3.SIGEVA.controller;
 
 import com.equipo3.SIGEVA.dao.AdministradorDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("usuario")
+@RequestMapping("user")
 public class AdministradorController {
+	
+	@Autowired
+    private AdministradorDao administradordao;
     @Autowired
-    AdministradorDao administradorDao;
-
-    @GetMapping("/newUser")
-    public String registrarUsuario() {
-        try {
-            Usuario administrador = new Administrador();
-            administrador.setRol("Administrador");
-            administrador.setCentroFK("1234");
-            administrador.setUsername("user5");
-            administrador.setCorreo("micorreo@correo.com");
-            administrador.setHashPassword("sdfsdf");
-            administrador.setDni("99999999Q");
-            administrador.setNombre("Juan");
-            administrador.setApellidos("Perez");
-            administrador.setFechaNacimiento(new Date());
-            administrador.setImagen("912imagen");
-            administradorDao.save(administrador);
-            System.out.print("Hola");
-            return "hola";
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+    private UsuarioDao usuariodao;
+    @Autowired
+    private RolDao roldao;
+    
+   @PostMapping("/crearUsuario")
+   public void registrarUsuario(@RequestBody Usuario usuario) {
+    	try {
+    		Optional<Rol> rol = roldao.findById(usuario.getRol());
+    		Rol rolEleg = null;
+    		if(rol.isPresent()) {
+    			rolEleg = rol.get();
+    		}
+    		if(rolEleg.getNombre() == "Administrador") {
+    			Administrador admin = new Administrador(usuario.getIdUsuario());
+    			administradordao.save(admin);
+    		}
+    		usuariodao.save(usuario);
+    	}catch (Exception e) {
+    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+    	}
     }
-
-    @GetMapping("/hola")
-    public String hola(){
-        return "adios";
+    
+   /* @PostMapping("/crearAdministradores")
+    public void registrarAdministrador(@RequestBody Administrador usuario) {
+     	try {
+     		administradordao.save(usuario);
+     		usuariodao.save(usuario);
+     	}catch (Exception e) {
+     		throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+     	}
+     }*/
+    
+    @GetMapping("/getRoles")
+    public List<Rol> ListarRoles() {
+    	try {
+			return roldao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
     }
 }

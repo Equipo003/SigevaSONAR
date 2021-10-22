@@ -9,26 +9,55 @@ import java.util.UUID;
 
 @Document
 public class Usuario{
-    @Field
-    private String idUsuario;
-    private String rol;
-    private String centroFK;
     @Id
+    private String idUsuario;
+    @Field
+    private String rol;
+    @Field
+    private String centroFK;
     @Field
     private String username;
+    @Field
     private String correo;
+    @Field
     private String hashPassword;
+    @Field
     private String dni;
+    @Field
     private String nombre;
+    @Field
     private String apellidos;
+    @Field
     private Date fechaNacimiento;
+    @Field
     private String imagen;
 
     public Usuario(){
         this.idUsuario = UUID.randomUUID().toString();
+        
     }
 
-    public String getIdUsuario() {
+    public Usuario(String rol, String centroFK, String username, String correo, String hashPassword,
+			String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
+		this.idUsuario = UUID.randomUUID().toString();
+		this.rol = rol;
+		this.centroFK = centroFK;
+		this.username = username;
+		this.correo = correo;
+		this.hashPassword = hashPassword;
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.fechaNacimiento = fechaNacimiento;
+		this.imagen = imagen;
+	}
+
+
+	public Usuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public String getIdUsuario() {
         return idUsuario;
     }
 
