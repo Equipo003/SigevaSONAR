@@ -1,17 +1,20 @@
-package com.isoEquipo3.SIGEVA.Model;
+package com.equipo3.SIGEVA.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 @Document
 public class Usuario{
+    @Field
     private String idUsuario;
     private String rol;
     private String centroFK;
     @Id
+    @Field
     private String username;
     private String correo;
     private String hashPassword;
@@ -114,6 +117,7 @@ public class Usuario{
         this.imagen = imagen;
     }
 }
+
 
 
 

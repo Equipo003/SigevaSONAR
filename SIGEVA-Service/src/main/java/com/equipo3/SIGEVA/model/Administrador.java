@@ -1,4 +1,4 @@
-package com.isoEquipo3.SIGEVA.Model;
+package com.equipo3.SIGEVA.model;
 
 public class Administrador extends Usuario{
 
