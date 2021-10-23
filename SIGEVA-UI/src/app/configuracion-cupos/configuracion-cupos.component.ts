@@ -51,7 +51,7 @@ export class ConfiguracionCuposComponent implements OnInit {
       let confCupo : ConfiguracionCupos = new ConfiguracionCupos(this.duracionMinutos, this.numeroPacientes, this.duracionJornadaHoras,
       this.duracionJornadaMinutos, this.fechaInicio)
 
-      this.json.postJson('home/envio',confCupo).subscribe((res: any) => {
+      this.json.postJson('user/crearConfCupos',confCupo).subscribe((res: any) => {
            console.log(res);
       });
   }

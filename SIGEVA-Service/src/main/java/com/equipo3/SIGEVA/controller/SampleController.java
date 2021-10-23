@@ -1,11 +1,11 @@
-package com.isoEquipo3.SIGEVA.Controllers;
+package com.equipo3.SIGEVA.controller;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.isoEquipo3.SIGEVA.Model.ConfiguracionCupos;
-import com.isoEquipo3.SIGEVA.Dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class SampleController
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/envio")
-    public ConfiguracionCupos pruebaPost(@RequestBody ConfiguracionCupos conf){
+    public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
         List<ConfiguracionCupos> configuracionCuposList = configDao.findAll();
         if(configuracionCuposList.size() == 0)
             configDao.save(conf);
