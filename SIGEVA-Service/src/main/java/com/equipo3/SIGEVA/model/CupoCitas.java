@@ -74,9 +74,13 @@ public class CupoCitas {
 		}
 	}
 
+	public boolean pacienteEnlistado(Usuario paciente) {
+		return pacientesCitados.contains(paciente);
+	}
+
 	public static void main(String[] args) {
 
-		List<CupoCitas> lista = prepararCuposCitas(new CentroSalud("", 0, null, new ConfiguracionCupos("", 30, 50),
+		List<CupoCitas> lista = prepararCuposCitas(new CentroSalud("", 0, null, new ConfiguracionCupos("", 30, 0),
 				DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
 				DateWrapper.parseFromStringToDate("01/01/2000 20:00"), ""));
 
