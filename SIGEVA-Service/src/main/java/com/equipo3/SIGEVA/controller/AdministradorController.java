@@ -4,16 +4,15 @@ import com.equipo3.SIGEVA.dao.AdministradorDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,6 +28,8 @@ public class AdministradorController {
     private UsuarioDao usuariodao;
     @Autowired
     private RolDao roldao;
+	@Autowired
+	private ConfiguracionCuposDao configCuposDao;
     
    @PostMapping("/crearUsuario")
    public void registrarUsuario(@RequestBody Usuario usuario) {
@@ -73,4 +74,15 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
     }
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/crearConfCupos")
+	public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
+		List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+		if(configuracionCuposList.size() == 0)
+			configCuposDao.save(conf);
+		else
+			System.out.println("Ya existe una configuracion");
+		return conf;
+	}
 }
