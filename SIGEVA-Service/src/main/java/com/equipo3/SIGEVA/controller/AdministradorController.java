@@ -2,50 +2,67 @@ package com.equipo3.SIGEVA.controller;
 
 import com.equipo3.SIGEVA.dao.AdministradorDao;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("usuario")
+@RequestMapping("user")
 public class AdministradorController {
+	
+	@Autowired
+    private AdministradorDao administradordao;
     @Autowired
-    AdministradorDao administradorDao;
+    private UsuarioDao usuariodao;
+    @Autowired
+    private RolDao roldao;
     @Autowired
     private CentroSaludDao centroSaludDao;
     
+   @PostMapping("/crearUsuario")
+   public void registrarUsuario(@RequestBody Usuario usuario) {
+    	try {
+    		System.out.println(usuario.getRol());
+    		Optional<Rol> rol = roldao.findById(usuario.getRol());
+    		Rol rolEleg = null;
 
-    @GetMapping("/newUser")
-    public String registrarUsuario() {
-        try {
-            Usuario administrador = new Administrador();
-            administrador.setRol("Administrador");
-            administrador.setCentroFK("1234");
-            administrador.setUsername("user5");
-            administrador.setCorreo("micorreo@correo.com");
-            administrador.setHashPassword("sdfsdf");
-            administrador.setDni("99999999Q");
-            administrador.setNombre("Juan");
-            administrador.setApellidos("Perez");
-            administrador.setFechaNacimiento(new Date());
-            administrador.setImagen("912imagen");
-            administradorDao.save(administrador);
-            System.out.print("Hola");
-            return "hola";
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+    		if(rol.isPresent()) {
+    			rolEleg = rol.get();
+    		}
+    		
+    		usuariodao.save(usuario);
+    		System.out.println(usuario.getIdUsuario());
+    		if(rolEleg.getNombre().replace(" ", "").equals("Administrador")) {
+    			Administrador admin = new Administrador();
+    			admin.setIdUsuario(usuario.getIdUsuario());
+    			administradordao.save(admin);
+    		}
+    		
+    	}catch (Exception e) {
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    	}
     }
+   
     
+
     @GetMapping("/newCentroSalud")
     public void crearCentroSalud() {
     	boolean coincide=false;
@@ -75,8 +92,23 @@ public class AdministradorController {
         }
     }
 
-    @GetMapping("/hola")
-    public String hola(){
-        return "adios";
+   /* @PostMapping("/crearAdministradores")
+    public void registrarAdministrador(@RequestBody Administrador usuario) {
+     	try {
+     		administradordao.save(usuario);
+     		usuariodao.save(usuario);
+     	}catch (Exception e) {
+     		throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+     	}
+     }*/
+    
+    @GetMapping("/getRoles")
+    public List<Rol> ListarRoles() {
+    	try {
+			return roldao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+
     }
 }
