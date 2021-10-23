@@ -40,7 +40,7 @@ public class Usuario{
 
     public Usuario(ObjectId rol, String centroFK, String username, String correo, String hashPassword,
 			String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
-		this.idUsuario = new ObjectId(UUID.randomUUID().toString());
+		this.idUsuario = new ObjectId();
 		this.rol = rol;
 		this.centroFK = centroFK;
 		this.username = username;
