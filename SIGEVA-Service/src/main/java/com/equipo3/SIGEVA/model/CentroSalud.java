@@ -11,19 +11,15 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private ObjectId idCentroSalud;
+	private ObjectId idCentroSalud = new ObjectId();
 	@Field
 	private String nombreCentro;
 	@Field
 	private int numVacunasDisponibles;
 	@Field
-	private Date horaApertura;
-	@Field
-	private Date horaCierre;
-	@Field
 	private String direccion;
 	public CentroSalud() {
-		idCentroSalud=  new ObjectId();
+
 	}
 
 	public String getNombreCentro() {
@@ -45,19 +41,7 @@ public class CentroSalud {
 			numVacunasDisponibles=0;
 		this.numVacunasDisponibles = numVacunasDisponibles;
 	}
-	public Date getHoraApertura() {
-		return horaApertura;
-	}
-	public void setHoraApertura(Date horaApertura) {
-		this.horaApertura = horaApertura;
-	}
-	public Date getHoraCierre() {
-		return horaCierre;
-	}
-	public void setHoraCierre(Date horaCierre) {
-		if(horaCierreMayorApertura(this.horaApertura, horaCierre))
-			this.horaCierre = horaCierre;
-	}
+	
 	public String getDireccion() {
 		return direccion;
 	}

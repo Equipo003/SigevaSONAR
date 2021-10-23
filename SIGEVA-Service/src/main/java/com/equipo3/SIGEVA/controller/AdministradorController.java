@@ -68,17 +68,16 @@ public class AdministradorController {
     }
    
     
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/newCentroSalud")
+    public void crearCentroSalud(@RequestBody CentroSalud conf) {
+    //	boolean coincide=false;
 
-    @GetMapping("/newCentroSalud")
-    public void crearCentroSalud() {
-    	boolean coincide=false;
         try {
-        	CentroSalud centroSalud = new CentroSalud();
-        	centroSalud.setDireccion("calle");
-    		centroSalud.setHoraApertura(new Date(121,9,20,20,15,5));
-    		centroSalud.setHoraCierre(new Date(121,10,10,10,15,5));
-    		centroSalud.setNumVacunasDisponibles(2);
-    		centroSaludDao.save(centroSalud);
+//        	CentroSalud centroSalud = new CentroSalud();
+//        	centroSalud.setDireccion("calle");
+//    		centroSalud.setNumVacunasDisponibles(2);
+    		centroSaludDao.save(conf);
 //    		List<CentroSalud> centrosSaludList = centroSaludDao.findAll();
 //    		for(int i =0; i<centrosSaludList.size();i++) {
 //    			if(centrosSaludList.get(i).getIdCentroSalud().equals(centroSalud.getIdCentroSalud())) {
@@ -91,7 +90,7 @@ public class AdministradorController {
 //    		}else {
 //    			throw new RuntimeException("MISMO ID");
 //    		}
-    		
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

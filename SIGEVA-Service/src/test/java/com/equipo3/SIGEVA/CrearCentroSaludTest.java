@@ -17,7 +17,7 @@ public class CrearCentroSaludTest {
 	public void testCrearCentroSaludBien() {
 		
     	try {
-    		administradorController.crearCentroSalud();
+    		administradorController.crearCentroSalud(null);
         } catch (Exception e){
             Assertions.assertNull(e);
         }
