@@ -12,7 +12,8 @@ public class CentroSalud {
 	@Field
 	@Id
 	private ObjectId idCentroSalud;
-	//private String idCentroSalud = UUID.randomUUID().toString();
+	@Field
+	private String nombreCentro;
 	@Field
 	private int numVacunasDisponibles;
 	@Field
@@ -23,6 +24,14 @@ public class CentroSalud {
 	private String direccion;
 	public CentroSalud() {
 		idCentroSalud=  new ObjectId();
+	}
+
+	public String getNombreCentro() {
+		return nombreCentro;
+	}
+
+	public void setNombreCentro(String nombreCentro) {
+		this.nombreCentro = nombreCentro;
 	}
 
 	public ObjectId getIdCentroSalud() {
