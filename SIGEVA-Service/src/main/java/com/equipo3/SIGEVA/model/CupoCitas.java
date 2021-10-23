@@ -79,7 +79,7 @@ public class CupoCitas {
 	public void anadirPaciente(Usuario paciente) throws UsuarioInvalidoException, CupoCitasException {
 		if (pacientesCitados.contains(paciente)) {
 			throw new UsuarioInvalidoException("El usuario ya estaba contenido.");
-		} else if (pacientesCitados.size() + 1 > centroSalud.getConfiguracionCupos().getNumPacientesMaximo()) {
+		} else if (pacientesCitados.size() + 1 > centroSalud.getConfiguracionCupos().getNumeroPacientes()) {
 			throw new CupoCitasException("El cupo ya ha alcanzado su máximo.");
 		} else {
 			pacientesCitados.add(paciente);
@@ -92,32 +92,36 @@ public class CupoCitas {
 
 	public static void main(String[] args) {
 
-		List<CupoCitas> lista1 = prepararCuposCitas(new CentroSalud(UUID.randomUUID().toString(), 0, null, new ConfiguracionCupos("", 30, 0),
-				DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
-				DateWrapper.parseFromStringToDate("01/01/2000 20:00"), ""));
+		CentroSalud centroSalud = new CentroSalud("", 0,
+				new ConfiguracionCupos(30, 0, DateWrapper.parseFromStringToDate("07/11/2021 00:00"),
+						DateWrapper.parseFromStringToDate("31/12/2021 00:00"),
+						DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
+						DateWrapper.parseFromStringToDate("01/01/2000 20:30")),
+				null, null);
 
-		List<CupoCitas> lista2 = prepararCuposCitas(new CentroSalud(UUID.randomUUID().toString(), 0, null, new ConfiguracionCupos("", 30, 0),
-				DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
-				DateWrapper.parseFromStringToDate("01/01/2000 20:00"), ""));
-		
-		
+		List<CupoCitas> lista = prepararCuposCitas(centroSalud);
+
+		for (int i = 0; i < lista.size(); i++) {
+			System.out.println(lista.get(i).toString());
+		}
+
 	}
-
-	private static final String FECHA_FIN = "31/12/2021";
 
 	@SuppressWarnings("deprecation")
 	public static List<CupoCitas> prepararCuposCitas(CentroSalud centroSalud) {
 
 		List<CupoCitas> momentos = new ArrayList<>();
 
-		Date fechaInicio = new Date(); // A contar desde hoy.
-		fechaInicio.setHours(centroSalud.getHoraApertura().getHours());
-		fechaInicio.setMinutes(centroSalud.getHoraApertura().getMinutes());
+		Date fechaInicio = centroSalud.getConfiguracionCupos().getDiaInicio();
+		fechaInicio.setHours(centroSalud.getConfiguracionCupos().getHoraInicio().getHours());
+		fechaInicio.setMinutes(centroSalud.getConfiguracionCupos().getHoraInicio().getMinutes());
 		fechaInicio.setSeconds(0);
 
-		Date fechaFinAbsoluta = new Date(Integer.parseInt(FECHA_FIN.split("/")[2]) - 1900,
-				Integer.parseInt(FECHA_FIN.split("/")[1]) - 1, Integer.parseInt(FECHA_FIN.split("/")[0]),
-				centroSalud.getHoraCierre().getHours(), centroSalud.getHoraCierre().getMinutes());
+		Date fechaFinAbsoluta = new Date(centroSalud.getConfiguracionCupos().getDiaFin().getYear(),
+				centroSalud.getConfiguracionCupos().getDiaFin().getMonth(),
+				centroSalud.getConfiguracionCupos().getDiaFin().getDate(),
+				centroSalud.getConfiguracionCupos().getHoraFin().getHours(),
+				centroSalud.getConfiguracionCupos().getHoraFin().getMinutes());
 
 		int duracionTramo = centroSalud.getConfiguracionCupos().getDuracionMinutos();
 

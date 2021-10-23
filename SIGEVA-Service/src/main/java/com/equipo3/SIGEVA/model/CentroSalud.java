@@ -1,38 +1,60 @@
 package com.equipo3.SIGEVA.model;
 
-import java.util.Date;
+import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document
 public class CentroSalud {
 
-	private String uuid;
+	@Id
+	private String idCentroSalud;
+
+	@Field
+	private String nombreCentro;
+
+	@Field
 	private int numVacunasDisponibles;
-	private Vacuna vacuna;
+
+	@Field
 	private ConfiguracionCupos configuracionCupos;
-	private Date horaApertura;
-	private Date horaCierre;
+
+	@Field
+	private Vacuna vacuna;
+
+	@Field
 	private String direccion;
 
 	public CentroSalud() {
 
 	}
 
-	public CentroSalud(String uuid, int numVacunasDisponibles, Vacuna vacuna, ConfiguracionCupos configuracionCupos,
-			Date horaApertura, Date horaCierre, String direccion) {
-		this.uuid = uuid;
+	public CentroSalud(String nombreCentro, int numVacunasDisponibles, ConfiguracionCupos configuracionCupos,
+			Vacuna vacuna, String direccion) {
+		this.idCentroSalud = UUID.randomUUID().toString();
+		this.nombreCentro = nombreCentro;
 		this.numVacunasDisponibles = numVacunasDisponibles;
-		this.vacuna = vacuna;
 		this.configuracionCupos = configuracionCupos;
-		this.horaApertura = horaApertura;
-		this.horaCierre = horaCierre;
+		this.vacuna = vacuna;
 		this.direccion = direccion;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getIdCentroSalud() {
+		return idCentroSalud;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setIdCentroSalud(String idCentroSalud) {
+		this.idCentroSalud = idCentroSalud;
+	}
+
+	public String getNombreCentro() {
+		return nombreCentro;
+	}
+
+	public void setNombreCentro(String nombreCentro) {
+		this.nombreCentro = nombreCentro;
 	}
 
 	public int getNumVacunasDisponibles() {
@@ -43,14 +65,6 @@ public class CentroSalud {
 		this.numVacunasDisponibles = numVacunasDisponibles;
 	}
 
-	public Vacuna getVacuna() {
-		return vacuna;
-	}
-
-	public void setVacuna(Vacuna vacuna) {
-		this.vacuna = vacuna;
-	}
-
 	public ConfiguracionCupos getConfiguracionCupos() {
 		return configuracionCupos;
 	}
@@ -59,20 +73,12 @@ public class CentroSalud {
 		this.configuracionCupos = configuracionCupos;
 	}
 
-	public Date getHoraApertura() {
-		return horaApertura;
+	public Vacuna getVacuna() {
+		return vacuna;
 	}
 
-	public void setHoraApertura(Date horaApertura) {
-		this.horaApertura = horaApertura;
-	}
-
-	public Date getHoraCierre() {
-		return horaCierre;
-	}
-
-	public void setHoraCierre(Date horaCierre) {
-		this.horaCierre = horaCierre;
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
 	}
 
 	public String getDireccion() {
@@ -85,9 +91,9 @@ public class CentroSalud {
 
 	@Override
 	public String toString() {
-		return "CentroSalud [uuid=" + uuid + ", numVacunasDisponibles=" + numVacunasDisponibles + ", vacuna=" + vacuna
-				+ ", configuracionCupos=" + configuracionCupos + ", horaApertura=" + horaApertura + ", horaCierre="
-				+ horaCierre + ", direccion=" + direccion + "]";
+		return "CentroSalud [idCentroSalud=" + idCentroSalud + ", nombreCentro=" + nombreCentro
+				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", configuracionCupos=" + configuracionCupos
+				+ ", vacuna=" + vacuna + ", direccion=" + direccion + "]";
 	}
 
 }
