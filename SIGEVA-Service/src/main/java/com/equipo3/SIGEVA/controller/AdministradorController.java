@@ -33,20 +33,27 @@ public class AdministradorController {
    @PostMapping("/crearUsuario")
    public void registrarUsuario(@RequestBody Usuario usuario) {
     	try {
+    		System.out.println(usuario.getRol());
     		Optional<Rol> rol = roldao.findById(usuario.getRol());
     		Rol rolEleg = null;
+
     		if(rol.isPresent()) {
     			rolEleg = rol.get();
     		}
-    		if(rolEleg.getNombre() == "Administrador") {
-    			Administrador admin = new Administrador(usuario.getIdUsuario());
+    		
+    		usuariodao.save(usuario);
+    		System.out.println(usuario.getIdUsuario());
+    		if(rolEleg.getNombre().replace(" ", "").equals("Administrador")) {
+    			Administrador admin = new Administrador();
+    			admin.setIdUsuario(usuario.getIdUsuario());
     			administradordao.save(admin);
     		}
-    		usuariodao.save(usuario);
+    		
     	}catch (Exception e) {
-    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     	}
     }
+   
     
    /* @PostMapping("/crearAdministradores")
     public void registrarAdministrador(@RequestBody Administrador usuario) {

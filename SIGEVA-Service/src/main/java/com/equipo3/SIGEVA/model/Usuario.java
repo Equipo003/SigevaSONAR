@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,9 +11,9 @@ import java.util.UUID;
 @Document
 public class Usuario{
     @Id
-    private String idUsuario;
+    private ObjectId idUsuario;
     @Field
-    private String rol;
+    private ObjectId rol;
     @Field
     private String centroFK;
     @Field
@@ -33,13 +34,13 @@ public class Usuario{
     private String imagen;
 
     public Usuario(){
-        this.idUsuario = UUID.randomUUID().toString();
+        //this.idUsuario = new ObjectId(UUID.randomUUID().toString());
         
     }
 
-    public Usuario(String rol, String centroFK, String username, String correo, String hashPassword,
+    public Usuario(ObjectId rol, String centroFK, String username, String correo, String hashPassword,
 			String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
-		this.idUsuario = UUID.randomUUID().toString();
+		this.idUsuario = new ObjectId(UUID.randomUUID().toString());
 		this.rol = rol;
 		this.centroFK = centroFK;
 		this.username = username;
@@ -53,25 +54,24 @@ public class Usuario{
 	}
 
 
-	public Usuario(String idUsuario) {
+	public Usuario(ObjectId idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 
-	public String getIdUsuario() {
+	public ObjectId getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(String idUsuario) {
+    public void setIdUsuario(ObjectId idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public String getRol() {
+    public ObjectId getRol() {
         return rol;
     }
 
-    public String setRol(String rol) {
+    public void setRol(ObjectId rol) {
         this.rol = rol;
-        return rol;
     }
 
     public String getCentroFK() {
