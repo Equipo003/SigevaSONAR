@@ -10,23 +10,23 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class Rol {
 	@Id
-	ObjectId id;
+	String id;
 	@Field 
 	String nombre;
 	
 	public Rol(String nombre) {
-		this.id = new ObjectId(UUID.randomUUID().toString());
+		this.id =UUID.randomUUID().toString();
 		this.nombre = nombre;
 	}
 	
 	public Rol() {
 	}
 
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(ObjectId id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

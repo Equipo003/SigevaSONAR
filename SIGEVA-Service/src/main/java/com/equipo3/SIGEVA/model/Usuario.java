@@ -11,9 +11,9 @@ import java.util.UUID;
 @Document
 public class Usuario{
     @Id
-    private ObjectId idUsuario;
+    private String idUsuario;
     @Field
-    private ObjectId rol;
+    private String rol;
     @Field
     private String centroFK;
     @Field
@@ -35,42 +35,41 @@ public class Usuario{
 
     public Usuario(){
         //this.idUsuario = new ObjectId(UUID.randomUUID().toString());
-        
+
     }
 
-    public Usuario(ObjectId rol, String centroFK, String username, String correo, String hashPassword,
-			String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
-		this.idUsuario = new ObjectId();
-		this.rol = rol;
-		this.centroFK = centroFK;
-		this.username = username;
-		this.correo = correo;
-		this.hashPassword = hashPassword;
-		this.dni = dni;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.fechaNacimiento = fechaNacimiento;
-		this.imagen = imagen;
-	}
+    public Usuario(String rol, String centroFK, String username, String correo, String hashPassword,
+                   String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
+        this.rol = rol;
+        this.centroFK = centroFK;
+        this.username = username;
+        this.correo = correo;
+        this.hashPassword = hashPassword;
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.fechaNacimiento = fechaNacimiento;
+        this.imagen = imagen;
+    }
 
 
-	public Usuario(ObjectId idUsuario) {
-		this.idUsuario = idUsuario;
-	}
+    public Usuario(ObjectId idUsuario) {
 
-	public ObjectId getIdUsuario() {
+    }
+
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(ObjectId idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public ObjectId getRol() {
+    public String getRol() {
         return rol;
     }
 
-    public void setRol(ObjectId rol) {
+    public void setRol(String rol) {
         this.rol = rol;
     }
 
