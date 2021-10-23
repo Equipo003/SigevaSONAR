@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("usuario")
@@ -47,6 +48,7 @@ public class AdministradorController {
     
     @GetMapping("/newCentroSalud")
     public void crearCentroSalud() {
+    	boolean coincide=false;
         try {
         	CentroSalud centroSalud = new CentroSalud();
         	centroSalud.setDireccion("calle");
@@ -54,6 +56,19 @@ public class AdministradorController {
     		centroSalud.setHoraCierre(new Date(121,10,10,10,15,5));
     		centroSalud.setNumVacunasDisponibles(2);
     		centroSaludDao.save(centroSalud);
+//    		List<CentroSalud> centrosSaludList = centroSaludDao.findAll();
+//    		for(int i =0; i<centrosSaludList.size();i++) {
+//    			if(centrosSaludList.get(i).getIdCentroSalud().equals(centroSalud.getIdCentroSalud())) {
+//    				System.out.println("COINCIDE");
+//        			coincide = true;
+//    			}
+//    		}
+//    		if(!coincide) {
+//    			centroSaludDao.save(centroSalud);
+//    		}else {
+//    			throw new RuntimeException("MISMO ID");
+//    		}
+    		
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
