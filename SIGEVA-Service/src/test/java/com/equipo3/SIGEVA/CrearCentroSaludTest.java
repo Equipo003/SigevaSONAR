@@ -21,6 +21,5 @@ public class CrearCentroSaludTest {
         } catch (Exception e){
             Assertions.assertNull(e);
         }
-	
 	}
 }

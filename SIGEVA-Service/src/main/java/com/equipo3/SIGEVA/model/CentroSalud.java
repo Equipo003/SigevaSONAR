@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	//private ObjectId idCentroSalud =  new ObjectId(UUID.randomUUID().toString());
-	private String idCentroSalud = UUID.randomUUID().toString();
+	private ObjectId idCentroSalud;
+	//private String idCentroSalud = UUID.randomUUID().toString();
 	@Field
 	private int numVacunasDisponibles;
 	@Field
@@ -22,19 +22,10 @@ public class CentroSalud {
 	@Field
 	private String direccion;
 	public CentroSalud() {
-		
+		idCentroSalud=  new ObjectId();
 	}
-	
-//	public CentroSalud(String idCentroSalud, int numVacunasDisponibles, Date horaApertura, Date horaCierre,
-//			String direccion) {
-//		this.idCentroSalud = idCentroSalud;
-//		this.numVacunasDisponibles = numVacunasDisponibles;
-//		this.horaApertura = horaApertura;
-//		this.horaCierre = horaCierre;
-//		this.direccion = direccion;
-//	}
 
-	public String getIdCentroSalud() {
+	public ObjectId getIdCentroSalud() {
 		return idCentroSalud;
 	}
 	public int getNumVacunasDisponibles() {

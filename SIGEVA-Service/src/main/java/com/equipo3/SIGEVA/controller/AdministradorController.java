@@ -54,9 +54,6 @@ public class AdministradorController {
     		centroSalud.setHoraCierre(new Date(121,10,10,10,15,5));
     		centroSalud.setNumVacunasDisponibles(2);
     		centroSaludDao.save(centroSalud);
-            //System.out.print("Hola");
-           // return "hola";
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
