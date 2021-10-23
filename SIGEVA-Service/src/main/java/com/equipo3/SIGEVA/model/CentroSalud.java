@@ -3,12 +3,14 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class CentroSalud {
 	@Field
+	@Id
 	//private ObjectId idCentroSalud =  new ObjectId(UUID.randomUUID().toString());
 	private String idCentroSalud = UUID.randomUUID().toString();
 	@Field
