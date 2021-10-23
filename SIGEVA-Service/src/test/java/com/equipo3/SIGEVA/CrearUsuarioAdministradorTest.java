@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public class CrearUsuarioAdministradorTest {
 
         administrador.setRol("6173cecfc5635444ee5469d7");
         administrador.setCentroFK("1234");
-        administrador.setUsername("user5555");
+        administrador.setUsername("user55");
         administrador.setCorreo("micorreo@correo.com");
         administrador.setHashPassword("sdfsdf");
         administrador.setDni("99999999Q");
@@ -37,7 +38,7 @@ public class CrearUsuarioAdministradorTest {
         administrador.setFechaNacimiento(new Date());
         administrador.setImagen("912imagen");
 
-        administradorController.registrarUsuario(administrador);
+        //administradorController.registrarUsuario(administrador);
     }
 
     @Test
@@ -59,6 +60,17 @@ public class CrearUsuarioAdministradorTest {
             System.out.println(rse.getMessage());
             Assertions.assertNull(rse);
         }
+    }
+
+    @Test
+    public void addRoles(){
+        Rol rol1 = new Rol("Administrador");
+        Rol rol2 = new Rol("Sanitario");
+        Rol rol3 = new Rol("Paciente");
+
+        administradorController.registrarRol(rol1);
+        administradorController.registrarRol(rol2);
+        administradorController.registrarRol(rol3);
     }
 }
 
