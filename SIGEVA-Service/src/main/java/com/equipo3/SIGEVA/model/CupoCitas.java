@@ -5,14 +5,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
+@Document
 public class CupoCitas {
 
+	@Id
 	private String uuid;
+
+	@Field
 	private CentroSalud centroSalud;
+
+	@Field
 	private Date fechaYHoraInicio;
+
+	@Field
 	private List<Usuario> pacientesCitados;
 
 	public CupoCitas() {
@@ -80,13 +92,15 @@ public class CupoCitas {
 
 	public static void main(String[] args) {
 
-		List<CupoCitas> lista = prepararCuposCitas(new CentroSalud("", 0, null, new ConfiguracionCupos("", 30, 0),
+		List<CupoCitas> lista1 = prepararCuposCitas(new CentroSalud(UUID.randomUUID().toString(), 0, null, new ConfiguracionCupos("", 30, 0),
 				DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
 				DateWrapper.parseFromStringToDate("01/01/2000 20:00"), ""));
 
-		for (int i = 0; i < lista.size(); i++)
-			System.out.println(lista.get(i).toString());
-
+		List<CupoCitas> lista2 = prepararCuposCitas(new CentroSalud(UUID.randomUUID().toString(), 0, null, new ConfiguracionCupos("", 30, 0),
+				DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
+				DateWrapper.parseFromStringToDate("01/01/2000 20:00"), ""));
+		
+		
 	}
 
 	private static final String FECHA_FIN = "31/12/2021";
@@ -130,7 +144,7 @@ public class CupoCitas {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static Date copia(Date f1) {
+	public static Date copia(Date f1) { // Desacoplado del Paso por Referencia.
 		return new Date(f1.getYear(), f1.getMonth(), f1.getDate(), f1.getHours(), f1.getMinutes(), f1.getSeconds());
 	}
 
