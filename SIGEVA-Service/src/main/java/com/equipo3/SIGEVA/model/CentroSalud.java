@@ -42,6 +42,10 @@ public class CentroSalud {
 		this.numVacunasDisponibles = numVacunasDisponibles;
 	}
 	
+	public void modificarStockVacunas(int numVacunasAgregadas) {
+		this.numVacunasDisponibles += numVacunasAgregadas;
+	}
+	
 	public String getDireccion() {
 		return direccion;
 	}
