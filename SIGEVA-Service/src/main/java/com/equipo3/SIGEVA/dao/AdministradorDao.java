@@ -8,7 +8,10 @@ import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
 
+import java.util.Optional;
+
 @Repository
-public interface AdministradorDao extends MongoRepository <Administrador, ObjectId> {
-	
+public interface AdministradorDao extends MongoRepository <Usuario, ObjectId> {
+
+    Optional<Usuario> findByUsername(String username);
 }
