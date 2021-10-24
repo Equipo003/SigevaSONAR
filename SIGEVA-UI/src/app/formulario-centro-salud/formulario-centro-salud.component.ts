@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonService } from '../Service/json.service';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { CentroSalud } from '../Model/centro-salud';
 
 @Component({
@@ -16,7 +14,7 @@ export class FormularioCentroSaludComponent implements OnInit {
   direccion: String;
   nombreCentro: String;
   constructor(private json: JsonService) {
-	this.numVacunasDisponibles=10;
+	this.numVacunasDisponibles=0;
 	this.direccion = "";
 	this.nombreCentro ="";
 	}
