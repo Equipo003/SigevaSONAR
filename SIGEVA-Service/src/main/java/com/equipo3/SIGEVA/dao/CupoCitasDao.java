@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -11,7 +12,7 @@ import com.equipo3.SIGEVA.model.CupoCitas;
 @Repository
 public interface CupoCitasDao extends MongoRepository<CupoCitas, String> {
 
-	@Query("e")
-	CupoCitas buscarCupoLibre(String uuidCentro, Date fecha);
-	
+	@Query("{ 'centroSalud._id' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 } }")
+	List<CupoCitas> buscarCuposLibres(String uuidCentro, Date fecha);
+
 }
