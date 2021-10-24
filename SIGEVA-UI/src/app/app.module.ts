@@ -10,6 +10,7 @@ import { FormularioCentroSaludComponent } from './formulario-centro-salud/formul
 import { ConfiguracionCuposComponent } from './configuracion-cupos/configuracion-cupos.component';
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {HttpClientModule} from "@angular/common/http";
     AppComponent,
     HomeComponent,
     FormularioCentroSaludComponent,
-    ConfiguracionCuposComponent
+    ConfiguracionCuposComponent,
+    CrearUsuariosComponent
   ],
   imports: [
     BrowserModule,
