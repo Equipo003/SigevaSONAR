@@ -96,23 +96,13 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-
-   /* @PostMapping("/crearAdministradores")
-    public void registrarAdministrador(@RequestBody Administrador usuario) {
-     	try {
-     		administradordao.save(usuario);
-     		usuariodao.save(usuario);
-     	}catch (Exception e) {
-     		throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-     	}
-     }*/
     
     @GetMapping("/getRoles")
     public List<Rol> ListarRoles() {
     	try {
 			return roldao.findAll();
 		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
 		}
 
     }
@@ -126,5 +116,14 @@ public class AdministradorController {
 		else
 			System.out.println("Ya existe una configuracion");
 		return conf;
+	}
+	
+	@GetMapping("/listCentroSalud")
+	public List<CentroSalud> listarCentrosSalud(){
+		try {
+			return centroSaludDao.findAll();
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		}
 	}
 }
