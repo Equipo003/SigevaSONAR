@@ -1,12 +1,11 @@
-<form class="form">
-  <h2>CONTACT US</h2>
-  <p type="text"><input [(ngModel)]="direccion" [ngModelOptions]="{standalone: true}" type="text" placeholder="Write your name here.." >
-  <p type="text"><input  type="text" placeholder="Let us know how to contact you back.." [(ngModel)]="nombreCentro" [ngModelOptions]="{standalone: true}"></p>
-  <p type="Number"><input  type="number" placeholder="What would you like to tell us.." [(ngModel)]="numVacunasDisponibles" [ngModelOptions]="{standalone: true}"></p>
-  <button (click)="enviarDatosBack()">Send Message</button>
-  <div>
-    <span class="fa fa-phone"></span>001 1023 567
-    <span class="fa fa-envelope-o"></span> contact@company.com
-  </div>
-</form>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<p class="texto">Crear Centro de Salud</p>
+<div class="Registro">
+<form method="post" action="https://getform.org/f/70415a77-d632-4883-bf07-2e15d3f557da">
 
+<p>Nombre del centro de salud</p><span class="fontawesome-hospital"></span><input type="text" required placeholder="Nombre del centro de salud" autocomplete="off" [(ngModel)]="nombreCentro" [ngModelOptions]="{standalone: true}"> 
+<p>Dirección del centro de salud</p><span class="fontawesome-map-marker "></span><input type="text" id="direccion" required placeholder="Dirección del Centro de Salud" autocomplete="off" [(ngModel)]="direccion" [ngModelOptions]="{standalone: true}">
+<p>Número de Vacunas Disponibles</p><span class="fontawesome-caret-right "></span><input  type="number" min="0"  id="numVacunas"  required placeholder="Número de Vacunas Disponibles" autocomplete="off"  [(ngModel)]="numVacunasDisponibles" [ngModelOptions]="{standalone: true}" > 
+<input type="submit" (click)="enviarDatosBack()"value="Crear Centro" title="Crear el centro de salud">

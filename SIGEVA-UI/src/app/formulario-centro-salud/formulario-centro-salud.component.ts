@@ -16,7 +16,7 @@ export class FormularioCentroSaludComponent implements OnInit {
   direccion: String;
   nombreCentro: String;
   constructor(private json: JsonService) {
-	this.numVacunasDisponibles=10;
+	this.numVacunasDisponibles=0;
 	this.direccion = "";
 	this.nombreCentro ="";
 	}
