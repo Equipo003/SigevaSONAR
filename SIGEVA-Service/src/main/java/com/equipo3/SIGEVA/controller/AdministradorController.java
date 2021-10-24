@@ -7,6 +7,7 @@ import com.equipo3.SIGEVA.model.*;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 
+import org.bson.types.ObjectId;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -160,6 +161,21 @@ public class AdministradorController {
 			return centroSaludDao.findAll();
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		}
+	}
+	
+	@PutMapping("/modicarDosisDisponibles/{centroSalud}/{vacunas}")
+	public void modificarNumeroVacunasDisponibles(@PathVariable String cs, @PathVariable int vacunas) {
+		try {
+			Optional<CentroSalud> centroS = centroSaludDao.findById(cs);
+			if(centroS.isPresent()) {
+				CentroSalud centroSaludDef = centroS.get();
+				centroSaludDef.modificarStockVacunas(vacunas);
+				centroSaludDao.save(centroSaludDef);
+			}
+			
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 }
