@@ -99,7 +99,7 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/newCentroSalud")
-	public CentroSalud crearCentroSalud(@RequestBody CentroSalud conf) {
+	public void crearCentroSalud(@RequestBody CentroSalud conf) {
 		//	boolean coincide=false;
 
 		try {
@@ -120,7 +120,7 @@ public class AdministradorController {
 //    			throw new RuntimeException("MISMO ID");
 //    		}
 
-    		return conf;
+			
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
