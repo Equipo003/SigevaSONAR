@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class ConfiguracionCupos {
 
@@ -76,6 +77,25 @@ public class ConfiguracionCupos {
 		return "ConfiguracionCupos [duracionMinutos=" + duracionMinutos + ", numeroPacientes=" + numeroPacientes
 				+ ", diaInicio=" + diaInicio + ", diaFin=" + diaFin + ", horaInicio=" + horaInicio + ", horaFin="
 				+ horaFin + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(diaFin, diaInicio, duracionMinutos, horaFin, horaInicio, numeroPacientes);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConfiguracionCupos other = (ConfiguracionCupos) obj;
+		return Objects.equals(diaFin, other.diaFin) && Objects.equals(diaInicio, other.diaInicio)
+				&& duracionMinutos == other.duracionMinutos && Objects.equals(horaFin, other.horaFin)
+				&& Objects.equals(horaInicio, other.horaInicio) && numeroPacientes == other.numeroPacientes;
 	}
 
 }

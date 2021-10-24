@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -94,6 +95,26 @@ public class CentroSalud {
 		return "CentroSalud [idCentroSalud=" + idCentroSalud + ", nombreCentro=" + nombreCentro
 				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", configuracionCupos=" + configuracionCupos
 				+ ", vacuna=" + vacuna + ", direccion=" + direccion + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(configuracionCupos, direccion, idCentroSalud, nombreCentro, numVacunasDisponibles, vacuna);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CentroSalud other = (CentroSalud) obj;
+		return Objects.equals(configuracionCupos, other.configuracionCupos)
+				&& Objects.equals(direccion, other.direccion) && Objects.equals(idCentroSalud, other.idCentroSalud)
+				&& Objects.equals(nombreCentro, other.nombreCentro)
+				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
 	}
 
 }

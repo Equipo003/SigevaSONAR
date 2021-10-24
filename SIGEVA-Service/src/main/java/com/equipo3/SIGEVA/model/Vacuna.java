@@ -1,5 +1,7 @@
 package com.equipo3.SIGEVA.model;
 
+import java.util.Objects;
+
 public class Vacuna {
 
 	private String nombre;
@@ -43,6 +45,24 @@ public class Vacuna {
 	@Override
 	public String toString() {
 		return "Vacuna [nombre=" + nombre + ", tiempoEntreVacuna=" + tiempoEntreVacuna + ", numDosis=" + numDosis + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre, numDosis, tiempoEntreVacuna);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vacuna other = (Vacuna) obj;
+		return Objects.equals(nombre, other.nombre) && numDosis == other.numDosis
+				&& tiempoEntreVacuna == other.tiempoEntreVacuna;
 	}
 
 }
