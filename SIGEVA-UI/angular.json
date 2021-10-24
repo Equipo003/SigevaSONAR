@@ -1,8 +1,5 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": "f4fab0b3-45ad-452a-8599-cc5e81af2d68"
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -69,9 +66,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "proxyConfig": "./proxy.conf.json"
-          },
           "configurations": {
             "production": {
               "browserTarget": "SIGEVA-UI:build:production"

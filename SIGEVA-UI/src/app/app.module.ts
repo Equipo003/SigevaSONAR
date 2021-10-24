@@ -1,26 +1,31 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule} from '@angular/forms'
-import { HttpClientModule } from '@angular/common/http';
+import { routing, appRoutingProviders} from "./app.routing";
 
 import { AppComponent } from './app.component';
 
+import { HomeComponent } from './home/home.component';
 import { FormularioCentroSaludComponent } from './formulario-centro-salud/formulario-centro-salud.component';
 
 import { ConfiguracionCuposComponent } from './configuracion-cupos/configuracion-cupos.component';
+import {FormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     FormularioCentroSaludComponent,
-    ConfiguracionCuposComponent,
+    ConfiguracionCuposComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    routing
   ],
-  providers: [],
+  providers: [appRoutingProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
