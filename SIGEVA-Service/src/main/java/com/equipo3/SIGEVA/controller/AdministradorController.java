@@ -2,9 +2,11 @@ package com.equipo3.SIGEVA.controller;
 
 import com.equipo3.SIGEVA.dao.AdministradorDao;
 import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.*;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,9 +23,15 @@ import java.util.Optional;
 public class AdministradorController {
 
 	@Autowired
-	private AdministradorDao adminDao;
+	private AdministradorDao administradorDao;
+	@Autowired
+	private UsuarioDao usuarioDao;
 	@Autowired
 	private RolDao rolDao;
+	@Autowired
+	private ConfiguracionCuposDao configCuposDao;
+	@Autowired
+	private CentroSaludDao centroSaludDao;
 
 	public void crearUsuarioAdministrador(Map<String, Object> user) {
 		try {
@@ -44,12 +51,12 @@ public class AdministradorController {
 			admin.setFechaNacimiento(new SimpleDateFormat("dd/MM/yyyy").parse(jso.optString("fechaNacimiento")));
 			admin.setImagen(jso.optString("imagen"));
 
-			Optional<Usuario> optUsuario = adminDao.findByUsername(jso.optString("userName"));
+			Optional<Usuario> optUsuario = administradorDao.findByUsername(jso.optString("userName"));
 			if (optUsuario.isPresent()){
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya existe en la base de datos");
 			}
 
-			adminDao.save(admin);
+			administradorDao.save(admin);
 
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -88,6 +95,35 @@ public class AdministradorController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/newCentroSalud")
+	public void crearCentroSalud(@RequestBody CentroSalud conf) {
+		//	boolean coincide=false;
+
+		try {
+//        	CentroSalud centroSalud = new CentroSalud();
+//        	centroSalud.setDireccion("calle");
+//    		centroSalud.setNumVacunasDisponibles(2);
+			centroSaludDao.save(conf);
+//    		List<CentroSalud> centrosSaludList = centroSaludDao.findAll();
+//    		for(int i =0; i<centrosSaludList.size();i++) {
+//    			if(centrosSaludList.get(i).getIdCentroSalud().equals(centroSalud.getIdCentroSalud())) {
+//    				System.out.println("COINCIDE");
+//        			coincide = true;
+//    			}
+//    		}
+//    		if(!coincide) {
+//    			centroSaludDao.save(centroSalud);
+//    		}else {
+//    			throw new RuntimeException("MISMO ID");
+//    		}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
 	@PostMapping("/registrarRol")
 	public void registrarRol(@RequestBody Rol rol){
 		try {
@@ -105,5 +141,16 @@ public class AdministradorController {
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/crearConfCupos")
+	public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
+		List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+		if(configuracionCuposList.size() == 0)
+			configCuposDao.save(conf);
+		else
+			System.out.println("Ya existe una configuracion");
+		return conf;
 	}
 }
