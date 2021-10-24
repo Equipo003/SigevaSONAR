@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import com.equipo3.SIGEVA.model.Rol;
 
 @Repository
-public interface RolDao extends MongoRepository <Rol, ObjectId> {
+public interface RolDao extends MongoRepository <Rol, String> {
 }
