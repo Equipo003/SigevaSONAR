@@ -50,7 +50,7 @@ public class AdministradorController {
 			admin.setDni(jso.optString("dni"));
 			admin.setNombre(jso.optString("nombre"));
 			admin.setApellidos(jso.optString("apellidos"));
-			admin.setFechaNacimiento(new SimpleDateFormat("dd/MM/yyyy").parse(jso.optString("fechaNacimiento")));
+			admin.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(jso.optString("fechaNacimiento")));
 			admin.setImagen(jso.optString("imagen"));
 
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(jso.optString("userName"));
@@ -66,12 +66,11 @@ public class AdministradorController {
 	}
 
 	public void crearUsuarioPaciente(Map<String, Object> user) {
-
 	}
+
 	public void crearUsuarioSanitario(Map<String, Object> user) {
-
 	}
-
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuario")
 	public void registrarUsuario(@RequestBody Map<String, Object> info) {
 		try {

@@ -2,24 +2,33 @@
   <div class="register-screen">
     <div class="register-form">
       <h1>CREAR USUARIOS</h1>
-      <p>Elige el tipo de usuario a crear: </p>
-      <select [(ngModel)]="seleccionado">
-        <option *ngFor="let rol of roles">{{rol.nombre}}</option>
-      </select>
-      {{seleccionado}}
-<!--      <div class="control-group">-->
-<!--        <input type="text" placeholder="Nombre de usuario">-->
-<!--      </div>-->
-<!--      <div class="control-group">-->
-<!--        <input type="email" placeholder="Correo electrónico">-->
-<!--      </div>-->
-<!--      <div class="control-group">-->
-<!--        <input type="password" placeholder="Contraseña">-->
-<!--      </div>-->
-<!--      <div class="control-group">-->
-<!--        <input type="password" placeholder="Repite contraseña">-->
-<!--      </div>-->
-<!--      <button class="btn">Crear cuenta</button>-->
+      <div class="control-group">
+        <p>Elige el tipo de usuario a crear: </p>
+        <select [(ngModel)]="seleccionado">
+          <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+        </select>
+      </div>
+      <p>{{seleccionado}}</p>
+
+      <div class="control-group">
+        <input type="text" placeholder="Centro al que pertenece" [(ngModel)]="centro">
+      </div>
+      <div class="control-group">
+        <input type="email" placeholder="Nombre de usuario" [(ngModel)]="username">
+      </div>
+      <div class="control-group">
+        <input type="email" placeholder="Correo electrónico" [(ngModel)]="correo">
+      </div>
+      <div class="control-group">
+        <input type="email" placeholder="Nombre" [(ngModel)]="nombre">
+      </div>
+      <div class="control-group">
+        <input type="text" placeholder="Apellidos" [(ngModel)]="apellidos">
+      </div>
+      <div class="control-group">
+        <input type="date" placeholder="Fecha Nacimiento" [(ngModel)]="fechaNacimiento">
+      </div>
+      <button class="btn" type="submit" (click)=enviarDatosBack()>Crear usuario</button>
     </div>
 
   </div>
