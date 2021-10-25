@@ -1,34 +1,45 @@
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
-      <h1>CREAR USUARIOS</h1>
-      <div class="control-group">
-        <p>Elige el tipo de usuario a crear: </p>
-        <select [(ngModel)]="seleccionado">
-          <option *ngFor="let rol of roles">{{rol.nombre}}</option>
-        </select>
-      </div>
-      <p>{{seleccionado}}</p>
+      <form #crearUsuariosForm="ngForm" (ngSubmit)="enviarDatosBack()">
+        <h1>CREAR USUARIOS</h1>
+        <div class="control-group">
+          <p>Elige el tipo de usuario a crear: </p>
+          <select name="rol" [(ngModel)]="seleccionado">
+            <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+          </select>
+        </div>
 
-      <div class="control-group">
-        <input type="text" placeholder="Centro al que pertenece" [(ngModel)]="centro">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Nombre de usuario" [(ngModel)]="username">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Correo electrónico" [(ngModel)]="correo">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Nombre" [(ngModel)]="nombre">
-      </div>
-      <div class="control-group">
-        <input type="text" placeholder="Apellidos" [(ngModel)]="apellidos">
-      </div>
-      <div class="control-group">
-        <input type="date" placeholder="Fecha Nacimiento" [(ngModel)]="fechaNacimiento">
-      </div>
-      <button class="btn" type="submit" (click)=enviarDatosBack()>Crear usuario</button>
+
+        <div class="control-group">
+          <input type="text" placeholder="Centro al que pertenece" name="centro" #centro="ngModel" [(ngModel)]="usuario2.centro" required>
+          <div>
+          <small *ngIf="!centro.valid && centro.touched">
+            El campo no puede estar vacío
+          </small>
+          </div>
+        </div>
+        <div class="control-group">
+          <input type="email" placeholder="Nombre de usuario" name="username" [(ngModel)]="username">
+        </div>
+        <div class="control-group">
+          <input type="email" placeholder="Correo electrónico" name="correo" [(ngModel)]="correo">
+        </div>
+        <div class="control-group">
+          <input type="email" placeholder="Nombre" name="nombre" [(ngModel)]="nombre">
+        </div>
+        <div class="control-group">
+          <input type="text" placeholder="Apellidos" name="apellidos" [(ngModel)]="apellidos">
+        </div>
+        <div class="control-group">
+          <input type="date" placeholder="Fecha Nacimiento" name="fechaNacimiento" [(ngModel)]="fechaNacimiento">
+        </div>
+        <div class="control-group">
+          <input (change)="capturarFile($event)" type="file" accept="image/png, image/jpeg">
+        </div>
+<!--        <img *ngIf="imagen" alt="imagen usuario" width="100" height="100" src={{imagen}}>-->
+        <button class="btn" type="submit" [disabled]="crearUsuariosForm.invalid">Crear usuario</button>
+      </form>
     </div>
 
   </div>
