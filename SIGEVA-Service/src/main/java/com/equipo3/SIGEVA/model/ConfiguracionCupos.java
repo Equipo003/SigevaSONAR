@@ -67,4 +67,12 @@ public class ConfiguracionCupos{
     public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
+
+    public Date getHoraFin(){
+        Date fechaFin = new Date(this.fechaInicio);
+        fechaFin.setHours(fechaFin.getHours()+this.duracionJornadaHoras);
+        fechaFin.setMinutes(fechaFin.getMinutes()+this.duracionJornadaMinutos);
+
+        return fechaFin;
+    }
 }

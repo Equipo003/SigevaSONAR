@@ -34,6 +34,8 @@ public class AdministradorController {
 	@Autowired
 	private CentroSaludDao centroSaludDao;
 
+   
+    
 	public void crearUsuarioAdministrador(Map<String, Object> user) {
 		try {
 
@@ -118,22 +120,11 @@ public class AdministradorController {
 //    		}else {
 //    			throw new RuntimeException("MISMO ID");
 //    		}
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-    
-    @GetMapping("/getRoles")
-    public List<Rol> ListarRoles() {
-    	try {
-			return rolDao.findAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
 
 	@PostMapping("/registrarRol")
 	public void registrarRol(@RequestBody Rol rol){
@@ -141,6 +132,15 @@ public class AdministradorController {
 			rolDao.save(rol);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+	
+	@GetMapping("/getRoles")
+	public List<Rol> ListarRoles() {
+		try {
+			return rolDao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
 

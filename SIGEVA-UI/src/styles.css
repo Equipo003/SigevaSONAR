@@ -1,1 +1,118 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  box-sizing: border-box;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+}
+
+*:focus {
+  outline: none;
+}
+
+body {
+  font-family: Arial;
+  background-color: #3498DB;
+  padding: 50px;
+}
+
+.centrar-texto {
+  text-align: center;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.contenido-centrado {
+  max-width: 80rem;
+}
+
+input {
+  text-align: center;
+  background-color: #ECF0F1;
+  background: #FFFFFF;
+  border: 2px solid black;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 200;
+  padding: 10px 0;
+  width: 400px;
+  margin-top: 3px;
+  transition: border .5s;
+}
+
+input:focus {
+  border: 2px solid #3498DB;
+  box-shadow: none;
+}
+
+select {
+  text-align: center;
+  background-color: #ECF0F1;
+  background: #FFFFFF;
+  border: 2px solid black;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 200;
+  padding: 10px 0;
+  width: 400px;
+  transition: border .5s;
+}
+
+.register {
+  margin: 20px auto;
+  width: 500px;
+}
+
+.register-screen {
+  background-color: #FFF;
+  padding: 20px;
+  border-radius: 5px
+}
+
+.register-form {
+  text-align: center;
+}
+
+.control-group {
+  margin-bottom: 10px;
+}
+
+
+
+.btn {
+  border: 2px solid transparent;
+  background: #3498DB;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 250px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.btn-add {
+  border: 2px solid transparent;
+  background: #3498DB;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 200px;
+  margin: 0 auto;
+  cursor: pointer;
+}

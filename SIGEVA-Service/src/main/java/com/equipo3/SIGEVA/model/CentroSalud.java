@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private ObjectId idCentroSalud = new ObjectId();
+	private ObjectId id = new ObjectId();
 	@Field
 	private String nombreCentro;
 	@Field
@@ -31,7 +31,7 @@ public class CentroSalud {
 	}
 
 	public ObjectId getIdCentroSalud() {
-		return idCentroSalud;
+		return id;
 	}
 	public int getNumVacunasDisponibles() {
 		return numVacunasDisponibles;

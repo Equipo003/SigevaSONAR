@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CentroSaludDao extends MongoRepository<CentroSalud, String> {
 	List<CentroSalud> findAll();
-	//CentroSalud findById(ObjectId id);
+	CentroSalud findById(ObjectId id);
 }
 
