@@ -60,6 +60,10 @@ select {
   transition: border .5s;
 }
 
+select, option {
+  color: black;
+}
+
 .register {
   margin: 20px auto;
   width: 500px;

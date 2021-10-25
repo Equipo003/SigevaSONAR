@@ -138,6 +138,7 @@ public class AdministradorController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
 	public List<Rol> ListarRoles() {
 		try {

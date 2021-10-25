@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class JsonService {
     this.url = 'http://localhost:8080/' ;
   }
 
-  getJson(url : string) {
+  getJson(url : string):Observable<any>{
     let options : Object =  {
       "observe" : 'body',
       "responseType": 'text'

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonService } from '../Service/json.service';
+import {Rol} from "../Model/rol";
 
 @Component({
   selector: 'app-crear-usuarios',
@@ -9,15 +10,20 @@ import { JsonService } from '../Service/json.service';
 })
 export class CrearUsuariosComponent implements OnInit {
 
-  id : String;
-  nombre : String;
+  public roles: Rol[];
+  public seleccionado: string = "";
 
   constructor(private json: JsonService) {
-    this.id = "";
-    this.nombre = "";
+    this.roles = [];
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit() {
+    this.json.getJson("user/getRoles").subscribe(
+      result=> {
+        this.roles = JSON.parse(result);
+        console.log(this.roles);
+      }, error=> {
+        console.log(error);
+      });
+  };
 }
