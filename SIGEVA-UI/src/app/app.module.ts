@@ -12,6 +12,7 @@ import { ConfiguracionCuposComponent } from './configuracion-cupos/configuracion
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.component';
+import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.componen
     HomeComponent,
     FormularioCentroSaludComponent,
     ConfiguracionCuposComponent,
-    CrearUsuariosComponent
+    CrearUsuariosComponent,
+    IndicarDosisVacunasComponent
   ],
   imports: [
     BrowserModule,
