@@ -14,34 +14,34 @@ export class CrearUsuariosComponent implements OnInit {
   public roles: Rol[];
   public seleccionado: string;
   public nombreRol:string;
-  public usuario2: Usuario;
-  rol: string;
-  centro: string;
-  username: string;
-  correo: string;
-  hashPassword:string;
-  dni:string;
-  nombre:string;
-  apellidos:string;
-  fechaNacimiento:string;
-  imagen:string;
+  public usuario: Usuario;
+  // rol: string;
+  // centro: string;
+  // username: string;
+  // correo: string;
+  // hashPassword:string;
+  // dni:string;
+  // nombre:string;
+  // apellidos:string;
+  // fechaNacimiento:string;
+  // imagen:string;
 
   constructor(private json: JsonService) {
     this.roles = [];
     this.seleccionado = "";
     this.nombreRol = "";
-    this.rol = "";
-    this.usuario2 = new Usuario("", "", "", "", "", "",
+    // this.rol = "";
+    this.usuario = new Usuario("", "", "", "", "", "",
       "", "", "", "");
-    this.centro = "";
-    this.username = "";
-    this.correo = "";
-    this.hashPassword = "";
-    this.dni = "";
-    this.nombre = "";
-    this.apellidos = "";
-    this.fechaNacimiento = "";
-    this.imagen = "";
+    // this.centro = "";
+    // this.username = "";
+    // this.correo = "";
+    // this.hashPassword = "";
+    // this.dni = "";
+    // this.nombre = "";
+    // this.apellidos = "";
+    // this.fechaNacimiento = "";
+    // this.imagen = "";
   }
 
   ngOnInit() {
@@ -61,7 +61,7 @@ export class CrearUsuariosComponent implements OnInit {
     var reader = new FileReader();
     reader.onload = function () {
       if (typeof reader.result === "string") {
-        self.imagen = ("data:image/png;base64," + btoa(reader.result));
+        self.usuario.imagen = ("data:image/png;base64," + btoa(reader.result));
       }
     }
     reader.readAsBinaryString(file);
@@ -73,7 +73,7 @@ export class CrearUsuariosComponent implements OnInit {
     let self = this;
     this.roles.forEach(function(rol2 : Rol){
       if (rol2.nombre === self.seleccionado){
-        self.rol = rol2.id;
+        self.usuario.rol = rol2.id;
         self.nombreRol = rol2.nombre;
       }
     });
@@ -81,10 +81,7 @@ export class CrearUsuariosComponent implements OnInit {
 
   enviarDatosBack() {
     this.checkRol();
-    console.log(this.rol);
-    var usuario: Usuario = new Usuario(this.rol, this.centro, this.username, this.correo, this.hashPassword, this.dni,
-      this.nombre, this.apellidos, this.fechaNacimiento, this.imagen);
-    this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario2).subscribe((res: any) => {
+    this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario).subscribe((res: any) => {
       console.log(res);
     });
   }
