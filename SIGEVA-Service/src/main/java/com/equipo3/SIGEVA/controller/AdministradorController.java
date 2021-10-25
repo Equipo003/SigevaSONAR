@@ -164,10 +164,10 @@ public class AdministradorController {
 		}
 	}
 	
-	@PutMapping("/modicarDosisDisponibles/{centroSalud}/{vacunas}")
-	public void modificarNumeroVacunasDisponibles(@PathVariable String cs, @PathVariable int vacunas) {
+	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
+	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(cs);
+			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
 			if(centroS.isPresent()) {
 				CentroSalud centroSaludDef = centroS.get();
 				centroSaludDef.modificarStockVacunas(vacunas);
