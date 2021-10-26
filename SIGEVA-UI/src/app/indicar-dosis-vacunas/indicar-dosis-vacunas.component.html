@@ -1,1 +1,21 @@
-<p>indicar-dosis-vacunas works!</p>
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<div class='register'>
+	<div class='register-screeen'>
+		<div class='register-form'>
+			<form #modificarVacunasDisponibles="ngForm"(ngSubmit)="enviarDatosBack()">
+				<H1>Modificar dósis vacunas</H1>
+				<div align="left" class="selectCenter">
+					<fieldset>
+						<select name="menuCentro" id="menuCentro" align="left"
+							[(ngModel)]='centroSeleccionado'>
+							<option *ngFor="let centro of cs">{{centro.nombreCentro}}</option>
+							<p>{{centro.numVacunasDisponibles}}</p>
+						</select>
+					</fieldset>
+				</div>
+		</div>
+	</div>
+</div>
+

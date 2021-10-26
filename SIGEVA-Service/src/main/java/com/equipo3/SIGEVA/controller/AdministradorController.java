@@ -155,6 +155,7 @@ public class AdministradorController {
 		return conf;
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/listCentroSalud")
 	public List<CentroSalud> listarCentrosSalud(){
 		try {
