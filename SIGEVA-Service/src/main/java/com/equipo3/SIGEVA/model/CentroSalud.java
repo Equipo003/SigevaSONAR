@@ -11,13 +11,14 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private ObjectId id = new ObjectId();
+	private String id = UUID.randomUUID().toString();
 	@Field
 	private String nombreCentro;
 	@Field
 	private int numVacunasDisponibles;
 	@Field
 	private String direccion;
+
 	public CentroSalud() {
 
 	}
@@ -30,12 +31,14 @@ public class CentroSalud {
 		this.nombreCentro = nombreCentro;
 	}
 
-	public ObjectId getIdCentroSalud() {
+	public String getIdCentroSalud() {
 		return id;
 	}
+
 	public int getNumVacunasDisponibles() {
 		return numVacunasDisponibles;
 	}
+
 	public void setNumVacunasDisponibles(int numVacunasDisponibles) {
 		if(numVacunasDisponibles<0)
 			numVacunasDisponibles=0;
@@ -45,9 +48,11 @@ public class CentroSalud {
 	public String getDireccion() {
 		return direccion;
 	}
+
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
+
 	public boolean horaCierreMayorApertura( Date horaApertura,Date horaCierre) {
 		if(horaCierre.after(horaApertura))
 			return true;

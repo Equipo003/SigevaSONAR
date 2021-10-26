@@ -123,9 +123,20 @@ public class AdministradorController {
 		}
 	}
 
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getCentros")
+	public List<CentroSalud> listarCentros() {
+		try {
+			return centroSaludDao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
-	public List<Rol> ListarRoles() {
+	public List<Rol> listarRoles() {
 		try {
 			return rolDao.findAll();
 		} catch (Exception e) {
