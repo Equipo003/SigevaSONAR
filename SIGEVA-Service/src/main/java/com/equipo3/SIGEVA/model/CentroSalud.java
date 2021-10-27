@@ -2,6 +2,7 @@ package com.equipo3.SIGEVA.model;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private ObjectId id = new ObjectId();
+	private String id = UUID.randomUUID().toString();
 	@Field
 	private String nombreCentro;
 	@Field
@@ -24,11 +25,11 @@ public class CentroSalud {
 
 	}
 
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(ObjectId id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -40,7 +41,7 @@ public class CentroSalud {
 		this.nombreCentro = nombreCentro;
 	}
 
-	public ObjectId getIdCentroSalud() {
+	public String getIdCentroSalud() {
 		return id;
 	}
 

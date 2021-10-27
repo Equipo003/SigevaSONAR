@@ -123,9 +123,20 @@ public class AdministradorController {
 		}
 	}
 
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getCentros")
+	public List<CentroSalud> listarCentros() {
+		try {
+			return centroSaludDao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
-	public List<Rol> ListarRoles() {
+	public List<Rol> listarRoles() {
 		try {
 			return rolDao.findAll();
 		} catch (Exception e) {
@@ -135,12 +146,16 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearConfCupos")
-	public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
-		List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-		if(configuracionCuposList.size() == 0)
-			configCuposDao.save(conf);
-		else
-			System.out.println("Ya existe una configuracion");
-		return conf;
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
+		try {
+			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			if (configuracionCuposList.size() == 0)
+				configCuposDao.save(conf);
+			else
+				throw new Exception();
+		} catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+		}
+
 	}
 }

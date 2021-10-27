@@ -1,38 +1,78 @@
-<header>Configuración de los Cupos de Vacunación</header>
+<div class="register">
+  <div class="register-screen">
+    <div class="register-form">
+      <h1>FECHAS Y HORARIOS DE LA VACUNACIÓN</h1>
+      <div class="control-group"></div>
+    </div>
+      <p></p>
 
-<nav></nav>
+      <div class="control-group">Fecha y hora de inicio
+        <input type="datetime-local" placeholder="Fecha de inicio y hora de inicio" [(ngModel)]="fechaInicio">
+      </div>
+      <div class="control-group">Duración Jornada (horas [0-24])
+        <input type="number" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
+      </div>
+      <div class="control-group">Duración Jornada (minuntos [0-59])
+        <input type="number" placeholder="Correo electrónico" [(ngModel)]="duracionJornadaMinutos">
+      </div>
+      <div class="control-group">
+      </div>
+      <div class="control-group">
+        <h2>Duración total: {{duracionJornadaHoras}} horas y {{duracionJornadaMinutos}}min</h2>
+      </div>
+      <div class="control-group">
+        <h2 *ngIf="fechaCreada == true">Hora fin de las jornadas: {{fecha | date: 'shortTime'}}</h2>
+            <button class="btn" (click)="calcularHoraFin()">Calcular hora Fin</button>
+      </div>
+  </div>
+  <div class="separation"></div>
+  <div class="register-screen">
+    <div class="register-form">
+      <h1>TAMAÑO DE LOS CUPOS</h1>
+      <div class="control-group"></div>
+    </div>
+      <p></p>
+    <div *ngIf="fechaCreada == false" class="control-group">
+      <h3>Completa el horario para calcular la hora de fin de las jornadas de vacunación</h3>
+    </div>
+    <div *ngIf="fechaCreada == true" class="control-group">Duración del cupo (minutos)
+      <input type="number" placeholder="Duracion del cupo" [(ngModel)]="duracionMinutos">
+    </div>
+    <div *ngIf="fechaCreada == true" class="control-group">Número de pacientes
+      <input type="number" placeholder="Duracion del cupo" [(ngModel)]="numeroPacientes">
+    </div>
 
-<section>
-  <form>
-    <fieldset>
-      <legend>Datos a Introducir</legend>
-      <fieldset>
-        <legend>Horario de los Centros</legend>
-        <label>Fecha de inicio de la vacunación:</label>
-        <input name = 'fechaInicio' type="datetime-local" [(ngModel)]="fechaInicio"/><br>
-        <label>Duración Jornada:</label><br>
-        <label>Horas:</label>
-        <input name = 'horaInicio' type="number" max="23" min="0" [(ngModel)]="duracionJornadaHoras"/>
-        <label>Minutos:</label>
-        <input name = 'minutoInicio' type="number" max="59" min="0" [(ngModel)]="duracionJornadaMinutos"/><br>
-        <h1>Hora de fin de las jornadas de vacunación: {{fecha | date: 'shortTime'}}</h1>
-        <button (click)="calcularHoraFin()">Calcular hora Fin</button>
-      </fieldset>
-      <fieldset>
-        <legend>Cupos de Vacunación</legend>
-        <label>Duración de los cupos de vacunación (minutos):</label>
-        <input name="duracionMinutos" type="number" min="0" max="59" [(ngModel)]="duracionMinutos"/><br>
-        <label>Numero de pacientes por cupo:</label>
-        <input name = 'numeroPacientes' type="number" [(ngModel)]="numeroPacientes"/><br>
-      </fieldset>
-    </fieldset>
-    <fieldset>
-      <legend>Estadísticas</legend>
-      <h1>Ratio de pacientes/minuto: {{numeroPacientes/duracionMinutos | number: '1.0-1'}}</h1>
-      <h1>Pacientes vacunados por día: {{((this.duracionJornadaHoras*60+this.duracionJornadaMinutos)/this.duracionMinutos)*this.numeroPacientes | number: '1.0-0'}}</h1>
-    </fieldset>
-    <button *ngIf="fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0"
-            (click)="(crearConfiguracionCupos())">Guardar configuración</button>
-  </form>
-</section>
+  </div>
+
+  <div class="separation"></div>
+  <div class="register-screen">
+    <div class="register-form">
+      <h1>ESTADÍSTICAS</h1>
+      <div *ngIf="!(fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0)" class="control-group">
+        <h3>Indica el tamaño de los cupos para conocer las estadísticas</h3>
+      </div>
+      <div *ngIf="(fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0)" class="control-group">
+        <h1>Ratio de pacientes/minuto: {{numeroPacientes/duracionMinutos | number: '1.0-1'}}</h1>
+        <h1>Pacientes vacunados por día: {{((this.duracionJornadaHoras*60+this.duracionJornadaMinutos)/this.duracionMinutos)*this.numeroPacientes | number: '1.0-0'}}</h1>
+      </div>
+      <div *ngIf="(fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0)" class="control-group">
+        <button class="btn" (click)="aceptarEstadisticasF()">Aceptar estadísticas</button>
+      </div>
+    </div>
+  </div>
+  <div class="separation"></div>
+  <div *ngIf="this.aceptarEstadisticas == true" class="control-group" class="register-screen">
+    <div class="register-form">
+      <h1>CONFIRMAR</h1>
+      <div class="control-group">
+        <button class="btn" (click)="(crearConfiguracionCupos())">Guardar configuración</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
 
