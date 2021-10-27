@@ -149,12 +149,16 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearConfCupos")
-	public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
-		List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-		if(configuracionCuposList.size() == 0)
-			configCuposDao.save(conf);
-		else
-			System.out.println("Ya existe una configuracion");
-		return conf;
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
+		try {
+			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			if (configuracionCuposList.size() == 0)
+				configCuposDao.save(conf);
+			else
+				throw new Exception();
+		} catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+		}
+
 	}
 }

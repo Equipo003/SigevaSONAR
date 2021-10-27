@@ -20,16 +20,18 @@ export class ConfiguracionCuposComponent implements OnInit {
       pacientesVacunadosDia : number;
       fechaInicio : string;
       fechaCreada : boolean;
+      aceptarEstadisticas : boolean;
 
   constructor(private json: JsonService) {
     this.duracionMinutos = 0;
     this.numeroPacientes = 0;
     this.pacientesVacunadosDia = 0;
-    this.duracionJornadaHoras = 0;
+    this.duracionJornadaHoras=0;
     this.duracionJornadaMinutos = 0;
     this.fechaInicio = '';
     this.fechaCreada = false;
     this.fecha = new Date();
+    this.aceptarEstadisticas = false;
   }
 
   ngOnInit(): void {
@@ -40,11 +42,13 @@ export class ConfiguracionCuposComponent implements OnInit {
   }
 
   calcularHoraFin(){
-      this.fecha = new Date(this.fechaInicio);
+      if(this.fechaInicio != ''){
+        this.fecha = new Date(this.fechaInicio);
             this.fecha.setHours(this.fecha.getHours()+this.duracionJornadaHoras);
             this.fecha.setMinutes(this.fecha.getMinutes()+this.duracionJornadaMinutos);
             console.log(this.fecha);
-      this.fechaCreada = true;
+        this.fechaCreada = true;
+      }
   }
 
   crearConfiguracionCupos(){
@@ -54,6 +58,10 @@ export class ConfiguracionCuposComponent implements OnInit {
       this.json.postJson('user/crearConfCupos',confCupo).subscribe((res: any) => {
            console.log(res);
       });
+  }
+
+  aceptarEstadisticasF(){
+    this.aceptarEstadisticas = true;
   }
 
 }
