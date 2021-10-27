@@ -1,6 +1,8 @@
+import {CentroSalud} from "./centro-salud";
+
 export interface Usuario{
   rol: string;
-  centro: string;
+  centroSalud: CentroSalud;
   username: string;
   correo: string;
   hashPassword:string;
@@ -13,7 +15,7 @@ export interface Usuario{
 
 export class Usuario {
   rol: string;
-  centro: string;
+  centroSalud: CentroSalud;
   username: string;
   correo: string;
   hashPassword:string;
@@ -23,11 +25,11 @@ export class Usuario {
   fechaNacimiento:string;
   imagen:string;
 
-  constructor(rol: string, centro: string, username: string, correo: string, hashPassword:string, dni:string,
+  constructor(rol: string, centroSalud: CentroSalud, username: string, correo: string, hashPassword:string, dni:string,
               nombre:string, apellidos:string, fechaNacimiento:string, imagen:string){
 
     this.rol = rol;
-    this.centro = centro;
+    this.centroSalud = centroSalud;
     this.username = username;
     this.correo = correo;
     this.hashPassword = hashPassword;
