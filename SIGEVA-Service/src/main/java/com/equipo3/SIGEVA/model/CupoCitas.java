@@ -13,7 +13,7 @@ import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
 @Document
-public class CupoCitas {
+public class CupoCitas implements Comparable<CupoCitas> {
 
 	@Id
 	private String uuid;
@@ -117,7 +117,7 @@ public class CupoCitas {
 		if (pacientesCitados.contains(paciente)) {
 			throw new UsuarioInvalidoException("El usuario ya estaba contenido.");
 		} else if (estaLleno(configuracionCupos.getNumeroPacientes())) {
-			throw new CupoCitasException("El cupo ya ha alcanzado su máximo.");
+			throw new CupoCitasException("El cupo ya había alcanzado su máximo.");
 		} else {
 			pacientesCitados.add(paciente);
 		}
@@ -125,6 +125,11 @@ public class CupoCitas {
 
 	public boolean pacienteEnlistado(Usuario paciente) {
 		return pacientesCitados.contains(paciente);
+	}
+
+	@Override
+	public int compareTo(CupoCitas o) {
+		return fechaYHoraInicio.compareTo(o.getFechaYHoraInicio());
 	}
 
 }
