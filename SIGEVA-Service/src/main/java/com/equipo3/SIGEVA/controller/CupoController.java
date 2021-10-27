@@ -34,7 +34,8 @@ public class CupoController {
 	@GetMapping("/buscarCupoLibre")
 	public CupoCitas buscarCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date fecha) {
 		if (centroSalud != null) {
-			return cupoCitasDao.buscarCuposLibres(centroSalud, fecha).get(0);
+			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
+			return cupoCitasDao.buscarCuposLibres(centroSalud, fecha, maximo).get(0);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se estaba considerando centroSalud.");
 		}
@@ -45,22 +46,20 @@ public class CupoController {
 		// TODO
 	}
 
-	/*@Autowired
-	private CentroSaludDao centroSaludDao;
-
-	@GetMapping("/prueba")
-	public void prueba() {
-		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
-		List<CupoCitas> lista2 = this.calcularCuposCitas(centroSalud);
-		for (int i = 0; i < lista2.size(); i++) {
-			System.out.println(lista2.get(i).toString());
-		}
-	}*/
+	/*
+	 * @Autowired private CentroSaludDao centroSaludDao;
+	 * 
+	 * @GetMapping("/prueba") public void prueba() { CentroSalud centroSalud =
+	 * centroSaludDao.findAll().get(0); List<CupoCitas> lista2 =
+	 * this.calcularCuposCitas(centroSalud); for (int i = 0; i < lista2.size(); i++)
+	 * { System.out.println(lista2.get(i).toString()); } }
+	 */
 
 	@GetMapping("/buscarCuposLibres")
 	public List<CupoCitas> buscarCuposLibres(@RequestBody CentroSalud centroSalud, @RequestBody Date fecha) {
 		if (centroSalud != null) {
-			return cupoCitasDao.buscarCuposLibres(centroSalud, fecha);
+			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
+			return cupoCitasDao.buscarCuposLibres(centroSalud, fecha, maximo);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se estaba considerando centroSalud.");
 		}
@@ -102,13 +101,13 @@ public class CupoController {
 	}
 
 	@PostMapping("/prepararCuposCitas")
-	public List<CupoCitas> prepararCuposCitas(@RequestBody CentroSalud centroSalud) { // Requerirá tiempo.
+	public List<CupoCitas> prepararCuposCitas(@RequestBody CentroSalud centroSalud) { // ¡Requerirá tiempo!
 
 		List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
 		for (int i = 0; i < momentos.size(); i++) {
 			System.out.println(momentos.get(i));
-			cupoCitasDao.save(momentos.get(i)); // ¡TARDA LO SUYO!
+			cupoCitasDao.save(momentos.get(i)); // ¡Puede tardar!
 		}
 
 		return momentos;

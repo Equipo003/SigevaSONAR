@@ -13,7 +13,7 @@ import com.equipo3.SIGEVA.model.CupoCitas;
 @Repository
 public interface CupoCitasDao extends MongoRepository<CupoCitas, String> {
 
-	@Query("{ 'centroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 } }")
-	public List<CupoCitas> buscarCuposLibres(CentroSalud centro, Date fecha);
+	@Query("{ 'centroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 } , 'tamano' : { '$lt' : ?2 } }")
+	public List<CupoCitas> buscarCuposLibres(CentroSalud centro, Date fecha, int maximo);
 
 }

@@ -31,7 +31,7 @@ class CuposTests {
 	private ConfiguracionCuposDao configuracionCuposDao;
 
 	@Test
-	void prepararCuposYBuscarCuposLibres() { // 100 segundos.
+	void prepararCuposYBuscarCuposLibres() {
 
 		cupoCitasDao.deleteAll();
 
@@ -39,7 +39,7 @@ class CuposTests {
 
 		System.out.println(centroSalud);
 
-		List<CupoCitas> lista1 = cupoController.prepararCuposCitas(centroSalud);
+		List<CupoCitas> lista1 = cupoController.prepararCuposCitas(centroSalud); // ¡TARDA LO SUYO!
 
 		CupoCitas cupo1 = cupoController.buscarCupoLibre(centroSalud,
 				configuracionCuposDao.findAll().get(0).getFechaInicioAsDate());
