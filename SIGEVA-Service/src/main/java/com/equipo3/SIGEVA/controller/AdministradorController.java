@@ -119,12 +119,8 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-<<<<<<< HEAD
-	
-=======
 
 	@CrossOrigin(origins = "http://localhost:4200")
->>>>>>> branch 'develop' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 	@GetMapping("/getRoles")
 	public List<Rol> ListarRoles() {
 		try {
