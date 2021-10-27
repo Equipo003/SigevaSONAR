@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonService } from '../Service/json.service';
+import {Rol} from "../Model/rol";
+import {Usuario} from "../Model/Usuario";
 
 @Component({
   selector: 'app-crear-usuarios',
@@ -9,15 +11,78 @@ import { JsonService } from '../Service/json.service';
 })
 export class CrearUsuariosComponent implements OnInit {
 
-  id : String;
-  nombre : String;
+  public roles: Rol[];
+  public seleccionado: string;
+  public nombreRol:string;
+  public usuario: Usuario;
+  // rol: string;
+  // centro: string;
+  // username: string;
+  // correo: string;
+  // hashPassword:string;
+  // dni:string;
+  // nombre:string;
+  // apellidos:string;
+  // fechaNacimiento:string;
+  // imagen:string;
 
   constructor(private json: JsonService) {
-    this.id = "";
-    this.nombre = "";
+    this.roles = [];
+    this.seleccionado = "";
+    this.nombreRol = "";
+    // this.rol = "";
+    this.usuario = new Usuario("", "", "", "", "", "",
+      "", "", "", "");
+    // this.centro = "";
+    // this.username = "";
+    // this.correo = "";
+    // this.hashPassword = "";
+    // this.dni = "";
+    // this.nombre = "";
+    // this.apellidos = "";
+    // this.fechaNacimiento = "";
+    // this.imagen = "";
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.json.getJson("user/getRoles").subscribe(
+      result=> {
+        this.roles = JSON.parse(result);
+        this.seleccionado = this.roles[0].nombre;
+        console.log(this.roles);
+      }, error=> {
+        console.log(error);
+      });
+  };
+
+  capturarFile (event : any) {
+    let self = this;
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function () {
+      if (typeof reader.result === "string") {
+        self.usuario.imagen = ("data:image/png;base64," + btoa(reader.result));
+      }
+    }
+    reader.readAsBinaryString(file);
   }
 
+
+
+  checkRol(){
+    let self = this;
+    this.roles.forEach(function(rol2 : Rol){
+      if (rol2.nombre === self.seleccionado){
+        self.usuario.rol = rol2.id;
+        self.nombreRol = rol2.nombre;
+      }
+    });
+  }
+
+  enviarDatosBack() {
+    this.checkRol();
+    this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario).subscribe((res: any) => {
+      console.log(res);
+    });
+  }
 }

@@ -28,7 +28,6 @@ export class IndicarDosisVacunasComponent implements OnInit {
 		this.json.getJson('user/listCentroSalud').subscribe(
 			(res: any) => {this.cs = JSON.parse(res);
 				this.centroSeleccionado = this.cs[0].nombreCentro;
-				this.nVacunasActual = this.cs[0].numVacunasDisponibles;
 				console.log(res);
 			}, error=>{
 				console.log(error);

@@ -1,16 +1,16 @@
 export interface CentroSalud{
-    direccion: String;
-	nombreCentro : String;
-	numVacunasDisponibles : Number;
+    direccion: string;
+	nombreCentro : string;
+	numVacunasDisponibles : number;
 }
 
 export class CentroSalud {
-	
-	direccion: String;
-	constructor(direccion: String, nombreCentro : String,numVacunasDisponibles : Number){
+
+	direccion: string;
+	constructor(direccion: string, nombreCentro : string,numVacunasDisponibles : number){
 		this.direccion = direccion;
 		this.nombreCentro = nombreCentro;
 		this.numVacunasDisponibles = numVacunasDisponibles;
-		
+
 	}
 }

@@ -11,8 +11,8 @@ import { CentroSalud } from '../Model/centro-salud';
 export class FormularioCentroSaludComponent implements OnInit {
 
   numVacunasDisponibles:number;
-  direccion: String;
-  nombreCentro: String;
+  direccion: string;
+  nombreCentro: string;
   constructor(private json: JsonService) {
 	this.numVacunasDisponibles=0;
 	this.direccion = "";

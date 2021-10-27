@@ -1,13 +1,13 @@
 export interface Rol{
-  id : String;
-  nombre : String;
+  id : string;
+  nombre : string;
 }
 
 export class Rol {
-  id : String;
-  nombre : String;
+  id : string;
+  nombre : string;
 
-  constructor(id : String, nombre : String){
+  constructor(id : string, nombre : string){
 
     this.id = id;
     this.nombre = nombre;
