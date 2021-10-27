@@ -1,8 +1,11 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
@@ -27,6 +31,9 @@ public class CupoController {
 
 	@Autowired
 	CupoCitasDao cupoCitasDao;
+
+	@Autowired
+	ConfiguracionCuposDao configuracionCuposDao;
 
 	@GetMapping("/buscarCupoLibre")
 	public CupoCitas buscarCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date fecha) {
@@ -44,12 +51,10 @@ public class CupoController {
 
 	@GetMapping("/prueba")
 	public void prueba() {
-		CentroSalud centroSalud = new CentroSalud("", 0,
-				new ConfiguracionCupos(30, 0, DateWrapper.parseFromStringToDate("07/11/2021 00:00"),
-						DateWrapper.parseFromStringToDate("31/12/2021 00:00"),
-						DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
-						DateWrapper.parseFromStringToDate("01/01/2000 20:30")),
-				null, null); // 1375 registros.
+		CentroSalud centroSalud = new CentroSalud();
+		centroSalud.setNombreCentro("Centro 1");
+		centroSalud.setNumVacunasDisponibles(50);
+		centroSalud.setDireccion("Plaza");
 		List<CupoCitas> lista2 = this.prepararCuposCitas1(centroSalud);
 		for (int i = 0; i < lista2.size(); i++) {
 			System.out.println(lista2.get(i).toString());
@@ -70,18 +75,24 @@ public class CupoController {
 	public List<CupoCitas> prepararCuposCitas1(@RequestBody CentroSalud centroSalud) { // No requerirá tiempo.
 		List<CupoCitas> momentos = new ArrayList<>();
 
-		Date fechaInicio = centroSalud.getConfiguracionCupos().getDiaInicio();
-		fechaInicio.setHours(centroSalud.getConfiguracionCupos().getHoraInicio().getHours());
-		fechaInicio.setMinutes(centroSalud.getConfiguracionCupos().getHoraInicio().getMinutes());
-		fechaInicio.setSeconds(0);
+		ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
 
-		Date fechaFinAbsoluta = new Date(centroSalud.getConfiguracionCupos().getDiaFin().getYear(),
-				centroSalud.getConfiguracionCupos().getDiaFin().getMonth(),
-				centroSalud.getConfiguracionCupos().getDiaFin().getDate(),
-				centroSalud.getConfiguracionCupos().getHoraFin().getHours(),
-				centroSalud.getConfiguracionCupos().getHoraFin().getMinutes());
+		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
-		int duracionTramo = centroSalud.getConfiguracionCupos().getDuracionMinutos();
+		Date fechaInicio = null;
+		try {
+			fechaInicio = formateador.parse(configuracionCupos.getFechaInicio());
+			fechaInicio.setHours(formateador.parse(configuracionCupos.getFechaInicio()).getHours());
+			fechaInicio.setMinutes(formateador.parse(configuracionCupos.getFechaInicio()).getMinutes());
+			fechaInicio.setSeconds(0);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Date fechaFinAbsoluta = new Date(121, 11, 31, configuracionCupos.getHoraFin().getHours(),
+				configuracionCupos.getHoraFin().getMinutes());
+
+		int duracionTramo = configuracionCupos.getDuracionMinutos();
 
 		Date fechaIterada = copia(fechaInicio);
 

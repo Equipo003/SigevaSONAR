@@ -1,0 +1,36 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+
+
+
+<form method="post" action="https://getform.org/f/70415a77-d632-4883-bf07-2e15d3f557da">
+  <div class="register">
+  <div class="register-screen">
+    <div class="register-form">
+      <p class="texto">Crear Centro de Salud</p>
+      <div class="control-group">
+        <p>Nombre del centro de salud</p>
+        <span class="fontawesome-hospital"></span>
+        <input type="text" required placeholder="Nombre del centro de salud" autocomplete="off" [(ngModel)]="nombreCentro" [ngModelOptions]="{standalone: true}">
+      </div>
+
+      <div class="control-group">
+        <p>Dirección del centro de salud</p>
+        <span class="fontawesome-map-marker "></span>
+        <input type="text" id="direccion" required placeholder="Dirección del Centro de Salud" autocomplete="off" [(ngModel)]="direccion" [ngModelOptions]="{standalone: true}">
+      </div>
+
+      <div class="control-group">
+        <p>Número de Vacunas Disponibles</p>
+        <span class="fontawesome-caret-right "></span>
+        <input type="number" min="0"  id="numVacunas"  required placeholder="Número de Vacunas Disponibles" autocomplete="off"  [(ngModel)]="numVacunasDisponibles" [ngModelOptions]="{standalone: true}" >
+      </div>
+
+      <div class="control-group">
+       <input class="btn" type="submit" (click)="enviarDatosBack()"value="Crear Centro" title="Crear el centro de salud">
+      </div>
+    </div>
+  </div>
+  </div>
+</form>

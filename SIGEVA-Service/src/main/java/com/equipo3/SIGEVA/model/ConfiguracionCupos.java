@@ -1,101 +1,85 @@
 package com.equipo3.SIGEVA.model;
 
-import java.util.Date;
-import java.util.Objects;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+@Document
 public class ConfiguracionCupos {
 
 	private int duracionMinutos;
 	private int numeroPacientes;
+	private int duracionJornadaHoras;
+	private int duracionJornadaMinutos;
+	private String fechaInicio;
 
-	private Date diaInicio;
-	private Date diaFin;
-
-	private Date horaInicio;
-	private Date horaFin;
-
-	public ConfiguracionCupos(int duracionMinutos, int numeroPacientes, Date diaInicio, Date diaFin, Date horaInicio,
-			Date horaFin) {
-		this.duracionMinutos = duracionMinutos;
-		this.numeroPacientes = numeroPacientes;
-		this.diaInicio = diaInicio;
-		this.diaFin = diaFin;
-		this.horaInicio = horaInicio;
-		this.horaFin = horaFin;
+	public ConfiguracionCupos() {
 	}
 
-	public int getDuracionMinutos() {
-		return duracionMinutos;
+	public ConfiguracionCupos(int duracionMinutos, int numeroPacientes, int duracionJornadaHoras,
+			int duracionJornadaMinutos, String fechaInicio) {
+		this.duracionMinutos = duracionMinutos;
+		this.numeroPacientes = numeroPacientes;
+		this.duracionJornadaHoras = duracionJornadaHoras;
+		this.duracionJornadaMinutos = duracionJornadaMinutos;
+		this.fechaInicio = fechaInicio;
 	}
 
 	public void setDuracionMinutos(int duracionMinutos) {
 		this.duracionMinutos = duracionMinutos;
 	}
 
-	public int getNumeroPacientes() {
-		return numeroPacientes;
-	}
-
 	public void setNumeroPacientes(int numeroPacientes) {
 		this.numeroPacientes = numeroPacientes;
 	}
 
-	public Date getDiaInicio() {
-		return diaInicio;
+	public int getDuracionMinutos() {
+		return this.duracionMinutos;
 	}
 
-	public void setDiaInicio(Date diaInicio) {
-		this.diaInicio = diaInicio;
+	public int getNumeroPacientes() {
+		return numeroPacientes;
 	}
 
-	public Date getDiaFin() {
-		return diaFin;
+	public int getDuracionJornadaHoras() {
+		return duracionJornadaHoras;
 	}
 
-	public void setDiaFin(Date diaFin) {
-		this.diaFin = diaFin;
+	public void setDuracionJornadaHoras(int duracionJornadaHoras) {
+		this.duracionJornadaHoras = duracionJornadaHoras;
 	}
 
-	public Date getHoraInicio() {
-		return horaInicio;
+	public int getDuracionJornadaMinutos() {
+		return duracionJornadaMinutos;
 	}
 
-	public void setHoraInicio(Date horaInicio) {
-		this.horaInicio = horaInicio;
+	public void setDuracionJornadaMinutos(int duracionJornadaMinutos) {
+		this.duracionJornadaMinutos = duracionJornadaMinutos;
 	}
 
+	public String getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(String fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	@SuppressWarnings("deprecation")
 	public Date getHoraFin() {
-		return horaFin;
-	}
+		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+		Date fechaFin = null;
+		try {
+			fechaFin = formateador.parse(this.fechaInicio);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		fechaFin.setHours(fechaFin.getHours() + this.duracionJornadaHoras);
+		fechaFin.setMinutes(fechaFin.getMinutes() + this.duracionJornadaMinutos);
 
-	public void setHoraFin(Date horaFin) {
-		this.horaFin = horaFin;
+		return fechaFin;
 	}
-
-	@Override
-	public String toString() {
-		return "ConfiguracionCupos [duracionMinutos=" + duracionMinutos + ", numeroPacientes=" + numeroPacientes
-				+ ", diaInicio=" + diaInicio + ", diaFin=" + diaFin + ", horaInicio=" + horaInicio + ", horaFin="
-				+ horaFin + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(diaFin, diaInicio, duracionMinutos, horaFin, horaInicio, numeroPacientes);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ConfiguracionCupos other = (ConfiguracionCupos) obj;
-		return Objects.equals(diaFin, other.diaFin) && Objects.equals(diaInicio, other.diaInicio)
-				&& duracionMinutos == other.duracionMinutos && Objects.equals(horaFin, other.horaFin)
-				&& Objects.equals(horaInicio, other.horaInicio) && numeroPacientes == other.numeroPacientes;
-	}
-
 }

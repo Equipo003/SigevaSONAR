@@ -108,14 +108,15 @@ public class CupoCitas {
 				&& Objects.equals(pacientesCitados, other.pacientesCitados) && Objects.equals(uuid, other.uuid);
 	}
 
-	public boolean estaLleno() {
-		return pacientesCitados.size() == centroSalud.getConfiguracionCupos().getNumeroPacientes();
+	public boolean estaLleno(int maximo) {
+		return pacientesCitados.size() == maximo;
 	}
 
-	public void anadirPaciente(Usuario paciente) throws UsuarioInvalidoException, CupoCitasException {
+	public void anadirPaciente(Usuario paciente, ConfiguracionCupos configuracionCupos)
+			throws UsuarioInvalidoException, CupoCitasException {
 		if (pacientesCitados.contains(paciente)) {
 			throw new UsuarioInvalidoException("El usuario ya estaba contenido.");
-		} else if (estaLleno()) {
+		} else if (estaLleno(configuracionCupos.getNumeroPacientes())) {
 			throw new CupoCitasException("El cupo ya ha alcanzado su máximo.");
 		} else {
 			pacientesCitados.add(paciente);

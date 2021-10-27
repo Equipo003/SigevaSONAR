@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.CupoController;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
@@ -20,6 +21,9 @@ public class CuposTests {
 
 	@Autowired
 	private CupoController cupoController;
+	
+	@Autowired
+	private CentroSaludDao centroSaludDao;
 
 	@Autowired
 	private CupoCitasDao cupoCitasDao;
@@ -29,12 +33,9 @@ public class CuposTests {
 
 		cupoCitasDao.deleteAll();
 
-		CentroSalud centroSalud = new CentroSalud("", 0,
-				new ConfiguracionCupos(30, 0, DateWrapper.parseFromStringToDate("07/11/2021 00:00"),
-						DateWrapper.parseFromStringToDate("31/12/2021 00:00"),
-						DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
-						DateWrapper.parseFromStringToDate("01/01/2000 20:30")),
-				null, null); // 1375 registros.
+		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
+		
+		System.out.println(centroSalud);
 		
 		List<CupoCitas> lista1 = cupoController.prepararCuposCitas2(centroSalud);
 		

@@ -1,30 +1,22 @@
 package com.equipo3.SIGEVA.model;
 
+import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class CentroSalud {
-
+	@Field
 	@Id
-	private String idCentroSalud;
-
+	private ObjectId id = new ObjectId();
 	@Field
 	private String nombreCentro;
-
 	@Field
 	private int numVacunasDisponibles;
-
-	@Field
-	private ConfiguracionCupos configuracionCupos;
-
-	@Field
-	private Vacuna vacuna;
-
 	@Field
 	private String direccion;
 
@@ -32,22 +24,12 @@ public class CentroSalud {
 
 	}
 
-	public CentroSalud(String nombreCentro, int numVacunasDisponibles, ConfiguracionCupos configuracionCupos,
-			Vacuna vacuna, String direccion) {
-		this.idCentroSalud = UUID.randomUUID().toString();
-		this.nombreCentro = nombreCentro;
-		this.numVacunasDisponibles = numVacunasDisponibles;
-		this.configuracionCupos = configuracionCupos;
-		this.vacuna = vacuna;
-		this.direccion = direccion;
+	public ObjectId getId() {
+		return id;
 	}
 
-	public String getIdCentroSalud() {
-		return idCentroSalud;
-	}
-
-	public void setIdCentroSalud(String idCentroSalud) {
-		this.idCentroSalud = idCentroSalud;
+	public void setId(ObjectId id) {
+		this.id = id;
 	}
 
 	public String getNombreCentro() {
@@ -58,28 +40,18 @@ public class CentroSalud {
 		this.nombreCentro = nombreCentro;
 	}
 
+	public ObjectId getIdCentroSalud() {
+		return id;
+	}
+
 	public int getNumVacunasDisponibles() {
 		return numVacunasDisponibles;
 	}
 
 	public void setNumVacunasDisponibles(int numVacunasDisponibles) {
+		if (numVacunasDisponibles < 0)
+			numVacunasDisponibles = 0;
 		this.numVacunasDisponibles = numVacunasDisponibles;
-	}
-
-	public ConfiguracionCupos getConfiguracionCupos() {
-		return configuracionCupos;
-	}
-
-	public void setConfiguracionCupos(ConfiguracionCupos configuracionCupos) {
-		this.configuracionCupos = configuracionCupos;
-	}
-
-	public Vacuna getVacuna() {
-		return vacuna;
-	}
-
-	public void setVacuna(Vacuna vacuna) {
-		this.vacuna = vacuna;
 	}
 
 	public String getDireccion() {
@@ -90,16 +62,21 @@ public class CentroSalud {
 		this.direccion = direccion;
 	}
 
+	public boolean horaCierreMayorApertura(Date horaApertura, Date horaCierre) {
+		if (horaCierre.after(horaApertura))
+			return true;
+		return false;
+	}
+
 	@Override
 	public String toString() {
-		return "CentroSalud [idCentroSalud=" + idCentroSalud + ", nombreCentro=" + nombreCentro
-				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", configuracionCupos=" + configuracionCupos
-				+ ", vacuna=" + vacuna + ", direccion=" + direccion + "]";
+		return "CentroSalud [id=" + id + ", nombreCentro=" + nombreCentro + ", numVacunasDisponibles="
+				+ numVacunasDisponibles + ", direccion=" + direccion + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(configuracionCupos, direccion, idCentroSalud, nombreCentro, numVacunasDisponibles, vacuna);
+		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles);
 	}
 
 	@Override
@@ -111,10 +88,9 @@ public class CentroSalud {
 		if (getClass() != obj.getClass())
 			return false;
 		CentroSalud other = (CentroSalud) obj;
-		return Objects.equals(configuracionCupos, other.configuracionCupos)
-				&& Objects.equals(direccion, other.direccion) && Objects.equals(idCentroSalud, other.idCentroSalud)
+		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
 				&& Objects.equals(nombreCentro, other.nombreCentro)
-				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
+				&& numVacunasDisponibles == other.numVacunasDisponibles;
 	}
 
 }
