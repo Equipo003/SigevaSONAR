@@ -64,6 +64,16 @@ public class ConfiguracionCupos {
 		return fechaInicio;
 	}
 
+	public Date getFechaInicioAsDate() {
+		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+		try {
+			return formateador.parse(fechaInicio);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}

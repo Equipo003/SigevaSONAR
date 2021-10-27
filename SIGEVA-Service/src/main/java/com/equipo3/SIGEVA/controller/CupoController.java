@@ -1,11 +1,8 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +19,6 @@ import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
-import com.equipo3.SIGEVA.model.DateWrapper;
 import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
@@ -49,17 +45,17 @@ public class CupoController {
 		// TODO
 	}
 
+	/*@Autowired
+	private CentroSaludDao centroSaludDao;
+
 	@GetMapping("/prueba")
 	public void prueba() {
-		CentroSalud centroSalud = new CentroSalud();
-		centroSalud.setNombreCentro("Centro 1");
-		centroSalud.setNumVacunasDisponibles(50);
-		centroSalud.setDireccion("Plaza");
-		List<CupoCitas> lista2 = this.prepararCuposCitas1(centroSalud);
+		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
+		List<CupoCitas> lista2 = this.calcularCuposCitas(centroSalud);
 		for (int i = 0; i < lista2.size(); i++) {
 			System.out.println(lista2.get(i).toString());
 		}
-	}
+	}*/
 
 	@GetMapping("/buscarCuposLibres")
 	public List<CupoCitas> buscarCuposLibres(@RequestBody CentroSalud centroSalud, @RequestBody Date fecha) {
@@ -71,23 +67,12 @@ public class CupoController {
 	}
 
 	@SuppressWarnings("deprecation")
-	@GetMapping("/prepararCuposCitas1")
-	public List<CupoCitas> prepararCuposCitas1(@RequestBody CentroSalud centroSalud) { // No requerirá tiempo.
+	public List<CupoCitas> calcularCuposCitas(@RequestBody CentroSalud centroSalud) { // No requerirá tiempo.
 		List<CupoCitas> momentos = new ArrayList<>();
 
 		ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
 
-		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-
-		Date fechaInicio = null;
-		try {
-			fechaInicio = formateador.parse(configuracionCupos.getFechaInicio());
-			fechaInicio.setHours(formateador.parse(configuracionCupos.getFechaInicio()).getHours());
-			fechaInicio.setMinutes(formateador.parse(configuracionCupos.getFechaInicio()).getMinutes());
-			fechaInicio.setSeconds(0);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		Date fechaInicio = configuracionCupos.getFechaInicioAsDate();
 
 		Date fechaFinAbsoluta = new Date(121, 11, 31, configuracionCupos.getHoraFin().getHours(),
 				configuracionCupos.getHoraFin().getMinutes());
@@ -116,10 +101,10 @@ public class CupoController {
 		return momentos;
 	}
 
-	@PostMapping("/prepararCuposCitas2")
-	public List<CupoCitas> prepararCuposCitas2(@RequestBody CentroSalud centroSalud) { // Requerirá tiempo.
+	@PostMapping("/prepararCuposCitas")
+	public List<CupoCitas> prepararCuposCitas(@RequestBody CentroSalud centroSalud) { // Requerirá tiempo.
 
-		List<CupoCitas> momentos = prepararCuposCitas1(centroSalud);
+		List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
 		for (int i = 0; i < momentos.size(); i++) {
 			System.out.println(momentos.get(i));
