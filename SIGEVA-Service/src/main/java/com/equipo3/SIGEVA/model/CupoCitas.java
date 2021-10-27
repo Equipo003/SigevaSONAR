@@ -27,6 +27,9 @@ public class CupoCitas {
 	@Field
 	private List<Usuario> pacientesCitados;
 
+	@Field
+	private int tamano;
+
 	public CupoCitas() {
 
 	}
@@ -36,6 +39,7 @@ public class CupoCitas {
 		this.centroSalud = centroSalud;
 		this.fechaYHoraInicio = fechaYHoraInicio;
 		this.pacientesCitados = pacientesCitados;
+		this.tamano = 0;
 	}
 
 	public String getUuid() {
@@ -68,12 +72,21 @@ public class CupoCitas {
 
 	public void setPacientesCitados(List<Usuario> pacientesCitados) {
 		this.pacientesCitados = pacientesCitados;
+		this.tamano = pacientesCitados.size();
+	}
+
+	public int getTamano() {
+		return pacientesCitados.size();
+	}
+
+	public void setTamano(int tamano) {
+		this.tamano = pacientesCitados.size();
 	}
 
 	@Override
 	public String toString() {
 		return "CupoCitas [uuid=" + uuid + ", centroSalud=" + centroSalud + ", fechaYHoraInicio=" + fechaYHoraInicio
-				+ ", pacientesCitados=" + pacientesCitados + "]";
+				+ ", pacientesCitados=" + pacientesCitados + ", tamano=" + tamano + "]";
 	}
 
 	@Override

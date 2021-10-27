@@ -35,9 +35,9 @@ public class CuposTests {
 						DateWrapper.parseFromStringToDate("01/01/2000 08:00"),
 						DateWrapper.parseFromStringToDate("01/01/2000 20:30")),
 				null, null); // 1375 registros.
-
+		
 		List<CupoCitas> lista1 = cupoController.prepararCuposCitas2(centroSalud);
-
+		
 		CupoCitas cupo1 = cupoController.buscarCupoLibre(centroSalud,
 				DateWrapper.parseFromStringToDate("07/11/2021 00:00"));
 
@@ -45,7 +45,7 @@ public class CuposTests {
 
 		List<CupoCitas> lista2 = cupoController.buscarCuposLibres(centroSalud,
 				DateWrapper.parseFromStringToDate("07/11/2021 00:00"));
-
+		
 		assertEquals(lista1, lista2);
 		
 	}
