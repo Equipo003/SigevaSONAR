@@ -1,34 +1,94 @@
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
-      <h1>CREAR USUARIOS</h1>
-      <div class="control-group">
-        <p>Elige el tipo de usuario a crear: </p>
-        <select [(ngModel)]="seleccionado">
-          <option *ngFor="let rol of roles">{{rol.nombre}}</option>
-        </select>
-      </div>
-      <p>{{seleccionado}}</p>
+      <form #crearUsuariosForm="ngForm" (ngSubmit)="enviarDatosBack()">
+        <h1>CREAR USUARIOS</h1>
 
-      <div class="control-group">
-        <input type="text" placeholder="Centro al que pertenece" [(ngModel)]="centro">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Nombre de usuario" [(ngModel)]="username">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Correo electrónico" [(ngModel)]="correo">
-      </div>
-      <div class="control-group">
-        <input type="email" placeholder="Nombre" [(ngModel)]="nombre">
-      </div>
-      <div class="control-group">
-        <input type="text" placeholder="Apellidos" [(ngModel)]="apellidos">
-      </div>
-      <div class="control-group">
-        <input type="date" placeholder="Fecha Nacimiento" [(ngModel)]="fechaNacimiento">
-      </div>
-      <button class="btn" type="submit" (click)=enviarDatosBack()>Crear usuario</button>
+        <div class="control-group">
+          <p>Elige el tipo de usuario a crear: </p>
+          <select name="rol" [(ngModel)]="seleccionado">
+            <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <input type="text" placeholder="Centro al que pertenece" name="centro" #centro="ngModel" [(ngModel)]="usuario.centro" required>
+          <div>
+            <small *ngIf="!centro.valid && centro.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="email" placeholder="Nombre de usuario" name="username" #username="ngModel" [(ngModel)]="usuario.username" required>
+          <div>
+            <small *ngIf="!username.valid && username.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="email" placeholder="Correo electrónico" name="correo" #correo="ngModel" [(ngModel)]="usuario.correo" required>
+          <div>
+            <small *ngIf="!correo.valid && correo.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="password" placeholder="Password" name="password" #password="ngModel" [(ngModel)]="usuario.hashPassword" required>
+          <div>
+            <small *ngIf="!password.valid && password.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="email" placeholder="DNI" name="dni" #dni="ngModel" [(ngModel)]="usuario.dni" required>
+          <div>
+            <small *ngIf="!dni.valid && dni.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+        <div class="control-group">
+          <input type="email" placeholder="Nombre" name="nombre" #nombre="ngModel" [(ngModel)]="usuario.nombre" required>
+          <div>
+            <small *ngIf="!nombre.valid && nombre.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="text" placeholder="Apellidos" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario.apellidos" required>
+          <div>
+            <small *ngIf="!apellidos.valid && apellidos.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input type="date" placeholder="Fecha Nacimiento" name="fechaNacimiento" #fechaNacimiento="ngModel" [(ngModel)]="usuario.fechaNacimiento" required>
+          <div>
+            <small *ngIf="!fechaNacimiento.valid && fechaNacimiento.touched">
+              El campo no puede estar vacío
+            </small>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <input (change)="capturarFile($event)" type="file" accept="image/png, image/jpeg">
+        </div>
+
+        <img *ngIf="usuario.imagen" alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
+        <button class="btn" type="submit" [disabled]="crearUsuariosForm.invalid">Crear usuario</button>
+      </form>
     </div>
 
   </div>
