@@ -36,6 +36,8 @@ public class AdministradorController {
 	private ConfiguracionCuposDao configCuposDao;
 	@Autowired
 	private CentroSaludDao centroSaludDao;
+	@Autowired
+	private CupoController cupoController;
 
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -104,6 +106,7 @@ public class AdministradorController {
 		try {
 
 			centroSaludDao.save(conf);
+			//cupoController.prepararCuposCitas(conf);
 
         } catch (Exception e) {
             e.printStackTrace();
