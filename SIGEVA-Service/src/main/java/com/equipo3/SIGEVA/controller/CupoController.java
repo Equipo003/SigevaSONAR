@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
@@ -34,7 +35,35 @@ public class CupoController {
 
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
-	
+
+	@SuppressWarnings("deprecation")
+	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
+	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody CentroSalud centroSalud) {
+		int distancia = 21;
+
+		Date maximo = new Date(122, 0, 1); // 01/01/2022
+		maximo.setDate(maximo.getDate() - distancia); // 11/12/2021
+
+		Date hoy = new Date();
+		if (hoy.before(maximo)) {
+			if (centroSalud != null) {
+				List<CupoCitas> lista = new ArrayList<>();
+				CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
+				lista.add(dosis1);
+				Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
+				fechaDosis2.setDate(fechaDosis2.getDate() + 21);
+				CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
+				lista.add(dosis2);
+				return lista;
+			} else {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de salud no contemplado.");
+			}
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Ya no se pueden pedir citas a razón de que en 2022 no se asignarán segundas dosis.");
+		}
+	}
+
 	@GetMapping("/buscarCupoLibre")
 	public CupoCitas buscarCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
@@ -73,17 +102,17 @@ public class CupoController {
 		}
 	}
 
-	/*@Autowired
+	@Autowired
 	private CentroSaludDao centroSaludDao;
 
 	@GetMapping("/prueba")
-	public void prueba() {
+	public void prueba() { // Método borrador.
 		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
-		List<CupoCitas> lista2 = this.calcularCuposCitas(centroSalud);
-		for (int i = 0; i < lista2.size(); i++) {
-			System.out.println(lista2.get(i).toString());
+		List<CupoCitas> lista = buscarParDeCuposLibresAPartirDeHoy(centroSalud);
+		for (int i = 0; i < lista.size(); i++) {
+			System.out.println(lista.get(i).toString());
 		}
-	}*/
+	}
 
 	@GetMapping("/buscarCuposLibres")
 	public List<CupoCitas> buscarCuposLibres(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
