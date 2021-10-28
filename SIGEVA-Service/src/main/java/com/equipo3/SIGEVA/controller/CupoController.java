@@ -68,7 +68,7 @@ public class CupoController {
 	public CupoCitas buscarCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
 			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
-			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibres(centroSalud, aPartirDeLaFecha, maximo);
+			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud, aPartirDeLaFecha, maximo);
 			Collections.sort(lista); // Ordenación por paso por referencia.
 			return lista.get(0);
 		} else {
@@ -83,11 +83,13 @@ public class CupoController {
 			if (cupo != null && paciente != null) {
 				Optional<CupoCitas> optCupo = cupoCitasDao.findById(cupo.getUuid());
 				if (optCupo.isPresent()) {
-					cupo.anadirPaciente(paciente, configuracionCuposDao.findAll().get(0));
-					cupoCitasDao.save(cupo);
+					CupoCitas cupoReal = optCupo.get();
+					ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
+					cupoReal.anadirPaciente(paciente, configuracionCupos);
+					cupoCitasDao.save(cupoReal);
 					/*
 					 * El .save() debería funcionar por Sustitución al tratarse de la misma PK. En
-					 * caso contrario, añadir cupoCitasDao.delete(cupo); justo antes.
+					 * caso contrario, añadir cupoCitasDao.delete(cupoReal); justo antes.
 					 */
 				} else {
 					throw new ResponseStatusException(HttpStatus.CONFLICT, "El cupo no se contemplaba en BD.");
@@ -118,7 +120,7 @@ public class CupoController {
 	public List<CupoCitas> buscarCuposLibres(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
 			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
-			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibres(centroSalud, aPartirDeLaFecha, maximo);
+			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud, aPartirDeLaFecha, maximo);
 			Collections.sort(lista); // Ordenación por paso por referencia.
 			return lista;
 		} else {
