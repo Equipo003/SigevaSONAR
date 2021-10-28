@@ -1,23 +1,31 @@
 package com.equipo3.SIGEVA.controller;
 
-import com.equipo3.SIGEVA.dao.AdministradorDao;
-import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.model.*;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.equipo3.SIGEVA.dao.AdministradorDao;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Sanitario;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("user")
@@ -111,6 +119,8 @@ public class AdministradorController {
         }
     }
 
+
+
 	@PostMapping("/registrarRol")
 	public void registrarRol(@RequestBody Rol rol){
 		try {
@@ -120,9 +130,20 @@ public class AdministradorController {
 		}
 	}
 
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getCentros")
+	public List<CentroSalud> listarCentros() {
+		try {
+			return centroSaludDao.findAll();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
-	public List<Rol> ListarRoles() {
+	public List<Rol> listarRoles() {
 		try {
 			return rolDao.findAll();
 		} catch (Exception e) {
@@ -132,38 +153,16 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearConfCupos")
-	public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
-		List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-		if(configuracionCuposList.size() == 0)
-			configCuposDao.save(conf);
-		else
-			System.out.println("Ya existe una configuracion");
-		return conf;
-	}
-	
-	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/listCentroSalud")
-	public List<CentroSalud> listarCentrosSalud(){
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
 		try {
-			return centroSaludDao.findAll();
-		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			if (configuracionCuposList.size() == 0)
+				configCuposDao.save(conf);
+			else
+				throw new Exception();
+		} catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}
-	}
-	
-	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			if(centroS.isPresent()) {
-				CentroSalud centroSaludDef = centroS.get();
-				centroSaludDef.modificarStockVacunas(vacunas);
-				centroSaludDao.save(centroSaludDef);
-			}
-			
-		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
+
 	}
 }
-

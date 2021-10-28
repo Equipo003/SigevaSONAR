@@ -1,13 +1,17 @@
 package com.equipo3.SIGEVA.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 
 @RestController
 @RequestMapping(path = "/home")

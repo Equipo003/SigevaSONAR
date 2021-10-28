@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private ObjectId id = new ObjectId();
+	private String id = UUID.randomUUID().toString();
 	@Field
 	private String nombreCentro;
 	@Field
@@ -22,6 +22,14 @@ public class CentroSalud {
 
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getNombreCentro() {
 		return nombreCentro;
 	}
@@ -30,15 +38,17 @@ public class CentroSalud {
 		this.nombreCentro = nombreCentro;
 	}
 
-	public ObjectId getIdCentroSalud() {
+	public String getIdCentroSalud() {
 		return id;
 	}
+
 	public int getNumVacunasDisponibles() {
 		return numVacunasDisponibles;
 	}
+
 	public void setNumVacunasDisponibles(int numVacunasDisponibles) {
-		if(numVacunasDisponibles<0)
-			numVacunasDisponibles=0;
+		if (numVacunasDisponibles < 0)
+			numVacunasDisponibles = 0;
 		this.numVacunasDisponibles = numVacunasDisponibles;
 	}
 	
@@ -49,13 +59,40 @@ public class CentroSalud {
 	public String getDireccion() {
 		return direccion;
 	}
+
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	public boolean horaCierreMayorApertura( Date horaApertura,Date horaCierre) {
-		if(horaCierre.after(horaApertura))
+
+	public boolean horaCierreMayorApertura(Date horaApertura, Date horaCierre) {
+		if (horaCierre.after(horaApertura))
 			return true;
 		return false;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "CentroSalud [id=" + id + ", nombreCentro=" + nombreCentro + ", numVacunasDisponibles="
+				+ numVacunasDisponibles + ", direccion=" + direccion + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CentroSalud other = (CentroSalud) obj;
+		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
+				&& Objects.equals(nombreCentro, other.nombreCentro)
+				&& numVacunasDisponibles == other.numVacunasDisponibles;
+	}
+
 }
