@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -12,4 +13,6 @@ import com.equipo3.SIGEVA.model.Usuario;
 public interface AdministradorDao extends MongoRepository <Usuario, ObjectId> {
 
     Optional<Usuario> findByUsername(String username);
+
+    List<Usuario> findAllByRol(String rol);
 }

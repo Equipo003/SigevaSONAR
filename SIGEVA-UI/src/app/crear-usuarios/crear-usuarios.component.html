@@ -5,7 +5,7 @@
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
-      <form #crearUsuariosForm="ngForm" (ngSubmit)="enviarDatosBack()">
+      <form #crearUsuariosForm="ngForm" (ngSubmit)=enviarDatosBack() id ="form">
         <h1>CREAR USUARIOS</h1>
 
         <div class="control-group">
@@ -90,7 +90,9 @@
         <img *ngIf="usuario.imagen" alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
         <button class="btn" type="submit" [disabled]="crearUsuariosForm.invalid">Crear usuario</button>
       </form>
-    </div>
+
+    <p>{{errorMessage}}</p>
+    <p>{{message}}</p>
 
   </div>
 </div>

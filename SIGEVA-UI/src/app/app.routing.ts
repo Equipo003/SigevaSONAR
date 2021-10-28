@@ -6,13 +6,16 @@ import { FormularioCentroSaludComponent} from "./formulario-centro-salud/formula
 import { ConfiguracionCuposComponent} from "./configuracion-cupos/configuracion-cupos.component";
 import { CrearUsuariosComponent} from "./crear-usuarios/crear-usuarios.component";
 import {IndicarDosisVacunasComponent} from "./indicar-dosis-vacunas/indicar-dosis-vacunas.component"
+import {UsuarioComponent} from "./usuario/usuario.component";
 
 const  appRoutes: Routes = [
+  {path: '', component :HomeComponent},
   {path: 'home', component: HomeComponent},
   {path: 'crearCS', component: FormularioCentroSaludComponent},
   {path: 'cnfgCupos', component: ConfiguracionCuposComponent},
   {path: 'crearUsuarios', component: CrearUsuariosComponent},
-  {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent}
+  {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent},
+  {path: 'fijarPersonal', component: UsuarioComponent}
 
 ]
 
