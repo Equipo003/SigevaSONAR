@@ -14,7 +14,7 @@ public class Usuario{
     @Field
     private String rol;
     @Field
-    private String centroFK;
+    private String centroSalud;
     @Field
     private String username;
     @Field
@@ -40,7 +40,7 @@ public class Usuario{
     public Usuario(String rol, String centroFK, String username, String correo, String hashPassword,
                    String dni, String nombre, String apellidos, Date fechaNacimiento, String imagen) {
         this.rol = rol;
-        this.centroFK = centroFK;
+        this.centroSalud = centroFK;
         this.username = username;
         this.correo = correo;
         this.hashPassword = hashPassword;
@@ -72,12 +72,12 @@ public class Usuario{
         this.rol = rol;
     }
 
-    public String getCentroFK() {
-        return centroFK;
+    public String getCentroSalud() {
+        return centroSalud;
     }
 
-    public void setCentroFK(String centroFK) {
-        this.centroFK = centroFK;
+    public void setCentroSalud(String centroSalud) {
+        this.centroSalud = centroSalud;
     }
 
     public String getUsername() {

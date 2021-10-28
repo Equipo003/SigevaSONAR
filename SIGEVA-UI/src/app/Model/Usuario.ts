@@ -2,7 +2,7 @@ import {CentroSalud} from "./centro-salud";
 
 export interface Usuario{
   rol: string;
-  centroSalud: CentroSalud;
+  centroSalud: string;
   username: string;
   correo: string;
   hashPassword:string;
@@ -15,7 +15,7 @@ export interface Usuario{
 
 export class Usuario {
   rol: string;
-  centroSalud: CentroSalud;
+  centroSalud: string;
   username: string;
   correo: string;
   hashPassword:string;
@@ -25,7 +25,7 @@ export class Usuario {
   fechaNacimiento:string;
   imagen:string;
 
-  constructor(rol: string, centroSalud: CentroSalud, username: string, correo: string, hashPassword:string, dni:string,
+  constructor(rol: string, centroSalud: string, username: string, correo: string, hashPassword:string, dni:string,
               nombre:string, apellidos:string, fechaNacimiento:string, imagen:string){
 
     this.rol = rol;

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class CentroSalud {
 	@Field
 	@Id
-	private String id = UUID.randomUUID().toString();
+	private String id;
 	@Field
 	private String nombreCentro;
 	@Field
@@ -19,7 +19,7 @@ public class CentroSalud {
 	@Field
 	private String direccion;
 	public CentroSalud() {
-
+		this.id = UUID.randomUUID().toString();
 	}
 
 	public String getId() {
@@ -65,9 +65,7 @@ public class CentroSalud {
 	}
 
 	public boolean horaCierreMayorApertura(Date horaApertura, Date horaCierre) {
-		if (horaCierre.after(horaApertura))
-			return true;
-		return false;
+		return horaCierre.after(horaApertura);
 	}
 
 	@Override
