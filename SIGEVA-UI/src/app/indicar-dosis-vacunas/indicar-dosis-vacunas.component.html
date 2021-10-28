@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
 
 <div class="register">
-	<div class="register-screeen">
+	<div class="register-screen">
 		<div class="register-form">
 			<form #modificarDosisVacunas="ngForm" (ngSubmit)="putBackData()"> 
 				<H1>Modificar dosis vacunas</H1>
@@ -29,7 +31,7 @@
 				</div>
 				<br>
 				<br>
-				<button class="btnConfirmar" type="submit">Confirmar</button>
+				<button class="btn" type="submit">Confirmar</button>
 				<br>
 				<b style="color: Green">{{mensaje}}</b>
 		</form>

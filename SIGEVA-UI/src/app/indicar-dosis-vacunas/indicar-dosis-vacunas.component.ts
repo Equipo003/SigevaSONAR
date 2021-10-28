@@ -53,11 +53,9 @@ export class IndicarDosisVacunasComponent implements OnInit {
 	putBackData(){
 		this.json.putJsonVacunas("user/modificarDosisDisponibles",this.idCentro, this.vacunasAanadir).subscribe(
 			(res : any) => {
-				console.log("Hola "+res);
 				this.mensaje = "Modificación correcta";
 			}
 		);
-		this.mensaje = "Modificación correcta";
 		location.reload();
 		
 	}
