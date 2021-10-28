@@ -39,11 +39,14 @@ public class AdministradorController {
 
 
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/getUsuariosByRol/{rol}")
-	public List<Usuario> getUsuarioByRol(@PathVariable String rol) {
+	@GetMapping("/getUsuariosByRol")
+	public List<Usuario> getUsuarioByRol(@RequestParam  String rol) {
 		try {
 			System.out.println(rol);
-			return administradorDao.findAllByRol(rol);
+			List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
+			sanitarios.add(new Usuario());
+			System.out.println(sanitarios.size());
+			return sanitarios;
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

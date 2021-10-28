@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -21,6 +21,17 @@ export class JsonService {
       url = this.url + url;
     return this.http.get(url, options);
   }
+
+  getJsonP(url : string, params : HttpParams):Observable<any>{
+      let headers = new HttpHeaders();
+      headers.append("Content-Type", "aplication/json");
+      headers.append("observe","body");
+
+        url = this.url + url;
+      return this.http.get(url, {headers,params,responseType:'text'});
+    }
+
+
 
   putJsonVacunas(url : string, parameter1 : String, parameter2 : number){
 	let options : Object =  {
