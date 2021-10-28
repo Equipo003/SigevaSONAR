@@ -13,10 +13,12 @@ export class FormularioCentroSaludComponent implements OnInit {
   numVacunasDisponibles:number;
   direccion: string;
   nombreCentro: string;
+  mensajeExitososo: String;
   constructor(private json: JsonService) {
 	this.numVacunasDisponibles=0;
 	this.direccion = "";
 	this.nombreCentro ="";
+	this.mensajeExitososo="";
 	}
 
   ngOnInit(): void {

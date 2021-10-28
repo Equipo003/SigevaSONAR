@@ -94,25 +94,11 @@ public class AdministradorController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSalud conf) {
-		//	boolean coincide=false;
 
 		try {
-//        	CentroSalud centroSalud = new CentroSalud();
-//        	centroSalud.setDireccion("calle");
-//    		centroSalud.setNumVacunasDisponibles(2);
+
 			centroSaludDao.save(conf);
-//    		List<CentroSalud> centrosSaludList = centroSaludDao.findAll();
-//    		for(int i =0; i<centrosSaludList.size();i++) {
-//    			if(centrosSaludList.get(i).getIdCentroSalud().equals(centroSalud.getIdCentroSalud())) {
-//    				System.out.println("COINCIDE");
-//        			coincide = true;
-//    			}
-//    		}
-//    		if(!coincide) {
-//    			centroSaludDao.save(centroSalud);
-//    		}else {
-//    			throw new RuntimeException("MISMO ID");
-//    		}
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
