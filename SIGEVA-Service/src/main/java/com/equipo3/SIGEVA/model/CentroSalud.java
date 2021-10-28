@@ -1,5 +1,4 @@
 package com.equipo3.SIGEVA.model;
-
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,7 +18,6 @@ public class CentroSalud {
 	private int numVacunasDisponibles;
 	@Field
 	private String direccion;
-
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
 	}
@@ -53,7 +51,11 @@ public class CentroSalud {
 			numVacunasDisponibles = 0;
 		this.numVacunasDisponibles = numVacunasDisponibles;
 	}
-
+	
+	public void modificarStockVacunas(int numVacunasAgregadas) {
+		this.numVacunasDisponibles += numVacunasAgregadas;
+	}
+	
 	public String getDireccion() {
 		return direccion;
 	}

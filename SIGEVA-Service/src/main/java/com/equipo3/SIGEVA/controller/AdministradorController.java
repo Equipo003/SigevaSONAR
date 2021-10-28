@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -112,8 +113,6 @@ public class AdministradorController {
 //    		}else {
 //    			throw new RuntimeException("MISMO ID");
 //    		}
-
-			
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
