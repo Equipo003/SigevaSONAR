@@ -10,19 +10,30 @@ import { CentroSalud } from '../Model/centro-salud';
 })
 export class FormularioCentroSaludComponent implements OnInit {
 
+  id: string;
   numVacunasDisponibles:number;
   direccion: string;
   nombreCentro: string;
   mensajeExitososo: String;
+
+
+
   constructor(private json: JsonService) {
+
 	this.numVacunasDisponibles=0;
 	this.direccion = "";
 	this.nombreCentro ="";
 	this.mensajeExitososo="";
+    this.id = "";
+	this.numVacunasDisponibles=0;
+	this.direccion = "";
+	this.nombreCentro ="";
 	}
 
   ngOnInit(): void {
+
   }
+
  enviarDatosBack() {
 	var centroSalud: CentroSalud = new CentroSalud(this.direccion,this.nombreCentro,this.numVacunasDisponibles);
 	this.json.postJson("user/newCentroSalud",centroSalud).subscribe((res: any) => {

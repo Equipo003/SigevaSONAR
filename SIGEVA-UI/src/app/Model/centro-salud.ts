@@ -1,14 +1,17 @@
 export interface CentroSalud{
-    direccion: string;
+  id: string
+  direccion: string;
 	nombreCentro : string;
 	numVacunasDisponibles : number;
 }
 
 export class CentroSalud {
 
-	direccion: string;
-	constructor(direccion: string, nombreCentro : string,numVacunasDisponibles : number){
-		this.direccion = direccion;
+	constructor(direccion: string, nombreCentro : string,numVacunasDisponibles : number, id?: string){
+    if (id != null) {
+      this.id = id;
+    }
+    this.direccion = direccion;
 		this.nombreCentro = nombreCentro;
 		this.numVacunasDisponibles = numVacunasDisponibles;
 
