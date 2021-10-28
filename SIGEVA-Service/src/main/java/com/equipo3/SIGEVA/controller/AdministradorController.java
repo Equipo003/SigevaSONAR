@@ -3,15 +3,10 @@ package com.equipo3.SIGEVA.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.bson.types.ObjectId;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.AdministradorDao;
@@ -44,12 +39,23 @@ public class AdministradorController {
 
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getUsuariosByRol/{rol}")
+	public List<Usuario> getUsuarioByRol(@PathVariable String rol) {
+		try {
+			System.out.println(rol);
+			return administradorDao.findAllByRol(rol);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody Administrador admin) {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(admin.getUsername());
 			if (optUsuario.isPresent()){
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya existe en la base de datos");
+				throw new UsuarioInvalidoException("El usuario ya existe en la base de datos");
 			}
 
 			administradorDao.save(admin);
@@ -151,4 +157,20 @@ public class AdministradorController {
 		}
 
 	}
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
+    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
+        try {
+            Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
+            if(centroS.isPresent()) {
+                CentroSalud centroSaludDef = centroS.get();
+                System.out.println("Centro" + centroSaludDef.getNombreCentro());
+                centroSaludDef.modificarStockVacunas(vacunas);
+                centroSaludDao.save(centroSaludDef);
+            }
+        }catch(Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
 }

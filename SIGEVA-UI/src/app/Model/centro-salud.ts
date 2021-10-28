@@ -1,8 +1,8 @@
 export interface CentroSalud{
-  id: string
-  direccion: string;
+  	direccion: string;
 	nombreCentro : string;
 	numVacunasDisponibles : number;
+	id : string;
 }
 
 export class CentroSalud {

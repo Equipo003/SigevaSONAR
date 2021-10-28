@@ -18,6 +18,8 @@ export class CrearUsuariosComponent implements OnInit {
   public centroSeleccionado: String;
   public nombreRol:string;
   public usuario: Usuario;
+  public message: string;
+  public errorMessage: string;
 
   constructor(private json: JsonService) {
     this.roles = [];
@@ -25,17 +27,20 @@ export class CrearUsuariosComponent implements OnInit {
     this.rolSeleccionado = "";
     this.centroSeleccionado = "";
     this.nombreRol = "";
-    // this.rol = "";
+
     this.usuario = new Usuario("", "", "", "", "", "",
       "", "", "", "");
+    this.errorMessage = "";
+    this.message = "";
   }
 
   ngOnInit() {
+    this.message = "";
+    this.errorMessage = "";
     this.json.getJson("user/getRoles").subscribe(
       result=> {
         this.roles = JSON.parse(result);
         this.rolSeleccionado = this.roles[0].nombre;
-        console.log(this.roles);
       }, error=> {
         console.log(error);
       });
@@ -44,7 +49,6 @@ export class CrearUsuariosComponent implements OnInit {
       result=> {
         this.centros = JSON.parse(result);
         this.centroSeleccionado = this.centros[0].nombreCentro;
-        console.log(this.centros);
       }, error=> {
         console.log(error);
       });
@@ -84,9 +88,13 @@ export class CrearUsuariosComponent implements OnInit {
   enviarDatosBack() {
     this.checkRol();
     this.checkCentro();
-    console.log(this.usuario);
-    this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario).subscribe((res: any) => {
-      console.log(res);
+    this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario).subscribe(
+      result => {
+        this.message = "Usuario creado correctamente"
+        setTimeout('document.location.reload()',2000);
+      },err=> {
+        this.errorMessage = err.error.message;
+        console.log(err);
     });
   }
 }

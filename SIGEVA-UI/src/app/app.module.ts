@@ -9,10 +9,11 @@ import { HomeComponent } from './home/home.component';
 import { FormularioCentroSaludComponent } from './formulario-centro-salud/formulario-centro-salud.component';
 
 import { ConfiguracionCuposComponent } from './configuracion-cupos/configuracion-cupos.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.component';
 import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
+import { UsuarioComponent } from './usuario/usuario.component';
 
 
 @NgModule({
@@ -22,13 +23,15 @@ import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-do
     FormularioCentroSaludComponent,
     ConfiguracionCuposComponent,
     CrearUsuariosComponent,
-    IndicarDosisVacunasComponent
+    IndicarDosisVacunasComponent,
+    UsuarioComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    routing
+    routing,
+    ReactiveFormsModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
