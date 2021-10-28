@@ -22,10 +22,16 @@
 				<div class="numberNewVaccines" >
 					<p>Número de vacunas que se van a añadir:</p>
 					<input type = 'number' name= 'masVacunas' #newVacunas="ngModel" placeholder='número de vacunas' [(ngModel)]='vacunasAanadir' required>
+					 <small *ngIf="!newVacunas.valid && newVacunas.touched">
+					 <br>
+					 <b style="color: Red">El campo no puede estar vacío</b>
+            		 </small>
 				</div>
 				<br>
 				<br>
 				<button class="btnConfirmar" type="submit">Confirmar</button>
+				<br>
+				<b style="color: Green">{{mensaje}}</b>
 		</form>
 	</div>
 </div>

@@ -14,6 +14,7 @@ export class IndicarDosisVacunasComponent implements OnInit {
 	public nVacunasActual : number;
 	public vacunasAanadir : number;
 	public idCentro : String;
+	public mensaje : String;
 	
 	constructor(private json: JsonService) { 
 		this.cs = [];
@@ -21,6 +22,7 @@ export class IndicarDosisVacunasComponent implements OnInit {
 		this.nVacunasActual = 0;
 		this.vacunasAanadir = 0;
 		this.idCentro = "";
+		this.mensaje = "";
 	}
 
 	ngOnInit(): void {
@@ -52,9 +54,11 @@ export class IndicarDosisVacunasComponent implements OnInit {
 		this.json.putJsonVacunas("user/modificarDosisDisponibles",this.idCentro, this.vacunasAanadir).subscribe(
 			(res : any) => {
 				console.log("Hola "+res);
+				this.mensaje = "Modificación correcta";
 			}
 		);
-		window.location.reload();
+		this.mensaje = "Modificación correcta";
+		location.reload();
 		
 	}
 
