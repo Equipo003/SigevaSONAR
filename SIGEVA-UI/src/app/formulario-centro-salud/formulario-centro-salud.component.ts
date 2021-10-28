@@ -14,31 +14,51 @@ export class FormularioCentroSaludComponent implements OnInit {
   numVacunasDisponibles:number;
   direccion: string;
   nombreCentro: string;
-  mensajeExitososo: String;
-
-
+  mensajeRespuesta: string;
+  mostrarTexto: boolean;
+  positivo: boolean;
 
   constructor(private json: JsonService) {
 
 	this.numVacunasDisponibles=0;
 	this.direccion = "";
 	this.nombreCentro ="";
-	this.mensajeExitososo="";
+	this.mensajeRespuesta="";
     this.id = "";
-	this.numVacunasDisponibles=0;
-	this.direccion = "";
-	this.nombreCentro ="";
+	this.mostrarTexto =false;
+	this.positivo= false;
 	}
 
   ngOnInit(): void {
 
   }
 
- enviarDatosBack() {
+ enviarDatosBack() { //NO DEBE GUARDAR SI HAY UN CAMPO NULO
 	var centroSalud: CentroSalud = new CentroSalud(this.direccion,this.nombreCentro,this.numVacunasDisponibles);
-	this.json.postJson("user/newCentroSalud",centroSalud).subscribe((res: any) => {
-           console.log(res);
-      });
+	this.json.postJson("user/newCentroSalud",centroSalud).subscribe(result => {
+		 this.mostrarTexto= true;
+		 this.positivo= true;
+         this.mensajeRespuesta = "Centro de salud guardado con éxito.";
+		 this.timeoutEsconderElementos();
+      }, error =>{
+		this.mostrarTexto= true;
+		this.positivo= false;
+		this.mensajeRespuesta = "Centro de salud no guardado."
+		this.timeoutEsconderElementos();
+});
   }
+
+	vaciarCampos(): void {
+	this.numVacunasDisponibles=0;
+	this.direccion = "";
+	this.nombreCentro ="";
+  }
+
+	timeoutEsconderElementos():void{
+		this.vaciarCampos();
+		setTimeout(() => {
+  		this.mostrarTexto =false;
+		}, 5000);
+	}
 
 }
