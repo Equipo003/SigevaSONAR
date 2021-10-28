@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -169,14 +171,15 @@ public class AdministradorController {
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(cs);
 			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
 			if(centroS.isPresent()) {
 				CentroSalud centroSaludDef = centroS.get();
+				System.out.println("Centro" + centroSaludDef.getNombreCentro());
 				centroSaludDef.modificarStockVacunas(vacunas);
+				centroSaludDao.save(centroSaludDef);
 			}
 		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.)
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 }
