@@ -10,13 +10,15 @@ import { JsonService } from '../Service/json.service';
 })
 export class IndicarDosisVacunasComponent implements OnInit {
 	public cs: CentroSalud[];
-	public centroSeleccionado: String;
+	public centroSeleccionado: CentroSalud;
 	public nVacunasActual : number;
+	public vacunasAanadir : number;
 	
 	constructor(private json: JsonService) { 
 		this.cs = [];
-		this.centroSeleccionado = "";
+		this.centroSeleccionado = new CentroSalud("","",0);
 		this.nVacunasActual = 0;
+		this.vacunasAanadir = 0;
 		
 	}
 
@@ -27,11 +29,12 @@ export class IndicarDosisVacunasComponent implements OnInit {
 	listarCentros() {
 		this.json.getJson('user/listCentroSalud').subscribe(
 			(res: any) => {this.cs = JSON.parse(res);
-				this.centroSeleccionado = this.cs[0].nombreCentro;
+				
 				console.log(res);
 			}, error=>{
 				console.log(error);
 			}); 
 	}
+	
 
 }

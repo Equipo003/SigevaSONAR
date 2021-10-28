@@ -5,14 +5,24 @@
 	<div class='register-screeen'>
 		<div class='register-form'>
 			<form>
-				<H1>Modificar dósis vacunas</H1>
-				<div align="left" class="selectCenter">
-					<fieldset>
+				<H1>Modificar dosis vacunas</H1>
+				
+				<div align="center" class="selectCenter">
+						<p>Elige el hospital: </p>
 						<select name="menuCentro" id="menuCentro" align="left"
-							[(ngModel)]='centroSeleccionado'>
-							<option *ngFor="let centro of cs">{{centro.nombreCentro}}</option>
+							[(ngModel)]='centroSeleccionado'  #centro = "ngModel">
+							<option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
 						</select>
-					</fieldset>
+				</div>
+				
+				<div align="center" class="numberVaccines">
+					<p>Número de vacunas actual:</p>
+					<b align="right">{{centroSeleccionado.numVacunasDisponibles}}</b>
+				</div>
+				
+				<div align="left" class="numberNewVaccines" >
+					<p>Número de vacunas que se van a añadir:</p>
+					<input type = 'number' name= 'masVacunas' #newVacunas="ngModel" placeholder='número de vacunas' [(ngModel)]='vacunasAanadir' required>
 				</div>
 		</form>
 	</div>
