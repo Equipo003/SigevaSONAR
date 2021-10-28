@@ -26,7 +26,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.centroSeleccionado = "";
     this.nombreRol = "";
     // this.rol = "";
-    this.usuario = new Usuario("", new CentroSalud("", "", 0), "", "", "", "",
+    this.usuario = new Usuario("", "", "", "", "", "",
       "", "", "", "");
   }
 
@@ -76,7 +76,7 @@ export class CrearUsuariosComponent implements OnInit {
     let self = this;
     this.centros.forEach(function(centro2 : CentroSalud){
       if (centro2.nombreCentro === self.centroSeleccionado){
-        self.usuario.centroSalud = centro2
+        self.usuario.centroSalud = centro2.id
       }
     });
   }

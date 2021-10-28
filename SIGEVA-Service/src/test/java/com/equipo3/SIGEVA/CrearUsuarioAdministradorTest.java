@@ -28,7 +28,7 @@ public class CrearUsuarioAdministradorTest {
         Usuario administrador = new Administrador();
 
         administrador.setRol("6173cecfc5635444ee5469d7");
-        administrador.setCentroFK("1234");
+        administrador.setCentroSalud("1234");
         administrador.setUsername("user55");
         administrador.setCorreo("micorreo@correo.com");
         administrador.setHashPassword("sdfsdf");
@@ -47,7 +47,7 @@ public class CrearUsuarioAdministradorTest {
             Usuario administrador = new Administrador();
 
             administrador.setRol("6173cecfc5635444ee5469d7");
-            administrador.setCentroFK("1234");
+            administrador.setCentroSalud("1234");
             administrador.setUsername("user5555");
             administrador.setCorreo("micorreo@correo.com");
             administrador.setHashPassword("sdfsdf");
