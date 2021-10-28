@@ -171,3 +171,9 @@ select, option {
   color: #71B100;
 }
 
+.separation {
+  height: 10px;
+  background : #3498DB;
+  width : 1500px;
+}
+
