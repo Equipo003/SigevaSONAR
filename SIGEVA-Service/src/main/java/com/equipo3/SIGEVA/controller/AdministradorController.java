@@ -168,6 +168,7 @@ public class AdministradorController {
 
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {

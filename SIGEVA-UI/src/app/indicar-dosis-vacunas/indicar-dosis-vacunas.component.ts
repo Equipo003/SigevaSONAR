@@ -13,13 +13,14 @@ export class IndicarDosisVacunasComponent implements OnInit {
 	public centroSeleccionado: String;
 	public nVacunasActual : number;
 	public vacunasAanadir : number;
+	public idCentro : String;
 	
 	constructor(private json: JsonService) { 
 		this.cs = [];
 		this.centroSeleccionado = "";
 		this.nVacunasActual = 0;
 		this.vacunasAanadir = 0;
-		
+		this.idCentro = "";
 	}
 
 	ngOnInit(): void {
@@ -37,17 +38,24 @@ export class IndicarDosisVacunasComponent implements OnInit {
 			}); 
 	}
 	
-	numVacunas(){
+	centroSelect(){
 		let self = this;
 		this.cs.forEach(function(centro2 : CentroSalud){
 			if(centro2.nombreCentro === self.centroSeleccionado){
 				self.nVacunasActual = centro2.numVacunasDisponibles;
+				self.idCentro = centro2.id;
 			}
 		});
 	}
 	
 	putBackData(){
-		this.json.putJsonVacunas("/")
+		this.json.putJsonVacunas("user/modificarDosisDisponibles",this.idCentro, this.vacunasAanadir).subscribe(
+			(res : any) => {
+				console.log("Hola "+res);
+			}
+		);
+		window.location.reload();
+		
 	}
 
 }

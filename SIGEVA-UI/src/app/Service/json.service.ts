@@ -27,7 +27,7 @@ export class JsonService {
       "observe" : 'body',
       "responseType": 'text'
     }
-	url = this.url + "/" + parameter1 + "/" + parameter2;
+	url = this.url +url+ "/" + parameter1 + "/" + parameter2;
 	return this.http.put(url, options);
   }
 

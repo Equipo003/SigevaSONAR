@@ -10,7 +10,7 @@
 				<div class="selectCenter">
 						<p>Elige el hospital: </p>
 						<select name="menuCentro" id="menuCentro" 
-							[(ngModel)]='centroSeleccionado'  #centro = "ngModel" (click)="numVacunas()">
+							[(ngModel)]='centroSeleccionado'  #centro = "ngModel" (click)="centroSelect()">
 							<option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
 						</select>
 				</div>
