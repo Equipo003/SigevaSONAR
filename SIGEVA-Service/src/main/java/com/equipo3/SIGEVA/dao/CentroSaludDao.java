@@ -10,7 +10,11 @@ import com.equipo3.SIGEVA.model.CentroSalud;
 
 @Repository
 public interface CentroSaludDao extends MongoRepository<CentroSalud, String> {
-	List<CentroSalud> findAll();
-	Optional<CentroSalud> findById(String id);
-}
 
+	List<CentroSalud> findAll();
+
+	Optional<CentroSalud> findById(String id);
+
+	Optional<CentroSalud> findByNombreCentro(String nombreCentroSalud);
+
+}

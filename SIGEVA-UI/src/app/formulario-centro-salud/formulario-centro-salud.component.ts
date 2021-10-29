@@ -17,6 +17,7 @@ export class FormularioCentroSaludComponent implements OnInit {
   mensajeRespuesta: string;
   mostrarTexto: boolean;
   positivo: boolean;
+  guardado: boolean;
 
   constructor(private json: JsonService) {
 
@@ -27,23 +28,29 @@ export class FormularioCentroSaludComponent implements OnInit {
     this.id = "";
 	this.mostrarTexto =false;
 	this.positivo= false;
+	this.guardado = false;
 	}
 
   ngOnInit(): void {
 
   }
 
- enviarDatosBack() { //NO DEBE GUARDAR SI HAY UN CAMPO NULO
+ enviarDatosBack() { //NO DEBE GUARDAR SI HAY UN CAMPO NULO y controlar número en backend
+	this.guardado = false;
+	this.positivo= false;
+ 	this.mostrarTexto= true;
+	this.mensajeRespuesta = "Centro de salud guardándose...";
+		
 	var centroSalud: CentroSalud = new CentroSalud(this.direccion,this.nombreCentro,this.numVacunasDisponibles);
 	this.json.postJson("user/newCentroSalud",centroSalud).subscribe(result => {
-		 this.mostrarTexto= true;
+		 this.guardado= true;
 		 this.positivo= true;
          this.mensajeRespuesta = "Centro de salud guardado con éxito.";
 		 this.timeoutEsconderElementos();
       }, error =>{
-		this.mostrarTexto= true;
+		this.guardado= true;
 		this.positivo= false;
-		this.mensajeRespuesta = "Centro de salud no guardado."
+		this.mensajeRespuesta = "Error. Centro de salud no guardado."
 		this.timeoutEsconderElementos();
 });
   }
@@ -58,7 +65,7 @@ export class FormularioCentroSaludComponent implements OnInit {
 		this.vaciarCampos();
 		setTimeout(() => {
   		this.mostrarTexto =false;
-		}, 5000);
+		}, 6000);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -17,7 +18,7 @@ public class CentroSalud {
 	private String id;
 	@Field
 	private String nombreCentro;
-	@Field
+	@Field 
 	private int numVacunasDisponibles;
 	@Field
 	private String direccion;
