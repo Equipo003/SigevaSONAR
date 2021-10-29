@@ -26,8 +26,9 @@
         <span class="fontawesome-caret-right "></span>
         <input type="number" min="0"  id="numVacunas"  required placeholder="Número de Vacunas Disponibles" autocomplete="off"  [(ngModel)]="numVacunasDisponibles" [ngModelOptions]="{standalone: true}" >
       </div>
-      <div id = "mensajeRespuesta" class = "resaltadoPositivo" *ngIf="mostrarTexto && positivo">{{mensajeRespuesta}}</div>
-       <div id = "mensajeRespuesta" class = "resaltadoNegativo" *ngIf="mostrarTexto && !positivo">{{mensajeRespuesta}}</div>
+      <div id = "mensajeRespuesta" class = "resaltadoPositivo" *ngIf="mostrarTexto && positivo && guardado">{{mensajeRespuesta}}</div>
+       <div id = "mensajeRespuesta" class = "resaltadoNegativo" *ngIf="mostrarTexto && !positivo && guardado">{{mensajeRespuesta}}</div>
+       <div id = "mensajeRespuesta" class = "resaltadoNeutral" *ngIf="mostrarTexto && !guardado">{{mensajeRespuesta}}</div>
       <div class="control-group">
        <input class="btn" type="submit" (click)="enviarDatosBack()"value="Crear Centro" title="Crear el centro de salud">
       </div>

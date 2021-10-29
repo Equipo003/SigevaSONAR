@@ -104,12 +104,17 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/newCentroSalud")
-	public void crearCentroSalud(@RequestBody CentroSalud conf) {
+	public void crearCentroSalud(@RequestBody CentroSalud centroSalud) {
 
 		try {
+			
+			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
+			if (optCentroSalud.isPresent()){
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud ya existe en la base de datos");
+			}
 
-			centroSaludDao.save(conf);
-			cupoController.prepararCuposCitas(conf);
+			centroSaludDao.save(centroSalud);
+			cupoController.prepararCuposCitas(centroSalud);
 
         } catch (Exception e) {
             e.printStackTrace();
