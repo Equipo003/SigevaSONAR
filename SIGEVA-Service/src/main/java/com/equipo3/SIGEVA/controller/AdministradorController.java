@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,33 +37,34 @@ public class AdministradorController {
 	@Autowired
 	private CupoController cupoController;
 
-
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getUsuariosByRol")
-	public List<Usuario> getUsuarioByRol(@RequestParam  String rol) {
+	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
 			System.out.println(rol);
 			List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
 			sanitarios.add(new Usuario());
 			System.out.println(sanitarios.size());
 			return sanitarios;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+	
+	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody Administrador admin) {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(admin.getUsername());
-			if (optUsuario.isPresent()){
-				throw new UsuarioInvalidoException("El usuario ya existe en la base de datos");
+			if (optUsuario.isPresent()) {
+				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(admin);
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
@@ -72,13 +74,13 @@ public class AdministradorController {
 	public void crearUsuarioPaciente(@RequestBody Paciente paciente) {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
-			if (optUsuario.isPresent()){
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya existe en la base de datos");
+			if (optUsuario.isPresent()) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(paciente);
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
@@ -88,13 +90,13 @@ public class AdministradorController {
 	public void crearUsuarioSanitario(@RequestBody Sanitario sanitario) {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
-			if (optUsuario.isPresent()){
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya existe en la base de datos");
+			if (optUsuario.isPresent()) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(sanitario);
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
@@ -108,23 +110,20 @@ public class AdministradorController {
 			centroSaludDao.save(conf);
 			cupoController.prepararCuposCitas(conf);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 
 	@PostMapping("/registrarRol")
-	public void registrarRol(@RequestBody Rol rol){
+	public void registrarRol(@RequestBody Rol rol) {
 		try {
 			rolDao.save(rol);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getCentros")
@@ -148,32 +147,32 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearConfCupos")
-	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf) {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-			if (configuracionCuposList.size() == 0)
+			if (configuracionCuposList.isEmpty())
 				configCuposDao.save(conf);
 			else
-				throw new Exception();
-		} catch (Exception e){
+				throw new ConfiguracionYaExistente("Ya existía configuración.");
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}
 
 	}
 
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-        try {
-            Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-            if(centroS.isPresent()) {
-                CentroSalud centroSaludDef = centroS.get();
-                System.out.println("Centro" + centroSaludDef.getNombreCentro());
-                centroSaludDef.modificarStockVacunas(vacunas);
-                centroSaludDao.save(centroSaludDef);
-            }
-        }catch(Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
+	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
+		try {
+			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
+			if (centroS.isPresent()) {
+				CentroSalud centroSaludDef = centroS.get();
+				System.out.println("Centro" + centroSaludDef.getNombreCentro());
+				centroSaludDef.modificarStockVacunas(vacunas);
+				centroSaludDao.save(centroSaludDef);
+			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 }

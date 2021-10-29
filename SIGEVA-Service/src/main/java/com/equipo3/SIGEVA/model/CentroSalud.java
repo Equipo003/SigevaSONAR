@@ -1,10 +1,14 @@
 package com.equipo3.SIGEVA.model;
+
 import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.equipo3.SIGEVA.exception.CentroSinStock;
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
 @Document
 public class CentroSalud {
@@ -19,9 +23,13 @@ public class CentroSalud {
 	private String direccion;
 	@Field
 	private Vacuna vacuna;
+
+	public static final int TIEMPO_ENTRE_DOSIS = 21; // dias
+	public static final int NUM_DOSIS = 2;
+	
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
-		this.vacuna = new Vacuna("Pfizer", 21, 2);
+		this.vacuna = new Vacuna("Pfizer", TIEMPO_ENTRE_DOSIS, NUM_DOSIS);
 	}
 
 	public String getId() {
@@ -44,16 +52,14 @@ public class CentroSalud {
 		return numVacunasDisponibles;
 	}
 
-	public void setNumVacunasDisponibles(int numVacunasDisponibles) {
-		if (numVacunasDisponibles < 0)
-			numVacunasDisponibles = 0;
-		this.numVacunasDisponibles = numVacunasDisponibles;
+	public void setNumVacunasDisponibles(int numVacunasDisponibles) throws NumVacunasInvalido {
+		if (numVacunasDisponibles >= 0) {
+			this.numVacunasDisponibles = numVacunasDisponibles;
+		} else {
+			throw new NumVacunasInvalido("La cantidad de stock especificada es inválida.");
+		}
 	}
-	
-	public void modificarStockVacunas(int numVacunasAgregadas) {
-		this.numVacunasDisponibles += numVacunasAgregadas;
-	}
-	
+
 	public String getDireccion() {
 		return direccion;
 	}
@@ -68,6 +74,26 @@ public class CentroSalud {
 
 	public void setVacuna(Vacuna vacuna) {
 		this.vacuna = vacuna;
+	}
+
+	public void modificarStockVacunas(int numVacunasAgregadas) {
+		this.numVacunasDisponibles += numVacunasAgregadas;
+	}
+
+	public void incrementarNumVacunasDisponibles(int cantidad) throws NumVacunasInvalido {
+		if (cantidad >= 0)
+			this.setNumVacunasDisponibles(this.getNumVacunasDisponibles() + cantidad);
+		else
+			throw new NumVacunasInvalido("La cantidad a incrementar especificada es inválida.");
+	}
+
+	public void decrementarNumVacunasDisponibles() throws CentroSinStock {
+		// No se restará stock hasta que no se confirme como vacunado por un sanitario.
+		try {
+			this.setNumVacunasDisponibles(numVacunasDisponibles - 1);
+		} catch (NumVacunasInvalido e) {
+			throw new CentroSinStock("El centro no dispone de stock.");
+		}
 	}
 
 	@Override

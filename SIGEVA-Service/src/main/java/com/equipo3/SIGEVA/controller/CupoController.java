@@ -16,17 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
+import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
 import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("cupo")
@@ -39,37 +38,42 @@ public class CupoController {
 	UsuarioDao usuarioDao;
 
 	@Autowired
-	CentroSaludDao centroSaludDao;
-
-	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
+
+	public static final int DIA_FIN = 31;
+	public static final int MES_FIN = 1;
+	public static final int ANYO_FIN = 2022;
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody CentroSalud centroSalud) {
-		int distancia = 21;
 
-		Date maximo = new Date(122, 0, 1); // 01/01/2022
-		maximo.setDate(maximo.getDate() - distancia); // 11/12/2021
+		if (centroSalud != null) {
+			Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
+			maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
 
-		Date hoy = new Date();
-		if (hoy.before(maximo)) {
-			if (centroSalud != null) {
+			Date hoy = new Date();
+			if (hoy.before(maximo)) {
+
 				List<CupoCitas> lista = new ArrayList<>();
 				CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
 				lista.add(dosis1);
+
 				Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
-				fechaDosis2.setDate(fechaDosis2.getDate() + 21);
+				fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
 				CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
 				lista.add(dosis2);
+
 				return lista;
+
 			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de salud no contemplado.");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
 			}
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Ya no se pueden pedir citas a razón de que en 2022 no se asignarán segundas dosis.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de Salud no contemplado.");
 		}
+
 	}
 
 	@GetMapping("/buscarCupoLibre")
@@ -92,54 +96,43 @@ public class CupoController {
 		try {
 			if (cupo != null && paciente != null) {
 
-				Optional<Usuario> u = usuarioDao.findById(paciente.getIdUsuario());
-				if (u.isPresent()) {
-					Paciente p = (Paciente) u.get();
+				Optional<CupoCitas> optCupoReal = cupoCitasDao.findById(cupo.getUuid());
 
-					Optional<CentroSalud> optCentro = centroSaludDao.findById(p.getCentroSalud()); // TODO
-					// Corregir FK: Cambiar p.getCentroSalud() a p.getCentroSalud().getId().
-					// Aún así, varios if/else serían posiblemente sobrantes.
+				/*
+				 * Consideración a valorar: Trabajar con el cupo real de la BD puede
+				 * considerarse innecesario ya que ya se tiene mediante el parámetro; salvo que
+				 * se llenase el cupo entre medias con rapidez, sobretodo en /modificarCita
+				 * donde en la interfaz/frontend se espera a que el paciente escoja entre varios
+				 * propuestos.
+				 */
 
-					if (optCentro.isPresent()) {
+				if (optCupoReal.isPresent()) {
 
-						CentroSalud centro = optCentro.get();
+					CupoCitas cupoReal = optCupoReal.get();
 
-						if (p.getNumVacunas() >= 0 && p.getNumVacunas() < centro.getVacuna().getNumDosis()) {
+					ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
+					/*
+					 * Prog: Puede provocar ArrayIndexOutOfBoundsException en caso de no existir
+					 * configuración en la BD. Considerar medir y throwear mediante if isEmpty().
+					 */
 
-							Optional<CupoCitas> optCupo = cupoCitasDao.findById(cupo.getUuid());
+					cupoReal.anadirPaciente(paciente, configuracionCupos); // Doble throws
 
-							if (optCupo.isPresent()) {
+					paciente.incrementarNumVacunas(); // throws
 
-								CupoCitas cupoReal = optCupo.get();
-								ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
-								cupoReal.anadirPaciente(paciente, configuracionCupos);
-								cupoCitasDao.save(cupoReal);
+					// No se restará stock hasta que no se confirme como vacunado por un sanitario.
 
-								p.incrementarNumVacunas();
-								usuarioDao.save(p);
+					cupoCitasDao.save(cupoReal);
+					usuarioDao.save(paciente);
 
-								/*
-								 * Ambos .save() deberían funcionar por Sustitución al tratarse de la misma PK.
-								 * En caso contrario, añadir cupoCitasDao.delete(cupoReal); justo antes.
-								 */
-
-							} else {
-								throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-										"El cupo no se contemplaba en BD.");
-							}
-
-						} else {
-							throw new ResponseStatusException(HttpStatus.CONFLICT,
-									"El paciente ya se había vacunado de las dos dosis.");
-						}
-
-					} else {
-						throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-								"El centro del paciente no se contemplaba en BD.");
-					}
+					/*
+					 * Prog: Ambos .save() deberían funcionar por Sustitución al tratarse de la
+					 * misma PK. En caso contrario, añadir cupoCitasDao.delete(cupoReal); justo
+					 * antes.
+					 */
 
 				} else {
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El paciente no se contemplaba en BD.");
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cupo no se contemplaba en BD.");
 				}
 
 			} else {
@@ -147,18 +140,9 @@ public class CupoController {
 						(cupo == null ? "Cupo" : "Paciente") + " nulo.");
 			}
 
-		} catch (UsuarioInvalidoException | CupoCitasException e) {
-			// Paciente ya contenido, o máximo alcanzado.
+		} catch (UsuarioInvalidoException | CupoCitasException | PacienteYaVacunadoException e) {
+			// Paciente ya contenido en este cupo, máximo alcanzado, o paciente ya vacunado.
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
-	@GetMapping("/prueba")
-	public void prueba() { // Método borrador.
-		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
-		List<CupoCitas> lista = buscarParDeCuposLibresAPartirDeHoy(centroSalud);
-		for (int i = 0; i < lista.size(); i++) {
-			System.out.println(lista.get(i).toString());
 		}
 	}
 
@@ -182,8 +166,8 @@ public class CupoController {
 
 		Date fechaInicio = configuracionCupos.getFechaInicioAsDate();
 
-		Date fechaFinAbsoluta = new Date(121, 11, 31, configuracionCupos.getHoraFin().getHours(),
-				configuracionCupos.getHoraFin().getMinutes());
+		Date fechaFinAbsoluta = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN,
+				configuracionCupos.getHoraFin().getHours(), configuracionCupos.getHoraFin().getMinutes());
 
 		int duracionTramo = configuracionCupos.getDuracionMinutos();
 
@@ -214,7 +198,6 @@ public class CupoController {
 		if (centroSalud != null) {
 			List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
-			// El bucle es sustituible por cupoCitasDao.saveAll(momentos);
 			for (int i = 0; i < momentos.size(); i++) {
 				System.out.println(momentos.get(i));
 				cupoCitasDao.save(momentos.get(i)); // ¡Puede tardar!
