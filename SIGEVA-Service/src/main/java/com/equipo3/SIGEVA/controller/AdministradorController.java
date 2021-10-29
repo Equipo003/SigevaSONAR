@@ -109,7 +109,7 @@ public class AdministradorController {
 		try {
 
 			centroSaludDao.save(conf);
-			//cupoController.prepararCuposCitas(conf);
+			cupoController.prepararCuposCitas(conf);
 
         } catch (Exception e) {
             e.printStackTrace();
