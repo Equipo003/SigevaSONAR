@@ -19,4 +19,9 @@ public class Paciente extends Usuario{
     public void setNumVacunas(int numVacunas) {
         this.numVacunas = numVacunas;
     }
+    
+    public void incrementarNumVacunas() {
+    	this.numVacunas++;
+    }
+    
 }

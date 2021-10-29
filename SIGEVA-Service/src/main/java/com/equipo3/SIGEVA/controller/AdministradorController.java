@@ -9,11 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.dao.AdministradorDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
@@ -27,9 +26,7 @@ import com.equipo3.SIGEVA.model.Usuario;
 public class AdministradorController {
 
 	@Autowired
-	private AdministradorDao administradorDao;
-	@Autowired
-	private UsuarioDao usuarioDao;
+	private UsuarioDao administradorDao;
 	@Autowired
 	private RolDao rolDao;
 	@Autowired

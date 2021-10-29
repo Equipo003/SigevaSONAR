@@ -19,12 +19,14 @@ import org.springframework.web.server.ResponseStatusException;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
 import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("cupo")
@@ -32,6 +34,12 @@ public class CupoController {
 
 	@Autowired
 	CupoCitasDao cupoCitasDao;
+
+	@Autowired
+	UsuarioDao usuarioDao;
+
+	@Autowired
+	CentroSaludDao centroSaludDao;
 
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
@@ -78,34 +86,72 @@ public class CupoController {
 
 	@PutMapping("/confirmarCita")
 	public void confirmarCita(@RequestBody CupoCitas cupo, @RequestBody Paciente paciente) {
-		// ¡No probado!
+
+		// ¡¡¡ NO PROBADO !!!. ¡¡¡ PUEDE FALLAR (no alarmarse) !!!.
+
 		try {
 			if (cupo != null && paciente != null) {
-				Optional<CupoCitas> optCupo = cupoCitasDao.findById(cupo.getUuid());
-				if (optCupo.isPresent()) {
-					CupoCitas cupoReal = optCupo.get();
-					ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
-					cupoReal.anadirPaciente(paciente, configuracionCupos);
-					cupoCitasDao.save(cupoReal);
-					/*
-					 * El .save() debería funcionar por Sustitución al tratarse de la misma PK. En
-					 * caso contrario, añadir cupoCitasDao.delete(cupoReal); justo antes.
-					 */
+
+				Optional<Usuario> u = usuarioDao.findById(paciente.getIdUsuario());
+				if (u.isPresent()) {
+					Paciente p = (Paciente) u.get();
+
+					Optional<CentroSalud> optCentro = centroSaludDao.findById(p.getCentroSalud()); // TODO
+					// Corregir FK: Cambiar p.getCentroSalud() a p.getCentroSalud().getId().
+					// Aún así, varios if/else serían posiblemente sobrantes.
+
+					if (optCentro.isPresent()) {
+
+						CentroSalud centro = optCentro.get();
+
+						if (p.getNumVacunas() >= 0 && p.getNumVacunas() < centro.getVacuna().getNumDosis()) {
+
+							Optional<CupoCitas> optCupo = cupoCitasDao.findById(cupo.getUuid());
+
+							if (optCupo.isPresent()) {
+
+								CupoCitas cupoReal = optCupo.get();
+								ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
+								cupoReal.anadirPaciente(paciente, configuracionCupos);
+								cupoCitasDao.save(cupoReal);
+
+								p.incrementarNumVacunas();
+								usuarioDao.save(p);
+
+								/*
+								 * Ambos .save() deberían funcionar por Sustitución al tratarse de la misma PK.
+								 * En caso contrario, añadir cupoCitasDao.delete(cupoReal); justo antes.
+								 */
+
+							} else {
+								throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+										"El cupo no se contemplaba en BD.");
+							}
+
+						} else {
+							throw new ResponseStatusException(HttpStatus.CONFLICT,
+									"El paciente ya se había vacunado de las dos dosis.");
+						}
+
+					} else {
+						throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+								"El centro del paciente no se contemplaba en BD.");
+					}
+
 				} else {
-					throw new ResponseStatusException(HttpStatus.CONFLICT, "El cupo no se contemplaba en BD.");
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El paciente no se contemplaba en BD.");
 				}
+
 			} else {
-				throw new ResponseStatusException(HttpStatus.CONFLICT,
-						(cupo == null ? "Cupo" : "Paciente") + " no contemplado correctamente en el parámetro.");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+						(cupo == null ? "Cupo" : "Paciente") + " nulo.");
 			}
+
 		} catch (UsuarioInvalidoException | CupoCitasException e) {
 			// Paciente ya contenido, o máximo alcanzado.
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-
-	@Autowired
-	private CentroSaludDao centroSaludDao;
 
 	@GetMapping("/prueba")
 	public void prueba() { // Método borrador.

@@ -1,5 +1,4 @@
 package com.equipo3.SIGEVA.model;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,8 +17,11 @@ public class CentroSalud {
 	private int numVacunasDisponibles;
 	@Field
 	private String direccion;
+	@Field
+	private Vacuna vacuna;
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
+		this.vacuna = new Vacuna("Pfizer", 21, 2);
 	}
 
 	public String getId() {
@@ -36,10 +38,6 @@ public class CentroSalud {
 
 	public void setNombreCentro(String nombreCentro) {
 		this.nombreCentro = nombreCentro;
-	}
-
-	public String getIdCentroSalud() {
-		return id;
 	}
 
 	public int getNumVacunasDisponibles() {
@@ -64,14 +62,18 @@ public class CentroSalud {
 		this.direccion = direccion;
 	}
 
-	public boolean horaCierreMayorApertura(Date horaApertura, Date horaCierre) {
-		return horaCierre.after(horaApertura);
+	public Vacuna getVacuna() {
+		return vacuna;
+	}
+
+	public void setVacuna(Vacuna vacuna) {
+		this.vacuna = vacuna;
 	}
 
 	@Override
 	public String toString() {
 		return "CentroSalud [id=" + id + ", nombreCentro=" + nombreCentro + ", numVacunasDisponibles="
-				+ numVacunasDisponibles + ", direccion=" + direccion + "]";
+				+ numVacunasDisponibles + ", direccion=" + direccion + ", vacuna=" + vacuna + "]";
 	}
 
 	@Override
