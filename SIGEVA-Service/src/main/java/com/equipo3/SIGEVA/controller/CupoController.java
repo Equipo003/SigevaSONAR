@@ -199,7 +199,7 @@ public class CupoController {
 			List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
 			for (int i = 0; i < momentos.size(); i++) {
-				//System.out.println(momentos.get(i));
+				System.out.println(momentos.get(i));
 				cupoCitasDao.save(momentos.get(i)); // ¡Puede tardar!
 			}
 
