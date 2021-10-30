@@ -6,10 +6,10 @@ import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-fijar-sanitarios',
-  templateUrl: './fijar-sanitarios.component.html',
-  styleUrls: ['./fijar-sanitarios.component.css']
+  templateUrl: './contenedor-fijar-sanitarios.component.html',
+  styleUrls: ['./contenedor-fijar-sanitarios.component.css']
 })
-export class FijarSanitariosComponent implements OnInit {
+export class ContenedorFijarSanitariosComponent implements OnInit {
 
   sanitarios: Usuario[];
   centros: CentroSalud[]

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FijarSanitariosComponent } from './fijar-sanitarios.component';
+import { ContenedorFijarSanitariosComponent } from './contenedor-fijar-sanitarios.component';
 
 describe('FijarSanitariosComponent', () => {
-  let component: FijarSanitariosComponent;
-  let fixture: ComponentFixture<FijarSanitariosComponent>;
+  let component: ContenedorFijarSanitariosComponent;
+  let fixture: ComponentFixture<ContenedorFijarSanitariosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FijarSanitariosComponent ]
+      declarations: [ ContenedorFijarSanitariosComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FijarSanitariosComponent);
+    fixture = TestBed.createComponent(ContenedorFijarSanitariosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
