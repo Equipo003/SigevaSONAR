@@ -6,14 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
@@ -22,10 +18,10 @@ import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
-import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
 import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.*;
 
 @RestController
 @RequestMapping("cupo")
@@ -40,40 +36,66 @@ public class CupoController {
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
 
+	@Autowired
+	CentroSaludDao centroSaludDao;
+
 	public static final int DIA_FIN = 31;
 	public static final int MES_FIN = 1;
 	public static final int ANYO_FIN = 2022;
 
 	@SuppressWarnings("deprecation")
-	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
-	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody CentroSalud centroSalud) {
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
+	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody Paciente paciente) {
+		try {
+			List<CupoCitas> lista = new ArrayList<>();
+			if (paciente != null) {
+				Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
+				Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
+				List<ConfiguracionCupos> confCupos = this.configuracionCuposDao.findAll();
+				if (!optCs.isPresent()) {
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+							"Paciente sin Centro de Salud asignado");
+				}
+				CentroSalud centroSalud;
+				centroSalud = optCs.get();
+				if (confCupos.size() == 0) {
+					throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED,
+							"Es necesario establecer la configuarion de los cupos");
+				}
 
-		if (centroSalud != null) {
-			Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
-			maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
+				maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
 
-			Date hoy = new Date();
-			if (hoy.before(maximo)) {
+				Date hoy = new Date();
+				if (hoy.before(maximo)) {
 
-				List<CupoCitas> lista = new ArrayList<>();
-				CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
-				lista.add(dosis1);
+					CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
+					dosis1.anadirPaciente(paciente, confCupos.get(0));
+					lista.add(dosis1);
 
-				Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
-				fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
-				CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
-				lista.add(dosis2);
+					Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
+					fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
+					CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
+					dosis2.anadirPaciente(paciente, confCupos.get(0));
+					lista.add(dosis2);
 
-				return lista;
 
+
+					return lista;
+
+				} else {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
+				}
 			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de Salud no contemplado.");
 			}
-		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de Salud no contemplado.");
+
+		}catch (Exception e){
+
 		}
 
+		return new ArrayList<CupoCitas>();
 	}
 
 	@GetMapping("/buscarCupoLibre")

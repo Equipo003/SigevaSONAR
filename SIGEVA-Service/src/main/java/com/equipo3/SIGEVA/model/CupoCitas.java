@@ -1,16 +1,16 @@
 package com.equipo3.SIGEVA.model;
 
+import com.equipo3.SIGEVA.exception.CupoCitasException;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.equipo3.SIGEVA.exception.CupoCitasException;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
 @Document
 public class CupoCitas implements Comparable<CupoCitas> {

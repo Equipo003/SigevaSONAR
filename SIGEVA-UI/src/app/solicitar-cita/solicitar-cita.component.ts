@@ -21,7 +21,7 @@ export class SolicitarCitaComponent implements OnInit {
 ;
 
   constructor(private json: JsonService) {
-    this.paciente = new Usuario("","", "", "", "", "",
+    this.paciente = new Usuario("","8071ef83-2230-40b5-bb4e-9b3167006f8f", "", "", "", "",
           "", "", "", "");
     this.mensaje = "";
     this.cita1 = new CupoCitas("",new CentroSalud("","",0,""), new Date());
@@ -36,8 +36,8 @@ export class SolicitarCitaComponent implements OnInit {
   }
 
   solicitarCita(){
-    let centroSalud = new CentroSalud("Calle mi calle", "Hospital Universitario", 1340, "8071ef83-2230-40b5-bb4e-9b3167006f8f");
-     this.json.postJson("cupo/buscarParDeCuposLibresAPartirDeHoy",centroSalud).subscribe(
+
+     this.json.postJson("cupo/buscarParDeCuposLibresAPartirDeHoy",this.paciente).subscribe(
           result => {
 
           this.citas = JSON.parse(result.toString());

@@ -54,7 +54,7 @@ export class JsonService {
   postJson(url : string, body : Object){
     let options : Object =  {
           "observe" : 'body',
-          "responseType": 'json'
+          "responseType": 'text'
     }
       url = this.url + url;
     return this.http.post(url, body, options);
