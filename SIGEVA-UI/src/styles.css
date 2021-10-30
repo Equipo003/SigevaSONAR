@@ -90,6 +90,12 @@ select, option {
   margin-bottom: 10px;
 }
 
+.control-group2 {
+  margin-bottom: 10px;
+  /*font-family: Lucida Console;*/
+ 
+}
+
 
 
 .btn {
@@ -112,6 +118,7 @@ select, option {
 
 .btnBlanco {
   border: 2px solid transparent;
+  border-color:#000000;
   background: #ffffff;
   color: #000000;
   font-size: 16px;
@@ -119,14 +126,19 @@ select, option {
   padding: 39px 0;
   text-decoration: none;
   text-shadow: none;
-  border-radius: 3px;
+  border-radius: 30px;
   box-shadow: none;
   transition: 0.25s;
-  display: block;
   width: 350px;
   margin: 0 auto;
   cursor: pointer;
   display:inline-block;
+  font-family: 'Helvetica Neue', sans-serif; 
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow: #008080 1px 1px; 
+  text-transform: uppercase;
   
 }
 
