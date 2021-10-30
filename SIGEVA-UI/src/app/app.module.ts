@@ -13,7 +13,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.component';
 import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
-import { UsuarioComponent } from './usuario/usuario.component';
+import { ContenedorFijarSanitariosComponent } from './contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component';
+import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitario-fijar-centro.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { UsuarioComponent } from './usuario/usuario.component';
     ConfiguracionCuposComponent,
     CrearUsuariosComponent,
     IndicarDosisVacunasComponent,
-    UsuarioComponent
+    ContenedorFijarSanitariosComponent,
+    SanitarioFijarCentroComponent
   ],
   imports: [
     BrowserModule,
