@@ -67,12 +67,19 @@ select, option {
 .register {
   margin: 20px auto;
   width: 500px;
+  
 }
 
+.register2 {
+  width: 500px;
+  display:inline-block;
+  margin: 100px auto;
+}
 .register-screen {
   background-color: #FFF;
   padding: 20px;
-  border-radius: 5px
+  border-radius: 5px;
+  
 }
 
 .register-form {
@@ -101,6 +108,26 @@ select, option {
   width: 250px;
   margin: 0 auto;
   cursor: pointer;
+}
+
+.btnBlanco {
+  border: 2px solid transparent;
+  background: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 39px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 350px;
+  margin: 0 auto;
+  cursor: pointer;
+  display:inline-block;
+  
 }
 
 .btn-add {
