@@ -1,11 +1,10 @@
 package com.equipo3.SIGEVA.model;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class ConfiguracionCupos {
@@ -65,7 +64,7 @@ public class ConfiguracionCupos {
 	}
 
 	public Date getFechaInicioAsDate() {
-		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		try {
 			return formateador.parse(fechaInicio);
 		} catch (ParseException e) {
@@ -80,13 +79,7 @@ public class ConfiguracionCupos {
 
 	@SuppressWarnings("deprecation")
 	public Date getHoraFin() {
-		SimpleDateFormat formateador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-		Date fechaFin = null;
-		try {
-			fechaFin = formateador.parse(this.fechaInicio);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		Date fechaFin = getFechaInicioAsDate();
 		fechaFin.setHours(fechaFin.getHours() + this.duracionJornadaHoras);
 		fechaFin.setMinutes(fechaFin.getMinutes() + this.duracionJornadaMinutos);
 

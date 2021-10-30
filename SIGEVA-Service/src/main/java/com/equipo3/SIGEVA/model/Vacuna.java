@@ -1,21 +1,31 @@
 package com.equipo3.SIGEVA.model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Vacuna {
 
+	private String uuid;
 	private String nombre;
-	private int tiempoEntreVacuna;
+	private int diasEntreDosis;
 	private int numDosis;
 
 	public Vacuna() {
-
 	}
 
-	public Vacuna(String nombre, int tiempoEntreVacuna, int numDosis) {
-		this.nombre = "Pfizer";
-		this.tiempoEntreVacuna = 21;
-		this.numDosis = 2;
+	public Vacuna(String nombre, int diasEntreDosis, int numDosis) {
+		this.uuid = UUID.randomUUID().toString();
+		this.nombre = nombre; // "Pfizer"
+		this.diasEntreDosis = diasEntreDosis; // 21 (3 semanas)
+		this.numDosis = numDosis; // 2
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getNombre() {
@@ -26,12 +36,12 @@ public class Vacuna {
 		this.nombre = nombre;
 	}
 
-	public int getTiempoEntreVacuna() {
-		return tiempoEntreVacuna;
+	public int getDiasEntreDosis() {
+		return diasEntreDosis;
 	}
 
-	public void setTiempoEntreVacuna(int tiempoEntreVacuna) {
-		this.tiempoEntreVacuna = tiempoEntreVacuna;
+	public void setDiasEntreDosis(int diasEntreDosis) {
+		this.diasEntreDosis = diasEntreDosis;
 	}
 
 	public int getNumDosis() {
@@ -44,12 +54,12 @@ public class Vacuna {
 
 	@Override
 	public String toString() {
-		return "Vacuna [nombre=" + nombre + ", tiempoEntreVacuna=" + tiempoEntreVacuna + ", numDosis=" + numDosis + "]";
+		return "Vacuna [nombre=" + nombre + ", diasEntreDosis=" + diasEntreDosis + ", numDosis=" + numDosis + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre, numDosis, tiempoEntreVacuna);
+		return Objects.hash(diasEntreDosis, nombre, numDosis, uuid);
 	}
 
 	@Override
@@ -61,8 +71,8 @@ public class Vacuna {
 		if (getClass() != obj.getClass())
 			return false;
 		Vacuna other = (Vacuna) obj;
-		return Objects.equals(nombre, other.nombre) && numDosis == other.numDosis
-				&& tiempoEntreVacuna == other.tiempoEntreVacuna;
+		return diasEntreDosis == other.diasEntreDosis && Objects.equals(nombre, other.nombre)
+				&& numDosis == other.numDosis && Objects.equals(uuid, other.uuid);
 	}
 
 }

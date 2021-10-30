@@ -80,7 +80,11 @@ public class CupoCitas implements Comparable<CupoCitas> {
 	}
 
 	public void setTamano(int tamano) {
-		this.tamano = pacientesCitados.size();
+		if (pacientesCitados != null && tamano == pacientesCitados.size()) {
+			this.tamano = tamano;
+		} else {
+			System.out.println("Tamaño incoherente, salvo que no haya setteado lista aún.");
+		}
 	}
 
 	@Override
@@ -112,15 +116,19 @@ public class CupoCitas implements Comparable<CupoCitas> {
 		return pacientesCitados.size() == maximo;
 	}
 
-	public void anadirPaciente(Usuario paciente, ConfiguracionCupos configuracionCupos)
+	public void anadirPaciente(Paciente paciente, ConfiguracionCupos configuracionCupos)
 			throws UsuarioInvalidoException, CupoCitasException {
+
 		if (pacientesCitados.contains(paciente)) {
 			throw new UsuarioInvalidoException("El usuario ya estaba contenido.");
+
 		} else if (estaLleno(configuracionCupos.getNumeroPacientes())) {
 			throw new CupoCitasException("El cupo ya había alcanzado su máximo.");
+
 		} else {
 			pacientesCitados.add(paciente);
 		}
+
 	}
 
 	public boolean pacienteEnlistado(Usuario paciente) {
