@@ -42,6 +42,15 @@ export class JsonService {
 	return this.http.put(url, options);
   }
 
+  putJsonSanitario(url : string, parameter1 : String, parameter2 : string){
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'text'
+    }
+    url = this.url +url+ "/" + parameter1 + "/" + parameter2;
+    return this.http.put(url, options);
+  }
+
   postJson(url : string, body : Object){
     let options : Object =  {
           "observe" : 'body',

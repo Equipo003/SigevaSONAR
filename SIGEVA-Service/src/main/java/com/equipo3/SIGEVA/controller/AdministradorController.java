@@ -38,13 +38,25 @@ public class AdministradorController {
 	private CupoController cupoController;
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PutMapping("/fijarCentro/{username}/{centro}")
+	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
+		try {
+			Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
+			if (optUsuario.isPresent()) {
+				Usuario sanitario = optUsuario.get();
+				sanitario.setCentroSalud(centro);
+				administradorDao.save(sanitario);
+			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getUsuariosByRol")
 	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			System.out.println(rol);
 			List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
-			sanitarios.add(new Usuario());
-			System.out.println(sanitarios.size());
 			return sanitarios;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
