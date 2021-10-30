@@ -60,8 +60,6 @@ export class SanitarioFijarCentroComponent implements OnInit {
     }
     else {
       this.fijarCentro();
-      console.log("llega");
-      console.log(this.newSanitario)
       let self = this;
       this.json.putJsonSanitario("user/fijarCentro", this.newSanitario.username, this.newSanitario.centroSalud).subscribe(
         result => {
