@@ -14,6 +14,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.component';
 import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
 import { UsuarioComponent } from './usuario/usuario.component';
+import { FijarSanitariosComponent } from './fijar-sanitarios/fijar-sanitarios.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { UsuarioComponent } from './usuario/usuario.component';
     ConfiguracionCuposComponent,
     CrearUsuariosComponent,
     IndicarDosisVacunasComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    FijarSanitariosComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { ConfiguracionCuposComponent} from "./configuracion-cupos/configuracion-
 import { CrearUsuariosComponent} from "./crear-usuarios/crear-usuarios.component";
 import {IndicarDosisVacunasComponent} from "./indicar-dosis-vacunas/indicar-dosis-vacunas.component"
 import {UsuarioComponent} from "./usuario/usuario.component";
+import {FijarSanitariosComponent} from "./fijar-sanitarios/fijar-sanitarios.component";
 
 const  appRoutes: Routes = [
   {path: '', component :HomeComponent},
@@ -15,7 +16,7 @@ const  appRoutes: Routes = [
   {path: 'cnfgCupos', component: ConfiguracionCuposComponent},
   {path: 'crearUsuarios', component: CrearUsuariosComponent},
   {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent},
-  {path: 'fijarPersonal', component: UsuarioComponent}
+  {path: 'fijarPersonal', component: FijarSanitariosComponent}
 
 ]
 
