@@ -159,6 +159,24 @@ select, option {
   padding-top: 0.5rem;
 }
 
+.navbar-logo{
+  display: inline-block;
+  vertical-align: middle;
+  width: 70px;
+}
+
+.navbar-logo img{
+ position:absolute;
+    left:43px;
+    /*left: 280px;*/
+    top:-138px;
+    width:300px;
+    height:400px;
+    border-radius:100%;
+    z-index:99999;
+
+}
+
 /* Navegacion */
 .navegacion a{
   color: black;
