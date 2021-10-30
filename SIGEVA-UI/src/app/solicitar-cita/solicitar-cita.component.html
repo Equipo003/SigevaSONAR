@@ -1,0 +1,32 @@
+<div class="separation"></div>
+<div class="register-screen">
+  <div class="register-form">
+    <h1 *ngIf = "this.solicitada == false">SOLICITAR CITA</h1>
+    <h1 *ngIf = "this.solicitada == true">{{this.mensaje}}</h1>
+    <div class="control-group">
+      <button *ngIf = "this.solicitada == false" class="btn" (click)="(solicitarCita())">Solicitar</button>
+    </div>
+  </div>
+</div>
+
+<div class="separation"></div>
+<div *ngIf = "this.solicitada == true"  class="register-screen">
+  <div class="register-form">
+    <h1>SOLICITAR CITA</h1>
+    <div  class="control-group">
+      <h1>Fecha y Hora: {{this.cita1.fechaYHoraInicio | date : 'medium'}}</h1>
+      <h1>Lugar: {{this.cita1.centroSalud.direccion}}, {{this.cita1.centroSalud.nombreCentro}} </h1>
+    </div>
+  </div>
+</div>
+<div class="separation"></div>
+<div *ngIf = "this.solicitada == true" class="register-screen">
+  <div class="register-form">
+    <h1>SOLICITAR CITA</h1>
+    <div  class="control-group">
+      <h1>Fecha y Hora: {{this.cita2.fechaYHoraInicio | date : 'medium'}}</h1>
+      <h1>Lugar: {{this.cita2.centroSalud.direccion}}, {{this.cita2.centroSalud.nombreCentro}} </h1>
+    </div>
+  </div>
+</div>
+

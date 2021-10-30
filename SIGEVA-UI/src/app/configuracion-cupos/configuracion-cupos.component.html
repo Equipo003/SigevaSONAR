@@ -10,7 +10,7 @@
         <input type="datetime-local" placeholder="Fecha de inicio y hora de inicio" [(ngModel)]="fechaInicio">
       </div>
       <div class="control-group">Duración Jornada (horas [0-24])
-        <input type="number" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
+        <input type="number" min="0" max="24" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
       </div>
       <div class="control-group">Duración Jornada (minuntos [0-59])
         <input type="number" placeholder="Correo electrónico" [(ngModel)]="duracionJornadaMinutos">
@@ -36,7 +36,7 @@
       <h3>Completa el horario para calcular la hora de fin de las jornadas de vacunación</h3>
     </div>
     <div *ngIf="fechaCreada == true" class="control-group">Duración del cupo (minutos)
-      <input type="number" placeholder="Duracion del cupo" [(ngModel)]="duracionMinutos">
+      <input type="number" min="0" max="59" placeholder="Duracion del cupo" [(ngModel)]="duracionMinutos">
     </div>
     <div *ngIf="fechaCreada == true" class="control-group">Número de pacientes
       <input type="number" placeholder="Duracion del cupo" [(ngModel)]="numeroPacientes">
@@ -66,13 +66,10 @@
       <h1>CONFIRMAR</h1>
       <div class="control-group">
         <button class="btn" (click)="(crearConfiguracionCupos())">Guardar configuración</button>
+        <h1 *ngIf="this.solicitada == true">{{this.mensaje}}</h1>
       </div>
     </div>
   </div>
-
-
-
-
 </div>
 
 

@@ -15,6 +15,7 @@ import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.componen
 import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
 import { ContenedorFijarSanitariosComponent } from './contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component';
 import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitario-fijar-centro.component';
+import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitari
     CrearUsuariosComponent,
     IndicarDosisVacunasComponent,
     ContenedorFijarSanitariosComponent,
-    SanitarioFijarCentroComponent
+    SanitarioFijarCentroComponent,
+    SolicitarCitaComponent
   ],
   imports: [
     BrowserModule,

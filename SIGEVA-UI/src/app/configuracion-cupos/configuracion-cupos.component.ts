@@ -21,6 +21,8 @@ export class ConfiguracionCuposComponent implements OnInit {
       fechaInicio : string;
       fechaCreada : boolean;
       aceptarEstadisticas : boolean;
+      mensaje : string;
+      solicitada :boolean;
 
   constructor(private json: JsonService) {
     this.duracionMinutos = 0;
@@ -32,6 +34,8 @@ export class ConfiguracionCuposComponent implements OnInit {
     this.fechaCreada = false;
     this.fecha = new Date();
     this.aceptarEstadisticas = false;
+    this.mensaje = '';
+    this.solicitada = false;
   }
 
   ngOnInit(): void {
@@ -56,8 +60,13 @@ export class ConfiguracionCuposComponent implements OnInit {
       this.duracionJornadaMinutos, this.fechaInicio)
 
       this.json.postJson('user/crearConfCupos',confCupo).subscribe((res: any) => {
-           console.log(res);
+           this.mensaje = 'Configuración guardada correctamente!'
+      },err=> {
+          this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
+          console.log(err);
       });
+
+      this.solicitada = true;
   }
 
   aceptarEstadisticasF(){
