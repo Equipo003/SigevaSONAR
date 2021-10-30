@@ -39,4 +39,5 @@ export class Usuario {
     this.fechaNacimiento = fechaNacimiento;
     this.imagen = imagen;
   }
+
 }
