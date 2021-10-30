@@ -1,38 +1,50 @@
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
 
-
-
-<form method="post" action="https://getform.org/f/70415a77-d632-4883-bf07-2e15d3f557da">
   <div class="register">
-  <div class="register-screen">
-    <div class="register-form">
-      <p class="texto">Crear Centro de Salud</p>
-      <div class="control-group">
-        <p>Nombre del centro de salud</p>
-        <span class="fontawesome-hospital"></span>
-        <input type="text" required placeholder="Nombre del centro de salud" autocomplete="off" [(ngModel)]="nombreCentro" [ngModelOptions]="{standalone: true}">
-      </div>
+    <div class="register-screen">
+      <div class="register-form">
+        <form #crearCentroForm="ngForm" (ngSubmit)=enviarDatosBack() id ="form">
+          <h1>CREAR CENTRO DE SALUD</h1>
 
-      <div class="control-group">
-        <p>Dirección del centro de salud</p>
-        <span class="fontawesome-map-marker "></span>
-        <input type="text" id="direccion" required placeholder="Dirección del Centro de Salud" autocomplete="off" [(ngModel)]="direccion" [ngModelOptions]="{standalone: true}">
-      </div>
+          <div class="control-group">
+            <span class="fontawesome-hospital"> </span>
+            <input type="text" placeholder="Nombre del centro de salud" name="nombreCentro" #nombreCentro="ngModel" [(ngModel)]="centroSalud.nombreCentro" required >
+            <div>
+              <small *ngIf="!nombreCentro.valid && nombreCentro.touched"  class="textoColorRojo">
+                El campo no puede estar vacío
+              </small>
+            </div>
+          </div>
 
-      <div class="control-group">
-        <p>Número de Vacunas Disponibles</p>
-        <span class="fontawesome-caret-right "></span>
-        <input type="number" min="0"  id="numVacunas"  required placeholder="Número de Vacunas Disponibles" autocomplete="off"  [(ngModel)]="numVacunasDisponibles" [ngModelOptions]="{standalone: true}" >
-      </div>
-      <div id = "mensajeRespuesta" class = "resaltadoPositivo" *ngIf="mostrarTexto && positivo && guardado">{{mensajeRespuesta}}</div>
-       <div id = "mensajeRespuesta" class = "resaltadoNegativo" *ngIf="mostrarTexto && !positivo && guardado">{{mensajeRespuesta}}</div>
-       <div id = "mensajeRespuesta" class = "resaltadoNeutral" *ngIf="mostrarTexto && !guardado">{{mensajeRespuesta}}</div>
-      <div class="control-group">
-       <input class="btn" type="submit" (click)="enviarDatosBack()"value="Crear Centro" title="Crear el centro de salud">
+          <div class="control-group">
+            <span class="fontawesome-map-marker "> </span>
+            <input type="text" placeholder="Dirección del Centro de Salud" name="direccionCentro" #direccionCentro="ngModel" [(ngModel)]="centroSalud.direccion" required>
+            <div>
+              <small *ngIf="!direccionCentro.valid && direccionCentro.touched"  class="textoColorRojo">
+                El campo no puede estar vacío
+              </small>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <p>Número de Vacunas Disponibles:</p>
+            <span class="fontawesome-caret-right "> </span>
+            <input type="number" min="0" placeholder="Número de Vacunas Disponibles" name="numVacunas" #numVacunas="ngModel" [(ngModel)]="centroSalud.numVacunasDisponibles">
+            <div>
+              <small *ngIf="!numVacunas.valid && numVacunas.touched"  class="textoColorRojo">
+                El campo no puede estar vacío
+              </small>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <button class="btn" type="submit" [disabled]="crearCentroForm.invalid">Crear Centro</button>
+          </div>
+        </form>
+
+        <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+        <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+        <p class="resaltadoNeutral" *ngIf="generandoCupos">{{generandoCupos}}</p>
+
       </div>
     </div>
   </div>
-  </div>
-</form>
