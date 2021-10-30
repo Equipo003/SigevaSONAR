@@ -24,7 +24,7 @@ public class SampleController
     @GetMapping("/hi")
     public void healthCheck(){
         List<ConfiguracionCupos> configuracionCuposList = configDao.findAll();
-        if(configuracionCuposList.size() >=1){
+        if(!configuracionCuposList.isEmpty()){
             System.out.println("Ya configurado");
         }
     }
@@ -33,7 +33,7 @@ public class SampleController
     @PostMapping("/envio")
     public ConfiguracionCupos crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf){
         List<ConfiguracionCupos> configuracionCuposList = configDao.findAll();
-        if(configuracionCuposList.size() == 0)
+        if(configuracionCuposList.isEmpty())
             configDao.save(conf);
         else
             System.out.println("Ya existe una configuracion");

@@ -1,16 +1,20 @@
 package com.equipo3.SIGEVA.dao;
 
-import com.equipo3.SIGEVA.model.CentroSalud;
-
 import java.util.List;
+import java.util.Optional;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import com.equipo3.SIGEVA.model.CentroSalud;
+
 @Repository
 public interface CentroSaludDao extends MongoRepository<CentroSalud, String> {
-	List<CentroSalud> findAll();
-	CentroSalud findById(ObjectId id);
-}
 
+	List<CentroSalud> findAll();
+
+	Optional<CentroSalud> findById(String id);
+
+	Optional<CentroSalud> findByNombreCentro(String nombreCentroSalud);
+
+}

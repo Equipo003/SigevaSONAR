@@ -7,11 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 @SpringBootTest
-public class CrearCentroSaludTest {
+class CrearCentroSaludTest {
     @Autowired
     private AdministradorController administradorController;
     @Test
-	public void testCrearCentroSaludBien() {
+	void testCrearCentroSaludBien() {
 		
     	try {
     		administradorController.crearCentroSalud(null);
