@@ -90,6 +90,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.checkCentro();
     this.json.postJson("user/crearUsuario" + this.nombreRol, this.usuario).subscribe(
       result => {
+        this.errorMessage = "";
         this.message = "Usuario creado correctamente"
         setTimeout('document.location.reload()',2000);
       },err=> {
