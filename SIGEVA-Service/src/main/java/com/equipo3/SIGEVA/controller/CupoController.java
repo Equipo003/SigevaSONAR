@@ -8,13 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
@@ -52,11 +46,11 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
-	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody String idUsuario) {
+	@GetMapping ("/buscarParDeCuposLibresAPartirDeHoy")
+	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestParam String username) {
 
-		Optional<Usuario> u = usuarioDao.findById(idUsuario);
-		if (idUsuario == null || !u.isPresent()) {
+		Optional<Usuario> u = usuarioDao.findByUsername(username);
+		if (username == null || !u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
 		
