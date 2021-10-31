@@ -58,7 +58,7 @@ public class CupoController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
 
-		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud()); // TODO - FK
+		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
 		if (!optCs.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					"No existe el centro de salud o el paciente no tiene centro de salud asignado.");
