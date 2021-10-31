@@ -127,6 +127,7 @@ public class CupoCitas implements Comparable<CupoCitas> {
 
 		} else {
 			pacientesCitados.add(paciente);
+			this.tamano+=1;
 		}
 
 	}
