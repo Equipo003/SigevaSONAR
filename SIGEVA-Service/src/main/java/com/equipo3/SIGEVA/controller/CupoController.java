@@ -48,7 +48,7 @@ public class CupoController {
 	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody Paciente paciente) {
 		try {
-			List<CupoCitas> lista = new ArrayList<>();
+
 			if (paciente != null) {
 				Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
 				Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
@@ -68,7 +68,7 @@ public class CupoController {
 
 				Date hoy = new Date();
 				if (hoy.before(maximo)) {
-
+					List<CupoCitas> lista = new ArrayList<>();
 					CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
 					dosis1.anadirPaciente(paciente, confCupos.get(0));
 					lista.add(dosis1);
@@ -79,7 +79,7 @@ public class CupoController {
 					dosis2.anadirPaciente(paciente, confCupos.get(0));
 					lista.add(dosis2);
 
-
+					System.out.println(lista.size());
 
 					return lista;
 
