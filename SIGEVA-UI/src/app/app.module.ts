@@ -31,7 +31,8 @@ import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.componen
     ContenedorFijarSanitariosComponent,
     SanitarioFijarCentroComponent,
     UsuariosSistemaComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    SolicitarCitaComponent
   ],
   imports: [
     BrowserModule,

@@ -18,7 +18,9 @@ const  appRoutes: Routes = [
   {path: 'crearUsuarios', component: CrearUsuariosComponent},
   {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent},
   {path: 'fijarPersonal', component: ContenedorFijarSanitariosComponent},
-  {path: 'usuariosSistema', component: UsuariosSistemaComponent}
+  {path: 'usuariosSistema', component: UsuariosSistemaComponent},
+  {path: 'solicitarCita', component: SolicitarCitaComponent}
+
 
 ]
 

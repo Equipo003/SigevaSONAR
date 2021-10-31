@@ -24,9 +24,10 @@ export class Usuario {
   apellidos:string;
   fechaNacimiento:string;
   imagen:string;
+  id: string | undefined;
 
   constructor(rol: string, centroSalud: string, username: string, correo: string, hashPassword:string, dni:string,
-              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string){
+              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string, id?: string){
 
     this.rol = rol;
     this.centroSalud = centroSalud;
@@ -38,6 +39,7 @@ export class Usuario {
     this.apellidos = apellidos;
     this.fechaNacimiento = fechaNacimiento;
     this.imagen = imagen;
+    this.id = id;
   }
 
 }

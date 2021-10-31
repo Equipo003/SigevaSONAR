@@ -9,6 +9,7 @@ import { JsonService } from '../Service/json.service';
   templateUrl: './solicitar-cita.component.html',
   styleUrls: ['./solicitar-cita.component.css']
 })
+
 export class SolicitarCitaComponent implements OnInit {
   paciente : Usuario;
   mensaje: string;
@@ -17,11 +18,10 @@ export class SolicitarCitaComponent implements OnInit {
   cita2 : CupoCitas;
   citas : CupoCitas[];
   solicitada : boolean;
-;
 
   constructor(private json: JsonService) {
     this.paciente = new Usuario("","26254604-7e30-43b4-9d37-529402489f5d", "", "", "", "",
-          "", "", "", "");
+          "", "", "", "", "cd23105f-6797-40b9-8ca0-89569c8f88c8");
     this.mensaje = "";
     this.cita1 = new CupoCitas("",new CentroSalud("","",0,""), new Date());
     this.cita2 = new CupoCitas("",new CentroSalud("","",0,""), new Date());

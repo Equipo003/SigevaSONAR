@@ -1,32 +1,83 @@
+<div class="contenedor-citas">
 <div class="separation"></div>
-<div class="register-screen">
+<div class="solicitud-cita">
   <div class="register-form">
     <h1 *ngIf = "this.solicitada == false">{{this.mensajeError}}</h1>
     <h1 *ngIf = "this.solicitada == true">{{this.mensaje}}</h1>
     <div class="control-group">
-      <button *ngIf = "this.solicitada == false" class="btn" (click)="(solicitarCita())">Solicitar</button>
+      <button *ngIf = !this.solicitada class="btn" (click)= solicitarCita()>Solicitar</button>
     </div>
   </div>
 </div>
 
 <div class="separation"></div>
-<div *ngIf = "this.solicitada == true"  class="register-screen">
-  <div class="register-form">
-    <h1>SOLICITAR CITA</h1>
-    <div  class="control-group">
-      <h1>Fecha y Hora: {{this.cita1.fechaYHoraInicio | date : 'medium'}}</h1>
-      <h1>Lugar: {{this.cita1.centroSalud.direccion}}, {{this.cita1.centroSalud.nombreCentro}} </h1>
-    </div>
+
+<div *ngIf = this.solicitada class="register-screen">
+  <div class="cita-form">
+    <h1 class="titulo">Cita 1</h1>
+    <hr>
+    <table aria-describedby="Información del producto">
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-calendar"></p>
+        </th>
+        <td>
+          <p>{{this.cita1.fechaYHoraInicio | date : 'medium'}}</p>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-hospital"></p>
+        </th>
+        <td>
+          <p>{{this.cita1.centroSalud.nombreCentro}}</p>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-map-marker"></p>
+        </th>
+        <td>
+          <p>{{this.cita1.centroSalud.direccion}}</p>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
+
 <div class="separation"></div>
-<div *ngIf = "this.solicitada == true" class="register-screen">
-  <div class="register-form">
-    <h1>SOLICITAR CITA</h1>
-    <div  class="control-group">
-      <h1>Fecha y Hora: {{this.cita2.fechaYHoraInicio | date : 'medium'}}</h1>
-      <h1>Lugar: {{this.cita2.centroSalud.direccion}}, {{this.cita2.centroSalud.nombreCentro}} </h1>
-    </div>
+
+<div *ngIf = this.solicitada class="register-screen">
+  <div class="cita-form">
+    <h1 class="titulo">Cita 2</h1>
+    <hr>
+    <table aria-describedby="Información del producto">
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-calendar"></p>
+        </th>
+        <td>
+          <p>{{this.cita2.fechaYHoraInicio | date : 'medium'}}</p>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-hospital"></p>
+        </th>
+        <td>
+          <p>{{this.cita2.centroSalud.nombreCentro}}</p>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-map-marker"></p>
+        </th>
+        <td>
+          <p>{{this.cita2.centroSalud.direccion}}</p>
+        </td>
+      </tr>
+    </table>
   </div>
+</div>
 </div>
 
