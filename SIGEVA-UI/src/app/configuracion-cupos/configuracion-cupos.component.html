@@ -1,5 +1,11 @@
 <div class="register">
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == true" class="register-screen">
+    <div class="register-form">
+      <h1>Ya se han configurado los cupos</h1>
+      <div class="control-group"></div>
+    </div>
+  </div>
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>FECHAS Y HORARIOS DE LA VACUNACIÓN</h1>
       <div class="control-group"></div>
@@ -26,7 +32,7 @@
       </div>
   </div>
   <div class="separation"></div>
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>TAMAÑO DE LOS CUPOS</h1>
       <div class="control-group"></div>
@@ -45,7 +51,7 @@
   </div>
 
   <div class="separation"></div>
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>ESTADÍSTICAS</h1>
       <div *ngIf="!(fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0)" class="control-group">
@@ -61,7 +67,7 @@
     </div>
   </div>
   <div class="separation"></div>
-  <div *ngIf="this.aceptarEstadisticas == true" class="control-group" class="register-screen">
+  <div *ngIf="this.aceptarEstadisticas == true && this.configuracionExistente == false" class="control-group" class="register-screen">
     <div class="register-form">
       <h1>CONFIRMAR</h1>
       <div class="control-group">

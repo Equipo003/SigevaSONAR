@@ -47,15 +47,15 @@ public class CupoController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody Paciente paciente) {
-		try {
 
 			if (paciente != null) {
 				Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
 				Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
 				List<ConfiguracionCupos> confCupos = this.configuracionCuposDao.findAll();
+
 				if (!optCs.isPresent()) {
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-							"Paciente sin Centro de Salud asignado");
+							"No existe el centro de salud o el paciente no tiene centro de salud asignado");
 				}
 				CentroSalud centroSalud;
 				centroSalud = optCs.get();
@@ -63,25 +63,33 @@ public class CupoController {
 					throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED,
 							"Es necesario establecer la configuarion de los cupos");
 				}
-
 				maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
 
 				Date hoy = new Date();
 				if (hoy.before(maximo)) {
 					List<CupoCitas> lista = new ArrayList<>();
 					CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
-					dosis1.anadirPaciente(paciente, confCupos.get(0));
 					lista.add(dosis1);
 
 					Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
 					fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
 					CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
-					dosis2.anadirPaciente(paciente, confCupos.get(0));
 					lista.add(dosis2);
+				try {
+					dosis1.anadirPaciente(paciente, confCupos.get(0));
+					dosis2.anadirPaciente(paciente, confCupos.get(0));
+				}catch(CupoCitasException c){
+					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+							"Error con la gestión de cupos");
+				} catch (UsuarioInvalidoException e) {
+					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+							"Error con el usuario");
+				}
 
-					System.out.println(lista.size());
+					this.cupoCitasDao.save(dosis1);
+					this.cupoCitasDao.save(dosis2);
 
-					return lista;
+				return lista;
 
 				} else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -91,11 +99,6 @@ public class CupoController {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de Salud no contemplado.");
 			}
 
-		}catch (Exception e){
-
-		}
-
-		return new ArrayList<CupoCitas>();
 	}
 
 	@GetMapping("/buscarCupoLibre")
