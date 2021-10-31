@@ -39,5 +39,7 @@ export class FormularioCentroSaludComponent implements OnInit {
       this.generandoCupos = "";
       this.errorMessage = err.error.message;
     });
+
+
   }
 }

@@ -21,6 +21,9 @@ export class ConfiguracionCuposComponent implements OnInit {
       fechaInicio : string;
       fechaCreada : boolean;
       aceptarEstadisticas : boolean;
+      mensaje : string;
+      solicitada :boolean;
+      configuracionExistente : boolean;
 
   constructor(private json: JsonService) {
     this.duracionMinutos = 0;
@@ -32,13 +35,18 @@ export class ConfiguracionCuposComponent implements OnInit {
     this.fechaCreada = false;
     this.fecha = new Date();
     this.aceptarEstadisticas = false;
+    this.mensaje = '';
+    this.solicitada = false;
+    this.configuracionExistente = false;
   }
 
   ngOnInit(): void {
-    //let body : ConfiguracionCupos = new ConfiguracionCupos(16,8);
-    //this.json.postJson('http://localhost:8080/home/envio', body).subscribe((res: any) => {
-     // console.log(res.numeroPacientes);
-    //});
+      this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+               this.configuracionExistente = JSON.parse(res);
+          },err=> {
+              this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
+              console.log(err);
+          });
   }
 
   calcularHoraFin(){
@@ -56,8 +64,14 @@ export class ConfiguracionCuposComponent implements OnInit {
       this.duracionJornadaMinutos, this.fechaInicio)
 
       this.json.postJson('user/crearConfCupos',confCupo).subscribe((res: any) => {
-           console.log(res);
+           this.mensaje = 'Configuración guardada correctamente!'
+           this.configuracionExistente = true;
+      },err=> {
+          this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
+          console.log(err);
       });
+
+      this.solicitada = true;
   }
 
   aceptarEstadisticasF(){

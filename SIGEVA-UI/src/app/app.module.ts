@@ -17,6 +17,7 @@ import { ContenedorFijarSanitariosComponent } from './contenedor-fijar-sanitario
 import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitario-fijar-centro.component';
 import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
 import { UsuarioComponent } from './usuario/usuario.component';
+import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 
 
 @NgModule({

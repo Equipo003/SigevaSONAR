@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
-import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
@@ -128,9 +125,9 @@ public class AdministradorController {
 			if (optCentroSalud.isPresent()){
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud ya existe en la base de datos");
 			}
-
-			centroSaludDao.save(centroSalud);
 			cupoController.prepararCuposCitas(centroSalud);
+			centroSaludDao.save(centroSalud);
+			System.out.println(centroSalud.getId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,6 +173,21 @@ public class AdministradorController {
 				configCuposDao.save(conf);
 			else
 				throw new ConfiguracionYaExistente("Ya existía configuración.");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+		}
+
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/existConfCupos")
+	public boolean existConfiguracionCupos() {
+		try {
+			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			if (configuracionCuposList.isEmpty())
+				return false;
+			else
+				return true;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}

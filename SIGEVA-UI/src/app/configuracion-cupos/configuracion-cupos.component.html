@@ -1,5 +1,11 @@
 <div class="register">
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == true" class="register-screen">
+    <div class="register-form">
+      <h1>Ya se han configurado los cupos</h1>
+      <div class="control-group"></div>
+    </div>
+  </div>
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>FECHAS Y HORARIOS DE LA VACUNACIÓN</h1>
       <div class="control-group"></div>
@@ -10,7 +16,7 @@
         <input type="datetime-local" placeholder="Fecha de inicio y hora de inicio" [(ngModel)]="fechaInicio">
       </div>
       <div class="control-group">Duración Jornada (horas [0-24])
-        <input type="number" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
+        <input type="number" min="0" max="24" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
       </div>
       <div class="control-group">Duración Jornada (minuntos [0-59])
         <input type="number" placeholder="Correo electrónico" [(ngModel)]="duracionJornadaMinutos">
@@ -26,7 +32,7 @@
       </div>
   </div>
   <div class="separation"></div>
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>TAMAÑO DE LOS CUPOS</h1>
       <div class="control-group"></div>
@@ -36,7 +42,7 @@
       <h3>Completa el horario para calcular la hora de fin de las jornadas de vacunación</h3>
     </div>
     <div *ngIf="fechaCreada == true" class="control-group">Duración del cupo (minutos)
-      <input type="number" placeholder="Duracion del cupo" [(ngModel)]="duracionMinutos">
+      <input type="number" min="0" max="59" placeholder="Duracion del cupo" [(ngModel)]="duracionMinutos">
     </div>
     <div *ngIf="fechaCreada == true" class="control-group">Número de pacientes
       <input type="number" placeholder="Duracion del cupo" [(ngModel)]="numeroPacientes">
@@ -45,7 +51,7 @@
   </div>
 
   <div class="separation"></div>
-  <div class="register-screen">
+  <div *ngIf="this.configuracionExistente == false" class="register-screen">
     <div class="register-form">
       <h1>ESTADÍSTICAS</h1>
       <div *ngIf="!(fechaCreada == true && duracionMinutos > 0 && numeroPacientes > 0)" class="control-group">
@@ -61,18 +67,15 @@
     </div>
   </div>
   <div class="separation"></div>
-  <div *ngIf="this.aceptarEstadisticas == true" class="control-group" class="register-screen">
+  <div *ngIf="this.aceptarEstadisticas == true && this.configuracionExistente == false" class="control-group" class="register-screen">
     <div class="register-form">
       <h1>CONFIRMAR</h1>
       <div class="control-group">
         <button class="btn" (click)="(crearConfiguracionCupos())">Guardar configuración</button>
+        <h1 *ngIf="this.solicitada == true">{{this.mensaje}}</h1>
       </div>
     </div>
   </div>
-
-
-
-
 </div>
 
 
