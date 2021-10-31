@@ -28,6 +28,7 @@ import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
 import com.equipo3.SIGEVA.model.CupoSimple;
 import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("cupo")
@@ -52,11 +53,15 @@ public class CupoController {
 	@SuppressWarnings("deprecation")
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
-	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody Paciente paciente) {
+	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody String idUsuario) {
 
-		if (paciente == null) {
+		Optional<Usuario> u = usuarioDao.findById(idUsuario);
+		if (idUsuario == null || !u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
+		
+		Paciente paciente = (Paciente) u.get();
+		System.out.println(paciente.toString());
 
 		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
 		if (!optCs.isPresent()) {
