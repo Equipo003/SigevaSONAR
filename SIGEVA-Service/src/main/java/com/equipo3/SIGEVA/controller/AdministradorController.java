@@ -184,10 +184,7 @@ public class AdministradorController {
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-			if (configuracionCuposList.isEmpty())
-				return false;
-			else
-				return true;
+			return !configuracionCuposList.isEmpty();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}

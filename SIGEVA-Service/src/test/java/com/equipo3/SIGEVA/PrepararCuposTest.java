@@ -16,7 +16,7 @@ import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.CupoCitas;
 
 @SpringBootTest
-class CuposTests {
+class PrepararCuposTest {
 
 	@Autowired
 	private CupoController cupoController;
@@ -41,7 +41,7 @@ class CuposTests {
 
 		List<CupoCitas> lista1 = cupoController.prepararCuposCitas(centroSalud); // ¡TARDA LO SUYO!
 
-		CupoCitas cupo1 = cupoController.buscarCupoLibre(centroSalud,
+		CupoCitas cupo1 = cupoController.buscarPrimerCupoLibre(centroSalud,
 				configuracionCuposDao.findAll().get(0).getFechaInicioAsDate());
 
 		assertEquals(lista1.get(0), cupo1);

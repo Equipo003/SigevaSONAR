@@ -6,22 +6,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
-import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.CupoCitas;
+import com.equipo3.SIGEVA.model.CupoSimple;
 import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.*;
 
 @RestController
 @RequestMapping("cupo")
@@ -48,61 +54,65 @@ public class CupoController {
 	@PostMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestBody Paciente paciente) {
 
-			if (paciente != null) {
-				Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
-				Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
-				List<ConfiguracionCupos> confCupos = this.configuracionCuposDao.findAll();
+		if (paciente == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
+		}
 
-				if (!optCs.isPresent()) {
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-							"No existe el centro de salud o el paciente no tiene centro de salud asignado");
-				}
-				CentroSalud centroSalud;
-				centroSalud = optCs.get();
-				if (confCupos.size() == 0) {
-					throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED,
-							"Es necesario establecer la configuarion de los cupos");
-				}
-				maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
+		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
+		if (!optCs.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					"No existe el centro de salud o el paciente no tiene centro de salud asignado.");
+		}
+		CentroSalud centroSalud = optCs.get();
 
-				Date hoy = new Date();
-				if (hoy.before(maximo)) {
-					List<CupoCitas> lista = new ArrayList<>();
-					CupoCitas dosis1 = buscarCupoLibre(centroSalud, hoy);
-					lista.add(dosis1);
+		Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
+		maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
+		Date hoy = new Date();
 
-					Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
-					fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
-					CupoCitas dosis2 = buscarCupoLibre(centroSalud, fechaDosis2);
-					lista.add(dosis2);
-				try {
-					dosis1.anadirPaciente(paciente, confCupos.get(0));
-					dosis2.anadirPaciente(paciente, confCupos.get(0));
-				}catch(CupoCitasException c){
-					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-							"Error con la gestión de cupos");
-				} catch (UsuarioInvalidoException e) {
-					throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-							"Error con el usuario");
-				}
+		if (!hoy.before(maximo)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
+		}
 
-					this.cupoCitasDao.save(dosis1);
-					this.cupoCitasDao.save(dosis2);
+		List<CupoCitas> lista = new ArrayList<>();
 
-				return lista;
+		CupoCitas dosis1 = buscarPrimerCupoLibre(centroSalud, hoy);
+		lista.add(dosis1);
 
-				} else {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
-				}
-			} else {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Centro de Salud no contemplado.");
-			}
+		Date fechaDosis2 = copia(dosis1.getFechaYHoraInicio());
+		fechaDosis2.setDate(fechaDosis2.getDate() + centroSalud.getVacuna().getDiasEntreDosis());
+		CupoCitas dosis2 = buscarPrimerCupoLibre(centroSalud, fechaDosis2);
+		lista.add(dosis2);
+
+		confirmarCita(dosis1, paciente);
+		confirmarCita(dosis2, paciente);
+
+		paciente.setAsignado(true);
+		usuarioDao.save(paciente);
+
+		return lista;
+
+	}
+
+	public void desasignarCupo(@RequestBody CupoCitas cupo, @RequestBody Paciente paciente) {
+		if (cupo == null || paciente == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cupo o paciente no contemplado.");
+		}
+
+		try {
+			cupo.eliminarPaciente(paciente);
+			paciente.desasignarCupo(CupoSimple.createCupoSimple(cupo));
+
+			cupoCitasDao.save(cupo);
+			usuarioDao.save(paciente);
+		} catch (UsuarioInvalidoException | CupoCitasException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 
 	}
 
 	@GetMapping("/buscarCupoLibre")
-	public CupoCitas buscarCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
+	public CupoCitas buscarPrimerCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
 			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
 			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud, aPartirDeLaFecha, maximo);
@@ -116,58 +126,45 @@ public class CupoController {
 	@PutMapping("/confirmarCita")
 	public void confirmarCita(@RequestBody CupoCitas cupo, @RequestBody Paciente paciente) {
 
-		// ¡¡¡ NO PROBADO !!!. ¡¡¡ PUEDE FALLAR (no alarmarse) !!!.
-
 		try {
-			if (cupo != null && paciente != null) {
 
-				Optional<CupoCitas> optCupoReal = cupoCitasDao.findById(cupo.getUuid());
-
-				/*
-				 * Consideración a valorar: Trabajar con el cupo real de la BD puede
-				 * considerarse innecesario ya que ya se tiene mediante el parámetro; salvo que
-				 * se llenase el cupo entre medias con rapidez, sobretodo en /modificarCita
-				 * donde en la interfaz/frontend se espera a que el paciente escoja entre varios
-				 * propuestos.
-				 */
-
-				if (optCupoReal.isPresent()) {
-
-					CupoCitas cupoReal = optCupoReal.get();
-
-					ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
-					/*
-					 * Prog: Puede provocar ArrayIndexOutOfBoundsException en caso de no existir
-					 * configuración en la BD. Considerar medir y throwear mediante if isEmpty().
-					 */
-
-					cupoReal.anadirPaciente(paciente, configuracionCupos); // Doble throws
-
-					paciente.incrementarNumVacunas(); // throws
-
-					// No se restará stock hasta que no se confirme como vacunado por un sanitario.
-
-					cupoCitasDao.save(cupoReal);
-					usuarioDao.save(paciente);
-
-					/*
-					 * Prog: Ambos .save() deberían funcionar por Sustitución al tratarse de la
-					 * misma PK. En caso contrario, añadir cupoCitasDao.delete(cupoReal); justo
-					 * antes.
-					 */
-
-				} else {
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cupo no se contemplaba en BD.");
-				}
-
-			} else {
+			if (cupo == null || paciente == null) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 						(cupo == null ? "Cupo" : "Paciente") + " nulo.");
 			}
 
-		} catch (UsuarioInvalidoException | CupoCitasException | PacienteYaVacunadoException e) {
+			if (paciente.isAsignado() || paciente.getNumCitasPendientes() == 2) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya tenía dos dosis asignadas.");
+			}
+
+			if (paciente.isVacunado()) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya está vacunado.");
+			}
+
+			List<ConfiguracionCupos> confCupos = this.configuracionCuposDao.findAll();
+			if (confCupos.isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.PRECONDITION_REQUIRED,
+						"Es necesario establecer la configuración de los cupos.");
+			}
+			ConfiguracionCupos configuracionCupos = confCupos.get(0);
+
+			Optional<CupoCitas> optCupoReal = cupoCitasDao.findById(cupo.getUuid());
+			if (!optCupoReal.isPresent()) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"Extrañamente el cupo no se contemplaba en BD.");
+			}
+			CupoCitas cupoReal = optCupoReal.get();
+
+			cupoReal.anadirPaciente(paciente, configuracionCupos); // Doble throws
+
+			paciente.asignarCupo(CupoSimple.createCupoSimple(cupoReal)); // throws
+
+			cupoCitasDao.save(cupoReal);
+			usuarioDao.save(paciente);
+
+		} catch (UsuarioInvalidoException | CupoCitasException e) {
 			// Paciente ya contenido en este cupo, máximo alcanzado, o paciente ya vacunado.
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno.");
 		}
 	}
 
