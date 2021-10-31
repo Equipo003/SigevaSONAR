@@ -1,0 +1,11 @@
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+  font-size: 20px;
+}
+
+.usuario{
+  height: 300px;
+  width: 300px;
+}

@@ -7,6 +7,7 @@ import { ConfiguracionCuposComponent} from "./configuracion-cupos/configuracion-
 import { CrearUsuariosComponent} from "./crear-usuarios/crear-usuarios.component";
 import {IndicarDosisVacunasComponent} from "./indicar-dosis-vacunas/indicar-dosis-vacunas.component"
 import {ContenedorFijarSanitariosComponent} from "./contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component";
+import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 
 const  appRoutes: Routes = [
@@ -17,7 +18,9 @@ const  appRoutes: Routes = [
   {path: 'crearUsuarios', component: CrearUsuariosComponent},
   {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent},
   {path: 'fijarPersonal', component: ContenedorFijarSanitariosComponent},
-  {path: "solicitarCita", component: SolicitarCitaComponent}
+  {path: 'usuariosSistema', component: UsuariosSistemaComponent},
+  {path: 'solicitarCita', component: SolicitarCitaComponent}
+
 
 ]
 

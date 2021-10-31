@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-
 @Document
 public class CupoCitas implements Comparable<CupoCitas> {
 
@@ -25,7 +24,7 @@ public class CupoCitas implements Comparable<CupoCitas> {
 	private Date fechaYHoraInicio;
 
 	@Field
-	private List<Usuario> pacientesCitados;
+	private List<Paciente> pacientesCitados;
 
 	@Field
 	private int tamano;
@@ -34,7 +33,7 @@ public class CupoCitas implements Comparable<CupoCitas> {
 
 	}
 
-	public CupoCitas(CentroSalud centroSalud, Date fechaYHoraInicio, List<Usuario> pacientesCitados) {
+	public CupoCitas(CentroSalud centroSalud, Date fechaYHoraInicio, List<Paciente> pacientesCitados) {
 		this.uuid = UUID.randomUUID().toString();
 		this.centroSalud = centroSalud;
 		this.fechaYHoraInicio = fechaYHoraInicio;
@@ -66,11 +65,11 @@ public class CupoCitas implements Comparable<CupoCitas> {
 		this.fechaYHoraInicio = fechaYHoraInicio;
 	}
 
-	public List<Usuario> getPacientesCitados() {
+	public List<Paciente> getPacientesCitados() {
 		return pacientesCitados;
 	}
 
-	public void setPacientesCitados(List<Usuario> pacientesCitados) {
+	public void setPacientesCitados(List<Paciente> pacientesCitados) {
 		this.pacientesCitados = pacientesCitados;
 		this.tamano = pacientesCitados.size();
 	}
@@ -119,21 +118,31 @@ public class CupoCitas implements Comparable<CupoCitas> {
 	public void anadirPaciente(Paciente paciente, ConfiguracionCupos configuracionCupos)
 			throws UsuarioInvalidoException, CupoCitasException {
 
-		if (pacientesCitados.contains(paciente)) {
-			throw new UsuarioInvalidoException("El usuario ya estaba contenido.");
+		if (pacienteEnlistado(paciente)) {
+			throw new UsuarioInvalidoException("El paciente ya estaba contenido.");
 
 		} else if (estaLleno(configuracionCupos.getNumeroPacientes())) {
 			throw new CupoCitasException("El cupo ya había alcanzado su máximo.");
 
 		} else {
 			pacientesCitados.add(paciente);
-			this.tamano+=1;
+			this.tamano++;
 		}
 
 	}
 
-	public boolean pacienteEnlistado(Usuario paciente) {
+	public boolean pacienteEnlistado(Paciente paciente) {
 		return pacientesCitados.contains(paciente);
+	}
+
+	public void eliminarPaciente(Paciente paciente) throws UsuarioInvalidoException {
+		if (!pacienteEnlistado(paciente)) {
+			throw new UsuarioInvalidoException("El paciente no estaba contenido.");
+
+		} else {
+			pacientesCitados.remove(paciente);
+			this.tamano--;
+		}
 	}
 
 	@Override

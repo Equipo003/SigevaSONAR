@@ -15,6 +15,8 @@ import { CrearUsuariosComponent } from './crear-usuarios/crear-usuarios.componen
 import { IndicarDosisVacunasComponent } from './indicar-dosis-vacunas/indicar-dosis-vacunas.component';
 import { ContenedorFijarSanitariosComponent } from './contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component';
 import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitario-fijar-centro.component';
+import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
+import { UsuarioComponent } from './usuario/usuario.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 
 
@@ -28,6 +30,8 @@ import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.componen
     IndicarDosisVacunasComponent,
     ContenedorFijarSanitariosComponent,
     SanitarioFijarCentroComponent,
+    UsuariosSistemaComponent,
+    UsuarioComponent,
     SolicitarCitaComponent
   ],
   imports: [

@@ -67,7 +67,7 @@ select, option {
 .register {
   margin: 20px auto;
   width: 500px;
-  
+
 }
 
 .register2 {
@@ -79,7 +79,7 @@ select, option {
   background-color: #FFF;
   padding: 20px;
   border-radius: 5px;
-  
+
 }
 
 .register-form {
@@ -93,10 +93,8 @@ select, option {
 .control-group2 {
   margin-bottom: 10px auto;
   /*font-family: Lucida Console;*/
- 
+
 }
-
-
 
 .btn {
   border: 2px solid transparent;
@@ -133,11 +131,11 @@ select, option {
   margin: 0 auto;
   cursor: pointer;
   display:inline-block;
-  font-family: 'Helvetica Neue', sans-serif; 
+  font-family: 'Helvetica Neue', sans-serif;
   font-weight: bold;
   letter-spacing: 3px;
   text-align: center;
-  text-shadow: #008080 1px 1px; 
+  text-shadow: #008080 1px 1px;
   text-transform: uppercase;
 }
 
@@ -209,13 +207,12 @@ select, option {
 }
 
 .navbar-logo img{
- position:absolute;
+ position:relative;
     left:43px;
     /*left: 280px;*/
-    top:-138px;
-    width:300px;
-    height:400px;
-    border-radius:100%;
+    top:-30px;
+    width:250px;
+    height:60px;
     z-index:99999;
 
 }

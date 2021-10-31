@@ -53,8 +53,13 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
-			return sanitarios;
+			if(rol.equals("all")) {
+				List<Usuario> sanitarios = administradorDao.findAll();
+				return sanitarios;
+			}else {
+				List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
+				return sanitarios;
+			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -179,10 +184,7 @@ public class AdministradorController {
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
-			if (configuracionCuposList.isEmpty())
-				return false;
-			else
-				return true;
+			return !configuracionCuposList.isEmpty();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}
