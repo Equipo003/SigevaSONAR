@@ -4,8 +4,6 @@ import {CentroSalud} from "../Model/centro-salud";
 import {CupoCitas} from "../Model/cupo-citas";
 import { JsonService } from '../Service/json.service';
 
-
-
 @Component({
   selector: 'app-solicitar-cita',
   templateUrl: './solicitar-cita.component.html',
