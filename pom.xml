@@ -9,4 +9,9 @@
 	<groupId>com.equipo3</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<modules>
+		<module>SIGEVA-Service</module>
+		<module>SIGEVA-UI</module>
+	</modules>
+
 </project>
