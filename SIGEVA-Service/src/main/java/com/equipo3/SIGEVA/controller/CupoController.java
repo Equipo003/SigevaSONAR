@@ -26,7 +26,7 @@ import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("cupo")
-public class CupoController {
+public class CupoController implements Condicionamientos {
 
 	@Autowired
 	CupoCitasDao cupoCitasDao;
@@ -46,14 +46,14 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping ("/buscarParDeCuposLibresAPartirDeHoy")
+	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestParam String username) {
 
 		Optional<Usuario> u = usuarioDao.findByUsername(username);
 		if (username == null || !u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
-		
+
 		Paciente paciente = (Paciente) u.get();
 		System.out.println(paciente.toString());
 
@@ -86,7 +86,9 @@ public class CupoController {
 		confirmarCita(dosis1, paciente);
 		confirmarCita(dosis2, paciente);
 
-		paciente.setAsignado(true);
+		if (CONTROL) {
+			paciente.setAsignado(true);
+		}
 		usuarioDao.save(paciente);
 
 		return lista;
@@ -132,11 +134,11 @@ public class CupoController {
 						(cupo == null ? "Cupo" : "Paciente") + " nulo.");
 			}
 
-			if (paciente.isAsignado() || paciente.getNumCitasPendientes() == 2) {
+			if ((paciente.isAsignado() || paciente.getNumCitasPendientes() == 2) && CONTROL) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya tenía dos dosis asignadas.");
 			}
 
-			if (paciente.isVacunado()) {
+			if (paciente.isVacunado() && CONTROL) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya está vacunado.");
 			}
 
