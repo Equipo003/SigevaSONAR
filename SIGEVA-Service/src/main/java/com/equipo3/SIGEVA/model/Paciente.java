@@ -10,7 +10,7 @@ import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 
-public class Paciente extends Usuario implements Condicionamientos {
+public class Paciente extends Usuario {
 
 	private boolean asignado;
 	private List<CupoSimple> cuposAsignados;
@@ -59,7 +59,7 @@ public class Paciente extends Usuario implements Condicionamientos {
 	}
 
 	public void asignarCupo(CupoSimple cupo) throws CupoCitasException {
-		if (cuposAsignados.contains(cupo) && CONTROL) {
+		if (cuposAsignados.contains(cupo) && Condicionamientos.control()) {
 			throw new CupoCitasException("Ya tenía este cupo asignado.");
 		} else {
 			cuposAsignados.add(cupo);
@@ -67,7 +67,7 @@ public class Paciente extends Usuario implements Condicionamientos {
 	}
 
 	public void desasignarCupo(CupoSimple cupo) throws CupoCitasException {
-		if (!cuposAsignados.contains(cupo) && CONTROL) {
+		if (!cuposAsignados.contains(cupo) && Condicionamientos.control()) {
 			throw new CupoCitasException("No se contemplaba este cupo.");
 		} else {
 			cuposAsignados.remove(cupo);
@@ -79,10 +79,10 @@ public class Paciente extends Usuario implements Condicionamientos {
 	}
 
 	public void setNumVacunas(int numVacunas) throws PacienteYaVacunadoException, NumVacunasInvalido {
-		if (numVacunas < 0 && CONTROL) {
+		if (numVacunas < 0 && Condicionamientos.control()) {
 			throw new NumVacunasInvalido("El número de vacunas especificado es inválido.");
 
-		} else if (numVacunas > 2 && CONTROL) {
+		} else if (numVacunas > 2 && Condicionamientos.control()) {
 			throw new PacienteYaVacunadoException("El paciente ya estaba totalmente vacunado.");
 
 		} else {
