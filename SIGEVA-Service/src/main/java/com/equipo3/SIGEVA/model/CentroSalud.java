@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.equipo3.SIGEVA.controller.Condicionamientos;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
@@ -17,19 +18,16 @@ public class CentroSalud {
 	private String id;
 	@Field
 	private String nombreCentro;
-	@Field 
+	@Field
 	private int numVacunasDisponibles;
 	@Field
 	private String direccion;
 	@Field
 	private Vacuna vacuna;
 
-	public static final int TIEMPO_ENTRE_DOSIS = 21; // dias
-	public static final int NUM_DOSIS = 2;
-	
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
-		this.vacuna = new Vacuna("Pfizer", TIEMPO_ENTRE_DOSIS, NUM_DOSIS);
+		this.vacuna = new Vacuna("Pfizer", Condicionamientos.tiempoEntreDosis(), 2);
 	}
 
 	public String getId() {

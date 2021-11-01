@@ -54,18 +54,16 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			if(rol.equals("all")) {
-				List<Usuario> sanitarios = administradorDao.findAll();
-				return sanitarios;
-			}else {
-				List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
-				return sanitarios;
+			if (rol.equals("all")) {
+				return administradorDao.findAll();
+			} else {
+				return administradorDao.findAllByRol(rol);
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-	
+
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -121,9 +119,9 @@ public class AdministradorController {
 	public void crearCentroSalud(@RequestBody CentroSalud centroSalud) {
 
 		try {
-			
+
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
-			if (optCentroSalud.isPresent()){
+			if (optCentroSalud.isPresent()) {
 				throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
 			}
 			cupoController.prepararCuposCitas(centroSalud);

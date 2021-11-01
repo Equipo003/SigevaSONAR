@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Document
-public class CupoCitas implements Comparable<CupoCitas>, Condicionamientos {
+public class CupoCitas implements Comparable<CupoCitas> {
 
 	@Id
 	private String uuid;
@@ -119,10 +119,10 @@ public class CupoCitas implements Comparable<CupoCitas>, Condicionamientos {
 	public void anadirPaciente(Paciente paciente, ConfiguracionCupos configuracionCupos)
 			throws UsuarioInvalidoException, CupoCitasException {
 
-		if (pacienteEnlistado(paciente) && CONTROL) {
+		if (pacienteEnlistado(paciente) && Condicionamientos.control()) {
 			throw new UsuarioInvalidoException("El paciente ya estaba contenido.");
 
-		} else if (estaLleno(configuracionCupos.getNumeroPacientes()) && CONTROL) {
+		} else if (estaLleno(configuracionCupos.getNumeroPacientes()) && Condicionamientos.control()) {
 			throw new CupoCitasException("El cupo ya había alcanzado su máximo.");
 
 		} else {
