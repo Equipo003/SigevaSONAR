@@ -23,12 +23,12 @@ export class SolicitarCitaComponent implements OnInit {
   constructor(private json: JsonService) {
     this.paciente = new Usuario("","412cc2c7-2067-4991-9912-53280a87a89a", "tupaciente", "", "", "",
           "", "", "", "", "4da33823-0218-41f2-86a6-65cdafe27e2e");
-    this.mensaje = "";
     this.cita1 = new CupoCitas("",new CentroSalud("","",0,""), new Date());
     this.cita2 = new CupoCitas("",new CentroSalud("","",0,""), new Date());
     this.citas = [];
     this.solicitada = false;
-    this.mensajeError = "SOLICITAR CITA";
+    this.mensaje = "SOLICITAR CITA";
+    this.mensajeError = "";
 
   }
 
@@ -48,9 +48,12 @@ export class SolicitarCitaComponent implements OnInit {
             this.cita1 = this.citas[0];
             this.cita2 = this.citas[1];
             this.mensaje = 'CITA RESERVADA!'
+            this.mensajeError = "";
             this.solicitada = true;
           },err=> {
-            this.mensajeError = err.error.message;
+            this.mensaje = ""
+            this.mensajeError = "Ya se han asignado 2 citas";
+            console.log(err.error);
           });
 
 
