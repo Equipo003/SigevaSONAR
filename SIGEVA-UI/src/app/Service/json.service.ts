@@ -31,6 +31,15 @@ export class JsonService {
       return this.http.get(url, {headers,params,responseType:'text'});
     }
 
+  getJsonPJ(url : string, params : HttpParams):Observable<any>{
+    let headers = new HttpHeaders();
+    headers.append("Content-Type", "aplication/json");
+    headers.append("observe","body");
+
+    url = this.url + url;
+    return this.http.get(url, {headers,params,responseType:'json'});
+  }
+
 
 
   putJsonVacunas(url : string, parameter1 : String, parameter2 : number){
@@ -54,7 +63,7 @@ export class JsonService {
   postJson(url : string, body : Object){
     let options : Object =  {
           "observe" : 'body',
-          "responseType": 'text'
+          "responseType": 'json'
     }
       url = this.url + url;
     return this.http.post(url, body, options);

@@ -1,9 +1,10 @@
+<div class="seccion contenedor">
 <div class="contenedor-citas">
 <div class="separation"></div>
 <div class="solicitud-cita">
   <div class="register-form">
-    <h1 *ngIf = "this.solicitada == false">{{this.mensajeError}}</h1>
-    <h1 *ngIf = "this.solicitada == true">{{this.mensaje}}</h1>
+    <h1>{{this.mensajeError}}</h1>
+    <h1>{{this.mensaje}}</h1>
     <div class="control-group">
       <button *ngIf = !this.solicitada class="btn" (click)= solicitarCita()>Solicitar</button>
     </div>
@@ -80,4 +81,4 @@
   </div>
 </div>
 </div>
-
+</div>

@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.model;
 
+import com.equipo3.SIGEVA.controller.Condicionamientos;
 import com.equipo3.SIGEVA.exception.CupoCitasException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.data.annotation.Id;
@@ -118,10 +119,10 @@ public class CupoCitas implements Comparable<CupoCitas> {
 	public void anadirPaciente(Paciente paciente, ConfiguracionCupos configuracionCupos)
 			throws UsuarioInvalidoException, CupoCitasException {
 
-		if (pacienteEnlistado(paciente)) {
+		if (pacienteEnlistado(paciente) && Condicionamientos.control()) {
 			throw new UsuarioInvalidoException("El paciente ya estaba contenido.");
 
-		} else if (estaLleno(configuracionCupos.getNumeroPacientes())) {
+		} else if (estaLleno(configuracionCupos.getNumeroPacientes()) && Condicionamientos.control()) {
 			throw new CupoCitasException("El cupo ya había alcanzado su máximo.");
 
 		} else {

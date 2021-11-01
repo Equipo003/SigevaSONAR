@@ -56,7 +56,6 @@ export class UsuariosSistemaComponent implements OnInit {
 		this.json.getJsonP("user/getUsuariosByRol", params).subscribe(
 			(res: any) => {
 				this.usuarios = JSON.parse(res);
-				console.log(res);
 				this.cs.forEach(function(centro2: CentroSalud) {
 					self.usuarios.forEach(function(usuario: Usuario) {
 						self.roles.forEach(function(rol: Rol) {

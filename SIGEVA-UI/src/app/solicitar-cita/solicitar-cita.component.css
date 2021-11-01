@@ -20,6 +20,7 @@
   margin-right: 1rem;
   border-radius: 30px;
   width: 500px;
+  min-width: 300px;
 }
 
 .titulo {

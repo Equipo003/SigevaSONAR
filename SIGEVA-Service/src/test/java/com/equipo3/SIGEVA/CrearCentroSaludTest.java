@@ -16,7 +16,7 @@ class CrearCentroSaludTest {
     	try {
     		administradorController.crearCentroSalud(null);
         } catch (Exception e){
-            Assertions.assertNull(e);
+            Assertions.assertNotNull(e);
         }
 	}
 }

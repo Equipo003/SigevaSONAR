@@ -8,7 +8,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
@@ -40,20 +47,16 @@ public class CupoController {
 	@Autowired
 	CentroSaludDao centroSaludDao;
 
-	public static final int DIA_FIN = 31;
-	public static final int MES_FIN = 1;
-	public static final int ANYO_FIN = 2022;
-
 	@SuppressWarnings("deprecation")
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping ("/buscarParDeCuposLibresAPartirDeHoy")
+	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestParam String username) {
 
 		Optional<Usuario> u = usuarioDao.findByUsername(username);
 		if (username == null || !u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
-		
+
 		Paciente paciente = (Paciente) u.get();
 		System.out.println(paciente.toString());
 
@@ -64,13 +67,14 @@ public class CupoController {
 		}
 		CentroSalud centroSalud = optCs.get();
 
-		Date maximo = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
+		Date maximo = new Date(Condicionamientos.anyoFin() - 1900, Condicionamientos.mesFin() - 1,
+				Condicionamientos.diaFin());
 		maximo.setDate(maximo.getDate() - centroSalud.getVacuna().getDiasEntreDosis());
 		Date hoy = new Date();
 
 		if (!hoy.before(maximo)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Desde el " + DIA_FIN + "/" + MES_FIN + "/" + ANYO_FIN + " ya no se podían pedir citas.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Desde el " + Condicionamientos.diaFin() + "/"
+					+ Condicionamientos.mesFin() + "/" + Condicionamientos.anyoFin() + " ya no se podían pedir citas.");
 		}
 
 		List<CupoCitas> lista = new ArrayList<>();
@@ -86,7 +90,9 @@ public class CupoController {
 		confirmarCita(dosis1, paciente);
 		confirmarCita(dosis2, paciente);
 
-		paciente.setAsignado(true);
+		if (Condicionamientos.control()) {
+			paciente.setAsignado(true);
+		}
 		usuarioDao.save(paciente);
 
 		return lista;
@@ -132,11 +138,11 @@ public class CupoController {
 						(cupo == null ? "Cupo" : "Paciente") + " nulo.");
 			}
 
-			if (paciente.isAsignado() || paciente.getNumCitasPendientes() == 2) {
+			if ((paciente.isAsignado() || paciente.getNumCitasPendientes() == 2) && Condicionamientos.control()) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya tenía dos dosis asignadas.");
 			}
 
-			if (paciente.isVacunado()) {
+			if (paciente.isVacunado() && Condicionamientos.control()) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, "El paciente ya está vacunado.");
 			}
 
@@ -187,8 +193,9 @@ public class CupoController {
 
 		Date fechaInicio = configuracionCupos.getFechaInicioAsDate();
 
-		Date fechaFinAbsoluta = new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN,
-				configuracionCupos.getHoraFin().getHours(), configuracionCupos.getHoraFin().getMinutes());
+		Date fechaFinAbsoluta = new Date(Condicionamientos.anyoFin() - 1900, Condicionamientos.mesFin() - 1,
+				Condicionamientos.diaFin(), configuracionCupos.getHoraFin().getHours(),
+				configuracionCupos.getHoraFin().getMinutes());
 
 		int duracionTramo = configuracionCupos.getDuracionMinutos();
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.equipo3.SIGEVA.dao.*;
+import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +54,16 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			if(rol.equals("all")) {
-				List<Usuario> sanitarios = administradorDao.findAll();
-				return sanitarios;
-			}else {
-				List<Usuario> sanitarios = administradorDao.findAllByRol(rol);
-				return sanitarios;
+			if (rol.equals("all")) {
+				return administradorDao.findAll();
+			} else {
+				return administradorDao.findAllByRol(rol);
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-	
+
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -89,7 +88,7 @@ public class AdministradorController {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, FRASE_USUARIO_EXISTENTE);
+				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(paciente);
@@ -105,7 +104,7 @@ public class AdministradorController {
 		try {
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
 			if (optUsuario.isPresent()) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, FRASE_USUARIO_EXISTENTE);
+				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(sanitario);
@@ -120,17 +119,15 @@ public class AdministradorController {
 	public void crearCentroSalud(@RequestBody CentroSalud centroSalud) {
 
 		try {
-			
+
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
-			if (optCentroSalud.isPresent()){
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud ya existe en la base de datos");
+			if (optCentroSalud.isPresent()) {
+				throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
 			}
 			cupoController.prepararCuposCitas(centroSalud);
 			centroSaludDao.save(centroSalud);
-			System.out.println(centroSalud.getId());
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
