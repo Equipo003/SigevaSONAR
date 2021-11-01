@@ -42,7 +42,7 @@ export class SolicitarCitaComponent implements OnInit {
         "username": String(this.paciente.username)
       }
     });
-     this.json.getJsonP("cupo/buscarParDeCuposLibresAPartirDeHoy",params).subscribe(
+     this.json.getJsonPJ("cupo/buscarParDeCuposLibresAPartirDeHoy",params).subscribe(
           result => {
             this.citas = JSON.parse(result.toString());
             this.cita1 = this.citas[0];
@@ -52,8 +52,8 @@ export class SolicitarCitaComponent implements OnInit {
             this.solicitada = true;
           },err=> {
             this.mensaje = ""
-            this.mensajeError = "Ya se han asignado 2 citas";
-            console.log(err.error);
+            this.mensajeError = err.error.message;
+            console.log(err.error)
           });
 
 
