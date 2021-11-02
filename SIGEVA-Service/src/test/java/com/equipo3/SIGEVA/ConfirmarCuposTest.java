@@ -9,19 +9,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.CupoCitas;
 import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @SpringBootTest
 class ConfirmarCuposTest {
 
 	@Autowired
 	private CupoController cupoController;
-
+	
+	@Autowired
+	private AdministradorController administradorcontroller;
+	
 	@Autowired
 	private UsuarioDao usuarioDao;
 
@@ -33,9 +39,17 @@ class ConfirmarCuposTest {
 
 	@Test
 	void buscarYConfirmarCupoLibre() {
-
-		Paciente paciente = (Paciente) usuarioDao.findAllByRol(rolDao.findAllByNombre("Paciente").get(0).getId())
-				.get(0);
+		Paciente paciente = new Paciente();
+		paciente.setUsername(paciente.getIdUsuario());
+		CentroSalud cs = new CentroSalud();
+		cs.setNombreCentro(cs.getId());
+		paciente.setCentroSalud(cs.getId());
+		
+		administradorcontroller.crearUsuarioPaciente(paciente);
+		
+		administradorcontroller.crearCentroSalud(cs);
+		
+		
 
 		// Se obvia que el paciente tenga centro, y que este a su vez tenga cupos.
 
