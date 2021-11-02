@@ -6,19 +6,13 @@ import java.util.Optional;
 import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Sanitario;
-import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
 @RequestMapping("user")
@@ -124,7 +118,12 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/newCentroSalud")
-	public void crearCentroSalud(@RequestBody CentroSalud centroSalud) {
+	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
+		CentroSalud centroSalud = new CentroSalud();
+
+		centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
+		centroSalud.setDireccion(centroSaludDTO.getDireccion());
+		centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
 
 		try {
 
@@ -141,7 +140,11 @@ public class AdministradorController {
 	}
 
 	@PostMapping("/registrarRol")
-	public void registrarRol(@RequestBody Rol rol) {
+	public void registrarRol(@RequestBody RolDTO rolDTO) {
+
+		Rol rol = new Rol();
+		rol.setNombre(rolDTO.getNombre());
+
 		try {
 			rolDao.save(rol);
 		} catch (Exception e) {
@@ -168,7 +171,16 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearConfCupos")
-	public void crearConfiguracionCupos(@RequestBody ConfiguracionCupos conf) {
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO confDTO) {
+
+		ConfiguracionCupos conf = new ConfiguracionCupos();
+
+		conf.setDuracionMinutos(confDTO.getDuracionMinutos());
+		conf.setNumeroPacientes(confDTO.getNumeroPacientes());
+		conf.setDuracionJornadaHoras(conf.getDuracionJornadaHoras());
+		conf.setDuracionJornadaMinutos(conf.getDuracionJornadaMinutos());
+		conf.setFechaInicio(conf.getFechaInicio());
+
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
 			if (configuracionCuposList.isEmpty())
@@ -200,7 +212,6 @@ public class AdministradorController {
 			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
 			if (centroS.isPresent()) {
 				CentroSalud centroSaludDef = centroS.get();
-				System.out.println("Centro" + centroSaludDef.getNombreCentro());
 				centroSaludDef.modificarStockVacunas(vacunas);
 				centroSaludDao.save(centroSaludDef);
 			}
