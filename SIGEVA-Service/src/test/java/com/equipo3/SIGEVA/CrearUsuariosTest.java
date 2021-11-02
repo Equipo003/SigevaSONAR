@@ -20,8 +20,6 @@ class CrearUsuariosTest {
 	@Autowired
 	private AdministradorController administradorController;
 
-	private UsuarioDao usuarioDao;
-
 	@Test
 	void insercionCorrectaAdministrador() {
 
@@ -42,6 +40,11 @@ class CrearUsuariosTest {
 	}
 
 	@Test
+	void eliminarAdministradorCreadoAnteriormente(){
+		administradorController.eliminarUsuario("user55");
+	}
+
+	@Test
 	void insercionAdministradorDuplicado() throws UsuarioInvalidoException {
 		Administrador administrador = new Administrador();
 
@@ -57,15 +60,13 @@ class CrearUsuariosTest {
 		administrador.setImagen("912imagen");
 		try{
 			administradorController.crearUsuarioAdministrador(administrador);
+			administradorController.crearUsuarioAdministrador(administrador);
 		} catch (Exception e){
+			administradorController.eliminarUsuario("user55");
 			assertNotNull(e);
 		}
 	}
 
-	@Test
-	void eliminarAdministradorCreadoAnteriormente(){
-		administradorController.eliminarUsuario("user55");
-	}
 
 	@Test
 	void insercionCorrectaSanitario() {
@@ -104,7 +105,9 @@ class CrearUsuariosTest {
 
 		try{
 			administradorController.crearUsuarioSanitario(sanitario);
+			administradorController.crearUsuarioSanitario(sanitario);
 		} catch (Exception e){
+			administradorController.eliminarUsuario("sanitario");
 			assertNotNull(e);
 		}
 	}
@@ -149,7 +152,9 @@ class CrearUsuariosTest {
 		paciente.setImagen("912imagen");
 		try {
 			administradorController.crearUsuarioPaciente(paciente);
+			administradorController.crearUsuarioPaciente(paciente);
 		} catch (Exception e){
+			administradorController.eliminarUsuario("paciente");
 			assertNotNull(e);
 		}
 
