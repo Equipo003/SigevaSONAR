@@ -1,5 +1,3 @@
-import {CentroSalud} from "./centro-salud";
-
 export interface Usuario{
   rol: string;
   centroSalud: string;

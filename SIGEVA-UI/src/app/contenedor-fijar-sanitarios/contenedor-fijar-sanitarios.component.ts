@@ -40,7 +40,7 @@ export class ContenedorFijarSanitariosComponent implements OnInit {
   getParams() {
     let params = new HttpParams({
       fromObject: {
-        rol: "141abdc8-0f85-43c0-8c51-dfdd2c039ef4"
+        rol: "1c509a0d-a4e2-4238-9c1a-7498d4ce1623"
       }
     });
     let self = this;

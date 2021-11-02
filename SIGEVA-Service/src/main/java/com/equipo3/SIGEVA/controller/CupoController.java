@@ -51,14 +51,13 @@ public class CupoController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestParam String username) {
-
+		System.out.println(username);
 		Optional<Usuario> u = usuarioDao.findByUsername(username);
 		if (username == null || !u.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paciente no contemplado.");
 		}
 
 		Paciente paciente = (Paciente) u.get();
-		System.out.println(paciente.toString());
 
 		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
 		if (!optCs.isPresent()) {
@@ -120,7 +119,7 @@ public class CupoController {
 	public CupoCitas buscarPrimerCupoLibre(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
 			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
-			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud, aPartirDeLaFecha, maximo);
+			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud.getId(), aPartirDeLaFecha, maximo);
 			Collections.sort(lista); // Ordenación por paso por referencia.
 			return lista.get(0);
 		} else {
@@ -177,7 +176,7 @@ public class CupoController {
 	public List<CupoCitas> buscarCuposLibres(@RequestBody CentroSalud centroSalud, @RequestBody Date aPartirDeLaFecha) {
 		if (centroSalud != null) {
 			int maximo = configuracionCuposDao.findAll().get(0).getNumeroPacientes();
-			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud, aPartirDeLaFecha, maximo);
+			List<CupoCitas> lista = cupoCitasDao.buscarCuposLibresAPartirDe(centroSalud.getId(), aPartirDeLaFecha, maximo);
 			Collections.sort(lista); // Ordenación por paso por referencia.
 			return lista;
 		} else {
@@ -227,7 +226,6 @@ public class CupoController {
 			List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
 			for (int i = 0; i < momentos.size(); i++) {
-				System.out.println(momentos.get(i));
 				cupoCitasDao.save(momentos.get(i)); // ¡Puede tardar!
 			}
 

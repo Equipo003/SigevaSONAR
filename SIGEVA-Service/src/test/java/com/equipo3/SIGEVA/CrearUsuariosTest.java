@@ -5,6 +5,7 @@ import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.RolDTO;
 import com.equipo3.SIGEVA.model.Sanitario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,15 +168,14 @@ class CrearUsuariosTest {
 
 //	@Test
 //	void addRoles() {
-//		Rol rol1 = new Rol("Administrador");
-//		Rol rol2 = new Rol("Sanitario");
-//		Rol rol3 = new Rol("Paciente");
+//		RolDTO rol1 = new RolDTO("Administrador");
+//		RolDTO rol2 = new RolDTO("Sanitario");
+//		RolDTO rol3 = new RolDTO("Paciente");
 //
 //		administradorController.registrarRol(rol1);
 //		administradorController.registrarRol(rol2);
 //		administradorController.registrarRol(rol3);
 //
-//		assertTrue(true);
 //	}
 
 
