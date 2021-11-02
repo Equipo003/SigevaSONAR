@@ -3,6 +3,8 @@ package com.equipo3.SIGEVA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,13 @@ import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 @SpringBootTest
 class CrearCentroSaludTest {
     @Autowired
     private AdministradorController administradorController;
+    @Autowired
+    private CentroSaludDao centroSDao;
     @Test
 	void testCrearCentroSaludBien() {
 		
@@ -25,6 +30,38 @@ class CrearCentroSaludTest {
             Assertions.assertNotNull(e);
         }
 	}
+    
+    @Test
+   	void testCrearCentroSaludExistente() {
+   		
+       	try {
+       		CentroSalud centroS = new CentroSalud();
+        	centroS.setId("2g");
+        	centroS.setNombreCentro("CENTRO");
+        	centroS.setNumVacunasDisponibles(10);
+        	centroS.setVacuna(null);
+        	centroSDao.save(centroS);
+       		administradorController.crearCentroSalud(centroS);
+           } catch (Exception e){
+               Assertions.assertNotNull(e);
+           }
+   	}
+    
+    @Test
+   	void testCentroSaludGuardado() throws NumVacunasInvalido {
+       	CentroSalud centroS = new CentroSalud();
+       	centroS.setId("112g");
+       	centroS.setNombreCentro(UUID.randomUUID().toString());
+       	centroS.setNumVacunasDisponibles(10);
+       	centroS.setVacuna(null);
+     	administradorController.crearCentroSalud(centroS);
+     	Assertions.assertNotNull(centroSDao.findByNombreCentro(centroS.getNombreCentro())); 
+   	}
+    
+    @Test
+   	void testGetCentroSalud() throws NumVacunasInvalido { 
+     	Assertions.assertNotNull(administradorController.listarCentros());   
+   	}
     
     @Test
     void testnumeroVacunasDisponiblesNegativo() throws NumVacunasInvalido {
