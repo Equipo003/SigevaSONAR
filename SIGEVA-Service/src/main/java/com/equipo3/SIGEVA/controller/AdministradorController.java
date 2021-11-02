@@ -54,7 +54,7 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			if (rol.equals("all")) {
+			if (rol.equals("Todos")) {
 				return administradorDao.findAll();
 			} else {
 				return administradorDao.findAllByRol(rol);

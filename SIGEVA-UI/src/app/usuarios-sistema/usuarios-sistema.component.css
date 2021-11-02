@@ -1,0 +1,18 @@
+.btn {
+  color: #3498DB;
+  background: #ffffff;
+  width: 150px;
+  margin: 10px;
+}
+
+select {
+  width: 250px;
+  margin: 20px;
+}
+
+.contenedorFiltrar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+}
