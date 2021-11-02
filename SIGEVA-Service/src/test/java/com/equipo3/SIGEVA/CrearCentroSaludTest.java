@@ -223,4 +223,24 @@ class CrearCentroSaludTest {
     	Assertions.assertNotNull(centroS.getDireccion());
     }
     
+	@Test
+	void devolucionBBDDCorrecta() {
+		CentroSalud cs = new CentroSalud();
+		CentroSalud cs2 = null;
+		cs.setId("TestPruebaCorrecta");
+		centroSDao.save(cs);
+		if(centroSDao.findById(cs.getId()).isPresent()) {
+			cs2 = centroSDao.findById(cs.getId()).get();
+		}
+		Assertions.assertEquals(cs, cs2);
+	}
+	
+	@Test
+	void devolucionBBDDIncorrecta() {
+		CentroSalud cs = new CentroSalud();
+		cs.setId("TestPruebaIncorrecta");
+		centroSDao.findById(cs.getId());
+		Assertions.assertFalse(centroSDao.findById(cs.getId()).isPresent());
+	}
+    
 }
