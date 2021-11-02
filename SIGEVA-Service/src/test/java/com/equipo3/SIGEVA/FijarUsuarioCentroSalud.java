@@ -33,9 +33,9 @@ class FijarUsuarioCentroSalud {
 	private RolDao roldao;
 
 	@Test
-	void AsignarCentroSaludSanitarioNivelModelo() {
+	void AsignarCentroSaludSanitarioNivelModelo() throws NumVacunasInvalido {
 		Usuario sanitario = new Sanitario();
-		CentroSalud cs = new CentroSalud();
+		CentroSaludDTO cs = new CentroSaludDTO();
 		cs.setNombreCentro(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(cs);
 		
@@ -48,7 +48,6 @@ class FijarUsuarioCentroSalud {
 		}
 		
 		sanitario.setRol(rol.getId());
-		System.out.println("Rol: " +rol.getId());
 		
 		if(sanitario!=null) {
 			System.out.println("No es nulo");
@@ -61,11 +60,9 @@ class FijarUsuarioCentroSalud {
 		
 		administradorController.crearUsuarioSanitario((Sanitario) sanitario);
 		
-		System.out.println("Id Sanitario "+sanitario.getIdUsuario());
 		
 		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
 			san = usuarioDao.findById(sanitario.getIdUsuario()).get();
-			System.out.println("Esta presente");
 		}
 		Assertions.assertEquals(sanitario.getCentroSalud(), san.getCentroSalud());
 	}

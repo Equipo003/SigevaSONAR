@@ -1,6 +1,9 @@
 package com.equipo3.SIGEVA.model;
 
+import java.util.UUID;
+
 public class CentroSaludDTO {
+	private String id;
     private String nombreCentro;
     private int numVacunasDisponibles;
     private String direccion;
@@ -18,7 +21,7 @@ public class CentroSaludDTO {
     }
 
     public CentroSaludDTO() {
-
+    	this.id = UUID.randomUUID().toString();
     }
 
     public String getNombreCentro() {
@@ -44,4 +47,8 @@ public class CentroSaludDTO {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+
+	public String getId() {
+		return this.id;
+	}
 }
