@@ -4,7 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.UUID;
 
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,10 +17,6 @@ import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CupoCitasDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.CupoCitas;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
 
 @SpringBootTest
 class ConfirmarCuposTest {
@@ -38,12 +37,12 @@ class ConfirmarCuposTest {
 	private CupoCitasDao cuposDao;
 
 	@Test
-	void buscarYConfirmarCupoLibre() {
+	void buscarYConfirmarCupoLibre() throws NumVacunasInvalido {
 		Paciente paciente = new Paciente();
 		paciente.setUsername(paciente.getIdUsuario());
-		CentroSalud cs = new CentroSalud();
-		cs.setNombreCentro(cs.getId());
-		paciente.setCentroSalud(cs.getId());
+		CentroSaludDTO cs = new CentroSaludDTO();
+		cs.setNombreCentro(UUID.randomUUID().toString());
+		paciente.setCentroSalud(UUID.randomUUID().toString());
 		
 		administradorcontroller.crearUsuarioPaciente(paciente);
 		

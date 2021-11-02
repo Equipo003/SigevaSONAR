@@ -23,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfiguracionCuposTest {
 
 
-    static ConfiguracionCupos configuracionCupos;
+    static ConfiguracionCuposDTO configuracionCuposDTO;
 
     @BeforeAll
     static void start(){
-        configuracionCupos = new ConfiguracionCupos(60, 60, 30,
+        configuracionCuposDTO = new ConfiguracionCuposDTO(60, 60, 30,
                 30, "");
     }
 
@@ -36,63 +36,63 @@ class ConfiguracionCuposTest {
 
     @Test
     void setDuracionMinutos() {
-        this.configuracionCupos.setDuracionMinutos(65);
-        assertTrue(this.configuracionCupos.getDuracionMinutos()==65);
+        this.configuracionCuposDTO.setDuracionMinutos(65);
+        assertTrue(this.configuracionCuposDTO.getDuracionMinutos()==65);
     }
 
     @Test
     void setNumeroPacientes() {
-        this.configuracionCupos.setNumeroPacientes(70);
-        assertTrue(this.configuracionCupos.getNumeroPacientes()==70);
+        this.configuracionCuposDTO.setNumeroPacientes(70);
+        assertTrue(this.configuracionCuposDTO.getNumeroPacientes()==70);
     }
 
     @Test
     void getDuracionMinutos() {
-        this.configuracionCupos.setDuracionMinutos(10);
-        assertTrue(this.configuracionCupos.getDuracionMinutos()==10);
+        this.configuracionCuposDTO.setDuracionMinutos(10);
+        assertTrue(this.configuracionCuposDTO.getDuracionMinutos()==10);
     }
 
     @Test
     void getNumeroPacientes() {
-        this.configuracionCupos.setNumeroPacientes(20);
-        assertTrue(this.configuracionCupos.getNumeroPacientes()==20);
+        this.configuracionCuposDTO.setNumeroPacientes(20);
+        assertTrue(this.configuracionCuposDTO.getNumeroPacientes()==20);
     }
 
     @Test
     void getDuracionJornadaHoras() {
-        this.configuracionCupos.setDuracionJornadaHoras(20);
-        assertTrue(this.configuracionCupos.getDuracionJornadaHoras()==20);
+        this.configuracionCuposDTO.setDuracionJornadaHoras(20);
+        assertTrue(this.configuracionCuposDTO.getDuracionJornadaHoras()==20);
     }
 
     @Test
     void setDuracionJornadaHoras() {
-        this.configuracionCupos.setDuracionJornadaHoras(50);
-        assertTrue(this.configuracionCupos.getDuracionJornadaHoras()==50);
+        this.configuracionCuposDTO.setDuracionJornadaHoras(50);
+        assertTrue(this.configuracionCuposDTO.getDuracionJornadaHoras()==50);
     }
 
     @Test
     void getDuracionJornadaMinutos() {
-        this.configuracionCupos.setDuracionJornadaMinutos(30);
-        assertTrue(this.configuracionCupos.getDuracionJornadaMinutos()==30);
+        this.configuracionCuposDTO.setDuracionJornadaMinutos(30);
+        assertTrue(this.configuracionCuposDTO.getDuracionJornadaMinutos()==30);
     }
 
     @Test
     void setDuracionJornadaMinutos() {
-        this.configuracionCupos.setDuracionJornadaMinutos(45);
-        assertTrue(this.configuracionCupos.getDuracionJornadaMinutos()==45);
+        this.configuracionCuposDTO.setDuracionJornadaMinutos(45);
+        assertTrue(this.configuracionCuposDTO.getDuracionJornadaMinutos()==45);
     }
 
     @Test
     void getFechaInicio() {
         String fecha = "2021-11-08T07:00";
-        this.configuracionCupos.setFechaInicio(fecha);
-        assertTrue(this.configuracionCupos.getFechaInicio().equals(fecha));
+        this.configuracionCuposDTO.setFechaInicio(fecha);
+        assertTrue(this.configuracionCuposDTO.getFechaInicio().equals(fecha));
     }
 
     @Test
     void getFechaInicioAsDate() {
         String fechaInicio = "2021-11-08T07:00";
-        this.configuracionCupos.setFechaInicio("2021-11-08T07:00");
+        this.configuracionCuposDTO.setFechaInicio("2021-11-08T07:00");
         Date fechaInicioDate = new Date();
 
         SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -102,20 +102,20 @@ class ConfiguracionCuposTest {
             e.printStackTrace();
         }
 
-        assertTrue(this.configuracionCupos.getFechaInicioAsDate().getTime()==fechaInicioDate.getTime());
+        assertTrue(this.configuracionCuposDTO.getFechaInicioAsDate().getTime()==fechaInicioDate.getTime());
 
     }
 
     @Test
     void setFechaInicio() {
         String fecha = "fecha de prueba";
-        this.configuracionCupos.setFechaInicio(fecha);
-        assertTrue(this.configuracionCupos.getFechaInicio().equals(fecha));
+        this.configuracionCuposDTO.setFechaInicio(fecha);
+        assertTrue(this.configuracionCuposDTO.getFechaInicio().equals(fecha));
     }
 
     @Test
     void getHoraFin() {
-        configuracionCupos.setFechaInicio("2021-11-08T07:00");
+        configuracionCuposDTO.setFechaInicio("2021-11-08T07:00");
         String fechaInicio = "2021-11-08T07:00";
         Date horaFin = new Date();
         SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -125,22 +125,22 @@ class ConfiguracionCuposTest {
             e.printStackTrace();
         }
 
-        horaFin.setHours(horaFin.getHours()+this.configuracionCupos.getDuracionJornadaHoras());
-        horaFin.setMinutes(horaFin.getMinutes()+this.configuracionCupos.getDuracionJornadaMinutos());
+        horaFin.setHours(horaFin.getHours()+this.configuracionCuposDTO.getDuracionJornadaHoras());
+        horaFin.setMinutes(horaFin.getMinutes()+this.configuracionCuposDTO.getDuracionJornadaMinutos());
 
-        assertTrue(this.configuracionCupos.getHoraFin().getTime()==horaFin.getTime());
+        assertTrue(this.configuracionCuposDTO.getHoraFin().getTime()==horaFin.getTime());
 
     }
 
     @Test
     void crearConfiguracionCupos(){
-        configuracionCupos = new ConfiguracionCupos(60, 60, 50,50,"2021-11-08T07:00" );
+        configuracionCuposDTO = new ConfiguracionCuposDTO(60, 60, 50,50,"2021-11-08T07:00" );
         if(this.administradorController.existConfiguracionCupos()==false){
-            this.administradorController.crearConfiguracionCupos(configuracionCupos);
+            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
             assertTrue(true);
         }else {
             Assertions.assertThatExceptionOfType(ResponseStatusException.class).isThrownBy(()->{
-                this.administradorController.crearConfiguracionCupos(configuracionCupos);
+                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
             });
         }
     }
