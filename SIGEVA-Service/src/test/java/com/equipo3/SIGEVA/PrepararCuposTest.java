@@ -37,8 +37,6 @@ class PrepararCuposTest {
 
 		CentroSalud centroSalud = centroSaludDao.findAll().get(0);
 
-		System.out.println(centroSalud);
-
 		List<CupoCitas> lista1 = cupoController.prepararCuposCitas(centroSalud); // ¡TARDA LO SUYO!
 
 		CupoCitas cupo1 = cupoController.buscarPrimerCupoLibre(centroSalud,
