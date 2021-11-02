@@ -149,6 +149,7 @@ class CrearCentroSaludTest {
     	centroS.setVacuna(null);
     	Assertions.assertFalse(centroS.equals(administradorController));
     }
+    
     @Test
     void testCompararCentroSaludConSiMismo() throws NumVacunasInvalido {
     	CentroSalud centroS = new CentroSalud();
