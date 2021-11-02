@@ -21,8 +21,8 @@ export class SolicitarCitaComponent {
 	solicitada: boolean;
 
 	constructor(private json: JsonService) {
-		this.paciente = new Usuario("", "152054f2-7948-40cc-ba6a-f260638b4351", "pepe", "", "", "",
-			"", "", "", "", "d2b2a043-df28-4c15-9190-9da25a0f6074");
+		this.paciente = new Usuario("", "eb972b1a-b1f0-41c9-bae4-ac729b6b967b", "vasilesan", "", "", "",
+			"", "", "", "", "25100ecd-136f-43a5-886e-0e7de585d5ea");
 		this.cita1 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
 		this.cita2 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
 		this.citas = [];

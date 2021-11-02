@@ -6,7 +6,7 @@
 
         <div class="control-group">
           <p>Elige el hospital: </p>
-          <select name="menuCentro" id="menuCentro" [(ngModel)]='centroSeleccionado'>
+          <select name="menuCentro" id="menuCentro" [(ngModel)]='centroSeleccionado' (click)="centroSelect()">
             <option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
           </select>
         </div>
