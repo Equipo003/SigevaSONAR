@@ -42,7 +42,7 @@ export class JsonService {
 
 
 
-  putJsonVacunas(url : string, parameter1 : String, parameter2 : number){
+  putJsonVacunas(url : string, parameter1 : string, parameter2 : number){
 	let options : Object =  {
       "observe" : 'body',
       "responseType": 'text'
@@ -51,7 +51,7 @@ export class JsonService {
 	return this.http.put(url, options);
   }
 
-  putJsonSanitario(url : string, parameter1 : String, parameter2 : string){
+  putJsonSanitario(url : string, parameter1 : string, parameter2 : string){
     let options : Object =  {
       "observe" : 'body',
       "responseType": 'text'

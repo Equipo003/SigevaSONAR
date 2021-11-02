@@ -82,8 +82,6 @@ public class CupoCitas implements Comparable<CupoCitas> {
 	public void setTamano(int tamano) {
 		if (pacientesCitados != null && tamano == pacientesCitados.size()) {
 			this.tamano = tamano;
-		} else {
-			System.out.println("Tamaño incoherente, salvo que no haya setteado lista aún.");
 		}
 	}
 

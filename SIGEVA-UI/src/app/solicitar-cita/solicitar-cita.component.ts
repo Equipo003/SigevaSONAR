@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, } from '@angular/core';
 import { Usuario } from "../Model/Usuario";
 import { CentroSalud  } from "../Model/centro-salud";
 import { CupoCitas } from "../Model/cupo-citas";
@@ -11,7 +11,7 @@ import { HttpParams } from "@angular/common/http";
 	styleUrls: ['./solicitar-cita.component.css']
 })
 
-export class SolicitarCitaComponent implements OnInit {
+export class SolicitarCitaComponent {
 	paciente: Usuario;
 	mensaje: string;
 	mensajeError: string;
@@ -29,10 +29,6 @@ export class SolicitarCitaComponent implements OnInit {
 		this.solicitada = false;
 		this.mensaje = "SOLICITAR CITA";
 		this.mensajeError = "";
-
-	}
-
-	ngOnInit(): void {
 
 	}
 

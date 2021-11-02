@@ -77,6 +77,7 @@ public class ConfiguracionCuposDTO {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public Date getHoraFin() {
         Date fechaFin = getFechaInicioAsDate();
         fechaFin.setHours(fechaFin.getHours() + this.duracionJornadaHoras);

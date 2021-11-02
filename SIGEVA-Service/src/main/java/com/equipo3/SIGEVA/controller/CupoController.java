@@ -58,7 +58,6 @@ public class CupoController {
 		}
 
 		Paciente paciente = (Paciente) u.get();
-		System.out.println(paciente.toString());
 
 		Optional<CentroSalud> optCs = this.centroSaludDao.findById(paciente.getCentroSalud());
 		if (!optCs.isPresent()) {
@@ -227,7 +226,6 @@ public class CupoController {
 			List<CupoCitas> momentos = calcularCuposCitas(centroSalud);
 
 			for (int i = 0; i < momentos.size(); i++) {
-				System.out.println(momentos.get(i));
 				cupoCitasDao.save(momentos.get(i)); // ¡Puede tardar!
 			}
 

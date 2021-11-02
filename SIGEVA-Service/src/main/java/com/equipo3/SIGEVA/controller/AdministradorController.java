@@ -135,6 +135,7 @@ public class AdministradorController {
 			centroSaludDao.save(centroSalud);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
@@ -177,9 +178,9 @@ public class AdministradorController {
 
 		conf.setDuracionMinutos(confDTO.getDuracionMinutos());
 		conf.setNumeroPacientes(confDTO.getNumeroPacientes());
-		conf.setDuracionJornadaHoras(conf.getDuracionJornadaHoras());
-		conf.setDuracionJornadaMinutos(conf.getDuracionJornadaMinutos());
-		conf.setFechaInicio(conf.getFechaInicio());
+		conf.setDuracionJornadaHoras(confDTO.getDuracionJornadaHoras());
+		conf.setDuracionJornadaMinutos(confDTO.getDuracionJornadaMinutos());
+		conf.setFechaInicio(confDTO.getFechaInicio());
 
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
