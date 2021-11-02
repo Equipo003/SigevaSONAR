@@ -14,4 +14,6 @@ public interface UsuarioDao extends MongoRepository <Usuario, String> {
     Optional<Usuario> findByUsername(String username);
 
     List<Usuario> findAllByRol(String rol);
+
+    void deleteByUsername(String username);
 }

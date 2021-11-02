@@ -35,6 +35,14 @@ public class AdministradorController {
 	@Autowired
 	private CupoController cupoController;
 
+	public void eliminarUsuario(String username){
+		try {
+			administradorDao.deleteByUsername(username);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping("/fijarCentro/{username}/{centro}")
 	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
