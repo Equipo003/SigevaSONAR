@@ -19,6 +19,7 @@ public class Rol {
 	}
 	
 	public Rol() {
+		this.id =UUID.randomUUID().toString();
 	}
 
 	public String getId() {

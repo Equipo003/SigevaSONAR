@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonService } from '../Service/json.service';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { ConfiguracionCupos } from '../Model/configuracion-cupos';
 
 @Component({

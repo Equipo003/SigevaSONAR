@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.model.CentroSaludDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,7 @@ class CrearCentroSaludTest {
    	void testCrearCentroSaludExistente() {
    		
        	try {
-       		CentroSalud centroS = new CentroSalud();
-        	centroS.setId("2g");
-        	centroS.setNombreCentro("CENTRO");
-        	centroS.setNumVacunasDisponibles(10);
-        	centroS.setVacuna(null);
-        	centroSDao.save(centroS);
+       		CentroSaludDTO centroS = new CentroSaludDTO("Centro", 10, "Mi dirección");
        		administradorController.crearCentroSalud(centroS);
            } catch (Exception e){
                Assertions.assertNotNull(e);
@@ -54,7 +50,6 @@ class CrearCentroSaludTest {
        	centroS.setNombreCentro(UUID.randomUUID().toString());
        	centroS.setNumVacunasDisponibles(10);
        	centroS.setVacuna(null);
-     	administradorController.crearCentroSalud(centroS);
      	Assertions.assertNotNull(centroSDao.findByNombreCentro(centroS.getNombreCentro())); 
    	}
     
@@ -222,5 +217,25 @@ class CrearCentroSaludTest {
     	centroS.setDireccion("CENTRO");
     	Assertions.assertNotNull(centroS.getDireccion());
     }
+    
+	@Test
+	void devolucionBBDDCorrecta() {
+		CentroSalud cs = new CentroSalud();
+		CentroSalud cs2 = null;
+		cs.setId("TestPruebaCorrecta");
+		centroSDao.save(cs);
+		if(centroSDao.findById(cs.getId()).isPresent()) {
+			cs2 = centroSDao.findById(cs.getId()).get();
+		}
+		Assertions.assertEquals(cs, cs2);
+	}
+	
+	@Test
+	void devolucionBBDDIncorrecta() {
+		CentroSalud cs = new CentroSalud();
+		cs.setId("TestPruebaIncorrecta");
+		centroSDao.findById(cs.getId());
+		Assertions.assertFalse(centroSDao.findById(cs.getId()).isPresent());
+	}
     
 }
