@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.dao;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;

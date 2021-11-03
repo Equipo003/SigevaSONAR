@@ -43,7 +43,7 @@ class CupoTest {
 	void setPacientesCitadosTest() {
 		Paciente p1 = new Paciente();
 		Paciente p2 = new Paciente();
-		List<Paciente> pacientes = new ArrayList();
+		List<Paciente> pacientes = new ArrayList<>();
 		pacientes.add(p1);
 		pacientes.add(p2);
 		
@@ -54,9 +54,7 @@ class CupoTest {
 	
 	@Test
 	void getTamanoTest() {
-		Paciente p1 = new Paciente();
-		Paciente p2 = new Paciente();
-		List<Paciente> pacientes = new ArrayList();
+		List<Paciente> pacientes = new ArrayList<>();
 		
 		cc.setPacientesCitados(pacientes);
 		

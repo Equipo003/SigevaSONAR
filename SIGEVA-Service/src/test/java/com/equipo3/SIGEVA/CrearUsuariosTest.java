@@ -1,19 +1,18 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.RolDTO;
-import com.equipo3.SIGEVA.model.Sanitario;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Date;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Sanitario;
 
 @SpringBootTest
 class CrearUsuariosTest {

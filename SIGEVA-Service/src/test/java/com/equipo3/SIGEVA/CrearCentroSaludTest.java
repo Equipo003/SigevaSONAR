@@ -1,21 +1,18 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.UUID;
 
-import com.equipo3.SIGEVA.model.CentroSaludDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.model.CentroSaludDTO;
 @SpringBootTest
 class CrearCentroSaludTest {
     @Autowired
