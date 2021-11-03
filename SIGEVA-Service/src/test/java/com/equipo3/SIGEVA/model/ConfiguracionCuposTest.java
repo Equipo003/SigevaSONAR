@@ -1,24 +1,21 @@
 package com.equipo3.SIGEVA.model;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-
-
-import com.equipo3.SIGEVA.controller.CupoController;
-import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.server.ResponseStatusException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
+
+@SuppressWarnings("static-access")
 @SpringBootTest
 class ConfiguracionCuposTest {
 
@@ -34,7 +31,7 @@ class ConfiguracionCuposTest {
     @Autowired
     private AdministradorController administradorController;
 
-    @Test
+	@Test
     void setDuracionMinutos() {
         this.configuracionCuposDTO.setDuracionMinutos(65);
         assertTrue(this.configuracionCuposDTO.getDuracionMinutos()==65);
@@ -113,7 +110,8 @@ class ConfiguracionCuposTest {
         assertTrue(this.configuracionCuposDTO.getFechaInicio().equals(fecha));
     }
 
-    @Test
+    @SuppressWarnings("deprecation")
+	@Test
     void getHoraFin() {
         configuracionCuposDTO.setFechaInicio("2021-11-08T07:00");
         String fechaInicio = "2021-11-08T07:00";

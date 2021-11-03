@@ -1,22 +1,17 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
 import java.util.UUID;
 
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.CentroSaludDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.model.CentroSaludDTO;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
@@ -25,8 +20,6 @@ import com.equipo3.SIGEVA.model.Usuario;
 class FijarUsuarioCentroSalud {
 	@Autowired
 	private AdministradorController administradorController;
-	@Autowired
-	private CentroSaludDao centroSDao;
 	@Autowired
 	private UsuarioDao usuarioDao;
 	@Autowired
