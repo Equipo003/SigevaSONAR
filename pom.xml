@@ -14,7 +14,7 @@
 	<artifactId>SIGEVA</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SIGEVA</name>
-	<description>Sistemas de Gestión de Vacunas</description>
+	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<sonar.organization>equipo003</sonar.organization>
