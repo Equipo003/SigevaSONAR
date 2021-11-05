@@ -38,52 +38,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
-	@PutMapping("/fijarCentro/{username}/{centro}")
-	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-		try {
-			Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-			if (optUsuario.isPresent()) {
-				Usuario sanitario = optUsuario.get();
-				sanitario.setCentroSalud(centro);
-				administradorDao.save(sanitario);
-			}
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/getUsuariosByRol")
-	public List<Usuario> getUsuarioByRol(@RequestParam String rol) {
-		try {
-			if (rol.equals("Todos")) {
-				return administradorDao.findAll();
-			} else {
-				return administradorDao.findAllByRol(rol);
-			}
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
-
-//	@CrossOrigin(origins = "http://localhost:4200")
-//	@PostMapping("/crearUsuarioAdministrador")
-//	public void crearUsuarioAdministrador(@RequestBody Administrador admin) {
-//		try {
-//			Optional<Usuario> optUsuario = administradorDao.findByUsername(admin.getUsername());
-//			if (optUsuario.isPresent()) {
-//				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
-//			}
-//
-//			administradorDao.save(admin);
-//
-//		} catch (Exception e) {
-//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//		}
-//	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
@@ -154,33 +109,61 @@ public class AdministradorController {
 		}
 	}
 
-	@PostMapping("/registrarRol")
-	public void registrarRol(@RequestBody RolDTO rolDTO) {
+//	@PostMapping("/registrarRol")
+//	public void registrarRol(@RequestBody RolDTO rolDTO) {
+//
+//		Rol rol = new Rol();
+//		rol.setNombre(rolDTO.getNombre());
+//
+//		try {
+//			rolDao.save(rol);
+//		} catch (Exception e) {
+//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//		}
+//	}
 
-		Rol rol = new Rol();
-		rol.setNombre(rolDTO.getNombre());
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getCentros")
+	public List<CentroSaludDTO> listarCentros() {
+		return WrapperModelToDTO.allcentroSaludToCentroSaludDTO();
+	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getRoles")
+	public List<RolDTO> listarRoles() {
 		try {
-			rolDao.save(rol);
+			return WrapperModelToDTO.allRolToRolDTO();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getUsuariosByRol")
+	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
+		try {
+			if (rol.equals("Todos")) {
+				return WrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+			} else {
+				return WrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/getCentros")
-	public List<CentroSalud> listarCentros() {
-		return centroSaludDao.findAll();
-		
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping("/getRoles")
-	public List<Rol> listarRoles() {
+	@PutMapping("/fijarCentro/{username}/{centro}")
+	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
 		try {
-			return rolDao.findAll();
+			Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
+			if (optUsuario.isPresent()) {
+				Usuario sanitario = optUsuario.get();
+				sanitario.setCentroSalud(centro);
+				administradorDao.save(sanitario);
+			}
 		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 

@@ -1,17 +1,22 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.model.Rol;
+import java.util.UUID;
 
 public class RolDTO {
 
+    String id;
     String nombre;
 
-    public RolDTO(String nombre) {
-        this.nombre = nombre;
+    public RolDTO() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public RolDTO(Rol rol){
-        this.nombre = rol.getNombre();
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombre() {
