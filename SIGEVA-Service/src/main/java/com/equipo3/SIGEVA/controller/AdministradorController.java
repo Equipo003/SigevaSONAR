@@ -30,6 +30,9 @@ public class AdministradorController {
 	@Autowired
 	private CupoController cupoController;
 
+	@Autowired
+	private WrapperModelToDTO wrapperModelToDTO;
+
 	public void eliminarUsuario(String username){
 		try {
 			administradorDao.deleteByUsername(username);
@@ -125,14 +128,14 @@ public class AdministradorController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return WrapperModelToDTO.allcentroSaludToCentroSaludDTO();
+		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO();
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
-			return WrapperModelToDTO.allRolToRolDTO();
+			return wrapperModelToDTO.allRolToRolDTO();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -143,9 +146,9 @@ public class AdministradorController {
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
 			if (rol.equals("Todos")) {
-				return WrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
 			} else {
-				return WrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
