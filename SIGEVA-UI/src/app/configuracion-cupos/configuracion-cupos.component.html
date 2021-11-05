@@ -1,8 +1,13 @@
 <div class="register">
   <div *ngIf="this.configuracionExistente == true" class="register-screen">
     <div class="register-form">
-      <h1>Ya se han configurado los cupos</h1>
-      <div class="control-group"></div>
+      <div class="control-group">
+        <h2>Fecha de inicio: {{this.fechaInicio | date: 'medium'}}.</h2>
+        <h2>Duración de las jornadas: {{this.duracionJornadaHoras}}horas y {{this.duracionJornadaMinutos}} minutos.</h2>
+        <h2>Hora fin de las jornadas: {{this.fecha | date: 'shortTime'}}.</h2>
+        <h2>Duracion de los cupos: {{this.duracionMinutos}} minutos.</h2>
+        <h2>Tamaño de los cupos: {{this.numeroPacientes}} pacientes.</h2>
+      </div>
     </div>
   </div>
   <div *ngIf="this.configuracionExistente == false" class="register-screen">

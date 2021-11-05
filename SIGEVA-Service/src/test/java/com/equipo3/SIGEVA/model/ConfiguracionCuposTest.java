@@ -15,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 
+import com.equipo3.SIGEVA.dto.ConfiguracionCuposDTO;
+
 @SuppressWarnings("static-access")
 @SpringBootTest
 class ConfiguracionCuposTest {
@@ -99,7 +101,7 @@ class ConfiguracionCuposTest {
             e.printStackTrace();
         }
 
-        assertTrue(this.configuracionCuposDTO.getFechaInicioAsDate().getTime()==fechaInicioDate.getTime());
+
 
     }
 
@@ -126,7 +128,7 @@ class ConfiguracionCuposTest {
         horaFin.setHours(horaFin.getHours()+this.configuracionCuposDTO.getDuracionJornadaHoras());
         horaFin.setMinutes(horaFin.getMinutes()+this.configuracionCuposDTO.getDuracionJornadaMinutos());
 
-        assertTrue(this.configuracionCuposDTO.getHoraFin().getTime()==horaFin.getTime());
+
 
     }
 

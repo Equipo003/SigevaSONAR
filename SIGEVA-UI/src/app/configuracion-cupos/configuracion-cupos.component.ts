@@ -41,10 +41,31 @@ export class ConfiguracionCuposComponent implements OnInit {
   ngOnInit(): void {
       this.json.getJson('user/existConfCupos').subscribe((res: any) => {
                this.configuracionExistente = JSON.parse(res);
+               if(this.configuracionExistente == true){
+                  this.mostrarConfiguracion();
+               }
           },err=> {
               this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
               console.log(err);
           });
+  }
+
+  mostrarConfiguracion(){
+     this.json.getJson('user/getConfCupos').subscribe((res: any) => {
+                   let configuracionCupos : ConfiguracionCupos;
+                   configuracionCupos = JSON.parse(res);
+                   console.log(res);
+
+                   this.fechaInicio = configuracionCupos.fechaInicio;
+                   this.duracionMinutos = configuracionCupos.duracionMinutos;
+                   this.duracionJornadaHoras = configuracionCupos.duracionJornadaHoras;
+                   this.duracionJornadaMinutos = configuracionCupos.duracionJornadaMinutos;
+                   this.numeroPacientes = configuracionCupos.numeroPacientes;
+                   this.calcularHoraFin();
+              },err=> {
+                  this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
+                  console.log(err);
+              });
   }
 
   calcularHoraFin(){
@@ -52,7 +73,6 @@ export class ConfiguracionCuposComponent implements OnInit {
         this.fecha = new Date(this.fechaInicio);
             this.fecha.setHours(this.fecha.getHours()+this.duracionJornadaHoras);
             this.fecha.setMinutes(this.fecha.getMinutes()+this.duracionJornadaMinutos);
-            console.log(this.fecha);
         this.fechaCreada = true;
       }
   }

@@ -3,7 +3,9 @@ package com.equipo3.SIGEVA.dto;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class WrapperModelToDTO {
     private RolDao rolDao;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private ConfiguracionCuposDao configuracionCuposDao;
 
     public List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(){
         List<CentroSaludDTO> centroSaludDTOList = new ArrayList<>();
@@ -77,4 +81,23 @@ public class WrapperModelToDTO {
         }
         return usuarioDTOList;
     }
+
+    public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(){
+        List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
+        if(!configuracionCuposList.isEmpty()){
+            ConfiguracionCupos configuracionCupos = configuracionCuposList.get(0);
+            ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
+            configuracionCuposDTO.setDuracionMinutos(configuracionCupos.getDuracionMinutos());
+            configuracionCuposDTO.setDuracionJornadaHoras(configuracionCupos.getDuracionJornadaHoras());
+            configuracionCuposDTO.setDuracionJornadaMinutos(configuracionCupos.getDuracionJornadaMinutos());
+            configuracionCuposDTO.setFechaInicio(configuracionCupos.getFechaInicio());
+            configuracionCuposDTO.setNumeroPacientes(configuracionCupos.getNumeroPacientes());
+
+            return configuracionCuposDTO;
+        }
+
+        return null;
+    }
+
+
 }

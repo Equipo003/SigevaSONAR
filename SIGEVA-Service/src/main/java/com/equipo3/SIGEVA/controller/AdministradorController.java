@@ -206,6 +206,21 @@ public class AdministradorController {
 
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/getConfCupos")
+	public ConfiguracionCuposDTO getConfiguracionCupos() {
+		try {
+			ConfiguracionCuposDTO configuracionCuposDTO = this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO();
+
+			if(configuracionCuposDTO == null)
+				throw new Exception();
+
+			return configuracionCuposDTO;
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
 	@CrossOrigin(origins = {"http://localhost:4200", "https://rocky-beach-98330.herokuapp.com"})
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
