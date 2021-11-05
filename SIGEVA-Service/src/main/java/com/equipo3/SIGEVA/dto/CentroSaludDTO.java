@@ -1,4 +1,4 @@
-package com.equipo3.SIGEVA.model;
+package com.equipo3.SIGEVA.dto;
 
 import java.util.UUID;
 
@@ -8,20 +8,16 @@ public class CentroSaludDTO {
     private int numVacunasDisponibles;
     private String direccion;
 
-    public CentroSaludDTO(String nombreCentro, int numVacunasDisponibles, String direccion) {
-        this.nombreCentro = nombreCentro;
-        this.numVacunasDisponibles = numVacunasDisponibles;
-        this.direccion = direccion;
-    }
-
-    public CentroSaludDTO(CentroSalud centroSalud){
-        this.nombreCentro = centroSalud.getNombreCentro();
-        this.numVacunasDisponibles = centroSalud.getNumVacunasDisponibles();
-        this.direccion = centroSalud.getDireccion();
-    }
-
     public CentroSaludDTO() {
-    	this.id = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNombreCentro() {
@@ -47,8 +43,4 @@ public class CentroSaludDTO {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-
-	public String getId() {
-		return this.id;
-	}
 }

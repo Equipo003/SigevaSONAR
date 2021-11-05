@@ -23,13 +23,13 @@ public class Paciente extends Usuario {
 		cuposAsignados = new ArrayList<>();
 	}
 
-	public Paciente(String rol, String centroFK, String username, String correo, String hashPassword, String dni,
-			String nombre, String apellidos, Date fechaNacimiento, String imagen, int numVacunas,
-			List<CupoSimple> cuposAsignados) {
-		super(rol, centroFK, username, correo, hashPassword, dni, nombre, apellidos, fechaNacimiento, imagen);
-		this.numVacunas = numVacunas;
-		this.cuposAsignados = cuposAsignados;
-	}
+//	public Paciente(String rol, String centroFK, String username, String correo, String hashPassword, String dni,
+//			String nombre, String apellidos, Date fechaNacimiento, String imagen, int numVacunas,
+//			List<CupoSimple> cuposAsignados) {
+//		super(rol, centroFK, username, correo, hashPassword, dni, nombre, apellidos, fechaNacimiento, imagen);
+//		this.numVacunas = numVacunas;
+//		this.cuposAsignados = cuposAsignados;
+//	}
 
 	public boolean isAsignado() {
 		return asignado;

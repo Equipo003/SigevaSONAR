@@ -20,97 +20,97 @@ class CrearUsuariosTest {
 	@Autowired
 	private AdministradorController administradorController;
 
-	@Test
-	void insercionCorrectaAdministrador() {
-
-		Administrador administrador = new Administrador();
-
-		administrador.setRol("6173cecfc5635444ee5469d7");
-		administrador.setCentroSalud("1234");
-		administrador.setUsername("user55");
-		administrador.setCorreo("micorreo@correo.com");
-		administrador.setHashPassword("sdfsdf");
-		administrador.setDni("99999999Q");
-		administrador.setNombre("Juan");
-		administrador.setApellidos("Perez");
-		administrador.setFechaNacimiento(new Date());
-		administrador.setImagen("912imagen");
-
-		administradorController.crearUsuarioAdministrador(administrador);
-	}
+//	@Test
+//	void insercionCorrectaAdministrador() {
+//
+//		Administrador administrador = new Administrador();
+//
+//		administrador.setRol("6173cecfc5635444ee5469d7");
+//		administrador.setCentroSalud("1234");
+//		administrador.setUsername("user55");
+//		administrador.setCorreo("micorreo@correo.com");
+//		administrador.setHashPassword("sdfsdf");
+//		administrador.setDni("99999999Q");
+//		administrador.setNombre("Juan");
+//		administrador.setApellidos("Perez");
+//		administrador.setFechaNacimiento(new Date());
+//		administrador.setImagen("912imagen");
+//
+//		administradorController.crearUsuarioAdministrador(administrador);
+//	}
 
 	@Test
 	void eliminarAdministradorCreadoAnteriormente(){
 		administradorController.eliminarUsuario("user55");
 	}
 
-	@Test
-	void insercionAdministradorDuplicado() throws UsuarioInvalidoException {
-		Administrador administrador = new Administrador();
+//	@Test
+//	void insercionAdministradorDuplicado() throws UsuarioInvalidoException {
+//		Administrador administrador = new Administrador();
+//
+//		administrador.setRol("6173cecfc5635444ee5469d7");
+//		administrador.setCentroSalud("1234");
+//		administrador.setUsername("user55");
+//		administrador.setCorreo("micorreo@correo.com");
+//		administrador.setHashPassword("sdfsdf");
+//		administrador.setDni("99999999Q");
+//		administrador.setNombre("Juan");
+//		administrador.setApellidos("Perez");
+//		administrador.setFechaNacimiento(new Date());
+//		administrador.setImagen("912imagen");
+//		try{
+//			administradorController.crearUsuarioAdministrador(administrador);
+//			administradorController.crearUsuarioAdministrador(administrador);
+//		} catch (Exception e){
+//			administradorController.eliminarUsuario("user55");
+//			assertNotNull(e);
+//		}
+//	}
 
-		administrador.setRol("6173cecfc5635444ee5469d7");
-		administrador.setCentroSalud("1234");
-		administrador.setUsername("user55");
-		administrador.setCorreo("micorreo@correo.com");
-		administrador.setHashPassword("sdfsdf");
-		administrador.setDni("99999999Q");
-		administrador.setNombre("Juan");
-		administrador.setApellidos("Perez");
-		administrador.setFechaNacimiento(new Date());
-		administrador.setImagen("912imagen");
-		try{
-			administradorController.crearUsuarioAdministrador(administrador);
-			administradorController.crearUsuarioAdministrador(administrador);
-		} catch (Exception e){
-			administradorController.eliminarUsuario("user55");
-			assertNotNull(e);
-		}
-	}
 
+//	@Test
+//	void insercionCorrectaSanitario() {
+//
+//		Sanitario sanitario = new Sanitario();
+//
+//		sanitario.setRol("6173cecfc5635444ee5469d7");
+//		sanitario.setCentroSalud("1234");
+//		sanitario.setUsername("sanitario");
+//		sanitario.setCorreo("micorreo@correo.com");
+//		sanitario.setHashPassword("sdfsdf");
+//		sanitario.setDni("99999999Q");
+//		sanitario.setNombre("Juan");
+//		sanitario.setApellidos("Perez");
+//		sanitario.setFechaNacimiento(new Date());
+//		sanitario.setImagen("912imagen");
+//
+//		administradorController.crearUsuarioSanitario(sanitario);
+//
+//	}
 
-	@Test
-	void insercionCorrectaSanitario() {
-
-		Sanitario sanitario = new Sanitario();
-
-		sanitario.setRol("6173cecfc5635444ee5469d7");
-		sanitario.setCentroSalud("1234");
-		sanitario.setUsername("sanitario");
-		sanitario.setCorreo("micorreo@correo.com");
-		sanitario.setHashPassword("sdfsdf");
-		sanitario.setDni("99999999Q");
-		sanitario.setNombre("Juan");
-		sanitario.setApellidos("Perez");
-		sanitario.setFechaNacimiento(new Date());
-		sanitario.setImagen("912imagen");
-
-		administradorController.crearUsuarioSanitario(sanitario);
-
-	}
-
-	@Test
-	void insercionSanitarioDuplicado() throws UsuarioInvalidoException {
-		Sanitario sanitario = new Sanitario();
-
-		sanitario.setRol("6173cecfc5635444ee5469d7");
-		sanitario.setCentroSalud("1234");
-		sanitario.setUsername("sanitario");
-		sanitario.setCorreo("micorreo@correo.com");
-		sanitario.setHashPassword("sdfsdf");
-		sanitario.setDni("99999999Q");
-		sanitario.setNombre("Juan");
-		sanitario.setApellidos("Perez");
-		sanitario.setFechaNacimiento(new Date());
-		sanitario.setImagen("912imagen");
-
-		try{
-			administradorController.crearUsuarioSanitario(sanitario);
-			administradorController.crearUsuarioSanitario(sanitario);
-		} catch (Exception e){
-			administradorController.eliminarUsuario("sanitario");
-			assertNotNull(e);
-		}
-	}
+//	@Test
+//	void insercionSanitarioDuplicado() throws UsuarioInvalidoException {
+//		Sanitario sanitario = new Sanitario();
+//
+//		sanitario.setRol("6173cecfc5635444ee5469d7");
+//		sanitario.setCentroSalud("1234");
+//		sanitario.setUsername("sanitario");
+//		sanitario.setCorreo("micorreo@correo.com");
+//		sanitario.setHashPassword("sdfsdf");
+//		sanitario.setDni("99999999Q");
+//		sanitario.setNombre("Juan");
+//		sanitario.setApellidos("Perez");
+//		sanitario.setFechaNacimiento(new Date());
+//		sanitario.setImagen("912imagen");
+//
+//		try{
+//			administradorController.crearUsuarioSanitario(sanitario);
+//			administradorController.crearUsuarioSanitario(sanitario);
+//		} catch (Exception e){
+//			administradorController.eliminarUsuario("sanitario");
+//			assertNotNull(e);
+//		}
+//	}
 
 	@Test
 	void eliminarSanitarioCreadoAnteriormente(){

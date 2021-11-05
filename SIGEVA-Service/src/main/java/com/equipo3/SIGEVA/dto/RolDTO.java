@@ -1,4 +1,6 @@
-package com.equipo3.SIGEVA.model;
+package com.equipo3.SIGEVA.dto;
+
+import com.equipo3.SIGEVA.model.Rol;
 
 public class RolDTO {
 

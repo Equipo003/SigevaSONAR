@@ -1,5 +1,5 @@
 export interface CentroSalud{
-  	direccion: string;
+  direccion: string;
 	nombreCentro : string;
 	numVacunasDisponibles : number;
 	id : string;

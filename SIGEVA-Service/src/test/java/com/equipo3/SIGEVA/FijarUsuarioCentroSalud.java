@@ -11,7 +11,7 @@ import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
@@ -25,40 +25,40 @@ class FijarUsuarioCentroSalud {
 	@Autowired
 	private RolDao roldao;
 
-	@Test
-	void AsignarCentroSaludSanitarioNivelModelo() throws NumVacunasInvalido {
-		Usuario sanitario = new Sanitario();
-		CentroSaludDTO cs = new CentroSaludDTO();
-		cs.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(cs);
-		
-		sanitario.setNombre("NombrePrueba");
-		sanitario.setUsername(UUID.randomUUID().toString());
-		Rol rol = null;
-		
-		if(roldao.findAllByNombre("Sanitario").isPresent()) {
-			rol = roldao.findAllByNombre("Sanitario").get();
-		}
-		
-		sanitario.setRol(rol.getId());
-		
-		if(sanitario!=null) {
-			System.out.println("No es nulo");
-			System.out.println(sanitario.getRol());
-		}
-		
-		administradorController.fijarPersonal(sanitario.getUsername(), cs.getId());
-		
-		Usuario san = null;
-		
-		administradorController.crearUsuarioSanitario((Sanitario) sanitario);
-		
-		
-		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
-			san = usuarioDao.findById(sanitario.getIdUsuario()).get();
-		}
-		Assertions.assertEquals(sanitario.getCentroSalud(), san.getCentroSalud());
-	}
+//	@Test
+//	void AsignarCentroSaludSanitarioNivelModelo() throws NumVacunasInvalido {
+//		Usuario sanitario = new Sanitario();
+//		CentroSaludDTO cs = new CentroSaludDTO();
+//		cs.setNombreCentro(UUID.randomUUID().toString());
+//		administradorController.crearCentroSalud(cs);
+//
+//		sanitario.setNombre("NombrePrueba");
+//		sanitario.setUsername(UUID.randomUUID().toString());
+//		Rol rol = null;
+//
+//		if(roldao.findAllByNombre("Sanitario").isPresent()) {
+//			rol = roldao.findAllByNombre("Sanitario").get();
+//		}
+//
+//		sanitario.setRol(rol.getId());
+//
+//		if(sanitario!=null) {
+//			System.out.println("No es nulo");
+//			System.out.println(sanitario.getRol());
+//		}
+//
+//		administradorController.fijarPersonal(sanitario.getUsername(), cs.getId());
+//
+//		Usuario san = null;
+//
+//		administradorController.crearUsuarioSanitario((Sanitario) sanitario);
+//
+//
+//		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
+//			san = usuarioDao.findById(sanitario.getIdUsuario()).get();
+//		}
+//		Assertions.assertEquals(sanitario.getCentroSalud(), san.getCentroSalud());
+//	}
 
 //	@Test
 //	void AsignarCentroSaludSanitarioNivelBBDD() throws NumVacunasInvalido {

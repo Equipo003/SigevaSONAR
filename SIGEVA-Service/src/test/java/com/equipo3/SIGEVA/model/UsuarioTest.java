@@ -112,13 +112,13 @@ public class UsuarioTest {
         assertNotEquals(usuario.hashCode(), new Integer(0));
     }
 
-    @Test
-    void checkEquals() {
-        Usuario u2 = new Usuario(usuario.getRol(), usuario.getCentroSalud(), usuario.getUsername(), usuario.getCorreo(),
-                usuario.getHashPassword(), usuario.getDni(), usuario.getNombre(),
-                usuario.getApellidos(), usuario.getFechaNacimiento(), usuario.getImagen());
-        u2.setIdUsuario(usuario.getIdUsuario());
-        assertEquals(usuario, u2);
-    }
+//    @Test
+//    void checkEquals() {
+//        Usuario u2 = new Usuario(usuario.getRol(), usuario.getCentroSalud(), usuario.getUsername(), usuario.getCorreo(),
+//                usuario.getHashPassword(), usuario.getDni(), usuario.getNombre(),
+//                usuario.getApellidos(), usuario.getFechaNacimiento(), usuario.getImagen());
+//        u2.setIdUsuario(usuario.getIdUsuario());
+//        assertEquals(usuario, u2);
+//    }
 
 }

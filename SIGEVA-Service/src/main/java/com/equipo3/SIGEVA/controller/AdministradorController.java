@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.equipo3.SIGEVA.dao.*;
+import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
@@ -68,16 +69,33 @@ public class AdministradorController {
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
+//	@CrossOrigin(origins = "http://localhost:4200")
+//	@PostMapping("/crearUsuarioAdministrador")
+//	public void crearUsuarioAdministrador(@RequestBody Administrador admin) {
+//		try {
+//			Optional<Usuario> optUsuario = administradorDao.findByUsername(admin.getUsername());
+//			if (optUsuario.isPresent()) {
+//				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+//			}
+//
+//			administradorDao.save(admin);
+//
+//		} catch (Exception e) {
+//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//		}
+//	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
-	public void crearUsuarioAdministrador(@RequestBody Administrador admin) {
+	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
-			Optional<Usuario> optUsuario = administradorDao.findByUsername(admin.getUsername());
+			Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+			Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
-			administradorDao.save(admin);
+			administradorDao.save(administrador);
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -102,8 +120,9 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioSanitario")
-	public void crearUsuarioSanitario(@RequestBody Sanitario sanitario) {
+	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
+			Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -118,21 +137,16 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/newCentroSalud")
-	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
-		CentroSalud centroSalud = new CentroSalud();
-
-		centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
-		centroSalud.setDireccion(centroSaludDTO.getDireccion());
-		centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
-
+	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
-
+			CentroSalud centroSalud = WrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
 			if (optCentroSalud.isPresent()) {
 				throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
 			}
-			cupoController.prepararCuposCitas(centroSalud);
+
 			centroSaludDao.save(centroSalud);
+			cupoController.prepararCuposCitas(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -206,7 +220,7 @@ public class AdministradorController {
 
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = {"http://localhost:4200", "https://rocky-beach-98330.herokuapp.com"})
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
@@ -216,6 +230,24 @@ public class AdministradorController {
 				centroSaludDef.modificarStockVacunas(vacunas);
 				centroSaludDao.save(centroSaludDef);
 			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public CentroSalud getCentroById(String centroSalud) {
+		try {
+			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
+			return centroS.get();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public Rol getRolById(String rol) {
+		try {
+			Optional<Rol> rolOptional = rolDao.findById(rol);
+			return rolOptional.get();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

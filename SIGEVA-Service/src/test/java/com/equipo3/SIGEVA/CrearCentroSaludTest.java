@@ -12,7 +12,7 @@ import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 @SpringBootTest
 class CrearCentroSaludTest {
     @Autowired
@@ -29,16 +29,16 @@ class CrearCentroSaludTest {
         }
 	}
     
-    @Test
-   	void testCrearCentroSaludExistente() {
-   		
-       	try {
-       		CentroSaludDTO centroS = new CentroSaludDTO("Centro", 10, "Mi dirección");
-       		administradorController.crearCentroSalud(centroS);
-           } catch (Exception e){
-               Assertions.assertNotNull(e);
-           }
-   	}
+//    @Test
+//   	void testCrearCentroSaludExistente() {
+//
+//       	try {
+//       		CentroSaludDTO centroS = new CentroSaludDTO("Centro", 10, "Mi dirección");
+//       		administradorController.crearCentroSalud(centroS);
+//           } catch (Exception e){
+//               Assertions.assertNotNull(e);
+//           }
+//   	}
     
     @Test
    	void testCentroSaludGuardado() throws NumVacunasInvalido {

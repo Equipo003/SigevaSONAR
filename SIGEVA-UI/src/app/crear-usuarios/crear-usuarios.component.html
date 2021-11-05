@@ -6,13 +6,13 @@
 
         <div class="control-group">
           <p>Elige el tipo de usuario a crear: </p>
-          <select name="rol" [(ngModel)]="rolSeleccionado">
+          <select name="rol" [(ngModel)]="usuario.rol.nombre">
             <option *ngFor="let rol of roles">{{rol.nombre}}</option>
           </select>
         </div>
 
         <div class="control-group">
-          <select name="centro" [(ngModel)]="centroSeleccionado">
+          <select name="centro" [(ngModel)]="usuario.centroSalud.nombreCentro">
             <option *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
