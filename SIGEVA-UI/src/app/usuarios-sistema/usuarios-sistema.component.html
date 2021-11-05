@@ -5,7 +5,7 @@
       <h3>Filtrar por: </h3>
       <select name="rol" [(ngModel)]="rolSeleccionado">
         <option>Todos</option>
-        <option *ngFor="let rol of roles2">{{rol.nombre}}</option>
+        <option *ngFor="let rol of roles">{{rol.nombre}}</option>
       </select>
       <button class="btn" type="submit" (click)="cargarUsuarios()">FILTRAR</button>
 

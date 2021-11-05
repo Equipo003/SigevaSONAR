@@ -6,17 +6,23 @@ import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class WrapperModelToDTO {
 
-    private static CentroSaludDao centroSaludDao;
-    private static RolDao rolDao;
-    private static UsuarioDao usuarioDao;
+    @Autowired
+    private CentroSaludDao centroSaludDao;
+    @Autowired
+    private RolDao rolDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
-    public static List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(){
+    public List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(){
         List<CentroSaludDTO> centroSaludDTOList = new ArrayList<>();
         List<CentroSalud> centroSaludList = centroSaludDao.findAll();
 
@@ -26,11 +32,12 @@ public class WrapperModelToDTO {
             centroSaludDTO.setNombreCentro(centroSalud.getNombreCentro());
             centroSaludDTO.setDireccion(centroSalud.getDireccion());
             centroSaludDTO.setNumVacunasDisponibles(centroSalud.getNumVacunasDisponibles());
+            centroSaludDTOList.add(centroSaludDTO);
         }
         return centroSaludDTOList;
     }
 
-    public static List<RolDTO> allRolToRolDTO(){
+    public List<RolDTO> allRolToRolDTO(){
         List<RolDTO> rolDTOList = new ArrayList<>();
         List<Rol> rolList = rolDao.findAll();
 
@@ -38,11 +45,12 @@ public class WrapperModelToDTO {
             RolDTO rolDTO = new RolDTO();
             rolDTO.setId(rol.getId());
             rolDTO.setNombre(rol.getNombre());
+            rolDTOList.add(rolDTO);
         }
         return rolDTOList;
     }
 
-    public static List<UsuarioDTO> allUsuarioToUsuarioDTO(String rol){
+    public List<UsuarioDTO> allUsuarioToUsuarioDTO(String rol){
         List<UsuarioDTO> usuarioDTOList = new ArrayList<>();
         List<Usuario> usuarioList;
         if (rol.equals("Todos")) {
@@ -64,6 +72,8 @@ public class WrapperModelToDTO {
             usuarioDTO.setApellidos(usuario.getApellidos());
             usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
             usuarioDTO.setImagen(usuario.getImagen());
+
+            usuarioDTOList.add(usuarioDTO);
         }
         return usuarioDTOList;
     }
