@@ -68,6 +68,23 @@ export class ConfiguracionCuposComponent implements OnInit {
               });
   }
 
+  mostrarConfiguracion(){
+     this.json.getJson('user/getConfCupos').subscribe((res: any) => {
+                   let configuracionCupos : ConfiguracionCupos;
+                   configuracionCupos = JSON.parse(res);
+
+                   this.fechaInicio = configuracionCupos.fechaInicio;
+                   this.duracionMinutos = configuracionCupos.duracionMinutos;
+                   this.duracionJornadaHoras = configuracionCupos.duracionJornadaHoras;
+                   this.duracionJornadaMinutos = configuracionCupos.duracionJornadaMinutos;
+                   this.numeroPacientes = configuracionCupos.numeroPacientes;
+                   this.calcularHoraFin();
+              },err=> {
+                  this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
+                  console.log(err);
+              });
+  }
+
   calcularHoraFin(){
       if(this.fechaInicio != ''){
         this.fecha = new Date(this.fechaInicio);
