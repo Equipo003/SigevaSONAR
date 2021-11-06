@@ -32,7 +32,7 @@ class CrearCentroSaludTest {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		centroSaludDTO.setDireccion("Calle falsa 123");
-		centroSaludDTO.setNumVacunasDisponibles((int)Math.random());
+		centroSaludDTO.setNumVacunasDisponibles((int)Math.random()*1000);
 	}
 
     @Test

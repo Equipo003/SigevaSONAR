@@ -71,8 +71,7 @@ class CrearUsuariosTest {
 
 	@Test
 	void insercionCorrectaAdministrador() {
-		administradorDTO.setUsername(UUID.randomUUID().toString());
-		administradorDTO.setRol(administradorController.getRolById("0989148b-ef27-4fef-9e5a-dccbc6d20803"));
+		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
 		administradorDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioAdministrador(administradorDTO);
@@ -97,8 +96,7 @@ class CrearUsuariosTest {
 
 	@Test
 	void insercionCorrectaSanitario() {
-		sanitarioDTO.setUsername(UUID.randomUUID().toString());
-		sanitarioDTO.setRol(administradorController.getRolById("e24bf973-e26e-47b7-b8f4-83fa13968221"));
+		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
 		sanitarioDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
@@ -123,8 +121,7 @@ class CrearUsuariosTest {
 
 	@Test
 	void insercionCorrectaPaciente() {
-		pacienteDTO.setUsername(UUID.randomUUID().toString());
-		pacienteDTO.setRol(administradorController.getRolById("25ec739c-6012-4902-9b3a-a9dc60f84857"));
+		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
 		pacienteDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioPaciente(pacienteDTO);

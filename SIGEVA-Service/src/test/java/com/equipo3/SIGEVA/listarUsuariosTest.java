@@ -15,26 +15,23 @@ public class listarUsuariosTest {
     @Autowired
     private AdministradorController administradorController;
 
-    @Autowired
-    private RolDao rolDao;
-
     @Test
     public void getTodosUsuarios(){
         assertNotNull(administradorController.getUsuarioByRol("Todos"));
     }
 
     @Test void getUsuariosAdministradores(){
-        Rol rol = rolDao.findAllByNombre("Administrador").get();
+        Rol rol = administradorController.getRolByNombre("Administrador");
         assertNotNull(administradorController.getUsuarioByRol(rol.getId()));
     }
 
     @Test void getUsuariosSanitarios(){
-        Rol rol = rolDao.findAllByNombre("Sanitario").get();
+        Rol rol = administradorController.getRolByNombre("Sanitario");
         assertNotNull(administradorController.getUsuarioByRol(rol.getId()));
     }
 
     @Test void getUsuariosPacientes(){
-        Rol rol = rolDao.findAllByNombre("Paciente").get();
+        Rol rol = administradorController.getRolByNombre("Paciente");
         assertNotNull(administradorController.getUsuarioByRol(rol.getId()));
     }
 }

@@ -275,4 +275,16 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+
+	public Rol getRolByNombre(String nombreRol) {
+        try {
+            Optional<Rol> rolOptional = rolDao.findAllByNombre(nombreRol);
+            if (rolOptional.isPresent())
+                return rolOptional.get();
+			else
+				throw new Exception();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }
