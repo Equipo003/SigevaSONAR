@@ -83,4 +83,22 @@ public class WrapperModelToDTO {
 
         return null;
     }
+
+    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario){
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+
+        usuarioDTO.setIdUsuario(usuario.getIdUsuario());
+        usuarioDTO.setRol(rolDao.findById(usuario.getRol()).get());
+        usuarioDTO.setCentroSalud(centroSaludDao.findById(usuario.getCentroSalud()).get());
+        usuarioDTO.setUsername(usuario.getUsername());
+        usuarioDTO.setCorreo(usuario.getCorreo());
+        usuarioDTO.setHashPassword(usuario.getHashPassword());
+        usuarioDTO.setDni(usuario.getDni());
+        usuarioDTO.setNombre(usuario.getNombre());
+        usuarioDTO.setApellidos(usuario.getApellidos());
+        usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
+        usuarioDTO.setImagen(usuario.getImagen());
+
+        return usuarioDTO;
+    }
 }

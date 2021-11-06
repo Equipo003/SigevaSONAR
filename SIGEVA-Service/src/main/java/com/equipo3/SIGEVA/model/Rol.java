@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class Rol {
 	@Id
+	@Field
 	String id;
 	@Field 
 	String nombre;

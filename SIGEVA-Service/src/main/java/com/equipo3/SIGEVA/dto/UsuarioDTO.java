@@ -110,4 +110,21 @@ public class UsuarioDTO {
     public void setImagen(String imagen) {
         this.imagen = imagen;
     }
+
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "idUsuario='" + idUsuario + '\'' +
+                ", rol=" + rol +
+                ", centroSalud=" + centroSalud +
+                ", username='" + username + '\'' +
+                ", correo='" + correo + '\'' +
+                ", hashPassword='" + hashPassword + '\'' +
+                ", dni='" + dni + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", imagen='" + imagen + '\'' +
+                '}';
+    }
 }

@@ -115,18 +115,19 @@ public class AdministradorController {
 		}
 	}
 
-//	@PostMapping("/registrarRol")
-//	public void registrarRol(@RequestBody RolDTO rolDTO) {
-//
-//		Rol rol = new Rol();
-//		rol.setNombre(rolDTO.getNombre());
-//
-//		try {
-//			rolDao.save(rol);
-//		} catch (Exception e) {
-//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//		}
-//	}
+	@PostMapping("/registrarRol")
+	public void registrarRol(@RequestBody RolDTO rolDTO) {
+
+		Rol rol = new Rol();
+		rol.setId(rolDTO.getId());
+		rol.setNombre(rolDTO.getNombre());
+
+		try {
+			rolDao.save(rol);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getCentros")
@@ -258,10 +259,10 @@ public class AdministradorController {
 		}
 	}
 
-	public Rol getUsuarioById(String idUsuario) {
+	public UsuarioDTO getUsuarioById(String idUsuario) {
 		try {
-			Optional<Rol> rolOptional = rolDao.findById(idUsuario);
-			return rolOptional.get();
+			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
+			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

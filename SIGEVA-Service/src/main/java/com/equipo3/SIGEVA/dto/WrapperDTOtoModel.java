@@ -1,16 +1,14 @@
 package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Sanitario;
+import com.equipo3.SIGEVA.model.*;
 
 public class WrapperDTOtoModel {
 
     public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){
         Administrador administrador = new Administrador();
 
+        administrador.setIdUsuario(administradorDTO.getIdUsuario());
         administrador.setRol(administradorDTO.getRol().getId());
         administrador.setCentroSalud(administradorDTO.getCentroSalud().getId());
         administrador.setUsername(administradorDTO.getUsername());
@@ -28,6 +26,7 @@ public class WrapperDTOtoModel {
     public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO){
         Sanitario sanitario = new Sanitario();
 
+        sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
         sanitario.setRol(sanitarioDTO.getRol().getId());
         sanitario.setCentroSalud(sanitarioDTO.getCentroSalud().getId());
         sanitario.setUsername(sanitarioDTO.getUsername());
@@ -45,6 +44,7 @@ public class WrapperDTOtoModel {
     public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO){
         Paciente paciente = new Paciente();
 
+        paciente.setIdUsuario(pacienteDTO.getIdUsuario());
         paciente.setRol(pacienteDTO.getRol().getId());
         paciente.setCentroSalud(pacienteDTO.getCentroSalud().getId());
         paciente.setUsername(pacienteDTO.getUsername());
@@ -66,5 +66,13 @@ public class WrapperDTOtoModel {
         centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
 
         return centroSalud;
+    }
+
+    public static Rol rolDTOToRol(RolDTO rolDTO){
+        Rol rol = new Rol();
+        rol.setId(rolDTO.getId());
+        rol.setNombre(rolDTO.getNombre());
+
+        return rol;
     }
 }

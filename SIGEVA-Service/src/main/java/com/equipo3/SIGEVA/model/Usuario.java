@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class Usuario {
 	@Id
+	@Field
 	private String idUsuario;
 	@Field
 	private String rol;
