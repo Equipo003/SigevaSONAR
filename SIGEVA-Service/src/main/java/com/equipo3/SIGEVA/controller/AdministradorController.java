@@ -29,6 +29,8 @@ public class AdministradorController {
 	private CentroSaludDao centroSaludDao;
 	@Autowired
 	private CupoController cupoController;
+	@Autowired
+	private ConfiguracionCuposDao configuracionCuposDao;
 
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
@@ -210,7 +212,8 @@ public class AdministradorController {
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
-			ConfiguracionCuposDTO configuracionCuposDTO = this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO();
+			ConfiguracionCuposDTO configuracionCuposDTO =
+					this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
 			if(configuracionCuposDTO == null)
 				throw new Exception();
