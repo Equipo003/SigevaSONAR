@@ -128,14 +128,14 @@ public class AdministradorController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO();
+		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
-			return wrapperModelToDTO.allRolToRolDTO();
+			return wrapperModelToDTO.allRolToRolDTO(rolDao.findAll());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -146,9 +146,9 @@ public class AdministradorController {
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
 			if (rol.equals("Todos")) {
-				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
-				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

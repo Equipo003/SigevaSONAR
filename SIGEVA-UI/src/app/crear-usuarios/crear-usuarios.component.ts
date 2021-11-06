@@ -80,4 +80,12 @@ export class CrearUsuariosComponent implements OnInit {
         console.log(err);
     });
   }
+
+  onChangeCentro($event: any) {
+    this.usuario.centroSalud = $event;
+  }
+
+  onChangeRol($event: any) {
+    this.usuario.rol = $event;
+  }
 }

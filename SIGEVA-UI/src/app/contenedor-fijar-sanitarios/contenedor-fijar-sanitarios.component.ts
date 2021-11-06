@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {Usuario} from "../Model/Usuario";
-import {CentroSalud} from "../Model/centro-salud";
+import {Component, OnInit} from '@angular/core';
 import {JsonService} from "../Service/json.service";
 import {HttpParams} from "@angular/common/http";
+import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
+import {Rol} from "../Model/rol";
 
 @Component({
   selector: 'app-fijar-sanitarios',
@@ -11,59 +11,53 @@ import {HttpParams} from "@angular/common/http";
 })
 export class ContenedorFijarSanitariosComponent implements OnInit {
 
-  sanitarios: Usuario[];
-  centros: CentroSalud[]
+  sanitarios: UsuarioConObjetos[];
+  roles: Rol[];
+  id: string;
 
   constructor(private json: JsonService) {
     this.sanitarios = [];
-    this.centros = [];
+    this.roles = [new Rol("", "")];
+    this.id = "";
   }
 
   ngOnInit(): void {
-    this.getCentros();
     this.getParams();
-    this.changeCentros();
+    // this.getRoles();
   }
 
-  changeCentros() {
-    let self = this;
-    this.centros.forEach(function (centro2: CentroSalud) {
-      self.sanitarios.forEach(function (sanitario: Usuario) {
-        if (sanitario.centroSalud === centro2.id) {
-          sanitario.centroSalud = centro2.nombreCentro;
-        }
-
-      });
-    })
-  }
+  // getRoles(){
+  //   let self = this;
+  //   this.json.getJson("user/getRoles").subscribe(
+  //     result=> {
+  //       Object.assign(self.roles, JSON.parse(result));
+  //       this.setRolSanitario();
+  //     }, error=> {
+  //       console.log(error);
+  //     });
+  //   console.log(this.id);
+  // }
+  //
+  // setRolSanitario(){
+  //   let self = this;
+  //   this.roles.forEach(function(rol: Rol){
+  //     if (rol.nombre === "Sanitario"){
+  //       Object.assign(self.id, rol.id);
+  //     }
+  //   })
+  //   console.log(this.id);
+  // }
 
   getParams() {
+    console.log(this.id);
     let params = new HttpParams({
       fromObject: {
-        rol: "1c509a0d-a4e2-4238-9c1a-7498d4ce1623"
+        rol: "e24bf973-e26e-47b7-b8f4-83fa13968221"
       }
     });
-    let self = this;
     this.json.getJsonP("user/getUsuariosByRol", params).subscribe(
       result => {
         this.sanitarios = JSON.parse(result)
-        this.centros.forEach(function (centro2: CentroSalud) {
-          self.sanitarios.forEach(function (sanitario: Usuario) {
-            if (sanitario.centroSalud === centro2.id) {
-              sanitario.centroSalud = centro2.nombreCentro;
-            }
-
-          });
-        })
-      }, error => {
-        console.log(error);
-      });
-  }
-
-  getCentros() {
-    this.json.getJson("user/getCentros").subscribe(
-      result => {
-        this.centros = JSON.parse(result);
       }, error => {
         console.log(error);
       });
