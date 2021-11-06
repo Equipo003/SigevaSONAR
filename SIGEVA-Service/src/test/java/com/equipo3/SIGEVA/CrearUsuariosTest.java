@@ -78,6 +78,7 @@ class CrearUsuariosTest {
 		administradorController.crearUsuarioAdministrador(administradorDTO);
 
 		assertEquals(administradorController.getUsuarioById(administradorDTO.getIdUsuario()).toString(), administradorDTO.toString());
+		administradorController.eliminarUsuario(administradorDTO.getUsername());
 	}
 
 	@Test
@@ -88,6 +89,7 @@ class CrearUsuariosTest {
 			administradorController.crearUsuarioAdministrador(administradorDTO);
 			administradorController.crearUsuarioAdministrador(administradorDTO);
 		} catch (Exception e){
+			administradorController.eliminarUsuario(administradorDTO.getUsername());
 			assertNotNull(e);
 		}
 	}
@@ -102,6 +104,7 @@ class CrearUsuariosTest {
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
 		assertEquals(administradorController.getUsuarioById(sanitarioDTO.getIdUsuario()).toString(), sanitarioDTO.toString());
+		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
 
 	}
 
@@ -113,6 +116,7 @@ class CrearUsuariosTest {
 			administradorController.crearUsuarioSanitario(sanitarioDTO);
 			administradorController.crearUsuarioSanitario(sanitarioDTO);
 		} catch (Exception e){
+			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
 			assertNotNull(e);
 		}
 	}
@@ -126,6 +130,7 @@ class CrearUsuariosTest {
 		administradorController.crearUsuarioPaciente(pacienteDTO);
 
 		assertEquals(administradorController.getUsuarioById(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
+		administradorController.eliminarUsuario(pacienteDTO.getUsername());
 
 	}
 
@@ -137,7 +142,7 @@ class CrearUsuariosTest {
 			administradorController.crearUsuarioPaciente(pacienteDTO);
 			administradorController.crearUsuarioPaciente(pacienteDTO);
 		} catch (Exception e){
-			administradorController.eliminarUsuario("paciente");
+			administradorController.eliminarUsuario(pacienteDTO.getUsername());
 			assertNotNull(e);
 		}
 

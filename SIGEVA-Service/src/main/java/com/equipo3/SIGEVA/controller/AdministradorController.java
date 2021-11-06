@@ -35,14 +35,6 @@ public class AdministradorController {
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
 
-	public void eliminarUsuario(String username){
-		try {
-			administradorDao.deleteByUsername(username);
-		}catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -264,6 +256,22 @@ public class AdministradorController {
 			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
 			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarUsuario(String username){
+		try {
+			administradorDao.deleteByUsername(username);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarCentro(String idCentro){
+		try {
+			centroSaludDao.deleteById(idCentro);
+		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
