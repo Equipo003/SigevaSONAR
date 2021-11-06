@@ -20,7 +20,7 @@ public class WrapperModelToDTO {
     @Autowired
     private RolDao rolDao;
 
-    public List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(List<CentroSalud> centroSaludList){
+    public List<CentroSaludDTO> allCentroSaludToCentroSaludDTO(List<CentroSalud> centroSaludList){
         List<CentroSaludDTO> centroSaludDTOList = new ArrayList<>();
 
         for (CentroSalud centroSalud: centroSaludList) {

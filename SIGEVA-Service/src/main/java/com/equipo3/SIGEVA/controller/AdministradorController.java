@@ -35,14 +35,6 @@ public class AdministradorController {
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
 
-	public void eliminarUsuario(String username){
-		try {
-			administradorDao.deleteByUsername(username);
-		}catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@PostMapping("/crearUsuarioAdministrador")
@@ -130,7 +122,7 @@ public class AdministradorController {
 
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
+		return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
 
@@ -285,4 +277,32 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+
+	public void eliminarUsuario(String username){
+		try {
+			administradorDao.deleteByUsername(username);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarCentro(String idCentro){
+		try {
+			centroSaludDao.deleteById(idCentro);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public Rol getRolByNombre(String nombreRol) {
+        try {
+            Optional<Rol> rolOptional = rolDao.findAllByNombre(nombreRol);
+            if (rolOptional.isPresent())
+                return rolOptional.get();
+			else
+				throw new Exception();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }
