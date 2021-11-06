@@ -3,8 +3,6 @@ package com.equipo3.SIGEVA;
 import java.util.Date;
 import java.util.UUID;
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.model.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,17 +23,7 @@ class CrearUsuariosTest {
 	static AdministradorDTO administradorDTO;
 	static SanitarioDTO sanitarioDTO;
 	static PacienteDTO pacienteDTO;
-	static RolDTO rolDTO;
 
-	@Autowired
-	private RolDao rolDao;
-	@Autowired
-	private CentroSaludDao centroSaludDao;
-
-	@BeforeAll
-	static void crearRol(){
-		rolDTO = new RolDTO();
-	}
 	@BeforeAll
 	static void crearAdministrador() {
 		administradorDTO = new AdministradorDTO();
@@ -83,10 +71,9 @@ class CrearUsuariosTest {
 
 	@Test
 	void insercionCorrectaAdministrador() {
-
 		administradorDTO.setUsername(UUID.randomUUID().toString());
-		administradorDTO.setRol(rolDao.findById("0989148b-ef27-4fef-9e5a-dccbc6d20803").get());
-		administradorDTO.setCentroSalud(centroSaludDao.findById("2g").get());
+		administradorDTO.setRol(administradorController.getRolById("0989148b-ef27-4fef-9e5a-dccbc6d20803"));
+		administradorDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioAdministrador(administradorDTO);
 
@@ -109,8 +96,8 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaSanitario() {
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
-		sanitarioDTO.setRol(rolDao.findById("e24bf973-e26e-47b7-b8f4-83fa13968221").get());
-		sanitarioDTO.setCentroSalud(centroSaludDao.findById("2g").get());
+		sanitarioDTO.setRol(administradorController.getRolById("e24bf973-e26e-47b7-b8f4-83fa13968221"));
+		sanitarioDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
@@ -133,8 +120,8 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaPaciente() {
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
-		pacienteDTO.setRol(rolDao.findById("25ec739c-6012-4902-9b3a-a9dc60f84857").get());
-		pacienteDTO.setCentroSalud(centroSaludDao.findById("2g").get());
+		pacienteDTO.setRol(administradorController.getRolById("25ec739c-6012-4902-9b3a-a9dc60f84857"));
+		pacienteDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
 		administradorController.crearUsuarioPaciente(pacienteDTO);
 
