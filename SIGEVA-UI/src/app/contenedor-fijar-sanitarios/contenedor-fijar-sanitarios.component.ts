@@ -52,7 +52,7 @@ export class ContenedorFijarSanitariosComponent implements OnInit {
     console.log(this.id);
     let params = new HttpParams({
       fromObject: {
-        rol: "e24bf973-e26e-47b7-b8f4-83fa13968221"
+        rol: "Sanitario"
       }
     });
     this.json.getJsonP("user/getUsuariosByRol", params).subscribe(

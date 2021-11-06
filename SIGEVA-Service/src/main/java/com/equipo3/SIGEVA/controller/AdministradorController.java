@@ -147,6 +147,7 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
+			System.out.println("Dentro");
 			if (rol.equals("Todos")) {
 				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
