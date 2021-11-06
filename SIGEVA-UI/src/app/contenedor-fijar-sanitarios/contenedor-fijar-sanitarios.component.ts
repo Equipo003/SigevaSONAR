@@ -23,21 +23,20 @@ export class ContenedorFijarSanitariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParams();
-    // this.getRoles();
+    this.getRoles();
   }
 
-  // getRoles(){
-  //   let self = this;
-  //   this.json.getJson("user/getRoles").subscribe(
-  //     result=> {
-  //       Object.assign(self.roles, JSON.parse(result));
-  //       this.setRolSanitario();
-  //     }, error=> {
-  //       console.log(error);
-  //     });
-  //   console.log(this.id);
-  // }
-  //
+   getRoles(){
+     let self = this;
+     this.json.getJson("user/getRoles").subscribe(
+      result=> {
+        this.roles = JSON.parse(result);
+       }, error=> {
+        console.log(error);
+       });
+     console.log(this.id);
+  }
+  
   // setRolSanitario(){
   //   let self = this;
   //   this.roles.forEach(function(rol: Rol){
@@ -52,10 +51,10 @@ export class ContenedorFijarSanitariosComponent implements OnInit {
     console.log(this.id);
     let params = new HttpParams({
       fromObject: {
-        rol: "Sanitario"
+        rol: "e24bf973-e26e-47b7-b8f4-83fa13968221"
       }
     });
-    this.json.getJsonP("user/getUsuariosByRol", params).subscribe(
+    this.json.getJsonP("user/getUsuariosByRol/", params).subscribe(
       result => {
         this.sanitarios = JSON.parse(result)
       }, error => {

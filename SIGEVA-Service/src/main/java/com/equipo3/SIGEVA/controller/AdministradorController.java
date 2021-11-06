@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 @CrossOrigin
 @RestController
 @RequestMapping("user")
@@ -135,11 +134,10 @@ public class AdministradorController {
 		}
 	}
 
-
-	@GetMapping("/getUsuariosByRol")
+	@GetMapping("/getUsuariosByRol/")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			System.out.println("Dentro");
+			System.out.println("Dentro :" +rol);
 			if (rol.equals("Todos")) {
 				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
@@ -296,7 +294,7 @@ public class AdministradorController {
 
 	public Rol getRolByNombre(String nombreRol) {
         try {
-            Optional<Rol> rolOptional = rolDao.findAllByNombre(nombreRol);
+            Optional<Rol> rolOptional = rolDao.findByNombre(nombreRol);
             if (rolOptional.isPresent())
                 return rolOptional.get();
 			else
