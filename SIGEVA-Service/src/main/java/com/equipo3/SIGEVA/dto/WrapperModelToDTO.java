@@ -2,14 +2,14 @@ package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -82,5 +82,9 @@ public class WrapperModelToDTO {
         }
 
         return null;
+    }
+
+    public List<PacienteDTO> pacientesJornadaToPacientesDTO (List<Paciente> pacientesJornadas){
+        return new ArrayList<PacienteDTO>();
     }
 }

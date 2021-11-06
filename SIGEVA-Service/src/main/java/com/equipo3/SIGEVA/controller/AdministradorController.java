@@ -1,7 +1,8 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
@@ -24,8 +25,6 @@ public class AdministradorController {
 	private UsuarioDao administradorDao;
 	@Autowired
 	private RolDao rolDao;
-	@Autowired
-	private ConfiguracionCuposDao configCuposDao;
 	@Autowired
 	private CentroSaludDao centroSaludDao;
 	@Autowired
@@ -185,9 +184,9 @@ public class AdministradorController {
 		conf.setFechaInicio(confDTO.getFechaInicio());
 
 		try {
-			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
 			if (configuracionCuposList.isEmpty())
-				configCuposDao.save(conf);
+				configuracionCuposDao.save(conf);
 			else
 				throw new ConfiguracionYaExistente("Ya existía configuración.");
 		} catch (Exception e) {
@@ -200,10 +199,10 @@ public class AdministradorController {
 	@GetMapping("/existConfCupos")
 	public boolean existConfiguracionCupos() {
 		try {
-			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
 			return !configuracionCuposList.isEmpty();
 		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 
 	}
@@ -255,5 +254,24 @@ public class AdministradorController {
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
+	}
+
+	@GetMapping("/getPacientesJornada")
+	public List<PacienteDTO> getPacientesJornada(@RequestParam String fechaJornada){
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		try{
+			Date fechaJornadaFormated = formateador.parse(fechaJornada);
+			List<CupoCitas> cupoCitasList = cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated);
+			List<Paciente> pacientesJornada = new ArrayList<Paciente>();
+			Iterator<CupoCitas> cupoCitasIterator = cupoCitasList.iterator();
+			while(cupoCitasIterator.hasNext()){
+				pacientesJornada.addAll(cupoCitasIterator.next().getPacientesCitados());
+			}
+
+			return this.wrapperModelToDTO.pacientesJornadaToPacientesDTO(pacientesJornada);
+		}catch (ParseException p){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+
 	}
 }
