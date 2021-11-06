@@ -64,8 +64,9 @@ public class AdministradorController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioPaciente")
-	public void crearUsuarioPaciente(@RequestBody Paciente paciente) {
+	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
+			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -251,6 +252,15 @@ public class AdministradorController {
 	public Rol getRolById(String rol) {
 		try {
 			Optional<Rol> rolOptional = rolDao.findById(rol);
+			return rolOptional.get();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public Rol getUsuarioById(String idUsuario) {
+		try {
+			Optional<Rol> rolOptional = rolDao.findById(idUsuario);
 			return rolOptional.get();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

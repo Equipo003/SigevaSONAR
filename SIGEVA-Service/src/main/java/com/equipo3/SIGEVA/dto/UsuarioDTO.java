@@ -23,21 +23,6 @@ public class UsuarioDTO {
         this.idUsuario = UUID.randomUUID().toString();
     }
 
-    public UsuarioDTO(Rol rol, CentroSalud centroSalud, String username, String correo,
-                      String hashPassword, String dni, String nombre, String apellidos, Date fechaNacimiento,
-                      String imagen) {
-        this.rol = rol;
-        this.centroSalud = centroSalud;
-        this.username = username;
-        this.correo = correo;
-        this.hashPassword = hashPassword;
-        this.dni = dni;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.fechaNacimiento = fechaNacimiento;
-        this.imagen = imagen;
-    }
-
     public String getIdUsuario() {
         return idUsuario;
     }
