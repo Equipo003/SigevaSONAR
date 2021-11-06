@@ -122,7 +122,7 @@ public class AdministradorController {
 
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
+		return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
 
