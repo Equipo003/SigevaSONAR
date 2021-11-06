@@ -73,6 +73,9 @@ public class ConfiguracionCupos {
 		}
 	}
 
+
+
+
 	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}

@@ -2,14 +2,14 @@ package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -82,5 +82,27 @@ public class WrapperModelToDTO {
         }
 
         return null;
+    }
+
+    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario){
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+
+        usuarioDTO.setIdUsuario(usuario.getIdUsuario());
+        usuarioDTO.setRol(rolDao.findById(usuario.getRol()).get());
+        usuarioDTO.setCentroSalud(centroSaludDao.findById(usuario.getCentroSalud()).get());
+        usuarioDTO.setUsername(usuario.getUsername());
+        usuarioDTO.setCorreo(usuario.getCorreo());
+        usuarioDTO.setHashPassword(usuario.getHashPassword());
+        usuarioDTO.setDni(usuario.getDni());
+        usuarioDTO.setNombre(usuario.getNombre());
+        usuarioDTO.setApellidos(usuario.getApellidos());
+        usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
+        usuarioDTO.setImagen(usuario.getImagen());
+
+        return usuarioDTO;
+    }
+
+    public List<PacienteDTO> pacientesJornadaToPacientesDTO (List<Paciente> pacientesJornadas){
+        return new ArrayList<PacienteDTO>();
     }
 }

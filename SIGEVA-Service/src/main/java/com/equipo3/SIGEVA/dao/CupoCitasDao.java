@@ -22,4 +22,5 @@ public interface CupoCitasDao extends MongoRepository<CupoCitas, String> {
 	@Query("{ 'centroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 }, 'fechaYHoraInicio' : { '$lte' : ?2 } }")
 	public List<CupoCitas> buscarCuposDelTramo(CentroSalud centro, Date fechaInicio, Date fechaFin);
 
+    List<CupoCitas> findByFechaYHoraInicio(Date fechaJornadaFormated);
 }

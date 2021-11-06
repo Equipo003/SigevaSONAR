@@ -30,6 +30,13 @@ public class CentroSalud {
 		this.vacuna = new Vacuna("Pfizer", Condicionamientos.tiempoEntreDosis(), 2);
 	}
 
+	public CentroSalud(String nombreCentro, String direccion, int numVacunasDisponibles) {
+		this.id = UUID.randomUUID().toString();
+		this.nombreCentro = nombreCentro;
+		this.numVacunasDisponibles = numVacunasDisponibles;
+		this.direccion = direccion;
+	}
+
 	public String getId() {
 		return id;
 	}

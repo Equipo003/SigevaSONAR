@@ -1,7 +1,8 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("user")
 public class AdministradorController {
@@ -23,8 +25,6 @@ public class AdministradorController {
 	private UsuarioDao administradorDao;
 	@Autowired
 	private RolDao rolDao;
-	@Autowired
-	private ConfiguracionCuposDao configCuposDao;
 	@Autowired
 	private CentroSaludDao centroSaludDao;
 	@Autowired
@@ -45,7 +45,6 @@ public class AdministradorController {
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
-	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
@@ -62,10 +61,11 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearUsuarioPaciente")
-	public void crearUsuarioPaciente(@RequestBody Paciente paciente) {
+	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
+			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -78,7 +78,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
@@ -95,7 +95,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
@@ -127,13 +127,13 @@ public class AdministradorController {
 //		}
 //	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
 		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
@@ -143,7 +143,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
@@ -157,7 +157,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PutMapping("/fijarCentro/{username}/{centro}")
 	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
 		try {
@@ -172,7 +172,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearConfCupos")
 	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO confDTO) {
 
@@ -185,9 +185,9 @@ public class AdministradorController {
 		conf.setFechaInicio(confDTO.getFechaInicio());
 
 		try {
-			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
 			if (configuracionCuposList.isEmpty())
-				configCuposDao.save(conf);
+				configuracionCuposDao.save(conf);
 			else
 				throw new ConfiguracionYaExistente("Ya existía configuración.");
 		} catch (Exception e) {
@@ -196,19 +196,19 @@ public class AdministradorController {
 
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/existConfCupos")
 	public boolean existConfiguracionCupos() {
 		try {
-			List<ConfiguracionCupos> configuracionCuposList = configCuposDao.findAll();
+			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
 			return !configuracionCuposList.isEmpty();
 		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
@@ -224,7 +224,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = {"http://localhost:4200", "https://rocky-beach-98330.herokuapp.com"})
+
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
@@ -252,6 +252,34 @@ public class AdministradorController {
 		try {
 			Optional<Rol> rolOptional = rolDao.findById(rol);
 			return rolOptional.get();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	@GetMapping("/getPacientesJornada")
+	public List<PacienteDTO> getPacientesJornada(@RequestParam String fechaJornada){
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		try{
+			Date fechaJornadaFormated = formateador.parse(fechaJornada);
+			List<CupoCitas> cupoCitasList = cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated);
+			List<Paciente> pacientesJornada = new ArrayList<Paciente>();
+			Iterator<CupoCitas> cupoCitasIterator = cupoCitasList.iterator();
+			while(cupoCitasIterator.hasNext()){
+				pacientesJornada.addAll(cupoCitasIterator.next().getPacientesCitados());
+			}
+
+			return this.wrapperModelToDTO.pacientesJornadaToPacientesDTO(pacientesJornada);
+		}catch (ParseException p){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+	public UsuarioDTO getUsuarioById(String idUsuario) {
+		try {
+			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
+			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

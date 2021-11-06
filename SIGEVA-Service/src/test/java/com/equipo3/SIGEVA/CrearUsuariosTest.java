@@ -1,18 +1,18 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.Date;
+import java.util.UUID;
 
+import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.model.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Sanitario;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CrearUsuariosTest {
@@ -20,162 +20,126 @@ class CrearUsuariosTest {
 	@Autowired
 	private AdministradorController administradorController;
 
-//	@Test
-//	void insercionCorrectaAdministrador() {
-//
-//		Administrador administrador = new Administrador();
-//
-//		administrador.setRol("6173cecfc5635444ee5469d7");
-//		administrador.setCentroSalud("1234");
-//		administrador.setUsername("user55");
-//		administrador.setCorreo("micorreo@correo.com");
-//		administrador.setHashPassword("sdfsdf");
-//		administrador.setDni("99999999Q");
-//		administrador.setNombre("Juan");
-//		administrador.setApellidos("Perez");
-//		administrador.setFechaNacimiento(new Date());
-//		administrador.setImagen("912imagen");
-//
-//		administradorController.crearUsuarioAdministrador(administrador);
-//	}
+	static AdministradorDTO administradorDTO;
+	static SanitarioDTO sanitarioDTO;
+	static PacienteDTO pacienteDTO;
 
-	@Test
-	void eliminarAdministradorCreadoAnteriormente(){
-		administradorController.eliminarUsuario("user55");
+	@BeforeAll
+	static void crearAdministrador() {
+		administradorDTO = new AdministradorDTO();
+		administradorDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		administradorDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		administradorDTO.setUsername(UUID.randomUUID().toString());
+		administradorDTO.setCorreo("micorreo@correo.com");
+		administradorDTO.setHashPassword("sdfsdf");
+		administradorDTO.setDni("99999999Q");
+		administradorDTO.setNombre("Juan");
+		administradorDTO.setApellidos("Perez");
+		administradorDTO.setFechaNacimiento(new Date());
+		administradorDTO.setImagen("912imagen");
 	}
 
-//	@Test
-//	void insercionAdministradorDuplicado() throws UsuarioInvalidoException {
-//		Administrador administrador = new Administrador();
-//
-//		administrador.setRol("6173cecfc5635444ee5469d7");
-//		administrador.setCentroSalud("1234");
-//		administrador.setUsername("user55");
-//		administrador.setCorreo("micorreo@correo.com");
-//		administrador.setHashPassword("sdfsdf");
-//		administrador.setDni("99999999Q");
-//		administrador.setNombre("Juan");
-//		administrador.setApellidos("Perez");
-//		administrador.setFechaNacimiento(new Date());
-//		administrador.setImagen("912imagen");
-//		try{
-//			administradorController.crearUsuarioAdministrador(administrador);
-//			administradorController.crearUsuarioAdministrador(administrador);
-//		} catch (Exception e){
-//			administradorController.eliminarUsuario("user55");
-//			assertNotNull(e);
-//		}
-//	}
+	@BeforeAll
+	static void crearSanitario() {
+		sanitarioDTO = new SanitarioDTO();
+		sanitarioDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		sanitarioDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		sanitarioDTO.setUsername(UUID.randomUUID().toString());
+		sanitarioDTO.setCorreo("micorreo@correo.com");
+		sanitarioDTO.setHashPassword("sdfsdf");
+		sanitarioDTO.setDni("99999999Q");
+		sanitarioDTO.setNombre("Juan");
+		sanitarioDTO.setApellidos("Perez");
+		sanitarioDTO.setFechaNacimiento(new Date());
+		sanitarioDTO.setImagen("912imagen");
+	}
 
-
-//	@Test
-//	void insercionCorrectaSanitario() {
-//
-//		Sanitario sanitario = new Sanitario();
-//
-//		sanitario.setRol("6173cecfc5635444ee5469d7");
-//		sanitario.setCentroSalud("1234");
-//		sanitario.setUsername("sanitario");
-//		sanitario.setCorreo("micorreo@correo.com");
-//		sanitario.setHashPassword("sdfsdf");
-//		sanitario.setDni("99999999Q");
-//		sanitario.setNombre("Juan");
-//		sanitario.setApellidos("Perez");
-//		sanitario.setFechaNacimiento(new Date());
-//		sanitario.setImagen("912imagen");
-//
-//		administradorController.crearUsuarioSanitario(sanitario);
-//
-//	}
-
-//	@Test
-//	void insercionSanitarioDuplicado() throws UsuarioInvalidoException {
-//		Sanitario sanitario = new Sanitario();
-//
-//		sanitario.setRol("6173cecfc5635444ee5469d7");
-//		sanitario.setCentroSalud("1234");
-//		sanitario.setUsername("sanitario");
-//		sanitario.setCorreo("micorreo@correo.com");
-//		sanitario.setHashPassword("sdfsdf");
-//		sanitario.setDni("99999999Q");
-//		sanitario.setNombre("Juan");
-//		sanitario.setApellidos("Perez");
-//		sanitario.setFechaNacimiento(new Date());
-//		sanitario.setImagen("912imagen");
-//
-//		try{
-//			administradorController.crearUsuarioSanitario(sanitario);
-//			administradorController.crearUsuarioSanitario(sanitario);
-//		} catch (Exception e){
-//			administradorController.eliminarUsuario("sanitario");
-//			assertNotNull(e);
-//		}
-//	}
+	@BeforeAll
+	static void crearPaciente() {
+		pacienteDTO = new PacienteDTO();
+		pacienteDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		pacienteDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		pacienteDTO.setUsername(UUID.randomUUID().toString());
+		pacienteDTO.setCorreo("micorreo@correo.com");
+		pacienteDTO.setHashPassword("sdfsdf");
+		pacienteDTO.setDni("99999999Q");
+		pacienteDTO.setNombre("Juan");
+		pacienteDTO.setApellidos("Perez");
+		pacienteDTO.setFechaNacimiento(new Date());
+		pacienteDTO.setImagen("912imagen");
+	}
 
 	@Test
-	void eliminarSanitarioCreadoAnteriormente(){
-		administradorController.eliminarUsuario("sanitario");
+	void insercionCorrectaAdministrador() {
+		administradorDTO.setUsername(UUID.randomUUID().toString());
+		administradorDTO.setRol(administradorController.getRolById("0989148b-ef27-4fef-9e5a-dccbc6d20803"));
+		administradorDTO.setCentroSalud(administradorController.getCentroById("2g"));
+
+		administradorController.crearUsuarioAdministrador(administradorDTO);
+
+		assertEquals(administradorController.getUsuarioById(administradorDTO.getIdUsuario()).toString(), administradorDTO.toString());
+	}
+
+	@Test
+	void insercionAdministradorDuplicado() {
+		try{
+			String uuid = UUID.randomUUID().toString();
+			administradorDTO.setUsername(uuid);
+			administradorController.crearUsuarioAdministrador(administradorDTO);
+			administradorController.crearUsuarioAdministrador(administradorDTO);
+		} catch (Exception e){
+			assertNotNull(e);
+		}
+	}
+
+
+	@Test
+	void insercionCorrectaSanitario() {
+		sanitarioDTO.setUsername(UUID.randomUUID().toString());
+		sanitarioDTO.setRol(administradorController.getRolById("e24bf973-e26e-47b7-b8f4-83fa13968221"));
+		sanitarioDTO.setCentroSalud(administradorController.getCentroById("2g"));
+
+		administradorController.crearUsuarioSanitario(sanitarioDTO);
+
+		assertEquals(administradorController.getUsuarioById(sanitarioDTO.getIdUsuario()).toString(), sanitarioDTO.toString());
+
+	}
+
+	@Test
+	void insercionSanitarioDuplicado(){
+		try{
+			String uuid = UUID.randomUUID().toString();
+			sanitarioDTO.setUsername(uuid);
+			administradorController.crearUsuarioSanitario(sanitarioDTO);
+			administradorController.crearUsuarioSanitario(sanitarioDTO);
+		} catch (Exception e){
+			assertNotNull(e);
+		}
 	}
 
 	@Test
 	void insercionCorrectaPaciente() {
+		pacienteDTO.setUsername(UUID.randomUUID().toString());
+		pacienteDTO.setRol(administradorController.getRolById("25ec739c-6012-4902-9b3a-a9dc60f84857"));
+		pacienteDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
-		Paciente paciente = new Paciente();
+		administradorController.crearUsuarioPaciente(pacienteDTO);
 
-		paciente.setRol("6173cecfc5635444ee5469d7");
-		paciente.setCentroSalud("1234");
-		paciente.setUsername("paciente");
-		paciente.setCorreo("micorreo@correo.com");
-		paciente.setHashPassword("sdfsdf");
-		paciente.setDni("99999999Q");
-		paciente.setNombre("Juan");
-		paciente.setApellidos("Perez");
-		paciente.setFechaNacimiento(new Date());
-		paciente.setImagen("912imagen");
+		assertEquals(administradorController.getUsuarioById(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 
-		administradorController.crearUsuarioPaciente(paciente);
 	}
 
 	@Test
 	void insercionPacienteDuplicado() {
-		Paciente paciente = new Paciente();
-
-		paciente.setRol("6173cecfc5635444ee5469d7");
-		paciente.setCentroSalud("1234");
-		paciente.setUsername("paciente");
-		paciente.setCorreo("micorreo@correo.com");
-		paciente.setHashPassword("sdfsdf");
-		paciente.setDni("99999999Q");
-		paciente.setNombre("Juan");
-		paciente.setApellidos("Perez");
-		paciente.setFechaNacimiento(new Date());
-		paciente.setImagen("912imagen");
 		try {
-			administradorController.crearUsuarioPaciente(paciente);
-			administradorController.crearUsuarioPaciente(paciente);
+			String uuid = UUID.randomUUID().toString();
+			pacienteDTO.setUsername(uuid);
+			administradorController.crearUsuarioPaciente(pacienteDTO);
+			administradorController.crearUsuarioPaciente(pacienteDTO);
 		} catch (Exception e){
 			administradorController.eliminarUsuario("paciente");
 			assertNotNull(e);
 		}
 
 	}
-
-	@Test
-	void eliminarPacienteCreadoAnteriormente(){
-		administradorController.eliminarUsuario("paciente");
-	}
-
-//	@Test
-//	void addRoles() {
-//		RolDTO rol1 = new RolDTO("Administrador");
-//		RolDTO rol2 = new RolDTO("Sanitario");
-//		RolDTO rol3 = new RolDTO("Paciente");
-//
-//		administradorController.registrarRol(rol1);
-//		administradorController.registrarRol(rol2);
-//		administradorController.registrarRol(rol3);
-//
-//	}
-
-
 }

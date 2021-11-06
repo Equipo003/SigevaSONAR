@@ -62,11 +62,13 @@ export class ConfiguracionCuposComponent implements OnInit {
                    this.duracionJornadaMinutos = configuracionCupos.duracionJornadaMinutos;
                    this.numeroPacientes = configuracionCupos.numeroPacientes;
                    this.calcularHoraFin();
+
               },err=> {
                   this.mensaje = 'Ha ocurrido un error :( Vuelva a intentarlo más tarde'
                   console.log(err);
               });
   }
+
 
   calcularHoraFin(){
       if(this.fechaInicio != ''){
