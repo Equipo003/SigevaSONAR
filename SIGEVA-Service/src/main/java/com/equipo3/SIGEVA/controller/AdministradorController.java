@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("user")
 public class AdministradorController {
@@ -43,7 +44,6 @@ public class AdministradorController {
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
-	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
@@ -60,7 +60,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody Paciente paciente) {
 		try {
@@ -76,7 +76,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
@@ -93,7 +93,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
@@ -125,13 +125,13 @@ public class AdministradorController {
 //		}
 //	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
 		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO();
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
@@ -141,7 +141,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
@@ -155,7 +155,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PutMapping("/fijarCentro/{username}/{centro}")
 	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
 		try {
@@ -170,7 +170,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@PostMapping("/crearConfCupos")
 	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO confDTO) {
 
@@ -194,7 +194,7 @@ public class AdministradorController {
 
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/existConfCupos")
 	public boolean existConfiguracionCupos() {
 		try {
@@ -206,7 +206,7 @@ public class AdministradorController {
 
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
@@ -221,7 +221,7 @@ public class AdministradorController {
 		}
 	}
 
-	@CrossOrigin(origins = {"http://localhost:4200", "https://rocky-beach-98330.herokuapp.com"})
+
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
