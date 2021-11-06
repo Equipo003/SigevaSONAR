@@ -23,21 +23,6 @@ public class UsuarioDTO {
         this.idUsuario = UUID.randomUUID().toString();
     }
 
-    public UsuarioDTO(Rol rol, CentroSalud centroSalud, String username, String correo,
-                      String hashPassword, String dni, String nombre, String apellidos, Date fechaNacimiento,
-                      String imagen) {
-        this.rol = rol;
-        this.centroSalud = centroSalud;
-        this.username = username;
-        this.correo = correo;
-        this.hashPassword = hashPassword;
-        this.dni = dni;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.fechaNacimiento = fechaNacimiento;
-        this.imagen = imagen;
-    }
-
     public String getIdUsuario() {
         return idUsuario;
     }
@@ -124,5 +109,22 @@ public class UsuarioDTO {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "idUsuario='" + idUsuario + '\'' +
+                ", rol=" + rol +
+                ", centroSalud=" + centroSalud +
+                ", username='" + username + '\'' +
+                ", correo='" + correo + '\'' +
+                ", hashPassword='" + hashPassword + '\'' +
+                ", dni='" + dni + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", imagen='" + imagen + '\'' +
+                '}';
     }
 }

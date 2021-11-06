@@ -63,8 +63,9 @@ public class AdministradorController {
 
 
 	@PostMapping("/crearUsuarioPaciente")
-	public void crearUsuarioPaciente(@RequestBody Paciente paciente) {
+	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
+			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -273,5 +274,14 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	public UsuarioDTO getUsuarioById(String idUsuario) {
+		try {
+			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
+			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
 	}
 }
