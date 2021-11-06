@@ -2,8 +2,6 @@ package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Rol;
@@ -21,14 +19,9 @@ public class WrapperModelToDTO {
     private CentroSaludDao centroSaludDao;
     @Autowired
     private RolDao rolDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
-    private ConfiguracionCuposDao configuracionCuposDao;
 
-    public List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(){
+    public List<CentroSaludDTO> allcentroSaludToCentroSaludDTO(List<CentroSalud> centroSaludList){
         List<CentroSaludDTO> centroSaludDTOList = new ArrayList<>();
-        List<CentroSalud> centroSaludList = centroSaludDao.findAll();
 
         for (CentroSalud centroSalud: centroSaludList) {
             CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
@@ -41,9 +34,8 @@ public class WrapperModelToDTO {
         return centroSaludDTOList;
     }
 
-    public List<RolDTO> allRolToRolDTO(){
+    public List<RolDTO> allRolToRolDTO(List<Rol> rolList){
         List<RolDTO> rolDTOList = new ArrayList<>();
-        List<Rol> rolList = rolDao.findAll();
 
         for (Rol rol: rolList) {
             RolDTO rolDTO = new RolDTO();
@@ -54,14 +46,8 @@ public class WrapperModelToDTO {
         return rolDTOList;
     }
 
-    public List<UsuarioDTO> allUsuarioToUsuarioDTO(String rol){
+    public List<UsuarioDTO> listUsuarioToUsuarioDTO(List<Usuario> usuarioList){
         List<UsuarioDTO> usuarioDTOList = new ArrayList<>();
-        List<Usuario> usuarioList;
-        if (rol.equals("Todos")) {
-            usuarioList = usuarioDao.findAll();
-        } else {
-            usuarioList = usuarioDao.findAllByRol(rol);
-        }
 
         for(Usuario usuario: usuarioList) {
             UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -82,8 +68,7 @@ public class WrapperModelToDTO {
         return usuarioDTOList;
     }
 
-    public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(){
-        List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
+    public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(List<ConfiguracionCupos> configuracionCuposList){
         if(!configuracionCuposList.isEmpty()){
             ConfiguracionCupos configuracionCupos = configuracionCuposList.get(0);
             ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
@@ -98,6 +83,4 @@ public class WrapperModelToDTO {
 
         return null;
     }
-
-
 }

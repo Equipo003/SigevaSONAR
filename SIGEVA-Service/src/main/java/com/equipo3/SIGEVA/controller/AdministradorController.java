@@ -30,6 +30,8 @@ public class AdministradorController {
 	private CentroSaludDao centroSaludDao;
 	@Autowired
 	private CupoController cupoController;
+	@Autowired
+	private ConfiguracionCuposDao configuracionCuposDao;
 
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
@@ -128,14 +130,14 @@ public class AdministradorController {
 
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO();
+		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
 
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
-			return wrapperModelToDTO.allRolToRolDTO();
+			return wrapperModelToDTO.allRolToRolDTO(rolDao.findAll());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -146,9 +148,9 @@ public class AdministradorController {
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
 			if (rol.equals("Todos")) {
-				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
-				return wrapperModelToDTO.allUsuarioToUsuarioDTO(rol);
+				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -210,7 +212,8 @@ public class AdministradorController {
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
-			ConfiguracionCuposDTO configuracionCuposDTO = this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO();
+			ConfiguracionCuposDTO configuracionCuposDTO =
+					this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
 			if(configuracionCuposDTO == null)
 				throw new Exception();

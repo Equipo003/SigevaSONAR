@@ -6,14 +6,14 @@
 
         <div class="control-group">
           <p>Elige el tipo de usuario a crear: </p>
-          <select name="rol" [(ngModel)]="usuario.rol.nombre">
-            <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+          <select name="rol" [(ngModel)]="usuario.rol" (ngModelChange)="onChangeRol($event)" name="selRol">
+            <option [ngValue]="rol" *ngFor="let rol of roles">{{rol.nombre}}</option>
           </select>
         </div>
 
         <div class="control-group">
-          <select name="centro" [(ngModel)]="usuario.centroSalud.nombreCentro">
-            <option *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
+          <select [ngModel]="usuario.centroSalud" (ngModelChange)="onChangeCentro($event)" name="selCentro">
+            <option [ngValue]="centro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
 
@@ -89,6 +89,6 @@
 
     <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
     <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
-
+    </div>
   </div>
 </div>
