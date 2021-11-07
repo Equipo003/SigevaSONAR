@@ -3,7 +3,9 @@ package com.equipo3.SIGEVA.dto;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.model.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WrapperDTOtoModel {
 
     public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){

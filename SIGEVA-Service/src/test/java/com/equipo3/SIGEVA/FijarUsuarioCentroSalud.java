@@ -52,7 +52,7 @@ class FijarUsuarioCentroSalud {
 
 		}
 		sanitarioDTO.setRol(rol);
-		sanitarioDTO.setCentroSalud(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(cs));
+		sanitarioDTO.setCentroSalud((cs));
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 		administradorController.fijarPersonal(sanitarioDTO.getUsername(), cs.getId());
@@ -86,7 +86,7 @@ class FijarUsuarioCentroSalud {
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		sanitarioDTO.setNombre(UUID.randomUUID().toString());
 		sanitarioDTO.setRol(rol);
-		sanitarioDTO.setCentroSalud(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(cs));
+		sanitarioDTO.setCentroSalud(cs);
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
 
