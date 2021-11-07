@@ -124,7 +124,7 @@ class CrearUsuariosTest {
 		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
 		pacienteDTO.setCentroSalud(administradorController.getCentroById("2g"));
 
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+//		administradorController.crearUsuarioPaciente(pacienteDTO);
 
 		assertEquals(administradorController.getUsuarioById(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 		administradorController.eliminarUsuario(pacienteDTO.getUsername());
@@ -136,8 +136,8 @@ class CrearUsuariosTest {
 		try {
 			String uuid = UUID.randomUUID().toString();
 			pacienteDTO.setUsername(uuid);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
+//			administradorController.crearUsuarioPaciente(pacienteDTO);
+//			administradorController.crearUsuarioPaciente(pacienteDTO);
 		} catch (Exception e){
 			administradorController.eliminarUsuario(pacienteDTO.getUsername());
 			assertNotNull(e);
