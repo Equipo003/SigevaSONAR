@@ -3,9 +3,11 @@ package com.equipo3.SIGEVA.dto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class ConfiguracionCuposDTO {
 
+    private String id;
     private int duracionMinutos;
     private int numeroPacientes;
     private int duracionJornadaHoras;
@@ -13,15 +15,25 @@ public class ConfiguracionCuposDTO {
     private String fechaInicio;
 
     public ConfiguracionCuposDTO() {
+        this.id = UUID.randomUUID().toString();
     }
 
     public ConfiguracionCuposDTO(int duracionMinutos, int numeroPacientes, int duracionJornadaHoras,
                                  int duracionJornadaMinutos, String fechaInicio) {
+        this.id = UUID.randomUUID().toString();
         this.duracionMinutos = duracionMinutos;
         this.numeroPacientes = numeroPacientes;
         this.duracionJornadaHoras = duracionJornadaHoras;
         this.duracionJornadaMinutos = duracionJornadaMinutos;
         this.fechaInicio = fechaInicio;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setDuracionMinutos(int duracionMinutos) {
@@ -62,5 +74,16 @@ public class ConfiguracionCuposDTO {
 
     public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfiguracionCuposDTO{" +
+                "duracionMinutos=" + duracionMinutos +
+                ", numeroPacientes=" + numeroPacientes +
+                ", duracionJornadaHoras=" + duracionJornadaHoras +
+                ", duracionJornadaMinutos=" + duracionJornadaMinutos +
+                ", fechaInicio='" + fechaInicio + '\'' +
+                '}';
     }
 }
