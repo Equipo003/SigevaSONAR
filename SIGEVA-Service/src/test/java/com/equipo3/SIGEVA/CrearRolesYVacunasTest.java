@@ -1,4 +1,4 @@
-package com.equipo3.SIGEVA.model;
+package com.equipo3.SIGEVA;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dto.AdministradorDTO;

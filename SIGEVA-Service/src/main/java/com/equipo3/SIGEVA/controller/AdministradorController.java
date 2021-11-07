@@ -84,7 +84,6 @@ public class AdministradorController {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
-			System.out.println("Guardado");
 			administradorDao.save(sanitario);
 
 		} catch (Exception e) {
@@ -135,7 +134,7 @@ public class AdministradorController {
 		}
 	}
 
-	@GetMapping("/getUsuariosByRol/")
+	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
 			System.out.println("Dentro :" +rol);
@@ -147,6 +146,14 @@ public class AdministradorController {
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
+	}
+
+	public PacienteDTO getPaciente(String id) {
+		try {
+            return wrapperModelToDTO.pacienteToPacienteDTO(administradorDao.findById(id).get());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
 	}
 
 
@@ -247,10 +254,9 @@ public class AdministradorController {
 		}
 	}
 
-	public Rol getRolById(String rol) {
+	public RolDTO getRolById(String rol) {
 		try {
-			Optional<Rol> rolOptional = rolDao.findById(rol);
-			return rolOptional.get();
+			return wrapperModelToDTO.rolToRolDTO(rolDao.findById(rol).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -277,7 +283,6 @@ public class AdministradorController {
 
 	public UsuarioDTO getUsuarioById(String idUsuario) {
 		try {
-			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
 			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -300,13 +305,9 @@ public class AdministradorController {
 		}
 	}
 
-	public Rol getRolByNombre(String nombreRol) {
+	public RolDTO getRolByNombre(String nombreRol) {
         try {
-            Optional<Rol> rolOptional = rolDao.findByNombre(nombreRol);
-            if (rolOptional.isPresent())
-                return rolOptional.get();
-			else
-				throw new Exception();
+			return wrapperModelToDTO.rolToRolDTO(rolDao.findByNombre(nombreRol).get());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -349,7 +350,7 @@ public class AdministradorController {
 
 	public void eliminarVacuna(String idVacuna) {
 		try {
-			centroSaludDao.deleteById(idVacuna);
+			vacunaDao.deleteById(idVacuna);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

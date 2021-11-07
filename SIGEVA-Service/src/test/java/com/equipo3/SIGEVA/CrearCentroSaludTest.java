@@ -41,10 +41,8 @@ class CrearCentroSaludTest {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
 		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		administradorController.crearCentroSalud(centroSaludDTO);
-
-		System.out.println(centroSaludDTO.getNumVacunasDisponibles());
 		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
-		administradorController.eliminarCentro(centroSaludDTO.getId());
+//		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}
     
     @Test

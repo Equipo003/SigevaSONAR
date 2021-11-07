@@ -1,12 +1,17 @@
 package com.equipo3.SIGEVA.dto;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WrapperDTOtoModel {
+
+    @Autowired
+    private AdministradorController administradorController;
 
     public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){
         Administrador administrador = new Administrador();
@@ -67,13 +72,13 @@ public class WrapperDTOtoModel {
         return paciente;
     }
 
-    public static CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
+    public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
         CentroSalud centroSalud = new CentroSalud();
         centroSalud.setId(centroSaludDTO.getId());
         centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
         centroSalud.setDireccion(centroSaludDTO.getDireccion());
         centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
-        centroSalud.setVacuna(centroSaludDTO.getVacuna().getId());
+        centroSalud.setVacuna(administradorController.getVacunaByNombre("Pfizer").getId());
 
         return centroSalud;
     }

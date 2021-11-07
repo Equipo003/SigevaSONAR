@@ -66,13 +66,21 @@ public class WrapperModelToDTO {
         return rolDTOList;
     }
 
+    public RolDTO rolToRolDTO(Rol rol){
+        RolDTO rolDTO = new RolDTO();
+        rolDTO.setId(rol.getId());
+        rolDTO.setNombre(rol.getNombre());
+
+        return rolDTO;
+    }
+
     public List<UsuarioDTO> listUsuarioToUsuarioDTO(List<Usuario> usuarioList){
         List<UsuarioDTO> usuarioDTOList = new ArrayList<>();
 
         for(Usuario usuario: usuarioList) {
             UsuarioDTO usuarioDTO = new UsuarioDTO();
             usuarioDTO.setIdUsuario(usuario.getIdUsuario());
-            usuarioDTO.setRol(rolDao.findById(usuario.getRol()).get());
+            usuarioDTO.setRol(administradorController.getRolById(usuario.getRol()));
             usuarioDTO.setCentroSalud(administradorController.getCentroById(usuario.getCentroSalud()));
             usuarioDTO.setUsername(usuario.getUsername());
             usuarioDTO.setCorreo(usuario.getCorreo());
@@ -112,7 +120,7 @@ public class WrapperModelToDTO {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
 
         usuarioDTO.setIdUsuario(usuario.getIdUsuario());
-        usuarioDTO.setRol(rolDao.findById(usuario.getRol()).get());
+        usuarioDTO.setRol(administradorController.getRolById(usuario.getRol()));
         usuarioDTO.setCentroSalud(administradorController.getCentroById(usuario.getCentroSalud()));
         usuarioDTO.setUsername(usuario.getUsername());
         usuarioDTO.setCorreo(usuario.getCorreo());
@@ -136,13 +144,12 @@ public class WrapperModelToDTO {
 
         for (Usuario paciente: pacienteList) {
 
-//            System.out.println(paciente.toString());
             PacienteDTO pacienteDTO = new PacienteDTO();
 
             Paciente pacienteCast = (Paciente) paciente;
 
             pacienteDTO.setIdUsuario(pacienteCast.getIdUsuario());
-            pacienteDTO.setRol(rolDao.findById(pacienteCast.getRol()).get());
+            pacienteDTO.setRol(administradorController.getRolById(pacienteCast.getRol()));
             pacienteDTO.setCentroSalud(administradorController.getCentroById(pacienteCast.getCentroSalud()));
             pacienteDTO.setUsername(pacienteCast.getUsername());
             pacienteDTO.setCorreo(pacienteCast.getCorreo());
@@ -158,10 +165,36 @@ public class WrapperModelToDTO {
             pacienteDTO.setNumVacunas(pacienteCast.getNumVacunas());
             pacienteDTO.setCuposAsignados(pacienteCast.getCuposAsignados());
 
-//            pacienteDTOList.add(pacienteDTO);
+            pacienteDTOList.add(pacienteDTO);
         }
 
         return pacienteDTOList;
+    }
+
+    public PacienteDTO pacienteToPacienteDTO(Usuario paciente) throws PacienteYaVacunadoException, NumVacunasInvalido {
+
+            PacienteDTO pacienteDTO = new PacienteDTO();
+
+            Paciente pacienteCast = (Paciente) paciente;
+
+            pacienteDTO.setIdUsuario(pacienteCast.getIdUsuario());
+            pacienteDTO.setRol(administradorController.getRolById(pacienteCast.getRol()));
+            pacienteDTO.setCentroSalud(administradorController.getCentroById(pacienteCast.getCentroSalud()));
+            pacienteDTO.setUsername(pacienteCast.getUsername());
+            pacienteDTO.setCorreo(pacienteCast.getCorreo());
+            pacienteDTO.setHashPassword(pacienteCast.getHashPassword());
+            pacienteDTO.setDni(pacienteCast.getDni());
+            pacienteDTO.setNombre(pacienteCast.getNombre());
+            pacienteDTO.setApellidos(pacienteCast.getApellidos());
+            pacienteDTO.setFechaNacimiento(pacienteCast.getFechaNacimiento());
+            pacienteDTO.setImagen(pacienteCast.getImagen());
+
+            pacienteDTO.setAsignado(pacienteCast.isAsignado());
+            pacienteDTO.setVacunado(pacienteCast.isVacunado());
+            pacienteDTO.setNumVacunas(pacienteCast.getNumVacunas());
+            pacienteDTO.setCuposAsignados(pacienteCast.getCuposAsignados());
+
+        return pacienteDTO;
     }
 
     public VacunaDTO vacunaToVacunaDTO(Vacuna vacuna){

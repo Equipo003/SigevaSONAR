@@ -11,6 +11,7 @@ public class CentroSaludDTO {
 
     public CentroSaludDTO() {
         this.id = UUID.randomUUID().toString();
+        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
     }
 
     public CentroSaludDTO(String nombreCentro, String direccion, int numVacunasDisponibles) {
@@ -18,6 +19,7 @@ public class CentroSaludDTO {
         this.nombreCentro = nombreCentro;
         this.numVacunasDisponibles = numVacunasDisponibles;
         this.direccion = direccion;
+        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
     }
 
     public String getId() {

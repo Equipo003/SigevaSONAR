@@ -23,11 +23,20 @@ class CrearUsuariosTest {
 	static AdministradorDTO administradorDTO;
 	static SanitarioDTO sanitarioDTO;
 	static PacienteDTO pacienteDTO;
+	static CentroSaludDTO centroSaludDTO;
+
+	@BeforeAll
+	static void crearCentroSalud() {
+		centroSaludDTO = new CentroSaludDTO();
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		centroSaludDTO.setDireccion(UUID.randomUUID().toString());
+		centroSaludDTO.setNumVacunasDisponibles((int) (Math.random() * 1000));
+	}
 
 	@BeforeAll
 	static void crearAdministrador() {
 		administradorDTO = new AdministradorDTO();
-		administradorDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		administradorDTO.setRol(new RolDTO());
 		administradorDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		administradorDTO.setUsername(UUID.randomUUID().toString());
 		administradorDTO.setCorreo("micorreo@correo.com");
@@ -42,7 +51,7 @@ class CrearUsuariosTest {
 	@BeforeAll
 	static void crearSanitario() {
 		sanitarioDTO = new SanitarioDTO();
-		sanitarioDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		sanitarioDTO.setRol(new RolDTO());
 		sanitarioDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		sanitarioDTO.setCorreo("micorreo@correo.com");
@@ -57,7 +66,7 @@ class CrearUsuariosTest {
 	@BeforeAll
 	static void crearPaciente() {
 		pacienteDTO = new PacienteDTO();
-		pacienteDTO.setRol(new Rol(UUID.randomUUID().toString()));
+		pacienteDTO.setRol(new RolDTO());
 		pacienteDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
 		pacienteDTO.setCorreo("micorreo@correo.com");
@@ -72,12 +81,16 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaAdministrador() {
 		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
-		administradorDTO.setCentroSalud(administradorController.getCentroById("2g"));
+		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		administradorController.crearCentroSalud(centroSaludDTO);
+		administradorDTO.setCentroSalud((centroSaludDTO));
 
 		administradorController.crearUsuarioAdministrador(administradorDTO);
 
 		assertEquals(administradorController.getUsuarioById(administradorDTO.getIdUsuario()).toString(), administradorDTO.toString());
 		administradorController.eliminarUsuario(administradorDTO.getUsername());
+		administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 	}
 
 	@Test
@@ -85,10 +98,17 @@ class CrearUsuariosTest {
 		try{
 			String uuid = UUID.randomUUID().toString();
 			administradorDTO.setUsername(uuid);
+			administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
+			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorDTO.setCentroSalud((centroSaludDTO));
+
 			administradorController.crearUsuarioAdministrador(administradorDTO);
 			administradorController.crearUsuarioAdministrador(administradorDTO);
 		} catch (Exception e){
 			administradorController.eliminarUsuario(administradorDTO.getUsername());
+			administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 			assertNotNull(e);
 		}
 	}
@@ -97,13 +117,17 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaSanitario() {
 		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-		sanitarioDTO.setCentroSalud(administradorController.getCentroById("2g"));
+		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		administradorController.crearCentroSalud(centroSaludDTO);
+		sanitarioDTO.setCentroSalud((centroSaludDTO));
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
 		assertEquals(administradorController.getUsuarioById(sanitarioDTO.getIdUsuario()).toString(), sanitarioDTO.toString());
-		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
 
+		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+		administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 	}
 
 	@Test
@@ -111,10 +135,17 @@ class CrearUsuariosTest {
 		try{
 			String uuid = UUID.randomUUID().toString();
 			sanitarioDTO.setUsername(uuid);
+			sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+			administradorController.crearCentroSalud(centroSaludDTO);
+			sanitarioDTO.setCentroSalud((centroSaludDTO));
+
 			administradorController.crearUsuarioSanitario(sanitarioDTO);
 			administradorController.crearUsuarioSanitario(sanitarioDTO);
 		} catch (Exception e){
 			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+			administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 			assertNotNull(e);
 		}
 	}
@@ -122,13 +153,17 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaPaciente() {
 		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-		pacienteDTO.setCentroSalud(administradorController.getCentroById("2g"));
+		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		administradorController.crearCentroSalud(centroSaludDTO);
+		pacienteDTO.setCentroSalud((centroSaludDTO));
 
-//		administradorController.crearUsuarioPaciente(pacienteDTO);
+		administradorController.crearUsuarioPaciente(pacienteDTO);
 
-		assertEquals(administradorController.getUsuarioById(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
+		assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
+
 		administradorController.eliminarUsuario(pacienteDTO.getUsername());
-
+		administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 	}
 
 	@Test
@@ -136,12 +171,18 @@ class CrearUsuariosTest {
 		try {
 			String uuid = UUID.randomUUID().toString();
 			pacienteDTO.setUsername(uuid);
-//			administradorController.crearUsuarioPaciente(pacienteDTO);
-//			administradorController.crearUsuarioPaciente(pacienteDTO);
+			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
+			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+			administradorController.crearCentroSalud(centroSaludDTO);
+			pacienteDTO.setCentroSalud((centroSaludDTO));
+
+			administradorController.crearUsuarioPaciente(pacienteDTO);
+			administradorController.crearUsuarioPaciente(pacienteDTO);
 		} catch (Exception e){
 			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 			assertNotNull(e);
 		}
-
 	}
 }
