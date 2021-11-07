@@ -158,7 +158,7 @@ public class WrapperModelToDTO {
             pacienteDTO.setNumVacunas(pacienteCast.getNumVacunas());
             pacienteDTO.setCuposAsignados(pacienteCast.getCuposAsignados());
 
-            pacienteDTOList.add(pacienteDTO);
+//            pacienteDTOList.add(pacienteDTO);
         }
 
         return pacienteDTOList;
