@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +31,13 @@ class ConfirmarCuposTest {
 
 	@Autowired
 	private CupoCitasDao cuposDao;
+	@Autowired
+	private AdministradorController administradorController;
 
 	@Test
 	void buscarYConfirmarCupoLibre() {
 
-		Paciente paciente = (Paciente) usuarioDao.findAllByRol(rolDao.findAllByNombre("Paciente").get().getId())
+		Paciente paciente = (Paciente) usuarioDao.findAllByRol(administradorController.getRolByNombre("Paciente").getId())
 				.get(0);
 
 		// Se obvia que el paciente tenga centro, y que este a su vez tenga cupos.

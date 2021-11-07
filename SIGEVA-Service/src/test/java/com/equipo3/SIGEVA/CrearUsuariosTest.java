@@ -28,7 +28,7 @@ class CrearUsuariosTest {
 	static void crearAdministrador() {
 		administradorDTO = new AdministradorDTO();
 		administradorDTO.setRol(new Rol(UUID.randomUUID().toString()));
-		administradorDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		administradorDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		administradorDTO.setUsername(UUID.randomUUID().toString());
 		administradorDTO.setCorreo("micorreo@correo.com");
 		administradorDTO.setHashPassword("sdfsdf");
@@ -43,7 +43,7 @@ class CrearUsuariosTest {
 	static void crearSanitario() {
 		sanitarioDTO = new SanitarioDTO();
 		sanitarioDTO.setRol(new Rol(UUID.randomUUID().toString()));
-		sanitarioDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		sanitarioDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		sanitarioDTO.setCorreo("micorreo@correo.com");
 		sanitarioDTO.setHashPassword("sdfsdf");
@@ -58,7 +58,7 @@ class CrearUsuariosTest {
 	static void crearPaciente() {
 		pacienteDTO = new PacienteDTO();
 		pacienteDTO.setRol(new Rol(UUID.randomUUID().toString()));
-		pacienteDTO.setCentroSalud(new CentroSalud(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
+		pacienteDTO.setCentroSalud(new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int)Math.random()*100));
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
 		pacienteDTO.setCorreo("micorreo@correo.com");
 		pacienteDTO.setHashPassword("sdfsdf");
