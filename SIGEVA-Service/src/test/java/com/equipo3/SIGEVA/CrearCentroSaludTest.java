@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class CrearCentroSaludTest {
 
-    @Autowired
-    private AdministradorController administradorController;
+	@Autowired
+	private AdministradorController administradorController;
 
 	static CentroSaludDTO centroSaludDTO;
 
@@ -32,14 +32,17 @@ class CrearCentroSaludTest {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		centroSaludDTO.setDireccion("Calle falsa 123");
-		centroSaludDTO.setNumVacunasDisponibles((int)Math.random()*1000);
+		centroSaludDTO.setNumVacunasDisponibles((int)(Math.random()*1000));
+		System.out.println(centroSaludDTO.getNumVacunasDisponibles());
 	}
 
     @Test
 	void testCrearCentroSaludBien() {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
+		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		administradorController.crearCentroSalud(centroSaludDTO);
 
+		System.out.println(centroSaludDTO.getNumVacunasDisponibles());
 		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
 		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}
@@ -49,6 +52,7 @@ class CrearCentroSaludTest {
        	try {
 			String uuid = UUID.randomUUID().toString();
 			centroSaludDTO.setNombreCentro(uuid);
+			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
        		administradorController.crearCentroSalud(centroSaludDTO);
 			administradorController.crearCentroSalud(centroSaludDTO);
 		   } catch (Exception e) {

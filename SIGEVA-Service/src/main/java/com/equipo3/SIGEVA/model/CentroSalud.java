@@ -23,11 +23,10 @@ public class CentroSalud {
 	@Field
 	private String direccion;
 	@Field
-	private Vacuna vacuna;
+	private String vacuna;
 
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
-		this.vacuna = new Vacuna("Pfizer", Condicionamientos.tiempoEntreDosis(), 2);
 	}
 
 	public CentroSalud(String nombreCentro, String direccion, int numVacunasDisponibles) {
@@ -73,11 +72,11 @@ public class CentroSalud {
 		this.direccion = direccion;
 	}
 
-	public Vacuna getVacuna() {
+	public String getVacuna() {
 		return vacuna;
 	}
 
-	public void setVacuna(Vacuna vacuna) {
+	public void setVacuna(String vacuna) {
 		this.vacuna = vacuna;
 	}
 
@@ -110,11 +109,6 @@ public class CentroSalud {
 				", direccion='" + direccion + '\'' +
 				", vacuna=" + vacuna +
 				'}';
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles);
 	}
 
 	@Override

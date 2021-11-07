@@ -22,15 +22,15 @@ class VacunaTest {
 	@Test
 	void getUuid() {
 		String uuid = UUID.randomUUID().toString();
-		vacuna.setUuid(uuid);
-		assertEquals(uuid, vacuna.getUuid());
+		vacuna.setId(uuid);
+		assertEquals(uuid, vacuna.getId());
 	}
 
 	@Test
 	void setUuid() {
 		String uuid = UUID.randomUUID().toString();
-		vacuna.setUuid(uuid);
-		assertEquals(uuid, vacuna.getUuid());
+		vacuna.setId(uuid);
+		assertEquals(uuid, vacuna.getId());
 	}
 
 	@Test
@@ -89,7 +89,7 @@ class VacunaTest {
 	@Test
 	void checkEquals() {
 		Vacuna v2 = new Vacuna(vacuna.getNombre(), vacuna.getDiasEntreDosis(), vacuna.getNumDosis());
-		v2.setUuid(vacuna.getUuid());
+		v2.setId(vacuna.getId());
 		assertEquals(vacuna, v2);
 	}
 

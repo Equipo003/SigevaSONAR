@@ -8,7 +8,6 @@ import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,8 @@ public class AdministradorController {
 	private CupoController cupoController;
 	@Autowired
 	private ConfiguracionCuposDao configuracionCuposDao;
+	@Autowired
+	private VacunaDao vacunaDao;
 
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
@@ -110,18 +111,13 @@ public class AdministradorController {
 		}
 	}
 
-//	@PostMapping("/registrarRol")
-//	public void registrarRol(@RequestBody RolDTO rolDTO) {
-//
-//		Rol rol = new Rol();
-//		rol.setNombre(rolDTO.getNombre());
-//
-//		try {
-//			rolDao.save(rol);
-//		} catch (Exception e) {
-//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//		}
-//	}
+	public void crearRol(@RequestBody RolDTO rolDTO) {
+		try {
+			rolDao.save(wrapperDTOtoModel.rolDTOToRol(rolDTO));
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 
 
 	@GetMapping("/getCentros")
@@ -174,7 +170,6 @@ public class AdministradorController {
 
 		try {
 			ConfiguracionCupos configuracionCupos = wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
-
 
 			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 			if (configuracionCuposDTOList.isEmpty())
@@ -243,10 +238,10 @@ public class AdministradorController {
 		}
 	}
 
-	public CentroSalud getCentroById(String centroSalud) {
+	public CentroSaludDTO getCentroById(String centroSalud) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			return centroS.get();
+//			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
+			return wrapperModelToDTO.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -316,4 +311,55 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+	public List<PacienteDTO> getPacientes(String rol) {
+		try {
+//			return wrapperModelToDTO.listPacienteToPacienteDTO(pacienteDao.findAllByRol(rol));
+//			List<Usuario> usuario = pacienteDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente");
+			return wrapperModelToDTO.listPacienteToPacienteDTO(administradorDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente"));
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void addVacuna(VacunaDTO vacunaDTO) {
+		try {
+			Vacuna vacuna = wrapperDTOtoModel.vacunaDTOToVacuna(vacunaDTO);
+			vacunaDao.save(vacuna);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public VacunaDTO getVacunaByNombre(String pfizer) {
+		try {
+			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findByNombre(pfizer).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public VacunaDTO getVacunaById(String id) {
+		try {
+			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findById(id).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarVacuna(String idVacuna) {
+		try {
+			centroSaludDao.deleteById(idVacuna);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarRol(String idRol) {
+		try {
+			rolDao.deleteById(idRol);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 }

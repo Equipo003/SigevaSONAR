@@ -1,4 +1,4 @@
-package com.equipo3.SIGEVA.model;
+package com.equipo3.SIGEVA;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,6 +64,9 @@ class ConfiguracionCuposTest {
             if (this.administradorController.existConfiguracionCupos()==false) {
                 this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
                 configuracionExistente = false;
+                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            }
+            else {
                 this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
             }
         } catch (Exception e) {
