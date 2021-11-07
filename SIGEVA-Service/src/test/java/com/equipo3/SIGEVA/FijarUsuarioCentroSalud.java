@@ -32,74 +32,84 @@ class FijarUsuarioCentroSalud {
 	private CentroSaludDao centroSaludDao;
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
+	@Autowired
+	private WrapperDTOtoModel wrapperDTOtoModel;
 
 
 	@Test
 	void AsignarCentroSaludSanitarioNivelModelo() throws NumVacunasInvalido {
-		Usuario sanitario = new Sanitario();
 		CentroSaludDTO cs = new CentroSaludDTO();
 		cs.setNombreCentro(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(cs);
+		//Centro salud creado
 
-		sanitario.setNombre("NombrePrueba");
-		sanitario.setUsername(UUID.randomUUID().toString());
+		SanitarioDTO sanitarioDTO = new SanitarioDTO();
+		sanitarioDTO.setNombre(UUID.randomUUID().toString());
+		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		Rol rol = null;
-
 		if(roldao.findAllByNombre("Sanitario").isPresent()) {
 			rol = roldao.findAllByNombre("Sanitario").get();
+
 		}
+		sanitarioDTO.setRol(rol);
+		sanitarioDTO.setCentroSalud(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(cs));
 
-		sanitario.setRol(rol.getId());
+		administradorController.crearUsuarioSanitario(sanitarioDTO);
+		administradorController.fijarPersonal(sanitarioDTO.getUsername(), cs.getId());
 
-		if(sanitario!=null) {
-			System.out.println("No es nulo");
-			System.out.println(sanitario.getRol());
+		
+
+
+		Sanitario sanitario = null;
+		if(usuarioDao.findByUsername(sanitarioDTO.getUsername()).isPresent()) {
+			sanitario = (Sanitario) usuarioDao.findByUsername(sanitarioDTO.getUsername()).get();
 		}
+		Assertions.assertEquals(sanitarioDTO.getCentroSalud().getId(), sanitario.getCentroSalud());
 
-		administradorController.fijarPersonal(sanitario.getUsername(), cs.getId());
-
-		Usuario san = null;
-
-		//administradorController.crearUsuarioSanitario(sanitario);
-
-
-		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
-			san = usuarioDao.findById(sanitario.getIdUsuario()).get();
-		}
-		Assertions.assertEquals(sanitario.getCentroSalud(), san.getCentroSalud());
+		administradorController.eliminarCentro(cs.getId());
+		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
 	}
 
 	@Test
 	void AsignarCentroSaludSanitarioNivelBBDD() throws NumVacunasInvalido {
-		SanitarioDTO sanitario = new SanitarioDTO();
-
 		CentroSaludDTO cs = new CentroSaludDTO();
-		CentroSalud csSanitario = new CentroSalud();
-
-		Rol rol = new Rol();
-		rol.setId("e24bf973-e26e-47b7-b8f4-83fa13968221");
-		rol.setNombre("Sanitario");
-
 		cs.setNombreCentro(UUID.randomUUID().toString());
-		cs.setNombreCentro(UUID.randomUUID().toString());
-
-		sanitario.setUsername(sanitario.getIdUsuario());
-		sanitario.setRol(rol);
-
 		administradorController.crearCentroSalud(cs);
-		sanitario.setCentroSalud(csSanitario);
+		//Centro salud DT creado
 
-		administradorController.crearUsuarioSanitario(sanitario);
+		SanitarioDTO sanitarioDTO = new SanitarioDTO();
+		Rol rol = null;
+		if(roldao.findAllByNombre("Sanitario").isPresent()) {
+			rol = roldao.findAllByNombre("Sanitario").get();
+
+		}
+		sanitarioDTO.setUsername(UUID.randomUUID().toString());
+		sanitarioDTO.setNombre(UUID.randomUUID().toString());
+		sanitarioDTO.setRol(rol);
+		sanitarioDTO.setCentroSalud(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(cs));
+		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
 
 		if(centroSaludDao.findById(cs.getId()).isPresent()) {
 			cs = wrapperModelToDTO.centroSaludToCentroSaludDTO(centroSaludDao.findById(cs.getId()).get());
 		}
 
-		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
-			sanitario = (SanitarioDTO)this.wrapperModelToDTO.usuarioToUsuarioDTO(usuarioDao.findById(sanitario.getIdUsuario()).get());
+		Sanitario sanitario = null;
+		if(usuarioDao.findById(sanitarioDTO.getIdUsuario()).isPresent()) {
+			sanitario = (Sanitario)usuarioDao.findByUsername(sanitarioDTO.getUsername()).get();
 		}
-		Assertions.assertEquals(cs.getId(), sanitario.getCentroSalud().getId());
+
+		administradorController.eliminarCentro(cs.getId());
+		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+
+		Assertions.assertEquals(cs.getId(), sanitario.getCentroSalud());
+
+
+
+
 	}
+
+
+
 
 }

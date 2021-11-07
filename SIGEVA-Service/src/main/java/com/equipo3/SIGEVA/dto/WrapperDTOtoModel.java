@@ -2,10 +2,12 @@ package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WrapperDTOtoModel {
 
-    public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){
+    public Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){
         Administrador administrador = new Administrador();
 
         administrador.setIdUsuario(administradorDTO.getIdUsuario());
@@ -23,7 +25,7 @@ public class WrapperDTOtoModel {
         return administrador;
     }
 
-    public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO){
+    public Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO){
         Sanitario sanitario = new Sanitario();
 
         sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
@@ -41,7 +43,7 @@ public class WrapperDTOtoModel {
         return sanitario;
     }
 
-    public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO){
+    public Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO){
         Paciente paciente = new Paciente();
 
         paciente.setIdUsuario(pacienteDTO.getIdUsuario());
@@ -59,7 +61,7 @@ public class WrapperDTOtoModel {
         return paciente;
     }
 
-    public static CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
+    public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
         CentroSalud centroSalud = new CentroSalud();
         centroSalud.setId(centroSaludDTO.getId());
         centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
@@ -70,7 +72,7 @@ public class WrapperDTOtoModel {
         return centroSalud;
     }
 
-    public static ConfiguracionCupos configuracionCuposDTOtoConfiguracionCupos(ConfiguracionCuposDTO configuracionCuposDTO){
+    public ConfiguracionCupos configuracionCuposDTOtoConfiguracionCupos(ConfiguracionCuposDTO configuracionCuposDTO){
         ConfiguracionCupos configuracionCupos = new ConfiguracionCupos();
 
         configuracionCupos.setId(configuracionCuposDTO.getId());
@@ -83,11 +85,13 @@ public class WrapperDTOtoModel {
         return configuracionCupos;
     }
 
-    public static Rol rolDTOToRol(RolDTO rolDTO){
+    public Rol rolDTOToRol(RolDTO rolDTO){
         Rol rol = new Rol();
         rol.setId(rolDTO.getId());
         rol.setNombre(rolDTO.getNombre());
 
         return rol;
     }
+
+
 }

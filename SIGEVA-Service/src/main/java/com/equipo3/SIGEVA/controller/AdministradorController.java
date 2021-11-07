@@ -34,6 +34,7 @@ public class AdministradorController {
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
 
+	@Autowired
 	private WrapperDTOtoModel wrapperDTOtoModel;
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
@@ -41,7 +42,7 @@ public class AdministradorController {
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
-			Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+			Administrador administrador = this.wrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -58,7 +59,7 @@ public class AdministradorController {
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
-			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+			Paciente paciente = this.wrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -75,12 +76,14 @@ public class AdministradorController {
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
-			Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+			Sanitario sanitario = this.wrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
 			if (optUsuario.isPresent()) {
+				System.out.println("Esta presente");
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
+			System.out.println("Guardado");
 			administradorDao.save(sanitario);
 
 		} catch (Exception e) {
@@ -92,7 +95,7 @@ public class AdministradorController {
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
-			CentroSalud centroSalud = WrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
+			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
 			if (optCentroSalud.isPresent()) {
 				throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
