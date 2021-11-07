@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class WrapperModelToDTO {
@@ -104,5 +105,17 @@ public class WrapperModelToDTO {
 
     public List<PacienteDTO> pacientesJornadaToPacientesDTO (List<Paciente> pacientesJornadas){
         return new ArrayList<PacienteDTO>();
+    }
+
+    public CentroSaludDTO centroSaludToCentroSaludDTO(CentroSalud centroSalud){
+        CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
+
+        centroSaludDTO.setDireccion(centroSalud.getDireccion());
+        centroSaludDTO.setNombreCentro(centroSalud.getNombreCentro());
+        centroSaludDTO.setId(centroSalud.getId());
+        centroSaludDTO.setNumVacunasDisponibles(centroSalud.getNumVacunasDisponibles());
+
+        return centroSaludDTO;
+
     }
 }
