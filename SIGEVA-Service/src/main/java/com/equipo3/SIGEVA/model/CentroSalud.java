@@ -103,8 +103,13 @@ public class CentroSalud {
 
 	@Override
 	public String toString() {
-		return "CentroSalud [id=" + id + ", nombreCentro=" + nombreCentro + ", numVacunasDisponibles="
-				+ numVacunasDisponibles + ", direccion=" + direccion + ", vacuna=" + vacuna + "]";
+		return "CentroSaludDTO{" +
+				"id='" + id + '\'' +
+				", nombreCentro='" + nombreCentro + '\'' +
+				", numVacunasDisponibles=" + numVacunasDisponibles +
+				", direccion='" + direccion + '\'' +
+				", vacuna=" + vacuna +
+				'}';
 	}
 
 	@Override

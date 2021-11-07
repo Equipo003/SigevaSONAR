@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 @CrossOrigin
 @RestController
 @RequestMapping("user")
@@ -35,13 +34,7 @@ public class AdministradorController {
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
 
-	public void eliminarUsuario(String username){
-		try {
-			administradorDao.deleteByUsername(username);
-		}catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
+	private WrapperDTOtoModel wrapperDTOtoModel;
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
@@ -130,7 +123,7 @@ public class AdministradorController {
 
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
-		return wrapperModelToDTO.allcentroSaludToCentroSaludDTO(centroSaludDao.findAll());
+		return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
 
@@ -143,10 +136,10 @@ public class AdministradorController {
 		}
 	}
 
-
-	@GetMapping("/getUsuariosByRol")
+	@GetMapping("/getUsuariosByRol/")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
+			System.out.println("Dentro :" +rol);
 			if (rol.equals("Todos")) {
 				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
@@ -174,22 +167,17 @@ public class AdministradorController {
 
 
 	@PostMapping("/crearConfCupos")
-	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO confDTO) {
-
-		ConfiguracionCupos conf = new ConfiguracionCupos();
-
-		conf.setDuracionMinutos(confDTO.getDuracionMinutos());
-		conf.setNumeroPacientes(confDTO.getNumeroPacientes());
-		conf.setDuracionJornadaHoras(confDTO.getDuracionJornadaHoras());
-		conf.setDuracionJornadaMinutos(confDTO.getDuracionJornadaMinutos());
-		conf.setFechaInicio(confDTO.getFechaInicio());
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
 		try {
-			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-			if (configuracionCuposList.isEmpty())
-				configuracionCuposDao.save(conf);
+			ConfiguracionCupos configuracionCupos = wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
+
+
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			if (configuracionCuposDTOList.isEmpty())
+				configuracionCuposDao.save(configuracionCupos);
 			else
-				throw new ConfiguracionYaExistente("Ya existía configuración.");
+				throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
 		}
@@ -201,7 +189,10 @@ public class AdministradorController {
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-			return !configuracionCuposList.isEmpty();
+			if (configuracionCuposList.size() == 0){
+				return false;
+			} else
+				return true;
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -212,13 +203,23 @@ public class AdministradorController {
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
-			ConfiguracionCuposDTO configuracionCuposDTO =
-					this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
-			if(configuracionCuposDTO == null)
+			if(configuracionCuposDTOList.isEmpty())
 				throw new Exception();
 
-			return configuracionCuposDTO;
+			return configuracionCuposDTOList.get(0);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
+	public void eliminarConfiguracionCupos() {
+		try {
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			configuracionCuposDao.delete(wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+
+
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -284,4 +285,32 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+
+	public void eliminarUsuario(String username){
+		try {
+			administradorDao.deleteByUsername(username);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarCentro(String idCentro){
+		try {
+			centroSaludDao.deleteById(idCentro);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public Rol getRolByNombre(String nombreRol) {
+        try {
+            Optional<Rol> rolOptional = rolDao.findByNombre(nombreRol);
+            if (rolOptional.isPresent())
+                return rolOptional.get();
+			else
+				throw new Exception();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

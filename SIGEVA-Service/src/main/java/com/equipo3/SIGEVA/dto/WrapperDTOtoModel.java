@@ -61,11 +61,26 @@ public class WrapperDTOtoModel {
 
     public static CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
         CentroSalud centroSalud = new CentroSalud();
+        centroSalud.setId(centroSaludDTO.getId());
         centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
         centroSalud.setDireccion(centroSaludDTO.getDireccion());
         centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
+        centroSalud.setVacuna(centroSaludDTO.getVacuna());
 
         return centroSalud;
+    }
+
+    public static ConfiguracionCupos configuracionCuposDTOtoConfiguracionCupos(ConfiguracionCuposDTO configuracionCuposDTO){
+        ConfiguracionCupos configuracionCupos = new ConfiguracionCupos();
+
+        configuracionCupos.setId(configuracionCuposDTO.getId());
+        configuracionCupos.setDuracionMinutos(configuracionCuposDTO.getDuracionMinutos());
+        configuracionCupos.setNumeroPacientes(configuracionCuposDTO.getNumeroPacientes());
+        configuracionCupos.setDuracionJornadaHoras(configuracionCuposDTO.getDuracionJornadaHoras());
+        configuracionCupos.setDuracionJornadaMinutos(configuracionCuposDTO.getDuracionJornadaMinutos());
+        configuracionCupos.setFechaInicio(configuracionCuposDTO.getFechaInicio());
+
+        return configuracionCupos;
     }
 
     public static Rol rolDTOToRol(RolDTO rolDTO){
