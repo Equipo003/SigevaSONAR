@@ -68,20 +68,24 @@ public class WrapperModelToDTO {
         return usuarioDTOList;
     }
 
-    public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(List<ConfiguracionCupos> configuracionCuposList){
-        if(!configuracionCuposList.isEmpty()){
-            ConfiguracionCupos configuracionCupos = configuracionCuposList.get(0);
+    public List<ConfiguracionCuposDTO> configuracionCuposToConfiguracionCuposDTO(List<ConfiguracionCupos> configuracionCuposList){
+
+        List<ConfiguracionCuposDTO> configuracionCuposDTOList = new ArrayList<>();
+
+        for (ConfiguracionCupos configuracionCupos: configuracionCuposList) {
             ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
+
+            configuracionCuposDTO.setId(configuracionCupos.getId());
             configuracionCuposDTO.setDuracionMinutos(configuracionCupos.getDuracionMinutos());
             configuracionCuposDTO.setDuracionJornadaHoras(configuracionCupos.getDuracionJornadaHoras());
             configuracionCuposDTO.setDuracionJornadaMinutos(configuracionCupos.getDuracionJornadaMinutos());
             configuracionCuposDTO.setFechaInicio(configuracionCupos.getFechaInicio());
             configuracionCuposDTO.setNumeroPacientes(configuracionCupos.getNumeroPacientes());
 
-            return configuracionCuposDTO;
+            configuracionCuposDTOList.add(configuracionCuposDTO);
         }
 
-        return null;
+        return configuracionCuposDTOList;
     }
 
     public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario){
