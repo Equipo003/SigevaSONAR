@@ -102,7 +102,7 @@ public class AdministradorController {
 			}
 
 			centroSaludDao.save(centroSalud);
-			cupoController.prepararCuposCitas(centroSalud);
+			//cupoController.prepararCuposCitas(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -260,7 +260,7 @@ public class AdministradorController {
 		}
 	}
 
-	@GetMapping("/getPacientesJornada")
+	/*@GetMapping("/getPacientesJornada")
 	public List<PacienteDTO> getPacientesJornada(@RequestParam String fechaJornada){
 		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		try{
@@ -277,7 +277,7 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 
-	}
+	}*/
 
 	public UsuarioDTO getUsuarioById(String idUsuario) {
 		try {
