@@ -80,17 +80,6 @@ public class CentroSalud {
 		this.vacuna = vacuna;
 	}
 
-	public void modificarStockVacunas(int numVacunasAgregadas) {
-		this.numVacunasDisponibles += numVacunasAgregadas;
-	}
-
-	public void incrementarNumVacunasDisponibles(int cantidad) throws NumVacunasInvalido {
-		if (cantidad >= 0)
-			this.setNumVacunasDisponibles(this.getNumVacunasDisponibles() + cantidad);
-		else
-			throw new NumVacunasInvalido("La cantidad a incrementar especificada es inválida.");
-	}
-
 	public void decrementarNumVacunasDisponibles() throws CentroSinStock {
 		// No se restará stock hasta que no se confirme como vacunado por un sanitario.
 		try {

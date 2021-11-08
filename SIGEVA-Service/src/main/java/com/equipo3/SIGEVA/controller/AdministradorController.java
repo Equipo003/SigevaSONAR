@@ -234,12 +234,10 @@ public class AdministradorController {
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			if (centroS.isPresent()) {
-				CentroSalud centroSaludDef = centroS.get();
-				centroSaludDef.modificarStockVacunas(vacunas);
-				centroSaludDao.save(centroSaludDef);
-			}
+			CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
+			centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
+			centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
