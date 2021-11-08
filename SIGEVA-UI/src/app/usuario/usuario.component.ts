@@ -1,21 +1,20 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Usuario } from '../Model/Usuario';
-import { CentroSalud } from '../Model/centro-salud';
-import { JsonService } from '../Service/json.service';
+import { Component, Input } from '@angular/core';
+import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
+import {CentroSalud} from "../Model/centro-salud";
+import {Rol} from "../Model/rol";
 
 @Component({
 	selector: 'app-usuario',
 	templateUrl: './usuario.component.html',
 	styleUrls: ['./usuario.component.css']
 })
-export class UsuarioComponent implements OnInit {
-	@Input() usuario: Usuario;
-	constructor(private json: JsonService) {
-		this.usuario = new Usuario("", "", "", "", "", "", "", "", "", "");
 
-	}
-	ngOnInit(): void {
-		
+export class UsuarioComponent {
+	@Input() usuario: UsuarioConObjetos;
+	constructor() {
+		this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "",
+      0), "", "", "", "", "", "", "",
+      "");
 	}
 
 }

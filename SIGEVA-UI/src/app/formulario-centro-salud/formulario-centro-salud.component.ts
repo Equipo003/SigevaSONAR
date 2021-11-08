@@ -26,10 +26,10 @@ export class FormularioCentroSaludComponent implements OnInit {
 
   }
 
- enviarDatosBack() { //NO DEBE GUARDAR SI HAY UN CAMPO NULO y controlar número en backend
-	//var centroSalud: CentroSalud = new CentroSalud(this.direccion,this.nombreCentro,this.numVacunasDisponibles);
+ enviarDatosBack() {
+    console.log(this.centroSalud);
    this.generandoCupos = "Generando cupos de citas...";
-	this.json.postJson("user/newCentroSalud",this.centroSalud).subscribe(
+   this.json.postJson("user/newCentroSalud",this.centroSalud).subscribe(
     result => {
       this.errorMessage = "";
       this.generandoCupos = "";

@@ -9,16 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class Rol {
 	@Id
+	@Field
 	String id;
 	@Field 
 	String nombre;
 	
-	public Rol(String nombre) {
-		this.id =UUID.randomUUID().toString();
-		this.nombre = nombre;
-	}
-	
 	public Rol() {
+		this.id =UUID.randomUUID().toString();
 	}
 
 	public String getId() {
@@ -36,6 +33,12 @@ public class Rol {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Rol{" +
+				"id='" + id + '\'' +
+				", nombre='" + nombre + '\'' +
+				'}';
+	}
 }

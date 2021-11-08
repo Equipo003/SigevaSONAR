@@ -1,11 +1,11 @@
-<div class="usuario">
-  <div class="contenido-usuario centrar-texto">
+<div class="item usuario">
+  <div class="contenido-item centrar-texto">
 
     <div class="control-group">
       <img alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
       <h3 class="centrar-texto fontawesome-user">  {{usuario.nombre}} {{usuario.apellidos}}</h3>
       <h3 class="centrar-texto fontawesome-passport">DNI: {{usuario.dni}}</h3>
-      <h3 class="centrar-texto fontawesome-user-plus">Rol: {{usuario.rol}}</h3>
-      <h3 class="centrar-texto fontawesome-hospital">  {{usuario.centroSalud}}</h3>
+      <h3 class="centrar-texto fontawesome-user-plus">Rol: {{usuario.rol.nombre}}</h3>
+      <h3 class="centrar-texto fontawesome-hospital">  {{usuario.centroSalud.nombreCentro}}</h3>
   </div>
 </div>

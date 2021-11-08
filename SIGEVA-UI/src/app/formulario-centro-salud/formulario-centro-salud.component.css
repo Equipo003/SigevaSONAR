@@ -3,6 +3,7 @@
 [class*="fontawesome-"]:before {
   font-family: 'FontAwesome', sans-serif;
   font-size: 20px;
+  right:1200px;
 }
 
 .resaltadoNeutral {

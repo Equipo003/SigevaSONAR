@@ -1,17 +1,26 @@
-package com.equipo3.SIGEVA.model;
+package com.equipo3.SIGEVA.dto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class ConfiguracionCuposDTO {
+
+    private String id;
     private int duracionMinutos;
     private int numeroPacientes;
     private int duracionJornadaHoras;
     private int duracionJornadaMinutos;
     private String fechaInicio;
 
-    public ConfiguracionCuposDTO(int duracionMinutos, int numeroPacientes, int duracionJornadaHoras, int duracionJornadaMinutos, String fechaInicio) {
+    public ConfiguracionCuposDTO() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public ConfiguracionCuposDTO(int duracionMinutos, int numeroPacientes, int duracionJornadaHoras,
+                                 int duracionJornadaMinutos, String fechaInicio) {
+        this.id = UUID.randomUUID().toString();
         this.duracionMinutos = duracionMinutos;
         this.numeroPacientes = numeroPacientes;
         this.duracionJornadaHoras = duracionJornadaHoras;
@@ -19,28 +28,28 @@ public class ConfiguracionCuposDTO {
         this.fechaInicio = fechaInicio;
     }
 
-    public ConfiguracionCuposDTO(ConfiguracionCupos configuracionCupos){
-        this.duracionMinutos = configuracionCupos.getDuracionMinutos();
-        this.numeroPacientes = configuracionCupos.getNumeroPacientes();
-        this.duracionJornadaHoras = configuracionCupos.getDuracionJornadaHoras();
-        this.duracionMinutos = configuracionCupos.getDuracionMinutos();
-        this.fechaInicio = configuracionCupos.getFechaInicio();
+    public String getId() {
+        return id;
     }
 
-    public int getDuracionMinutos() {
-        return duracionMinutos;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setDuracionMinutos(int duracionMinutos) {
         this.duracionMinutos = duracionMinutos;
     }
 
-    public int getNumeroPacientes() {
-        return numeroPacientes;
-    }
-
     public void setNumeroPacientes(int numeroPacientes) {
         this.numeroPacientes = numeroPacientes;
+    }
+
+    public int getDuracionMinutos() {
+        return this.duracionMinutos;
+    }
+
+    public int getNumeroPacientes() {
+        return numeroPacientes;
     }
 
     public int getDuracionJornadaHoras() {
@@ -67,21 +76,14 @@ public class ConfiguracionCuposDTO {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaInicioAsDate() {
-        SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        try {
-            return formateador.parse(fechaInicio);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Date getHoraFin() {
-        Date fechaFin = getFechaInicioAsDate();
-        fechaFin.setHours(fechaFin.getHours() + this.duracionJornadaHoras);
-        fechaFin.setMinutes(fechaFin.getMinutes() + this.duracionJornadaMinutos);
-
-        return fechaFin;
+    @Override
+    public String toString() {
+        return "ConfiguracionCuposDTO{" +
+                "duracionMinutos=" + duracionMinutos +
+                ", numeroPacientes=" + numeroPacientes +
+                ", duracionJornadaHoras=" + duracionJornadaHoras +
+                ", duracionJornadaMinutos=" + duracionJornadaMinutos +
+                ", fechaInicio='" + fechaInicio + '\'' +
+                '}';
     }
 }

@@ -12,8 +12,8 @@ export class CentroSalud {
       this.id = id;
     }
     this.direccion = direccion;
-		this.nombreCentro = nombreCentro;
-		this.numVacunasDisponibles = numVacunasDisponibles;
+	this.nombreCentro = nombreCentro;
+	this.numVacunasDisponibles = numVacunasDisponibles;
 
 	}
 }

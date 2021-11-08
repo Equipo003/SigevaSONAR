@@ -3,12 +3,14 @@ package com.equipo3.SIGEVA.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class ConfiguracionCupos {
 
+	private String id;
 	private int duracionMinutos;
 	private int numeroPacientes;
 	private int duracionJornadaHoras;
@@ -16,15 +18,15 @@ public class ConfiguracionCupos {
 	private String fechaInicio;
 
 	public ConfiguracionCupos() {
+		this.id = UUID.randomUUID().toString();
 	}
 
-	public ConfiguracionCupos(int duracionMinutos, int numeroPacientes, int duracionJornadaHoras,
-			int duracionJornadaMinutos, String fechaInicio) {
-		this.duracionMinutos = duracionMinutos;
-		this.numeroPacientes = numeroPacientes;
-		this.duracionJornadaHoras = duracionJornadaHoras;
-		this.duracionJornadaMinutos = duracionJornadaMinutos;
-		this.fechaInicio = fechaInicio;
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public void setDuracionMinutos(int duracionMinutos) {
@@ -72,6 +74,9 @@ public class ConfiguracionCupos {
 			return null;
 		}
 	}
+
+
+
 
 	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;

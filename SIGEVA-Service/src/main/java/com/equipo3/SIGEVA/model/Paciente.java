@@ -23,13 +23,13 @@ public class Paciente extends Usuario {
 		cuposAsignados = new ArrayList<>();
 	}
 
-	public Paciente(String rol, String centroFK, String username, String correo, String hashPassword, String dni,
-			String nombre, String apellidos, Date fechaNacimiento, String imagen, int numVacunas,
-			List<CupoSimple> cuposAsignados) {
-		super(rol, centroFK, username, correo, hashPassword, dni, nombre, apellidos, fechaNacimiento, imagen);
-		this.numVacunas = numVacunas;
-		this.cuposAsignados = cuposAsignados;
-	}
+//	public Paciente(String rol, String centroFK, String username, String correo, String hashPassword, String dni,
+//			String nombre, String apellidos, Date fechaNacimiento, String imagen, int numVacunas,
+//			List<CupoSimple> cuposAsignados) {
+//		super(rol, centroFK, username, correo, hashPassword, dni, nombre, apellidos, fechaNacimiento, imagen);
+//		this.numVacunas = numVacunas;
+//		this.cuposAsignados = cuposAsignados;
+//	}
 
 	public boolean isAsignado() {
 		return asignado;
@@ -108,32 +108,4 @@ public class Paciente extends Usuario {
 	public void setVacunado(boolean vacunado) {
 		this.vacunado = vacunado;
 	}
-
-	@Override
-	public String toString() {
-		return "Paciente " + super.toString() + " [asignado=" + asignado + ", numVacunas=" + numVacunas
-				+ ", cuposAsignados=" + cuposAsignados + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(asignado, cuposAsignados, numVacunas);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Paciente other = (Paciente) obj;
-		return asignado == other.asignado && Objects.equals(cuposAsignados, other.cuposAsignados)
-				&& numVacunas == other.numVacunas;
-	}
-
 }
