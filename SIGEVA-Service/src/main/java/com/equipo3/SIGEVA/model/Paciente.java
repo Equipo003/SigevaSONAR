@@ -108,32 +108,4 @@ public class Paciente extends Usuario {
 	public void setVacunado(boolean vacunado) {
 		this.vacunado = vacunado;
 	}
-
-	@Override
-	public String toString() {
-		return "Paciente " + super.toString() + " [asignado=" + asignado + ", numVacunas=" + numVacunas
-				+ ", cuposAsignados=" + cuposAsignados + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(asignado, cuposAsignados, numVacunas);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Paciente other = (Paciente) obj;
-		return asignado == other.asignado && Objects.equals(cuposAsignados, other.cuposAsignados)
-				&& numVacunas == other.numVacunas;
-	}
-
 }

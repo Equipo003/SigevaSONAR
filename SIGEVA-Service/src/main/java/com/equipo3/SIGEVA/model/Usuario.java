@@ -126,36 +126,4 @@ public class Usuario {
 	public void setImagen(String imagen) {
 		this.imagen = imagen;
 	}
-
-	@Override
-	public String toString() {
-		return "Usuario [idUsuario=" + idUsuario + ", rol=" + rol + ", centroSalud=" + centroSalud + ", username="
-				+ username + ", correo=" + correo + ", hashPassword=" + hashPassword + ", dni=" + dni + ", nombre="
-				+ nombre + ", apellidos=" + apellidos + ", fechaNacimiento=" + fechaNacimiento + ", imagen=" + imagen
-				+ "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(apellidos, centroSalud, correo, dni, fechaNacimiento, hashPassword, idUsuario, imagen,
-				nombre, rol, username);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		return Objects.equals(apellidos, other.apellidos) && Objects.equals(centroSalud, other.centroSalud)
-				&& Objects.equals(correo, other.correo) && Objects.equals(dni, other.dni)
-				&& Objects.equals(fechaNacimiento, other.fechaNacimiento)
-				&& Objects.equals(hashPassword, other.hashPassword) && Objects.equals(idUsuario, other.idUsuario)
-				&& Objects.equals(imagen, other.imagen) && Objects.equals(nombre, other.nombre)
-				&& Objects.equals(rol, other.rol) && Objects.equals(username, other.username);
-	}
-
 }
