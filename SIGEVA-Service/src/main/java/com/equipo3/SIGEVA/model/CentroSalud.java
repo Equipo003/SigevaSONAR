@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.equipo3.SIGEVA.controller.Condicionamientos;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 

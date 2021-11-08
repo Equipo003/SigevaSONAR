@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.dto;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class VacunaDTO {
@@ -60,4 +61,23 @@ public class VacunaDTO {
                 ", numDosis=" + numDosis +
                 '}';
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(diasEntreDosis, id, nombre, numDosis);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VacunaDTO other = (VacunaDTO) obj;
+		return diasEntreDosis == other.diasEntreDosis && Objects.equals(id, other.id)
+				&& Objects.equals(nombre, other.nombre) && numDosis == other.numDosis;
+	}
+    
 }

@@ -1,30 +1,24 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.VacunaDao;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
-import com.equipo3.SIGEVA.model.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.Vacuna;
 
 @Component
 public class WrapperModelToDTO {
-
-    @Autowired
-    private CentroSaludDao centroSaludDao;
-    @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private VacunaDao vacunaDao;
+	
     @Autowired
     private AdministradorController administradorController;
 
@@ -160,10 +154,7 @@ public class WrapperModelToDTO {
             pacienteDTO.setFechaNacimiento(pacienteCast.getFechaNacimiento());
             pacienteDTO.setImagen(pacienteCast.getImagen());
 
-            pacienteDTO.setAsignado(pacienteCast.isAsignado());
-            pacienteDTO.setVacunado(pacienteCast.isVacunado());
-            pacienteDTO.setNumVacunas(pacienteCast.getNumVacunas());
-            pacienteDTO.setCuposAsignados(pacienteCast.getCuposAsignados());
+            pacienteDTO.setNumDosisAplicadas(pacienteCast.getNumDosisAplicadas());
 
             pacienteDTOList.add(pacienteDTO);
         }
@@ -189,10 +180,7 @@ public class WrapperModelToDTO {
             pacienteDTO.setFechaNacimiento(pacienteCast.getFechaNacimiento());
             pacienteDTO.setImagen(pacienteCast.getImagen());
 
-            pacienteDTO.setAsignado(pacienteCast.isAsignado());
-            pacienteDTO.setVacunado(pacienteCast.isVacunado());
-            pacienteDTO.setNumVacunas(pacienteCast.getNumVacunas());
-            pacienteDTO.setCuposAsignados(pacienteCast.getCuposAsignados());
+            pacienteDTO.setNumDosisAplicadas(pacienteCast.getNumDosisAplicadas());
 
         return pacienteDTO;
     }

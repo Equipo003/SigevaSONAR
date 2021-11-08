@@ -1,11 +1,10 @@
 package com.equipo3.SIGEVA.model;
 
+import java.util.UUID;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Document
 public class Vacuna {

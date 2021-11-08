@@ -64,11 +64,8 @@ public class WrapperDTOtoModel {
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
         paciente.setImagen(pacienteDTO.getImagen());
 
-        paciente.setAsignado(pacienteDTO.isAsignado());
-        paciente.setCuposAsignados(pacienteDTO.getCuposAsignados());
-        paciente.setVacunado(pacienteDTO.isVacunado());
-        paciente.setNumVacunas(pacienteDTO.getNumVacunas());
-
+        paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+        
         return paciente;
     }
 

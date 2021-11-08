@@ -265,7 +265,7 @@ public class AdministradorController {
 		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		try{
 			Date fechaJornadaFormated = formateador.parse(fechaJornada);
-			List<CupoCitas> cupoCitasList = cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated);
+			List<CupoCitas> cupoCitasList = cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated); // MAL!
 			List<Paciente> pacientesJornada = new ArrayList<Paciente>();
 			Iterator<CupoCitas> cupoCitasIterator = cupoCitasList.iterator();
 			while(cupoCitasIterator.hasNext()){

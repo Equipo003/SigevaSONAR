@@ -1,97 +1,64 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.controller.Condicionamientos;
-import com.equipo3.SIGEVA.exception.CupoCitasException;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import java.util.Objects;
+
 import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
-import com.equipo3.SIGEVA.model.CupoSimple;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+public class PacienteDTO extends UsuarioDTO {
 
-public class PacienteDTO extends UsuarioDTO{
+	private int numDosisAplicadas;
 
-    private boolean asignado;
-    private List<CupoSimple> cuposAsignados;
+	public PacienteDTO() {
+		super();
+	}
 
-    private boolean vacunado;
-    private int numVacunas;
+	public PacienteDTO(int numDosisAplicadas) {
+		super();
+		this.numDosisAplicadas = numDosisAplicadas;
+	}
 
-    public PacienteDTO() {
-        super();
-        this.asignado = false;
-        this.cuposAsignados = new ArrayList<>();
-        this.vacunado = false;
-        this.numVacunas = 0;
-    }
+	public int getNumDosisAplicadas() {
+		return numDosisAplicadas;
+	}
 
-    public boolean isAsignado() {
-        return asignado;
-    }
+	public void setNumDosisAplicadas(int numDosisAplicadas) {
+		this.numDosisAplicadas = numDosisAplicadas;
+	}
 
-    public void setAsignado(boolean asignado) {
-        this.asignado = asignado;
-    }
+	@Override
+	public String toString() {
+		return "PacienteDTO [" + super.toString() + " numDosisAplicadas=" + numDosisAplicadas + "]";
+	}
 
-    public List<CupoSimple> getCuposAsignados() {
-        return cuposAsignados;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(numDosisAplicadas);
+		return result;
+	}
 
-    public void setCuposAsignados(List<CupoSimple> cuposAsignados) {
-        this.cuposAsignados = cuposAsignados;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PacienteDTO other = (PacienteDTO) obj;
+		return numDosisAplicadas == other.numDosisAplicadas;
+	}
 
-    public boolean isVacunado() {
-        return vacunado;
-    }
+	public void incrementarNumDosisAplicadas() throws PacienteYaVacunadoException {
+		if (numDosisAplicadas == 2)
+			throw new PacienteYaVacunadoException("El paciente ya estaba vacunado de las dos dosis.");
+		else
+			numDosisAplicadas++;
+	}
 
-    public void setVacunado(boolean vacunado) {
-        this.vacunado = vacunado;
-    }
+	public boolean isTotalmenteVacunado() {
+		return numDosisAplicadas == 2;
+	}
 
-    public int getNumVacunas() {
-        return numVacunas;
-    }
-
-    public void setNumVacunas(int numVacunas) throws PacienteYaVacunadoException, NumVacunasInvalido {
-        if (numVacunas < 0 && Condicionamientos.control()) {
-            throw new NumVacunasInvalido("El número de vacunas especificado es inválido.");
-
-        } else if (numVacunas > 2 && Condicionamientos.control()) {
-            throw new PacienteYaVacunadoException("El paciente ya estaba totalmente vacunado.");
-
-        } else {
-            this.numVacunas = numVacunas;
-        }
-    }
-
-    public int getNumCitasPendientes() {
-        int count = 0;
-        Date hoy = new Date();
-        for (int i = 0; i < cuposAsignados.size(); i++) {
-            if (hoy.before(cuposAsignados.get(i).getFechaYHoraInicio())) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public void asignarCupo(CupoSimple cupo) throws CupoCitasException {
-        if (cuposAsignados.contains(cupo) && Condicionamientos.control()) {
-            throw new CupoCitasException("Ya tenía este cupo asignado.");
-        } else {
-            cuposAsignados.add(cupo);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "PacienteDTO{" + super.toString() +
-                ", asignado=" + asignado +
-                ", cuposAsignados=" + cuposAsignados +
-                ", vacunado=" + vacunado +
-                ", numVacunas=" + numVacunas +
-                '}';
-    }
 }

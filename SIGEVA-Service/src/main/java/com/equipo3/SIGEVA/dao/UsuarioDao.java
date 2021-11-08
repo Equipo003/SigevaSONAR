@@ -1,11 +1,8 @@
 package com.equipo3.SIGEVA.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.equipo3.SIGEVA.model.CupoCitas;
-import com.equipo3.SIGEVA.model.Paciente;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
