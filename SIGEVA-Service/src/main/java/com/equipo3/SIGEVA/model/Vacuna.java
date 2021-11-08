@@ -55,4 +55,10 @@ public class Vacuna {
 		this.numDosis = numDosis;
 	}
 
+	@Override
+	public String toString() {
+		return "Vacuna [id=" + id + ", nombre=" + nombre + ", diasEntreDosis=" + diasEntreDosis + ", numDosis="
+				+ numDosis + "]";
+	}
+
 }

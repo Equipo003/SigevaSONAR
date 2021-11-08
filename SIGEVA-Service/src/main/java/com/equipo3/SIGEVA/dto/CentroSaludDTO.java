@@ -8,93 +8,107 @@ import java.util.UUID;
 
 public class CentroSaludDTO {
 	private String id;
-    private String nombreCentro;
-    private int numVacunasDisponibles;
-    private String direccion;
-    private VacunaDTO vacuna;
+	private String nombreCentro;
+	private int numVacunasDisponibles;
+	private String direccion;
+	private VacunaDTO vacuna;
 
-    public CentroSaludDTO() {
-        this.id = UUID.randomUUID().toString();
-        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
-    }
+	public CentroSaludDTO() {
+		this.id = UUID.randomUUID().toString();
+		this.vacuna = new VacunaDTO("Pfizer", 21, 2);
+	}
 
-    public CentroSaludDTO(String nombreCentro, String direccion, int numVacunasDisponibles) {
-        this.id = UUID.randomUUID().toString();
-        this.nombreCentro = nombreCentro;
-        this.numVacunasDisponibles = numVacunasDisponibles;
-        this.direccion = direccion;
-        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
-    }
+	public CentroSaludDTO(String nombreCentro, String direccion, int numVacunasDisponibles) {
+		this.id = UUID.randomUUID().toString();
+		this.nombreCentro = nombreCentro;
+		this.numVacunasDisponibles = numVacunasDisponibles;
+		this.direccion = direccion;
+		this.vacuna = new VacunaDTO("Pfizer", 21, 2);
+	}
 
-    public String getId() {
-        return id;
-    }
+	public CentroSaludDTO(String id, String nombreCentro, int numVacunasDisponibles, String direccion,
+			VacunaDTO vacuna) {
+		this.id = id;
+		this.nombreCentro = nombreCentro;
+		this.numVacunasDisponibles = numVacunasDisponibles;
+		this.direccion = direccion;
+		this.vacuna = vacuna;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public CentroSaludDTO(String nombreCentro, int numVacunasDisponibles, String direccion, VacunaDTO vacuna) {
+		super();
+		this.nombreCentro = nombreCentro;
+		this.numVacunasDisponibles = numVacunasDisponibles;
+		this.direccion = direccion;
+		this.vacuna = vacuna;
+	}
 
-    public String getNombreCentro() {
-        return nombreCentro;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setNombreCentro(String nombreCentro) {
-        this.nombreCentro = nombreCentro;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public int getNumVacunasDisponibles() {
-        return numVacunasDisponibles;
-    }
+	public String getNombreCentro() {
+		return nombreCentro;
+	}
 
-    public void setNumVacunasDisponibles(int numVacunasDisponibles) {
-        this.numVacunasDisponibles = numVacunasDisponibles;
-    }
+	public void setNombreCentro(String nombreCentro) {
+		this.nombreCentro = nombreCentro;
+	}
 
-    public String getDireccion() {
-        return direccion;
-    }
+	public int getNumVacunasDisponibles() {
+		return numVacunasDisponibles;
+	}
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+	public void setNumVacunasDisponibles(int numVacunasDisponibles) {
+		this.numVacunasDisponibles = numVacunasDisponibles;
+	}
 
-    public VacunaDTO getVacuna() {
-        return vacuna;
-    }
+	public String getDireccion() {
+		return direccion;
+	}
 
-    public void setVacuna(VacunaDTO vacunaDTO) {
-        this.vacuna = vacunaDTO;
-    }
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
 
-    public void incrementarNumVacunasDisponibles(int cantidad) throws NumVacunasInvalido {
-        if (cantidad >= 0)
-            this.setNumVacunasDisponibles(this.getNumVacunasDisponibles() + cantidad);
-        else
-            throw new NumVacunasInvalido("La cantidad a incrementar especificada es inválida.");
-    }
+	public VacunaDTO getVacuna() {
+		return vacuna;
+	}
 
-    public void decrementarNumVacunasDisponibles() throws CentroSinStock {
-        // No se restará stock hasta que no se confirme como vacunado por un sanitario.
-        try {
-            if (this.getNumVacunasDisponibles() == 0){
-                throw new CentroSinStock("El centro de salud " + this.getNombreCentro() + " no tiene stock de vacunas.");
-            }
-            this.setNumVacunasDisponibles(numVacunasDisponibles - 1);
-        } catch (CentroSinStock e) {
-            throw new CentroSinStock("El centro no dispone de stock.");
-        }
-    }
+	public void setVacuna(VacunaDTO vacunaDTO) {
+		this.vacuna = vacunaDTO;
+	}
 
-    @Override
-    public String toString() {
-        return "CentroSaludDTO{" +
-                "id='" + id + '\'' +
-                ", nombreCentro='" + nombreCentro + '\'' +
-                ", numVacunasDisponibles=" + numVacunasDisponibles +
-                ", direccion='" + direccion + '\'' +
-                ", vacuna=" + vacuna.toString() +
-                '}';
-    }
+	public void incrementarNumVacunasDisponibles(int cantidad) throws NumVacunasInvalido {
+		if (cantidad >= 0)
+			this.setNumVacunasDisponibles(this.getNumVacunasDisponibles() + cantidad);
+		else
+			throw new NumVacunasInvalido("La cantidad a incrementar especificada es inválida.");
+	}
+
+	public void decrementarNumVacunasDisponibles() throws CentroSinStock {
+		// No se restará stock hasta que no se confirme como vacunado por un sanitario.
+		try {
+			if (this.getNumVacunasDisponibles() == 0) {
+				throw new CentroSinStock(
+						"El centro de salud " + this.getNombreCentro() + " no tiene stock de vacunas.");
+			}
+			this.setNumVacunasDisponibles(numVacunasDisponibles - 1);
+		} catch (CentroSinStock e) {
+			throw new CentroSinStock("El centro no dispone de stock.");
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "CentroSaludDTO{" + "id='" + id + '\'' + ", nombreCentro='" + nombreCentro + '\''
+				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", direccion='" + direccion + '\'' + ", vacuna="
+				+ vacuna.toString() + '}';
+	}
 
 	@Override
 	public int hashCode() {
@@ -114,5 +128,5 @@ public class CentroSaludDTO {
 				&& Objects.equals(nombreCentro, other.nombreCentro)
 				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
 	}
-    
+
 }

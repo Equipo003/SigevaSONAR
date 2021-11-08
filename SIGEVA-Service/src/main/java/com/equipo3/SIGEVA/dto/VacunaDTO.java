@@ -19,8 +19,15 @@ public class VacunaDTO {
         this.diasEntreDosis = diasEntreDosis;
         this.numDosis = numDosis;
     }
+    
+    public VacunaDTO(String id, String nombre, int diasEntreDosis, int numDosis) {
+		this.id = id;
+		this.nombre = nombre;
+		this.diasEntreDosis = diasEntreDosis;
+		this.numDosis = numDosis;
+	}
 
-    public String getId() {
+	public String getId() {
         return id;
     }
 
