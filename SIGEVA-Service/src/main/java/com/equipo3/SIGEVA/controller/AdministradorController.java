@@ -279,7 +279,8 @@ public class AdministradorController {
 
 	}*/
 
-	public UsuarioDTO getUsuarioById(String idUsuario) {
+	@GetMapping("/getUsuarioById")
+	public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
 		try {
 			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {

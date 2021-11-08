@@ -20,6 +20,7 @@ import { UsuarioComponent } from './usuario/usuario.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 import { CentroSaludComponent } from './centro-salud/centro-salud.component';
 import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
+import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-sa
     UsuarioComponent,
     SolicitarCitaComponent,
     CentroSaludComponent,
-    CentrosSaludSistemaComponent
+    CentrosSaludSistemaComponent,
+    EditarUsuarioComponent
   ],
   imports: [
     BrowserModule,

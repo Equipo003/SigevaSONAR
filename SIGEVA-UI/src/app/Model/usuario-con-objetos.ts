@@ -12,6 +12,7 @@ export interface UsuarioConObjetos {
   apellidos:string;
   fechaNacimiento:string;
   imagen:string;
+  idUsuario: string | undefined;
 }
 
 export class UsuarioConObjetos {
@@ -25,10 +26,10 @@ export class UsuarioConObjetos {
   apellidos:string;
   fechaNacimiento:string;
   imagen:string;
-  id: string | undefined;
+  idUsuario: string | undefined;
 
   constructor(rol: Rol, centroSalud: CentroSalud, username: string, correo: string, hashPassword:string, dni:string,
-              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string, id?: string){
+              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string, idUsuario?: string){
 
     this.rol = rol;
     this.centroSalud = centroSalud;
@@ -40,7 +41,7 @@ export class UsuarioConObjetos {
     this.apellidos = apellidos;
     this.fechaNacimiento = fechaNacimiento;
     this.imagen = imagen;
-    this.id = id;
+    this.idUsuario = String(idUsuario);
   }
 
 }

@@ -16,5 +16,4 @@ export class UsuarioComponent {
       0), "", "", "", "", "", "", "",
       "");
 	}
-
 }
