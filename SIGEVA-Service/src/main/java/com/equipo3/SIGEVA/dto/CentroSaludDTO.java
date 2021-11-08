@@ -1,8 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.controller.Condicionamientos;
-import com.equipo3.SIGEVA.model.Vacuna;
-
 import java.util.UUID;
 
 public class CentroSaludDTO {
@@ -10,11 +7,19 @@ public class CentroSaludDTO {
     private String nombreCentro;
     private int numVacunasDisponibles;
     private String direccion;
-    private Vacuna vacuna;
+    private VacunaDTO vacuna;
 
     public CentroSaludDTO() {
         this.id = UUID.randomUUID().toString();
-        this.vacuna = new Vacuna("Pfizer", Condicionamientos.tiempoEntreDosis(), 2);
+        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
+    }
+
+    public CentroSaludDTO(String nombreCentro, String direccion, int numVacunasDisponibles) {
+        this.id = UUID.randomUUID().toString();
+        this.nombreCentro = nombreCentro;
+        this.numVacunasDisponibles = numVacunasDisponibles;
+        this.direccion = direccion;
+        this.vacuna = new VacunaDTO("Pfizer", 21, 2);
     }
 
     public String getId() {
@@ -49,12 +54,12 @@ public class CentroSaludDTO {
         this.direccion = direccion;
     }
 
-    public Vacuna getVacuna() {
+    public VacunaDTO getVacuna() {
         return vacuna;
     }
 
-    public void setVacuna(Vacuna vacuna) {
-        this.vacuna = vacuna;
+    public void setVacuna(VacunaDTO vacunaDTO) {
+        this.vacuna = vacunaDTO;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class CentroSaludDTO {
                 ", nombreCentro='" + nombreCentro + '\'' +
                 ", numVacunasDisponibles=" + numVacunasDisponibles +
                 ", direccion='" + direccion + '\'' +
-                ", vacuna=" + vacuna +
+                ", vacuna=" + vacuna.toString() +
                 '}';
     }
 }

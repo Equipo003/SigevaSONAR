@@ -8,8 +8,8 @@ import java.util.UUID;
 
 public class UsuarioDTO {
     private String idUsuario;
-    private Rol rol;
-    private CentroSalud centroSalud;
+    private RolDTO rolDTO;
+    private CentroSaludDTO centroSaludDTO;
     private String username;
     private String correo;
     private String hashPassword;
@@ -31,20 +31,20 @@ public class UsuarioDTO {
         this.idUsuario = idUsuario;
     }
 
-    public Rol getRol() {
-        return rol;
+    public RolDTO getRol() {
+        return rolDTO;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRol(RolDTO rolDTO) {
+        this.rolDTO = rolDTO;
     }
 
-    public CentroSalud getCentroSalud() {
-        return centroSalud;
+    public CentroSaludDTO getCentroSalud() {
+        return centroSaludDTO;
     }
 
-    public void setCentroSalud(CentroSalud centroSalud) {
-        this.centroSalud = centroSalud;
+    public void setCentroSalud(CentroSaludDTO centroSaludDTO) {
+        this.centroSaludDTO = centroSaludDTO;
     }
 
     public String getUsername() {
@@ -115,8 +115,8 @@ public class UsuarioDTO {
     public String toString() {
         return "UsuarioDTO{" +
                 "idUsuario='" + idUsuario + '\'' +
-                ", rol=" + rol +
-                ", centroSalud=" + centroSalud +
+                ", rol=" + rolDTO.toString() +
+                ", centroSalud=" + centroSaludDTO +
                 ", username='" + username + '\'' +
                 ", correo='" + correo + '\'' +
                 ", hashPassword='" + hashPassword + '\'' +

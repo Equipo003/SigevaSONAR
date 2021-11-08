@@ -1,9 +1,17 @@
 package com.equipo3.SIGEVA.dto;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 import com.equipo3.SIGEVA.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WrapperDTOtoModel {
+
+    @Autowired
+    private AdministradorController administradorController;
 
     public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO){
         Administrador administrador = new Administrador();
@@ -41,7 +49,7 @@ public class WrapperDTOtoModel {
         return sanitario;
     }
 
-    public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO){
+    public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) throws PacienteYaVacunadoException, NumVacunasInvalido {
         Paciente paciente = new Paciente();
 
         paciente.setIdUsuario(pacienteDTO.getIdUsuario());
@@ -56,25 +64,55 @@ public class WrapperDTOtoModel {
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
         paciente.setImagen(pacienteDTO.getImagen());
 
+        paciente.setAsignado(pacienteDTO.isAsignado());
+        paciente.setCuposAsignados(pacienteDTO.getCuposAsignados());
+        paciente.setVacunado(pacienteDTO.isVacunado());
+        paciente.setNumVacunas(pacienteDTO.getNumVacunas());
+
         return paciente;
     }
 
-    public static CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
+    public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
         CentroSalud centroSalud = new CentroSalud();
         centroSalud.setId(centroSaludDTO.getId());
         centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
         centroSalud.setDireccion(centroSaludDTO.getDireccion());
         centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
-        centroSalud.setVacuna(centroSaludDTO.getVacuna());
+        centroSalud.setVacuna(administradorController.getVacunaByNombre("Pfizer").getId());
 
         return centroSalud;
     }
 
+    public static ConfiguracionCupos configuracionCuposDTOtoConfiguracionCupos(ConfiguracionCuposDTO configuracionCuposDTO){
+        ConfiguracionCupos configuracionCupos = new ConfiguracionCupos();
+
+        configuracionCupos.setId(configuracionCuposDTO.getId());
+        configuracionCupos.setDuracionMinutos(configuracionCuposDTO.getDuracionMinutos());
+        configuracionCupos.setNumeroPacientes(configuracionCuposDTO.getNumeroPacientes());
+        configuracionCupos.setDuracionJornadaHoras(configuracionCuposDTO.getDuracionJornadaHoras());
+        configuracionCupos.setDuracionJornadaMinutos(configuracionCuposDTO.getDuracionJornadaMinutos());
+        configuracionCupos.setFechaInicio(configuracionCuposDTO.getFechaInicio());
+
+        return configuracionCupos;
+    }
+
     public static Rol rolDTOToRol(RolDTO rolDTO){
         Rol rol = new Rol();
+
         rol.setId(rolDTO.getId());
         rol.setNombre(rolDTO.getNombre());
 
         return rol;
+    }
+
+    public static Vacuna vacunaDTOToVacuna(VacunaDTO vacunaDTO){
+        Vacuna vacuna = new Vacuna();
+
+        vacuna.setId(vacunaDTO.getId());
+        vacuna.setNombre(vacunaDTO.getNombre());
+        vacuna.setDiasEntreDosis(vacunaDTO.getDiasEntreDosis());
+        vacuna.setNumDosis(vacunaDTO.getNumDosis());
+
+        return vacuna;
     }
 }
