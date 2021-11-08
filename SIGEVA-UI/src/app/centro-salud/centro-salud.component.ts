@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { CentroSalud } from '../Model/centro-salud';
 
 @Component({
   selector: 'app-centro-salud',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./centro-salud.component.css']
 })
 export class CentroSaludComponent implements OnInit {
+  @Input() cs: CentroSalud;
 
-  constructor() { }
+  constructor() {
+	this.cs = new CentroSalud("", "", 0);
+  }
 
   ngOnInit(): void {
+	
   }
 
 }

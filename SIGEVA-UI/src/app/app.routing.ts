@@ -9,6 +9,7 @@ import {IndicarDosisVacunasComponent} from "./indicar-dosis-vacunas/indicar-dosi
 import {ContenedorFijarSanitariosComponent} from "./contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component";
 import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
+import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
 
 const  appRoutes: Routes = [
   {path: '', component :HomeComponent},
@@ -19,7 +20,8 @@ const  appRoutes: Routes = [
   {path: 'indicarDosisVacunas', component: IndicarDosisVacunasComponent},
   {path: 'fijarPersonal', component: ContenedorFijarSanitariosComponent},
   {path: 'usuariosSistema', component: UsuariosSistemaComponent},
-  {path: 'solicitarCita', component: SolicitarCitaComponent}
+  {path: 'solicitarCita', component: SolicitarCitaComponent},
+  {path: 'centrosSalud', component: CentrosSaludSistemaComponent}
 
 
 ]

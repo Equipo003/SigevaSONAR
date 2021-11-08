@@ -1,1 +1,8 @@
-<p>centros-salud-sistema works!</p>
+<div class="seccion contenedor">
+  <h1 class="centrar-texto">Centros de salud</h1>
+  <div class="contenedor-items">
+    <app-centro-salud *ngFor="let centroS of centrosSalud"
+    [cs] = centroS
+    ></app-centro-salud>
+  </div>
+</div>

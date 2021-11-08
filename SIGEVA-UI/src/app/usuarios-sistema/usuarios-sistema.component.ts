@@ -14,8 +14,8 @@ import { UsuarioConObjetos } from "../Model/Usuario-con-objetos";
 export class UsuariosSistemaComponent implements OnInit {
 	usuarios: UsuarioConObjetos[];
 	roles: Rol[];
-  rolMostrado: string;
-  rolSeleccionado: string;
+  	rolMostrado: string;
+  	rolSeleccionado: string;
 
 	constructor(private json: JsonService) {
 		this.usuarios = [];
