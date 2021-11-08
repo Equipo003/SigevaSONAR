@@ -32,6 +32,7 @@ import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 
 @RestController
+@CrossOrigin
 @RequestMapping("cupo")
 public class CupoController {
 
@@ -48,7 +49,6 @@ public class CupoController {
 	CentroSaludDao centroSaludDao;
 
 	@SuppressWarnings("deprecation")
-	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/buscarParDeCuposLibresAPartirDeHoy")
 	public List<CupoCitas> buscarParDeCuposLibresAPartirDeHoy(@RequestParam String username) {
 		System.out.println(username);
