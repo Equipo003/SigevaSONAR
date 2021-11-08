@@ -18,6 +18,8 @@ import { SanitarioFijarCentroComponent } from './sanitario-fijar-centro/sanitari
 import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
 import { UsuarioComponent } from './usuario/usuario.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
+import { CentroSaludComponent } from './centro-salud/centro-salud.component';
+import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
 
 
 @NgModule({
@@ -32,7 +34,9 @@ import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.componen
     SanitarioFijarCentroComponent,
     UsuariosSistemaComponent,
     UsuarioComponent,
-    SolicitarCitaComponent
+    SolicitarCitaComponent,
+    CentroSaludComponent,
+    CentrosSaludSistemaComponent
   ],
   imports: [
     BrowserModule,
