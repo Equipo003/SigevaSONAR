@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Cita;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
@@ -103,4 +105,23 @@ public class WrapperDTOtoModel {
 		vacuna.setNumDosis(vacunaDTO.getNumDosis());
 		return vacuna;
 	}
+
+	public static Cupo cupoDTOToCupo(CupoDTO cupoDTO) {
+		Cupo cupo = new Cupo();
+		cupo.setUuidCupo(cupoDTO.getUuidCupo());
+		cupo.setUuidCentroSalud(cupoDTO.getCentroSalud().getId());
+		cupo.setFechaYHoraInicio(cupoDTO.getFechaYHoraInicio());
+		cupo.setTamanoActual(cupoDTO.getTamanoActual());
+		return cupo;
+	}
+
+	public static Cita citaDTOToCita(CitaDTO citaDTO) {
+		Cita cita = new Cita();
+		cita.setUuidCita(citaDTO.getUuidCita());
+		cita.setUuidCupo(citaDTO.getCupo().getUuidCupo());
+		cita.setUuidPaciente(citaDTO.getPaciente().getIdUsuario());
+		cita.setDosis(citaDTO.getDosis());
+		return cita;
+	}
+
 }

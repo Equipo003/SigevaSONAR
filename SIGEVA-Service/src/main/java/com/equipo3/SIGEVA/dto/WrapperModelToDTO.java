@@ -2,197 +2,418 @@ package com.equipo3.SIGEVA.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.CitaDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dao.CupoDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.dao.VacunaDao;
+import com.equipo3.SIGEVA.exception.IdentificadorException;
+import com.equipo3.SIGEVA.model.Administrador;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Cita;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
 
 @Component
 public class WrapperModelToDTO {
-	
-    @Autowired
-    private AdministradorController administradorController;
 
-    public List<CentroSaludDTO> allCentroSaludToCentroSaludDTO(List<CentroSalud> centroSaludList){
-        List<CentroSaludDTO> centroSaludDTOList = new ArrayList<>();
+	@Autowired
+	ConfiguracionCuposDao configuracionCuposDao;
 
-        for (CentroSalud centroSalud: centroSaludList) {
-            CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
-            centroSaludDTO.setId(centroSalud.getId());
-            centroSaludDTO.setNombreCentro(centroSalud.getNombreCentro());
-            centroSaludDTO.setDireccion(centroSalud.getDireccion());
-            centroSaludDTO.setNumVacunasDisponibles(centroSalud.getNumVacunasDisponibles());
-            centroSaludDTO.setVacuna(administradorController.getVacunaById(centroSalud.getVacuna()));
-            centroSaludDTOList.add(centroSaludDTO);
-        }
-        return centroSaludDTOList;
-    }
+	public ConfiguracionCuposDTO getConfiguracionCuposDTOfromUuid(String uuidConfiguracionCupos)
+			throws IdentificadorException {
+		Optional<ConfiguracionCupos> optConfiguracionCupos = configuracionCuposDao.findById(uuidConfiguracionCupos);
 
-    public CentroSaludDTO centroSaludToCentroSaludDTO(CentroSalud centroSalud){
-            CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
-            centroSaludDTO.setId(centroSalud.getId());
-            centroSaludDTO.setNombreCentro(centroSalud.getNombreCentro());
-            centroSaludDTO.setDireccion(centroSalud.getDireccion());
-            centroSaludDTO.setNumVacunasDisponibles(centroSalud.getNumVacunasDisponibles());
-            centroSaludDTO.setVacuna(administradorController.getVacunaById(centroSalud.getVacuna()));
+		if (optConfiguracionCupos.isPresent()) {
+			return configuracionCuposToConfiguracionCuposDTO(optConfiguracionCupos.get());
+		} else {
+			throw new IdentificadorException(
+					"Identificador ConfiguracionCupos " + uuidConfiguracionCupos + " no encontrado.");
+		}
+	}
 
-        return centroSaludDTO;
-    }
+	public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(ConfiguracionCupos configuracionCupos) {
+		ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
 
-    public List<RolDTO> allRolToRolDTO(List<Rol> rolList){
-        List<RolDTO> rolDTOList = new ArrayList<>();
+		configuracionCuposDTO.setId(configuracionCupos.getId());
+		configuracionCuposDTO.setDuracionMinutos(configuracionCupos.getDuracionMinutos());
+		configuracionCuposDTO.setDuracionJornadaHoras(configuracionCupos.getDuracionJornadaHoras());
+		configuracionCuposDTO.setDuracionJornadaMinutos(configuracionCupos.getDuracionJornadaMinutos());
+		configuracionCuposDTO.setFechaInicio(configuracionCupos.getFechaInicio());
+		configuracionCuposDTO.setNumeroPacientes(configuracionCupos.getNumeroPacientes());
 
-        for (Rol rol: rolList) {
-            RolDTO rolDTO = new RolDTO();
-            rolDTO.setId(rol.getId());
-            rolDTO.setNombre(rol.getNombre());
-            rolDTOList.add(rolDTO);
-        }
-        return rolDTOList;
-    }
+		return configuracionCuposDTO;
+	}
 
-    public RolDTO rolToRolDTO(Rol rol){
-        RolDTO rolDTO = new RolDTO();
-        rolDTO.setId(rol.getId());
-        rolDTO.setNombre(rol.getNombre());
+	public List<ConfiguracionCuposDTO> allConfiguracionCuposToConfiguracionCuposDTO(List<ConfiguracionCupos> lista) {
+		List<ConfiguracionCuposDTO> listaDTO = new ArrayList<>();
+		for (ConfiguracionCupos configuracionCupos : lista) {
+			listaDTO.add(configuracionCuposToConfiguracionCuposDTO(configuracionCupos));
+		}
+		return listaDTO;
+	}
 
-        return rolDTO;
-    }
+	// --------------------------------------------------
 
-    public List<UsuarioDTO> listUsuarioToUsuarioDTO(List<Usuario> usuarioList){
-        List<UsuarioDTO> usuarioDTOList = new ArrayList<>();
+	@Autowired
+	RolDao rolDao;
 
-        for(Usuario usuario: usuarioList) {
-            UsuarioDTO usuarioDTO = new UsuarioDTO();
-            usuarioDTO.setIdUsuario(usuario.getIdUsuario());
-            usuarioDTO.setRol(administradorController.getRolById(usuario.getRol()));
-            usuarioDTO.setCentroSalud(administradorController.getCentroById(usuario.getCentroSalud()));
-            usuarioDTO.setUsername(usuario.getUsername());
-            usuarioDTO.setCorreo(usuario.getCorreo());
-            usuarioDTO.setHashPassword(usuario.getHashPassword());
-            usuarioDTO.setDni(usuario.getDni());
-            usuarioDTO.setNombre(usuario.getNombre());
-            usuarioDTO.setApellidos(usuario.getApellidos());
-            usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
-            usuarioDTO.setImagen(usuario.getImagen());
+	public RolDTO getRolDTOfromUuid(String uuidRol) throws IdentificadorException {
+		Optional<Rol> optRol = rolDao.findById(uuidRol);
 
-            usuarioDTOList.add(usuarioDTO);
-        }
-        return usuarioDTOList;
-    }
+		if (optRol.isPresent()) {
+			return rolToRolDTO(optRol.get());
+		} else {
+			throw new IdentificadorException("Identificador Rol " + uuidRol + " no encontrado.");
+		}
+	}
 
-    public List<ConfiguracionCuposDTO> configuracionCuposToConfiguracionCuposDTO(List<ConfiguracionCupos> configuracionCuposList){
+	public RolDTO rolToRolDTO(Rol rol) {
+		RolDTO rolDTO = new RolDTO();
 
-        List<ConfiguracionCuposDTO> configuracionCuposDTOList = new ArrayList<>();
+		rolDTO.setId(rol.getId());
+		rolDTO.setNombre(rol.getNombre());
 
-        for (ConfiguracionCupos configuracionCupos: configuracionCuposList) {
-            ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
+		return rolDTO;
+	}
 
-            configuracionCuposDTO.setId(configuracionCupos.getId());
-            configuracionCuposDTO.setDuracionMinutos(configuracionCupos.getDuracionMinutos());
-            configuracionCuposDTO.setDuracionJornadaHoras(configuracionCupos.getDuracionJornadaHoras());
-            configuracionCuposDTO.setDuracionJornadaMinutos(configuracionCupos.getDuracionJornadaMinutos());
-            configuracionCuposDTO.setFechaInicio(configuracionCupos.getFechaInicio());
-            configuracionCuposDTO.setNumeroPacientes(configuracionCupos.getNumeroPacientes());
+	public List<RolDTO> allRolToRolDTO(List<Rol> lista) {
+		List<RolDTO> listaDTO = new ArrayList<>();
+		for (Rol rol : lista) {
+			listaDTO.add(rolToRolDTO(rol));
+		}
+		return listaDTO;
+	}
 
-            configuracionCuposDTOList.add(configuracionCuposDTO);
-        }
+	// --------------------------------------------------
 
-        return configuracionCuposDTOList;
-    }
+	@Autowired
+	VacunaDao vacunaDao;
 
-    public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario){
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
+	public VacunaDTO getVacunaDTOfromUuid(String uuidVacuna) throws IdentificadorException {
+		Optional<Vacuna> optVacuna = vacunaDao.findById(uuidVacuna);
 
-        usuarioDTO.setIdUsuario(usuario.getIdUsuario());
-        usuarioDTO.setRol(administradorController.getRolById(usuario.getRol()));
-        usuarioDTO.setCentroSalud(administradorController.getCentroById(usuario.getCentroSalud()));
-        usuarioDTO.setUsername(usuario.getUsername());
-        usuarioDTO.setCorreo(usuario.getCorreo());
-        usuarioDTO.setHashPassword(usuario.getHashPassword());
-        usuarioDTO.setDni(usuario.getDni());
-        usuarioDTO.setNombre(usuario.getNombre());
-        usuarioDTO.setApellidos(usuario.getApellidos());
-        usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
-        usuarioDTO.setImagen(usuario.getImagen());
+		if (optVacuna.isPresent()) {
+			return vacunaToVacunaDTO(optVacuna.get());
+		} else {
+			throw new IdentificadorException("Identificador Vacuna " + uuidVacuna + " no encontrado.");
+		}
+	}
 
-        return usuarioDTO;
-    }
+	public VacunaDTO vacunaToVacunaDTO(Vacuna vacuna) {
+		VacunaDTO vacunaDTO = new VacunaDTO();
 
-    public List<PacienteDTO> pacientesJornadaToPacientesDTO (List<Paciente> pacientesJornadas){
-        return new ArrayList<PacienteDTO>();
-    }
+		vacunaDTO.setId(vacuna.getId());
+		vacunaDTO.setNombre(vacuna.getNombre());
+		vacunaDTO.setDiasEntreDosis(vacuna.getDiasEntreDosis());
+		vacunaDTO.setNumDosis(vacuna.getNumDosis());
 
-    public List<PacienteDTO> listPacienteToPacienteDTO(List<Usuario> pacienteList) throws PacienteYaVacunadoException, NumVacunasInvalido {
+		return vacunaDTO;
+	}
 
-        List<PacienteDTO> pacienteDTOList = new ArrayList<>();
+	public List<VacunaDTO> allVacunaToVacunaDTO(List<Vacuna> lista) {
+		List<VacunaDTO> listaDTO = new ArrayList<>();
+		for (Vacuna vacuna : lista) {
+			listaDTO.add(vacunaToVacunaDTO(vacuna));
+		}
+		return listaDTO;
+	}
 
-        for (Usuario paciente: pacienteList) {
+	// --------------------------------------------------
 
-            PacienteDTO pacienteDTO = new PacienteDTO();
+	@Autowired
+	CentroSaludDao centroSaludDao;
 
-            Paciente pacienteCast = (Paciente) paciente;
+	public CentroSaludDTO getCentroSaludDTOfromUuid(String uuidCentroSalud) throws IdentificadorException {
+		Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(uuidCentroSalud);
 
-            pacienteDTO.setIdUsuario(pacienteCast.getIdUsuario());
-            pacienteDTO.setRol(administradorController.getRolById(pacienteCast.getRol()));
-            pacienteDTO.setCentroSalud(administradorController.getCentroById(pacienteCast.getCentroSalud()));
-            pacienteDTO.setUsername(pacienteCast.getUsername());
-            pacienteDTO.setCorreo(pacienteCast.getCorreo());
-            pacienteDTO.setHashPassword(pacienteCast.getHashPassword());
-            pacienteDTO.setDni(pacienteCast.getDni());
-            pacienteDTO.setNombre(pacienteCast.getNombre());
-            pacienteDTO.setApellidos(pacienteCast.getApellidos());
-            pacienteDTO.setFechaNacimiento(pacienteCast.getFechaNacimiento());
-            pacienteDTO.setImagen(pacienteCast.getImagen());
+		if (optCentroSalud.isPresent()) {
+			CentroSalud centroSalud = optCentroSalud.get();
 
-            pacienteDTO.setNumDosisAplicadas(pacienteCast.getNumDosisAplicadas());
+			CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
 
-            pacienteDTOList.add(pacienteDTO);
-        }
+			centroSaludDTO.setId(centroSalud.getId());
+			centroSaludDTO.setNombreCentro(centroSalud.getNombreCentro());
+			centroSaludDTO.setNumVacunasDisponibles(centroSalud.getNumVacunasDisponibles());
+			centroSaludDTO.setDireccion(centroSalud.getDireccion());
+			centroSaludDTO.setVacuna(getVacunaDTOfromUuid(centroSalud.getVacuna()));
 
-        return pacienteDTOList;
-    }
+			return centroSaludDTO;
 
-    public PacienteDTO pacienteToPacienteDTO(Usuario paciente) throws PacienteYaVacunadoException, NumVacunasInvalido {
+		} else {
+			throw new IdentificadorException("Identificador Centro Salud " + uuidCentroSalud + " no encontrado.");
+		}
+	}
 
-            PacienteDTO pacienteDTO = new PacienteDTO();
+	public CentroSaludDTO centroSaludToCentroSaludDTO(CentroSalud centroSalud) {
+		try {
+			return getCentroSaludDTOfromUuid(centroSalud.getId());
+		} catch (IdentificadorException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-            Paciente pacienteCast = (Paciente) paciente;
+	public List<CentroSaludDTO> allCentroSaludToCentroSaludDTO(List<CentroSalud> lista) {
+		List<CentroSaludDTO> listaDTO = new ArrayList<>();
+		for (CentroSalud centroSalud : lista) {
+			listaDTO.add(centroSaludToCentroSaludDTO(centroSalud));
+		}
+		return listaDTO;
+	}
 
-            pacienteDTO.setIdUsuario(pacienteCast.getIdUsuario());
-            pacienteDTO.setRol(administradorController.getRolById(pacienteCast.getRol()));
-            pacienteDTO.setCentroSalud(administradorController.getCentroById(pacienteCast.getCentroSalud()));
-            pacienteDTO.setUsername(pacienteCast.getUsername());
-            pacienteDTO.setCorreo(pacienteCast.getCorreo());
-            pacienteDTO.setHashPassword(pacienteCast.getHashPassword());
-            pacienteDTO.setDni(pacienteCast.getDni());
-            pacienteDTO.setNombre(pacienteCast.getNombre());
-            pacienteDTO.setApellidos(pacienteCast.getApellidos());
-            pacienteDTO.setFechaNacimiento(pacienteCast.getFechaNacimiento());
-            pacienteDTO.setImagen(pacienteCast.getImagen());
+	// --------------------------------------------------
 
-            pacienteDTO.setNumDosisAplicadas(pacienteCast.getNumDosisAplicadas());
+	@Autowired
+	CupoDao cupoDao;
 
-        return pacienteDTO;
-    }
+	public CupoDTO getCupoDTOfromUuid(String uuidCupo) throws IdentificadorException {
+		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
 
-    public VacunaDTO vacunaToVacunaDTO(Vacuna vacuna){
-        VacunaDTO vacunaDTO = new VacunaDTO();
+		if (optCupo.isPresent()) {
+			Cupo cupo = optCupo.get();
 
-        vacunaDTO.setId(vacuna.getId());
-        vacunaDTO.setNombre(vacuna.getNombre());
-        vacunaDTO.setDiasEntreDosis(vacuna.getDiasEntreDosis());
-        vacunaDTO.setNumDosis(vacuna.getNumDosis());
+			CupoDTO cupoDTO = new CupoDTO();
 
-        return vacunaDTO;
-    }
+			cupoDTO.setUuidCupo(cupo.getUuidCupo());
+			cupoDTO.setCentroSalud(getCentroSaludDTOfromUuid(cupo.getUuidCentroSalud()));
+			cupoDTO.setFechaYHoraInicio(cupo.getFechaYHoraInicio());
+			cupoDTO.setTamanoActual(cupo.getTamanoActual());
+
+			return cupoDTO;
+
+		} else {
+			throw new IdentificadorException("Identificador Cupo " + uuidCupo + " no encontrado.");
+		}
+
+	}
+
+	public CupoDTO cupoToCupoDTO(Cupo cupo) {
+		try {
+			return getCupoDTOfromUuid(cupo.getUuidCupo());
+		} catch (IdentificadorException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<CupoDTO> allCupoToCupoDTO(List<Cupo> lista) {
+		List<CupoDTO> listaDTO = new ArrayList<>();
+		for (Cupo cupo : lista) {
+			listaDTO.add(cupoToCupoDTO(cupo));
+		}
+		return listaDTO;
+	}
+
+	// --------------------------------------------------
+
+	@Autowired
+	UsuarioDao usuarioDao;
+
+	public UsuarioDTO getUsuarioDTOfromUuid(String uuidUsuario) throws IdentificadorException { // ¡Parsear después!
+		Optional<Usuario> optUsuario = usuarioDao.findById(uuidUsuario);
+
+		if (optUsuario.isPresent()) {
+			Usuario usuario = optUsuario.get();
+			RolDTO rol = getRolDTOfromUuid(usuario.getRol());
+
+			switch (rol.getNombre()) { // Patrón Factory.
+
+			case "Administrador":
+
+				Administrador administrador = (Administrador) usuario;
+
+				AdministradorDTO administradorDTO = new AdministradorDTO();
+
+				administradorDTO.setIdUsuario(administrador.getIdUsuario());
+				administradorDTO.setRol(getRolDTOfromUuid(administrador.getRol()));
+				administradorDTO.setCentroSalud(getCentroSaludDTOfromUuid(administrador.getCentroSalud()));
+				administradorDTO.setUsername(administrador.getUsername());
+				administradorDTO.setCorreo(administrador.getCorreo());
+				administradorDTO.setHashPassword(administrador.getHashPassword());
+				administradorDTO.setDni(administrador.getDni());
+				administradorDTO.setNombre(administrador.getNombre());
+				administradorDTO.setApellidos(administrador.getApellidos());
+				administradorDTO.setFechaNacimiento(administrador.getFechaNacimiento());
+				administradorDTO.setImagen(administrador.getImagen());
+
+				return administradorDTO;
+
+			case "Sanitario":
+
+				Sanitario sanitario = (Sanitario) usuario;
+
+				SanitarioDTO sanitarioDTO = new SanitarioDTO();
+
+				sanitarioDTO.setIdUsuario(sanitario.getIdUsuario());
+				sanitarioDTO.setRol(getRolDTOfromUuid(sanitario.getRol()));
+				sanitarioDTO.setCentroSalud(getCentroSaludDTOfromUuid(sanitario.getCentroSalud()));
+				sanitarioDTO.setUsername(sanitario.getUsername());
+				sanitarioDTO.setCorreo(sanitario.getCorreo());
+				sanitarioDTO.setHashPassword(sanitario.getHashPassword());
+				sanitarioDTO.setDni(sanitario.getDni());
+				sanitarioDTO.setNombre(sanitario.getNombre());
+				sanitarioDTO.setApellidos(sanitario.getApellidos());
+				sanitarioDTO.setFechaNacimiento(sanitario.getFechaNacimiento());
+				sanitarioDTO.setImagen(sanitario.getImagen());
+
+				return sanitarioDTO;
+
+			case "Paciente":
+
+				Paciente paciente = (Paciente) usuario;
+
+				PacienteDTO pacienteDTO = new PacienteDTO();
+
+				pacienteDTO.setIdUsuario(paciente.getIdUsuario());
+				pacienteDTO.setRol(getRolDTOfromUuid(paciente.getRol()));
+				pacienteDTO.setCentroSalud(getCentroSaludDTOfromUuid(paciente.getCentroSalud()));
+				pacienteDTO.setUsername(paciente.getUsername());
+				pacienteDTO.setCorreo(paciente.getCorreo());
+				pacienteDTO.setHashPassword(paciente.getHashPassword());
+				pacienteDTO.setDni(paciente.getDni());
+				pacienteDTO.setNombre(paciente.getNombre());
+				pacienteDTO.setApellidos(paciente.getApellidos());
+				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
+				pacienteDTO.setImagen(paciente.getImagen());
+
+				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
+
+				return pacienteDTO;
+			}
+
+			return null;
+
+		} else {
+			throw new IdentificadorException("Identificador Usuario " + uuidUsuario + " no encontrado.");
+		}
+	}
+
+	public UsuarioDTO usuarioToUsuarioDTO(Usuario usuario) {
+		try {
+			return getUsuarioDTOfromUuid(usuario.getIdUsuario());
+		} catch (IdentificadorException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<UsuarioDTO> allUsuarioToUsuarioDTO(List<Usuario> lista) {
+		List<UsuarioDTO> listaDTO = new ArrayList<>();
+		for (Usuario usuario : lista) {
+			listaDTO.add(usuarioToUsuarioDTO(usuario));
+		}
+		return listaDTO;
+	}
+
+	// ----------
+
+	public PacienteDTO getPacienteDTOfromUuid(String uuidPaciente) throws IdentificadorException {
+		Optional<Usuario> optUsuario = usuarioDao.findById(uuidPaciente);
+
+		if (optUsuario.isPresent()) {
+			Usuario usuario = optUsuario.get();
+			RolDTO rol = getRolDTOfromUuid(usuario.getRol());
+			if (rol.getNombre().equals("Paciente")) {
+
+				Paciente paciente = (Paciente) usuario;
+
+				PacienteDTO pacienteDTO = new PacienteDTO();
+
+				pacienteDTO.setIdUsuario(paciente.getIdUsuario());
+				pacienteDTO.setRol(getRolDTOfromUuid(paciente.getRol()));
+				pacienteDTO.setCentroSalud(getCentroSaludDTOfromUuid(paciente.getCentroSalud()));
+				pacienteDTO.setUsername(paciente.getUsername());
+				pacienteDTO.setCorreo(paciente.getCorreo());
+				pacienteDTO.setHashPassword(paciente.getHashPassword());
+				pacienteDTO.setDni(paciente.getDni());
+				pacienteDTO.setNombre(paciente.getNombre());
+				pacienteDTO.setApellidos(paciente.getApellidos());
+				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
+				pacienteDTO.setImagen(paciente.getImagen());
+
+				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
+
+				return pacienteDTO;
+
+			} else {
+				throw new IdentificadorException(
+						"El Usuario del UUID " + uuidPaciente + " no es Paciente, sino " + rol.getNombre() + ".");
+			}
+		} else {
+			throw new IdentificadorException("Identificador Paciente " + uuidPaciente + " no encontrado.");
+		}
+	}
+
+	public PacienteDTO pacienteToPacienteDTO(Usuario usuario) {
+		try {
+			return getPacienteDTOfromUuid(usuario.getIdUsuario());
+		} catch (IdentificadorException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<PacienteDTO> allPacienteToPacienteDTO(List<Usuario> lista) {
+		List<PacienteDTO> listaDTO = new ArrayList<>();
+		for (Usuario usuario : lista) {
+			listaDTO.add(pacienteToPacienteDTO(usuario));
+		}
+		return listaDTO;
+	}
+
+	// --------------------------------------------------
+
+	@Autowired
+	CitaDao citaDao;
+
+	public CitaDTO getCitaDTOfromUuid(String uuidCita) throws IdentificadorException {
+		Optional<Cita> optCita = citaDao.findById(uuidCita);
+
+		if (optCita.isPresent()) {
+			Cita cita = optCita.get();
+
+			CitaDTO citaDTO = new CitaDTO();
+
+			citaDTO.setUuidCita(cita.getUuidCita());
+			citaDTO.setCupo(getCupoDTOfromUuid(cita.getUuidCupo()));
+			citaDTO.setPaciente(getPacienteDTOfromUuid(cita.getUuidPaciente()));
+			citaDTO.setDosis(cita.getDosis());
+
+			return citaDTO;
+
+		} else {
+			throw new IdentificadorException("Identificador Cita " + uuidCita + " no encontrado.");
+		}
+	}
+
+	public CitaDTO citaToCitaDTO(Cita cita) {
+		try {
+			return getCitaDTOfromUuid(cita.getUuidCita());
+		} catch (IdentificadorException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<CitaDTO> allCitaToCitaDTO(List<Cita> lista) {
+		List<CitaDTO> listaDTO = new ArrayList<>();
+		for (Cita cita : lista) {
+			listaDTO.add(citaToCitaDTO(cita));
+		}
+		return listaDTO;
+	}
+
 }

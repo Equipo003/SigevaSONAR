@@ -27,7 +27,7 @@ public class PacienteDTO extends UsuarioDTO {
 
 	@Override
 	public String toString() {
-		return "PacienteDTO [" + super.toString() + " numDosisAplicadas=" + numDosisAplicadas + "]";
+		return "PacienteDTO [" + super.toString() + ", numDosisAplicadas=" + numDosisAplicadas + "]";
 	}
 
 	@Override

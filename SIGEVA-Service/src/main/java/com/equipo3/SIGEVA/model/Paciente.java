@@ -28,7 +28,7 @@ public class Paciente extends Usuario {
 
 	@Override
 	public String toString() {
-		return "Paciente [" + super.toString() + " numDosisAplicadas=" + numDosisAplicadas + "]";
+		return "Paciente [" + super.toString() + ", numDosisAplicadas=" + numDosisAplicadas + "]";
 	}
 
 }
