@@ -81,7 +81,6 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaAdministrador() {
 		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
-		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(centroSaludDTO);
 		administradorDTO.setCentroSalud((centroSaludDTO));
@@ -99,7 +98,6 @@ class CrearUsuariosTest {
 			String uuid = UUID.randomUUID().toString();
 			administradorDTO.setUsername(uuid);
 			administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
-			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 			administradorController.crearCentroSalud(centroSaludDTO);
 			administradorDTO.setCentroSalud((centroSaludDTO));
@@ -117,7 +115,6 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaSanitario() {
 		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(centroSaludDTO);
 		sanitarioDTO.setCentroSalud((centroSaludDTO));
@@ -136,7 +133,6 @@ class CrearUsuariosTest {
 			String uuid = UUID.randomUUID().toString();
 			sanitarioDTO.setUsername(uuid);
 			sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 			administradorController.crearCentroSalud(centroSaludDTO);
 			sanitarioDTO.setCentroSalud((centroSaludDTO));
@@ -153,7 +149,6 @@ class CrearUsuariosTest {
 	@Test
 	void insercionCorrectaPaciente() {
 		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(centroSaludDTO);
 		pacienteDTO.setCentroSalud((centroSaludDTO));
@@ -172,7 +167,6 @@ class CrearUsuariosTest {
 			String uuid = UUID.randomUUID().toString();
 			pacienteDTO.setUsername(uuid);
 			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 			administradorController.crearCentroSalud(centroSaludDTO);
 			pacienteDTO.setCentroSalud((centroSaludDTO));

@@ -95,6 +95,7 @@ public class AdministradorController {
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
+			centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
 			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
 			if (optCentroSalud.isPresent()) {
@@ -137,7 +138,6 @@ public class AdministradorController {
 	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			System.out.println("Dentro :" +rol);
 			if (rol.equals("Todos")) {
 				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
@@ -279,7 +279,8 @@ public class AdministradorController {
 
 	}*/
 
-	public UsuarioDTO getUsuarioById(String idUsuario) {
+	@GetMapping("/getUsuarioById")
+	public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
 		try {
 			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {

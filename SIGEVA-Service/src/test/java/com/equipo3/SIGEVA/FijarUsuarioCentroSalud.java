@@ -70,7 +70,6 @@ class FijarUsuarioCentroSalud {
 
 	@Test
 	void AsignarCentroSalud() {
-		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		administradorController.crearCentroSalud(centroSaludDTO);
 		sanitarioDTO.setCentroSalud((centroSaludDTO));
 
@@ -78,7 +77,6 @@ class FijarUsuarioCentroSalud {
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
-		newCentroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		administradorController.crearCentroSalud(newCentroSaludDTO);
 
 		administradorController.fijarPersonal(sanitarioDTO.getUsername(), newCentroSaludDTO.getId());

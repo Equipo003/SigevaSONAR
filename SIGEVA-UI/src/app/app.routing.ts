@@ -10,6 +10,7 @@ import {ContenedorFijarSanitariosComponent} from "./contenedor-fijar-sanitarios/
 import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.component';
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
+import {EditarUsuarioComponent} from "./editar-usuario/editar-usuario.component";
 
 const  appRoutes: Routes = [
   {path: '', component :HomeComponent},
@@ -21,7 +22,8 @@ const  appRoutes: Routes = [
   {path: 'fijarPersonal', component: ContenedorFijarSanitariosComponent},
   {path: 'usuariosSistema', component: UsuariosSistemaComponent},
   {path: 'solicitarCita', component: SolicitarCitaComponent},
-  {path: 'centrosSalud', component: CentrosSaludSistemaComponent}
+  {path: 'centrosSalud', component: CentrosSaludSistemaComponent},
+  {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent}
 
 
 ]
