@@ -29,7 +29,6 @@ public class TerstModificarVacunas {
 
     @Test
     public void modificarNumeroVacunas() {
-        centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
         centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
         administradorController.crearCentroSalud(centroSaludDTO);
 

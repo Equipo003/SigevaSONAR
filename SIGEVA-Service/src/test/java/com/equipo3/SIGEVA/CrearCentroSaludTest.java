@@ -33,16 +33,14 @@ class CrearCentroSaludTest {
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		centroSaludDTO.setDireccion("Calle falsa 123");
 		centroSaludDTO.setNumVacunasDisponibles((int)(Math.random()*1000));
-		System.out.println(centroSaludDTO.getNumVacunasDisponibles());
 	}
 
     @Test
 	void testCrearCentroSaludBien() {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
-		centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
 		administradorController.crearCentroSalud(centroSaludDTO);
 		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
-//		administradorController.eliminarCentro(centroSaludDTO.getId());
+		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}
     
     @Test
@@ -50,7 +48,6 @@ class CrearCentroSaludTest {
        	try {
 			String uuid = UUID.randomUUID().toString();
 			centroSaludDTO.setNombreCentro(uuid);
-			centroSaludDTO.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
        		administradorController.crearCentroSalud(centroSaludDTO);
 			administradorController.crearCentroSalud(centroSaludDTO);
 		   } catch (Exception e) {

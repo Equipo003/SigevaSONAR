@@ -75,7 +75,7 @@ public class WrapperDTOtoModel {
         centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
         centroSalud.setDireccion(centroSaludDTO.getDireccion());
         centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
-        centroSalud.setVacuna(administradorController.getVacunaByNombre("Pfizer").getId());
+        centroSalud.setVacuna(centroSaludDTO.getVacuna().getId());
 
         return centroSalud;
     }
