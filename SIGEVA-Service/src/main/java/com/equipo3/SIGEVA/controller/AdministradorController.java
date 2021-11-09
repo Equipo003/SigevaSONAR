@@ -3,6 +3,8 @@ package com.equipo3.SIGEVA.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.equipo3.SIGEVA.exception.IdentificadorException;
+import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,13 +36,6 @@ import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Sanitario;
-import com.equipo3.SIGEVA.model.Usuario;
-import com.equipo3.SIGEVA.model.Vacuna;
 
 @CrossOrigin
 @RestController
@@ -54,8 +49,6 @@ public class AdministradorController {
 	@Autowired
 	private CentroSaludDao centroSaludDao;
 	@Autowired
-	private CupoController cupoController;
-	@Autowired
 	private ConfiguracionCuposDao configuracionCuposDao;
 	@Autowired
 	private VacunaDao vacunaDao;
@@ -64,14 +57,14 @@ public class AdministradorController {
 	private WrapperModelToDTO wrapperModelToDTO;
 
 	@Autowired
-	private WrapperDTOtoModel wrapperDTOtoModel;
+	private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
-			Administrador administrador = this.wrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+			Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -87,7 +80,7 @@ public class AdministradorController {
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
-			Paciente paciente = this.wrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -103,10 +96,9 @@ public class AdministradorController {
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
-			Sanitario sanitario = this.wrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+			Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
 			if (optUsuario.isPresent()) {
-				System.out.println("Esta presente");
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
@@ -128,7 +120,7 @@ public class AdministradorController {
 			}
 
 			centroSaludDao.save(centroSalud);
-			// cupoController.prepararCuposCitas(centroSalud);
+			// cupoController.prepararCupos(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,7 +130,7 @@ public class AdministradorController {
 
 	public void crearRol(@RequestBody RolDTO rolDTO) {
 		try {
-			rolDao.save(wrapperDTOtoModel.rolDTOToRol(rolDTO));
+			rolDao.save(WrapperDTOtoModel.rolDTOToRol(rolDTO));
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -173,7 +165,11 @@ public class AdministradorController {
 
 	public PacienteDTO getPaciente(String id) {
 		try {
-			return wrapperModelToDTO.pacienteToPacienteDTO(administradorDao.findById(id).get());
+			Optional<Usuario> optPaciente = administradorDao.findById(id);
+			if (optPaciente.isPresent()) {
+				return wrapperModelToDTO.pacienteToPacienteDTO(optPaciente.get());
+			}
+            throw new UsuarioInvalidoException("El paciente no existe en la base de datos");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -197,7 +193,7 @@ public class AdministradorController {
 	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
 		try {
-			ConfiguracionCupos configuracionCupos = wrapperDTOtoModel
+			ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
 					.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
 
 			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
@@ -216,10 +212,7 @@ public class AdministradorController {
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-			if (configuracionCuposList.size() == 0) {
-				return false;
-			} else
-				return true;
+			return configuracionCuposList.isEmpty();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -233,7 +226,7 @@ public class AdministradorController {
 					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
 			if (configuracionCuposDTOList.isEmpty())
-				throw new Exception();
+				throw new IdentificadorException("No existe una configuración de cupos");
 
 			return configuracionCuposDTOList.get(0);
 		} catch (Exception e) {
@@ -246,7 +239,7 @@ public class AdministradorController {
 			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
 					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 			configuracionCuposDao.delete(
-					wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+					WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -256,10 +249,13 @@ public class AdministradorController {
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
-			CentroSaludDTO centroSaludDTO = wrapperModelToDTO
-					.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
-			centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-			centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
+			if (optCentroSalud.isPresent()) {
+				CentroSaludDTO centroSaludDTO =
+						wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+				centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
+				centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+			}
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -268,8 +264,11 @@ public class AdministradorController {
 
 	public CentroSaludDTO getCentroById(String centroSalud) {
 		try {
-//			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			return wrapperModelToDTO.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
+			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
+			if (optCentroSalud.isPresent()) {
+				return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+			}
+            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -277,7 +276,11 @@ public class AdministradorController {
 
 	public RolDTO getRolById(String rol) {
 		try {
-			return wrapperModelToDTO.rolToRolDTO(rolDao.findById(rol).get());
+			Optional<Rol> optRol = rolDao.findById(rol);
+			if (optRol.isPresent()) {
+				return wrapperModelToDTO.rolToRolDTO(optRol.get());
+			}
+			throw new Exception();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -306,7 +309,11 @@ public class AdministradorController {
 	@GetMapping("/getUsuarioById")
 	public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
 		try {
-			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
+			Optional<Usuario> optUsuario = administradorDao.findById(idUsuario);
+			if (optUsuario.isPresent()) {
+				return wrapperModelToDTO.usuarioToUsuarioDTO(optUsuario.get());
+			}
+			throw new IdentificadorException("Identificador Usuario " + idUsuario + " no encontrado");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -330,18 +337,23 @@ public class AdministradorController {
 
 	public RolDTO getRolByNombre(String nombreRol) {
 		try {
-			return wrapperModelToDTO.rolToRolDTO(rolDao.findByNombre(nombreRol).get());
+			Optional<Rol> optRol = rolDao.findByNombre(nombreRol);
+			if (optRol.isPresent()) {
+				return wrapperModelToDTO.rolToRolDTO(optRol.get());
+			}
+			throw new IdentificadorException("Identificador Rol " + nombreRol + " no encontrado");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
 
-	public List<PacienteDTO> getPacientes(String rol) {
+	public List<PacienteDTO> getPacientes() {
 		try {
-//			return wrapperModelToDTO.listPacienteToPacienteDTO(pacienteDao.findAllByRol(rol));
-//			List<Usuario> usuario = pacienteDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente");
-			return wrapperModelToDTO
-					.allPacienteToPacienteDTO(administradorDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente"));
+			List<Usuario> optUsuario = administradorDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente");
+			if (!optUsuario.isEmpty()) {
+				return wrapperModelToDTO.allPacienteToPacienteDTO(optUsuario);
+			}
+			throw new IdentificadorException("No hay pacientes registrados");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -349,7 +361,7 @@ public class AdministradorController {
 
 	public void addVacuna(VacunaDTO vacunaDTO) {
 		try {
-			Vacuna vacuna = wrapperDTOtoModel.vacunaDTOToVacuna(vacunaDTO);
+			Vacuna vacuna = WrapperDTOtoModel.vacunaDTOToVacuna(vacunaDTO);
 			vacunaDao.save(vacuna);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -358,7 +370,11 @@ public class AdministradorController {
 
 	public VacunaDTO getVacunaByNombre(String pfizer) {
 		try {
-			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findByNombre(pfizer).get());
+			Optional<Vacuna> optVacuna = vacunaDao.findByNombre(pfizer);
+			if (optVacuna.isPresent()) {
+				return wrapperModelToDTO.vacunaToVacunaDTO(optVacuna.get());
+			}
+			throw new IdentificadorException("Identificador Vacuna " + pfizer + " no encontrado");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -366,7 +382,11 @@ public class AdministradorController {
 
 	public VacunaDTO getVacunaById(String id) {
 		try {
-			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findById(id).get());
+			Optional<Vacuna> optVacuna = vacunaDao.findById(id);
+			if (optVacuna.isPresent()) {
+				return wrapperModelToDTO.vacunaToVacunaDTO(optVacuna.get());
+			}
+			throw new IdentificadorException("Identificador Vacuna " + id + " no encontrado");
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}

@@ -12,11 +12,6 @@ public class PacienteDTO extends UsuarioDTO {
 		super();
 	}
 
-	public PacienteDTO(int numDosisAplicadas) {
-		super();
-		this.numDosisAplicadas = numDosisAplicadas;
-	}
-
 	public int getNumDosisAplicadas() {
 		return numDosisAplicadas;
 	}

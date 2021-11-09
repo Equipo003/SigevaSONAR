@@ -65,7 +65,7 @@ public class WrapperDTOtoModel {
 		return paciente;
 	}
 
-	public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) {
+	public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
 		CentroSalud centroSalud = new CentroSalud();
 		centroSalud.setId(centroSaludDTO.getId());
 		centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
@@ -73,6 +73,7 @@ public class WrapperDTOtoModel {
 		try {
 			centroSalud.setNumVacunasDisponibles(centroSaludDTO.getNumVacunasDisponibles());
 		} catch (NumVacunasInvalido e) {
+			throw new NumVacunasInvalido();
 		}
 		centroSalud.setVacuna(centroSaludDTO.getVacuna().getId());
 		return centroSalud;
