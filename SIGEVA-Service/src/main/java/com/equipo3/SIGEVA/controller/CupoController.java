@@ -130,7 +130,12 @@ public class CupoController {
 
 	@GetMapping("/prueba")
 	public void prueba() throws IdentificadorException {
-
+//		Date fecha = new Date(125,0,1);
+//		Cupo cupo = new Cupo();
+//		cupo.setFechaYHoraInicio(fecha);
+//		cupo.setUuidCentroSalud("f05b31fe-aaa3-45bc-a18d-93723b3316b4");
+//		cupo.setTamanoActual(1);
+//		cupoDao.save(cupo);
 	}
 
 }

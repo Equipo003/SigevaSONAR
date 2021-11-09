@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dao.VacunaDao;
@@ -59,6 +61,8 @@ public class AdministradorController {
 	private ConfiguracionCuposDao configuracionCuposDao;
 	@Autowired
 	private VacunaDao vacunaDao;
+	@Autowired
+	private CupoDao cupoDao;
 
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
@@ -128,6 +132,28 @@ public class AdministradorController {
 			}
 
 			centroSaludDao.save(centroSalud);
+			// cupoController.prepararCuposCitas(centroSalud);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+	
+	@PostMapping("/deleteCentroSalud")
+	public void borrarCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
+		try {
+			centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
+			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
+			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
+			System.out.println(cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date())); 
+			if (optCentroSalud.isPresent() && cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
+				centroSaludDao.deleteById(centroSalud.getId());
+			}else {
+				throw new CentroInvalidoException("El centro de salud NO existe en la base de datos o NO se puede borrar por contener citas.");
+			}
+
+			
 			// cupoController.prepararCuposCitas(centroSalud);
 
 		} catch (Exception e) {
