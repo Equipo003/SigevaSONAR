@@ -1,3 +1,27 @@
+@import url(https://weloveiconfonts.com/api/?family=entypo);
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+  font-size: 30px;
+
+}
+
+/* entypo */
+[class*="entypo-"]:before {
+  font-family: 'entypo', sans-serif;
+  font-size: 20px;
+  color:black;
+}
+
+p {
+  font-size: 18px;
+  margin: 4px;
+}
+
+p.entypo-calendar {
+ float:right;
+}
 
 
 
