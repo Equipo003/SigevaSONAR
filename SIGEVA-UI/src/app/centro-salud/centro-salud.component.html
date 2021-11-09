@@ -1,12 +1,37 @@
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <div class="item centroSalud">
-  <div class="contenido-item centrar-texto">
-    <div class="control-group">
-      <h3 class="centrar-texto">Nombre:  {{cs.nombreCentro}}</h3>
-      <h3 class="centrar-texto">Dirección: {{cs.direccion}}</h3>
-      <h3 class="centrar-texto ">Número de vacunas disponibles: {{cs.numVacunasDisponibles}}</h3>
-      <button type="submit" class="btn">Eliminar Centro</button>
-  </div>
+	<div class="contenido-item centrar-texto">
+		<div class="control-group">
+			<table class="tabla-centrosSalud" align="center">
+				<tr>
+					<td><img src="../assets/icons/hospital.png" width="30px"
+						height="30px"></td>
+
+					<td><b>{{cs.nombreCentro}}</b></td>
+				</tr>
+
+				<tr>
+					<td><img src="../assets/icons/adress.png" width="30px"
+						height="30px"></td>
+
+					<td><b>{{cs.direccion}}</b></td>
+				</tr>
+				<tr>
+					<td><img src="../assets/icons/vaccine.png" width="30px"
+						height="30px"></td>
+
+					<td><b>{{cs.numVacunasDisponibles}}</b></td>
+				</tr>
+
+			</table>
+			<div>
+				<br>
+				<button type="submit" class="btn">Modificar Centro</button>
+				<br>
+				<button type="submit" class="btn">Eliminar Centro</button>
+			</div>
+		</div>
+	</div>
 </div>
