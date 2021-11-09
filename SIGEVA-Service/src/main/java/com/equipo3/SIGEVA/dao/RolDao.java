@@ -12,5 +12,4 @@ public interface RolDao extends MongoRepository <Rol, String> {
 	
 	Optional<Rol> findByNombre(String nombre);
 
-    Optional<Rol> findAllByNombre(String sanitario);
 }

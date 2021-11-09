@@ -1,15 +1,13 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.Rol;
-
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UsuarioDTO {
     private String idUsuario;
-    private Rol rol;
-    private CentroSalud centroSalud;
+    private RolDTO rolDTO;
+    private CentroSaludDTO centroSaludDTO;
     private String username;
     private String correo;
     private String hashPassword;
@@ -31,20 +29,20 @@ public class UsuarioDTO {
         this.idUsuario = idUsuario;
     }
 
-    public Rol getRol() {
-        return rol;
+    public RolDTO getRol() {
+        return rolDTO;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRol(RolDTO rolDTO) {
+        this.rolDTO = rolDTO;
     }
 
-    public CentroSalud getCentroSalud() {
-        return centroSalud;
+    public CentroSaludDTO getCentroSalud() {
+        return centroSaludDTO;
     }
 
-    public void setCentroSalud(CentroSalud centroSalud) {
-        this.centroSalud = centroSalud;
+    public void setCentroSalud(CentroSaludDTO centroSaludDTO) {
+        this.centroSaludDTO = centroSaludDTO;
     }
 
     public String getUsername() {
@@ -115,8 +113,8 @@ public class UsuarioDTO {
     public String toString() {
         return "UsuarioDTO{" +
                 "idUsuario='" + idUsuario + '\'' +
-                ", rol=" + rol +
-                ", centroSalud=" + centroSalud +
+                ", rol=" + rolDTO.toString() +
+                ", centroSalud=" + centroSaludDTO +
                 ", username='" + username + '\'' +
                 ", correo='" + correo + '\'' +
                 ", hashPassword='" + hashPassword + '\'' +
@@ -127,4 +125,28 @@ public class UsuarioDTO {
                 ", imagen='" + imagen + '\'' +
                 '}';
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(apellidos, centroSaludDTO, correo, dni, fechaNacimiento, hashPassword, idUsuario, imagen,
+				nombre, rolDTO, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UsuarioDTO other = (UsuarioDTO) obj;
+		return Objects.equals(apellidos, other.apellidos) && Objects.equals(centroSaludDTO, other.centroSaludDTO)
+				&& Objects.equals(correo, other.correo) && Objects.equals(dni, other.dni)
+				&& Objects.equals(fechaNacimiento, other.fechaNacimiento)
+				&& Objects.equals(hashPassword, other.hashPassword) && Objects.equals(idUsuario, other.idUsuario)
+				&& Objects.equals(imagen, other.imagen) && Objects.equals(nombre, other.nombre)
+				&& Objects.equals(rolDTO, other.rolDTO) && Objects.equals(username, other.username);
+	}
+    
 }

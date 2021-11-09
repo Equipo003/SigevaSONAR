@@ -1,20 +1,47 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-import com.equipo3.SIGEVA.dao.*;
-import com.equipo3.SIGEVA.dto.*;
-import com.equipo3.SIGEVA.exception.CentroInvalidoException;
-import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
-import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.dao.VacunaDao;
+import com.equipo3.SIGEVA.dto.AdministradorDTO;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.ConfiguracionCuposDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
+import com.equipo3.SIGEVA.dto.RolDTO;
+import com.equipo3.SIGEVA.dto.SanitarioDTO;
+import com.equipo3.SIGEVA.dto.UsuarioDTO;
+import com.equipo3.SIGEVA.dto.VacunaDTO;
+import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.exception.CentroInvalidoException;
+import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Sanitario;
+import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.Vacuna;
+
 @CrossOrigin
 @RestController
 @RequestMapping("user")
@@ -30,6 +57,8 @@ public class AdministradorController {
 	private CupoController cupoController;
 	@Autowired
 	private ConfiguracionCuposDao configuracionCuposDao;
+	@Autowired
+	private VacunaDao vacunaDao;
 
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
@@ -55,7 +84,6 @@ public class AdministradorController {
 		}
 	}
 
-
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
@@ -72,7 +100,6 @@ public class AdministradorController {
 		}
 	}
 
-
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
@@ -83,7 +110,6 @@ public class AdministradorController {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
-			System.out.println("Guardado");
 			administradorDao.save(sanitario);
 
 		} catch (Exception e) {
@@ -91,10 +117,10 @@ public class AdministradorController {
 		}
 	}
 
-
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
+			centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
 			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
 			if (optCentroSalud.isPresent()) {
@@ -102,7 +128,7 @@ public class AdministradorController {
 			}
 
 			centroSaludDao.save(centroSalud);
-			cupoController.prepararCuposCitas(centroSalud);
+			// cupoController.prepararCuposCitas(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,25 +136,18 @@ public class AdministradorController {
 		}
 	}
 
-//	@PostMapping("/registrarRol")
-//	public void registrarRol(@RequestBody RolDTO rolDTO) {
-//
-//		Rol rol = new Rol();
-//		rol.setNombre(rolDTO.getNombre());
-//
-//		try {
-//			rolDao.save(rol);
-//		} catch (Exception e) {
-//			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//		}
-//	}
-
+	public void crearRol(@RequestBody RolDTO rolDTO) {
+		try {
+			rolDao.save(wrapperDTOtoModel.rolDTOToRol(rolDTO));
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
 		return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
-
 
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
@@ -139,20 +158,26 @@ public class AdministradorController {
 		}
 	}
 
-	@GetMapping("/getUsuariosByRol/")
+	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
-			System.out.println("Dentro :" +rol);
 			if (rol.equals("Todos")) {
-				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAll());
+				return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
 			} else {
-				return wrapperModelToDTO.listUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
+				return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
 			}
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
+	public PacienteDTO getPaciente(String id) {
+		try {
+			return wrapperModelToDTO.pacienteToPacienteDTO(administradorDao.findById(id).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 
 	@PutMapping("/fijarCentro/{username}/{centro}")
 	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
@@ -168,15 +193,15 @@ public class AdministradorController {
 		}
 	}
 
-
 	@PostMapping("/crearConfCupos")
 	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
 		try {
-			ConfiguracionCupos configuracionCupos = wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
+			ConfiguracionCupos configuracionCupos = wrapperDTOtoModel
+					.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
 
-
-			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 			if (configuracionCuposDTOList.isEmpty())
 				configuracionCuposDao.save(configuracionCupos);
 			else
@@ -187,12 +212,11 @@ public class AdministradorController {
 
 	}
 
-
 	@GetMapping("/existConfCupos")
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-			if (configuracionCuposList.size() == 0){
+			if (configuracionCuposList.size() == 0) {
 				return false;
 			} else
 				return true;
@@ -202,13 +226,13 @@ public class AdministradorController {
 
 	}
 
-
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
-			List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
+					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
-			if(configuracionCuposDTOList.isEmpty())
+			if (configuracionCuposDTOList.isEmpty())
 				throw new Exception();
 
 			return configuracionCuposDTOList.get(0);
@@ -219,101 +243,148 @@ public class AdministradorController {
 
 	public void eliminarConfiguracionCupos() {
 		try {
-			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO.configuracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-			configuracionCuposDao.delete(wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
-
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			configuracionCuposDao.delete(
+					wrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
 
-
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			if (centroS.isPresent()) {
-				CentroSalud centroSaludDef = centroS.get();
-				centroSaludDef.modificarStockVacunas(vacunas);
-				centroSaludDao.save(centroSaludDef);
-			}
+			CentroSaludDTO centroSaludDTO = wrapperModelToDTO
+					.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
+			centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
+			centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	public CentroSalud getCentroById(String centroSalud) {
+	public CentroSaludDTO getCentroById(String centroSalud) {
 		try {
-			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
-			return centroS.get();
+//			Optional<CentroSalud> centroS = centroSaludDao.findById(centroSalud);
+			return wrapperModelToDTO.centroSaludToCentroSaludDTO(centroSaludDao.findById(centroSalud).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	public Rol getRolById(String rol) {
+	public RolDTO getRolById(String rol) {
 		try {
-			Optional<Rol> rolOptional = rolDao.findById(rol);
-			return rolOptional.get();
+			return wrapperModelToDTO.rolToRolDTO(rolDao.findById(rol).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	@GetMapping("/getPacientesJornada")
-	public List<PacienteDTO> getPacientesJornada(@RequestParam String fechaJornada){
-		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-		try{
-			Date fechaJornadaFormated = formateador.parse(fechaJornada);
-			List<CupoCitas> cupoCitasList = cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated);
-			List<Paciente> pacientesJornada = new ArrayList<Paciente>();
-			Iterator<CupoCitas> cupoCitasIterator = cupoCitasList.iterator();
-			while(cupoCitasIterator.hasNext()){
-				pacientesJornada.addAll(cupoCitasIterator.next().getPacientesCitados());
-			}
+	/*
+	 * @GetMapping("/getPacientesJornada") public List<PacienteDTO>
+	 * getPacientesJornada(@RequestParam String fechaJornada){ SimpleDateFormat
+	 * formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); try{ Date
+	 * fechaJornadaFormated = formateador.parse(fechaJornada); List<CupoCitas>
+	 * cupoCitasList =
+	 * cupoController.cupoCitasDao.findByFechaYHoraInicio(fechaJornadaFormated); //
+	 * MAL! List<Paciente> pacientesJornada = new ArrayList<Paciente>();
+	 * Iterator<CupoCitas> cupoCitasIterator = cupoCitasList.iterator();
+	 * while(cupoCitasIterator.hasNext()){
+	 * pacientesJornada.addAll(cupoCitasIterator.next().getPacientesCitados()); }
+	 * 
+	 * return
+	 * this.wrapperModelToDTO.pacientesJornadaToPacientesDTO(pacientesJornada);
+	 * }catch (ParseException p){ throw new
+	 * ResponseStatusException(HttpStatus.BAD_REQUEST); }
+	 * 
+	 * }
+	 */
 
-			return this.wrapperModelToDTO.pacientesJornadaToPacientesDTO(pacientesJornada);
-		}catch (ParseException p){
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-		}
-
-	}
-
-	public UsuarioDTO getUsuarioById(String idUsuario) {
+	@GetMapping("/getUsuarioById")
+	public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
 		try {
-			Optional<Usuario> usuarioOptional = administradorDao.findById(idUsuario);
 			return this.wrapperModelToDTO.usuarioToUsuarioDTO(administradorDao.findById(idUsuario).get());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	public void eliminarUsuario(String username){
+	public void eliminarUsuario(String username) {
 		try {
 			administradorDao.deleteByUsername(username);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	public void eliminarCentro(String idCentro){
+	public void eliminarCentro(String idCentro) {
 		try {
 			centroSaludDao.deleteById(idCentro);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
 
-	public Rol getRolByNombre(String nombreRol) {
-        try {
-            Optional<Rol> rolOptional = rolDao.findByNombre(nombreRol);
-            if (rolOptional.isPresent())
-                return rolOptional.get();
-			else
-				throw new Exception();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
+	public RolDTO getRolByNombre(String nombreRol) {
+		try {
+			return wrapperModelToDTO.rolToRolDTO(rolDao.findByNombre(nombreRol).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
+
+	public List<PacienteDTO> getPacientes(String rol) {
+		try {
+//			return wrapperModelToDTO.listPacienteToPacienteDTO(pacienteDao.findAllByRol(rol));
+//			List<Usuario> usuario = pacienteDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente");
+			return wrapperModelToDTO
+					.allPacienteToPacienteDTO(administradorDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente"));
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void addVacuna(VacunaDTO vacunaDTO) {
+		try {
+			Vacuna vacuna = wrapperDTOtoModel.vacunaDTOToVacuna(vacunaDTO);
+			vacunaDao.save(vacuna);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public VacunaDTO getVacunaByNombre(String pfizer) {
+		try {
+			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findByNombre(pfizer).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public VacunaDTO getVacunaById(String id) {
+		try {
+			return wrapperModelToDTO.vacunaToVacunaDTO(vacunaDao.findById(id).get());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarVacuna(String idVacuna) {
+		try {
+			vacunaDao.deleteById(idVacuna);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void eliminarRol(String idRol) {
+		try {
+			rolDao.deleteById(idRol);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
 }

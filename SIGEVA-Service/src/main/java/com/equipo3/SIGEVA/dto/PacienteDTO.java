@@ -1,55 +1,64 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.model.CupoSimple;
+import java.util.Objects;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
 
-public class PacienteDTO extends UsuarioDTO{
+public class PacienteDTO extends UsuarioDTO {
 
-    private boolean asignado;
-    private List<CupoSimple> cuposAsignados;
+	private int numDosisAplicadas;
 
-    private boolean vacunado;
-    private int numVacunas;
+	public PacienteDTO() {
+		super();
+	}
 
-    public PacienteDTO() {
-        super();
-        this.asignado = false;
-        this.cuposAsignados = new ArrayList<>();
-        this.vacunado = false;
-        this.numVacunas = 0;
-    }
+	public PacienteDTO(int numDosisAplicadas) {
+		super();
+		this.numDosisAplicadas = numDosisAplicadas;
+	}
 
-    public boolean isAsignado() {
-        return asignado;
-    }
+	public int getNumDosisAplicadas() {
+		return numDosisAplicadas;
+	}
 
-    public void setAsignado(boolean asignado) {
-        this.asignado = asignado;
-    }
+	public void setNumDosisAplicadas(int numDosisAplicadas) {
+		this.numDosisAplicadas = numDosisAplicadas;
+	}
 
-    public List<CupoSimple> getCuposAsignados() {
-        return cuposAsignados;
-    }
+	@Override
+	public String toString() {
+		return "PacienteDTO [" + super.toString() + ", numDosisAplicadas=" + numDosisAplicadas + "]";
+	}
 
-    public void setCuposAsignados(List<CupoSimple> cuposAsignados) {
-        this.cuposAsignados = cuposAsignados;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(numDosisAplicadas);
+		return result;
+	}
 
-    public boolean isVacunado() {
-        return vacunado;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PacienteDTO other = (PacienteDTO) obj;
+		return numDosisAplicadas == other.numDosisAplicadas;
+	}
 
-    public void setVacunado(boolean vacunado) {
-        this.vacunado = vacunado;
-    }
+	public void incrementarNumDosisAplicadas() throws PacienteYaVacunadoException {
+		if (numDosisAplicadas == 2)
+			throw new PacienteYaVacunadoException("El paciente ya estaba vacunado de las dos dosis.");
+		else
+			numDosisAplicadas++;
+	}
 
-    public int getNumVacunas() {
-        return numVacunas;
-    }
+	public boolean isTotalmenteVacunado() {
+		return numDosisAplicadas == 2;
+	}
 
-    public void setNumVacunas(int numVacunas) {
-        this.numVacunas = numVacunas;
-    }
 }

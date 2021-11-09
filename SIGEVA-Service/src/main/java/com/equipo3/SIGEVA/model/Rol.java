@@ -14,11 +14,6 @@ public class Rol {
 	@Field 
 	String nombre;
 	
-	public Rol(String nombre) {
-		this.id =UUID.randomUUID().toString();
-		this.nombre = nombre;
-	}
-	
 	public Rol() {
 		this.id =UUID.randomUUID().toString();
 	}

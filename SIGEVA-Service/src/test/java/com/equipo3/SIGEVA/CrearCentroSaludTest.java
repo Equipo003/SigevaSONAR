@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class CrearCentroSaludTest {
 
-    @Autowired
-    private AdministradorController administradorController;
+	@Autowired
+	private AdministradorController administradorController;
 
 	static CentroSaludDTO centroSaludDTO;
 
@@ -32,14 +32,13 @@ class CrearCentroSaludTest {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		centroSaludDTO.setDireccion("Calle falsa 123");
-		centroSaludDTO.setNumVacunasDisponibles((int)Math.random()*1000);
+		centroSaludDTO.setNumVacunasDisponibles((int)(Math.random()*1000));
 	}
 
     @Test
 	void testCrearCentroSaludBien() {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(centroSaludDTO);
-
 		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
 		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}

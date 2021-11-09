@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.equipo3.SIGEVA.controller.Condicionamientos;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
@@ -23,11 +22,10 @@ public class CentroSalud {
 	@Field
 	private String direccion;
 	@Field
-	private Vacuna vacuna;
+	private String vacuna;
 
 	public CentroSalud() {
 		this.id = UUID.randomUUID().toString();
-		this.vacuna = new Vacuna("Pfizer", Condicionamientos.tiempoEntreDosis(), 2);
 	}
 
 	public CentroSalud(String nombreCentro, String direccion, int numVacunasDisponibles) {
@@ -73,23 +71,12 @@ public class CentroSalud {
 		this.direccion = direccion;
 	}
 
-	public Vacuna getVacuna() {
+	public String getVacuna() {
 		return vacuna;
 	}
 
-	public void setVacuna(Vacuna vacuna) {
+	public void setVacuna(String vacuna) {
 		this.vacuna = vacuna;
-	}
-
-	public void modificarStockVacunas(int numVacunasAgregadas) {
-		this.numVacunasDisponibles += numVacunasAgregadas;
-	}
-
-	public void incrementarNumVacunasDisponibles(int cantidad) throws NumVacunasInvalido {
-		if (cantidad >= 0)
-			this.setNumVacunasDisponibles(this.getNumVacunasDisponibles() + cantidad);
-		else
-			throw new NumVacunasInvalido("La cantidad a incrementar especificada es inválida.");
 	}
 
 	public void decrementarNumVacunasDisponibles() throws CentroSinStock {
@@ -110,11 +97,6 @@ public class CentroSalud {
 				", direccion='" + direccion + '\'' +
 				", vacuna=" + vacuna +
 				'}';
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles);
 	}
 
 	@Override
