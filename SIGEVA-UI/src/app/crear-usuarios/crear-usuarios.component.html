@@ -5,15 +5,15 @@
         <h1>CREAR USUARIOS</h1>
 
         <div class="control-group">
-          <p>Elige el tipo de usuario a crear: </p>
-          <select name="rol" [(ngModel)]="rolSeleccionado">
-            <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+          <b>Elige el tipo de usuario a crear: </b>
+          <select name="rol" [(ngModel)]="usuario.rol" (ngModelChange)="onChangeRol($event)" name="selRol">
+            <option [ngValue]="rol" *ngFor="let rol of roles">{{rol.nombre}}</option>
           </select>
         </div>
 
         <div class="control-group">
-          <select name="centro" [(ngModel)]="centroSeleccionado">
-            <option *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
+          <select [ngModel]="usuario.centroSalud" (ngModelChange)="onChangeCentro($event)" name="selCentro">
+            <option [ngValue]="centro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
 
@@ -71,6 +71,7 @@
         </div>
 
         <div class="control-group">
+          <b>Fecha de nacimiento:</b>
           <input type="date" placeholder="Fecha Nacimiento" name="fechaNacimiento" #fechaNacimiento="ngModel" [(ngModel)]="usuario.fechaNacimiento" required>
           <div>
             <small *ngIf="!fechaNacimiento.valid && fechaNacimiento.touched" class="textoColorRojo">
@@ -80,6 +81,7 @@
         </div>
 
         <div class="control-group">
+          <b>Selecciona la imagen de perfil:</b>
           <input (change)="capturarFile($event)" type="file" accept="image/png, image/jpeg">
         </div>
 
@@ -89,6 +91,6 @@
 
     <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
     <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
-
+    </div>
   </div>
 </div>

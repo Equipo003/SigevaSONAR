@@ -1,8 +1,14 @@
 package com.equipo3.SIGEVA;
 
+import java.util.Date;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +17,7 @@ import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.CentroSaludDTO;
+
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
@@ -24,65 +30,62 @@ class FijarUsuarioCentroSalud {
 	private UsuarioDao usuarioDao;
 	@Autowired
 	private RolDao roldao;
+	@Autowired
+	private CentroSaludDao centroSaludDao;
+	@Autowired
+	private WrapperModelToDTO wrapperModelToDTO;
+	@Autowired
+	private WrapperDTOtoModel wrapperDTOtoModel;
 
-	@Test
-	void AsignarCentroSaludSanitarioNivelModelo() throws NumVacunasInvalido {
-		Usuario sanitario = new Sanitario();
-		CentroSaludDTO cs = new CentroSaludDTO();
-		cs.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(cs);
-		
-		sanitario.setNombre("NombrePrueba");
-		sanitario.setUsername(UUID.randomUUID().toString());
-		Rol rol = null;
-		
-		if(roldao.findAllByNombre("Sanitario").isPresent()) {
-			rol = roldao.findAllByNombre("Sanitario").get();
-		}
-		
-		sanitario.setRol(rol.getId());
-		
-		if(sanitario!=null) {
-			System.out.println("No es nulo");
-			System.out.println(sanitario.getRol());
-		}
-		
-		administradorController.fijarPersonal(sanitario.getUsername(), cs.getId());
-		
-		Usuario san = null;
-		
-		administradorController.crearUsuarioSanitario((Sanitario) sanitario);
-		
-		
-		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
-			san = usuarioDao.findById(sanitario.getIdUsuario()).get();
-		}
-		Assertions.assertEquals(sanitario.getCentroSalud(), san.getCentroSalud());
+	static CentroSaludDTO centroSaludDTO;
+	static CentroSaludDTO newCentroSaludDTO;
+	static SanitarioDTO sanitarioDTO;
+
+	@BeforeAll
+	static void crearCentroSalud(){
+		centroSaludDTO = new CentroSaludDTO();
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		centroSaludDTO.setDireccion(UUID.randomUUID().toString());
+		centroSaludDTO.setNumVacunasDisponibles((int)(Math.random()*1000));
+
+		newCentroSaludDTO = new CentroSaludDTO();
+		newCentroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+		newCentroSaludDTO.setDireccion(UUID.randomUUID().toString());
+		newCentroSaludDTO.setNumVacunasDisponibles((int)(Math.random()*1000));
 	}
 
-//	@Test
-//	void AsignarCentroSaludSanitarioNivelBBDD() throws NumVacunasInvalido {
-//		Usuario sanitario = new Sanitario();
-//		CentroSaludDTO cs = new CentroSaludDTO();
-//
-//		cs.setNombreCentro(UUID.randomUUID().toString());
-//
-//		sanitario.setUsername(sanitario.getIdUsuario());
-//		sanitario.setRol("e24bf973-e26e-47b7-b8f4-83fa13968221");
-//
-//		administradorController.crearCentroSalud(cs);
-//		sanitario.setCentroSalud(UUID.randomUUID().toString());
-//		administradorController.crearUsuarioSanitario((Sanitario) sanitario);
-//
-//
-//		if(centroSDao.findById(cs.getId()).isPresent()) {
-//			cs = centroSDao.findById(cs.getId()).get();
-//		}
-//
-//		if(usuarioDao.findById(sanitario.getIdUsuario()).isPresent()) {
-//			sanitario = usuarioDao.findById(sanitario.getIdUsuario()).get();
-//		}
-//		Assertions.assertEquals(cs.getId(), sanitario.getCentroSalud());
-//	}
+	@BeforeAll
+	static void crearSanitario(){
+		sanitarioDTO = new SanitarioDTO();
+		sanitarioDTO.setNombre(UUID.randomUUID().toString());
+		sanitarioDTO.setUsername(UUID.randomUUID().toString());
+		sanitarioDTO.setHashPassword("sdfsdf");
+		sanitarioDTO.setCorreo("correo@correo.com");
+		sanitarioDTO.setDni("99999999Q");
+		sanitarioDTO.setNombre("Juan");
+		sanitarioDTO.setApellidos("Perez");
+		sanitarioDTO.setFechaNacimiento(new Date());
+		sanitarioDTO.setImagen("912imagen");
+	}
 
+	@Test
+	void AsignarCentroSalud() {
+		administradorController.crearCentroSalud(centroSaludDTO);
+		sanitarioDTO.setCentroSalud((centroSaludDTO));
+
+		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+
+		administradorController.crearUsuarioSanitario(sanitarioDTO);
+
+		administradorController.crearCentroSalud(newCentroSaludDTO);
+
+		administradorController.fijarPersonal(sanitarioDTO.getUsername(), newCentroSaludDTO.getId());
+
+		UsuarioDTO newSanitarioDTO = administradorController.getUsuarioById(sanitarioDTO.getIdUsuario());
+
+		Assertions.assertEquals(newSanitarioDTO.getCentroSalud().getId(), newCentroSaludDTO.getId());
+
+		administradorController.eliminarCentro(centroSaludDTO.getId());
+		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+	}
 }

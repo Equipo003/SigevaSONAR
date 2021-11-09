@@ -1,16 +1,16 @@
 package com.equipo3.SIGEVA.exception;
 
-public class CupoCitasException extends Exception {
+public class IdentificadorException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7940812683334331639L;
 
-	public CupoCitasException() {
+	public IdentificadorException() {
 	}
 
-	public CupoCitasException(String mensaje) {
+	public IdentificadorException(String mensaje) {
 		super(mensaje);
 	}
 

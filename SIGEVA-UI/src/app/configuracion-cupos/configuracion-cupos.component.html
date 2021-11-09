@@ -1,8 +1,49 @@
 <div class="register">
   <div *ngIf="this.configuracionExistente == true" class="register-screen">
+      <div class="register-form">
+        <h1>Datos de la vacunación</h1>
+        <table>
+          <tr >
+            <th scope="col">Periodo de vacunación</th>
+            <th scope="col">Duración de las jornadas</th>
+          </tr>
+          <tr>
+            <td>
+              <p class="entypo-calendar" > {{this.fechaInicio | date : 'mediumDate'}} - 31 Dec, 2021</p>
+            </td>
+            <td>
+              <p class="entypo-back-in-time" > {{this.fechaInicio | date: 'shortTime'}} - {{this.fecha | date:'shortTime'}}</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="col">Tamaño de los cupos</th>
+            <th scope="col">Duración de los cupos</th>
+          </tr>
+          <tr>
+            <td><p class="fontawesome-group"> {{this.numeroPacientes}} personas</p></td>
+            <td><p class="entypo-clock"> {{this.duracionMinutos}} min</p></td>
+          </tr>
+        </table>
+      </div>
+  </div>
+  <div class="separation"></div>
+  <div *ngIf="this.configuracionExistente == true" class="register-screen">
     <div class="register-form">
-      <h1>Ya se han configurado los cupos</h1>
-      <div class="control-group"></div>
+      <h1>Estadísticas</h1>
+      <table>
+        <tr>
+          <th scope="row" class="entypo-chart-line"> Pacientes vacunados/minuto:</th>
+          <td>
+            <p >{{numeroPacientes/duracionMinutos | number: '1.0-1'}}</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row" class="entypo-gauge"> Pacientes vacunados/día:</th>
+          <td>
+            <p>{{((this.duracionJornadaHoras*60+this.duracionJornadaMinutos)/this.duracionMinutos)*this.numeroPacientes | number: '1.0-0'}}</p>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
   <div *ngIf="this.configuracionExistente == false" class="register-screen">
