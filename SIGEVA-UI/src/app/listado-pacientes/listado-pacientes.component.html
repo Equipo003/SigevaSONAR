@@ -1,0 +1,29 @@
+<div class = contenedor-dividido>
+  <div class="listado-form">
+
+    <!-- Inicio de la lista de pacientes -->
+      <div class="listado">
+        <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
+          <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
+          <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
+          <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
+          <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
+          <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Vacunar</button>
+        </div>
+      </div>
+  </div>
+
+  <!-- Division de la pantalla -->
+
+  <div class="vacunas">
+    <div class="separation"></div>
+      <div class="vacuna-form">
+        <div class="vacuna-group">
+          <img alt="imagen paciente" width="100" height="100" src="{{this.pacienteSeleccionado.imagen}}" >
+          <p>{{this.pacienteSeleccionado.nombre}}</p>
+          <p>{{this.pacienteSeleccionado.dni}}</p>
+          <button  >Aplicar dosis</button>
+        </div>
+      </div>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import { UsuariosSistemaComponent } from './usuarios-sistema/usuarios-sistema.co
 import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.component';
 import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
 import {EditarUsuarioComponent} from "./editar-usuario/editar-usuario.component";
+import {ListadoPacientesComponent} from "./listado-pacientes/listado-pacientes.component";
 
 const  appRoutes: Routes = [
   {path: '', component :HomeComponent},
@@ -23,7 +24,8 @@ const  appRoutes: Routes = [
   {path: 'usuariosSistema', component: UsuariosSistemaComponent},
   {path: 'solicitarCita', component: SolicitarCitaComponent},
   {path: 'centrosSalud', component: CentrosSaludSistemaComponent},
-  {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent}
+  {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent},
+  {path: 'listadoUsuarios', component: ListadoPacientesComponent}
 
 
 ]
