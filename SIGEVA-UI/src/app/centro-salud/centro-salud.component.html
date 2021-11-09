@@ -1,12 +1,13 @@
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <div class="item centroSalud">
   <div class="contenido-item centrar-texto">
     <div class="control-group">
       <h3 class="centrar-texto">Nombre:  {{cs.nombreCentro}}</h3>
       <h3 class="centrar-texto">Dirección: {{cs.direccion}}</h3>
       <h3 class="centrar-texto ">Número de vacunas disponibles: {{cs.numVacunasDisponibles}}</h3>
-      <button type="submit" class="btn">Eliminar Centro</button>
+      <button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar Centro</button>
+      <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+      <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
   </div>
+</div>
 </div>
