@@ -12,8 +12,7 @@ export class ConfiguracionCuposComponent implements OnInit {
 
       duracionMinutos : number;
       numeroPacientes : number;
-      duracionJornadaHoras : number;
-      duracionJornadaMinutos : number;
+      duracionJornada : string;
       fecha : Date;
       pacientesVacunadosDia : number;
       fechaInicio : string;
@@ -22,20 +21,30 @@ export class ConfiguracionCuposComponent implements OnInit {
       mensaje : string;
       solicitada :boolean;
       configuracionExistente : boolean;
+      duracionJornadaHoras  : number;
+      duracionJornadaMinutos : number;
+      mensajeControlDuracion : string;
+      erroresHoras : boolean;
+      erroresMinutos : boolean;
+
 
   constructor(private json: JsonService) {
     this.duracionMinutos = 0;
     this.numeroPacientes = 0;
     this.pacientesVacunadosDia = 0;
-    this.duracionJornadaHoras=0;
-    this.duracionJornadaMinutos = 0;
+    this.duracionJornada= '';
     this.fechaInicio = '';
     this.fechaCreada = false;
     this.fecha = new Date();
+    this.duracionJornadaHoras = 0;
+    this.duracionJornadaMinutos=0;
     this.aceptarEstadisticas = false;
     this.mensaje = '';
     this.solicitada = false;
     this.configuracionExistente = false;
+    this.mensajeControlDuracion = '';
+    this.erroresHoras = false;
+    this.erroresMinutos = false;
   }
 
   ngOnInit(): void {
@@ -55,7 +64,6 @@ export class ConfiguracionCuposComponent implements OnInit {
                    let configuracionCupos : ConfiguracionCupos;
                    configuracionCupos = JSON.parse(res);
                    console.log(res);
-
                    this.fechaInicio = configuracionCupos.fechaInicio;
                    this.duracionMinutos = configuracionCupos.duracionMinutos;
                    this.duracionJornadaHoras = configuracionCupos.duracionJornadaHoras;
@@ -71,12 +79,27 @@ export class ConfiguracionCuposComponent implements OnInit {
 
 
   calcularHoraFin(){
-      if(this.fechaInicio != ''){
+    this.duracionJornadaMinutos = Number(this.duracionJornada.split(":")[1]);
+    this.duracionJornadaHoras = Number(this.duracionJornada.split(":")[0])
+
+    if(this.duracionJornadaHoras <= 23 && this.duracionJornadaMinutos <= 59) {
+      this.mensajeControlDuracion='';
+      if (this.fechaInicio != '') {
         this.fecha = new Date(this.fechaInicio);
-            this.fecha.setHours(this.fecha.getHours()+this.duracionJornadaHoras);
-            this.fecha.setMinutes(this.fecha.getMinutes()+this.duracionJornadaMinutos);
+        this.fecha.setHours(this.fecha.getHours() + this.duracionJornadaHoras);
+        this.fecha.setMinutes(this.fecha.getMinutes() + this.duracionJornadaMinutos);
         this.fechaCreada = true;
       }
+    }else{
+      if(this.duracionJornadaHoras > 23){
+        this.erroresHoras = true;
+      }
+      if(this.duracionJornadaMinutos > 59){
+        this.erroresMinutos = true;
+      }
+      this.mensajeControlDuracion = '';
+      this.mensajeControlDuracion = '¡Valores incorrectos!';
+    }
   }
 
   crearConfiguracionCupos(){

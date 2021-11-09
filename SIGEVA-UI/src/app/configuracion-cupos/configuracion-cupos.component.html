@@ -56,11 +56,8 @@
       <div class="control-group">Fecha y hora de inicio
         <input type="datetime-local" placeholder="Fecha de inicio y hora de inicio" [(ngModel)]="fechaInicio">
       </div>
-      <div class="control-group">Duración Jornada (horas [0-24])
-        <input type="number" min="0" max="24" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornadaHoras">
-      </div>
-      <div class="control-group">Duración Jornada (minuntos [0-59])
-        <input type="number" placeholder="Correo electrónico" [(ngModel)]="duracionJornadaMinutos">
+      <div class="control-group">Duración Jornada (HH:MM) Ej: 12:30, 12 horas y 30 minutos)
+        <input type="time" min="0" max="24" placeholder="Duaracion (horas)" [(ngModel)]="duracionJornada">
       </div>
       <div class="control-group">
       </div>
@@ -69,7 +66,10 @@
       </div>
       <div class="control-group">
         <h2 *ngIf="fechaCreada == true">Hora fin de las jornadas: {{fecha | date: 'shortTime'}}</h2>
-            <button class="btn" (click)="calcularHoraFin()">Calcular hora Fin</button>
+            <button class="btn" (click)="calcularHoraFin()">Calcular duracion total</button>
+      </div>
+      <div class="control-group">
+        <h2 class="mensajeError" >{{this.mensajeControlDuracion}}</h2>
       </div>
   </div>
   <div class="separation"></div>
