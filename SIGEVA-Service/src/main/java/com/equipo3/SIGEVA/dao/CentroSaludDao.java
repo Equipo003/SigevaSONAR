@@ -17,4 +17,5 @@ public interface CentroSaludDao extends MongoRepository<CentroSalud, String> {
 
 	Optional<CentroSalud> findByNombreCentro(String nombreCentroSalud);
 
+	 void deleteById(String uuidCentroSalud);
 }

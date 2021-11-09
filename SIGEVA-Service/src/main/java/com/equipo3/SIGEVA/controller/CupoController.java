@@ -1,20 +1,42 @@
 package com.equipo3.SIGEVA.controller;
 
-import com.equipo3.SIGEVA.dao.*;
-import com.equipo3.SIGEVA.dto.CentroSaludDTO;
-import com.equipo3.SIGEVA.dto.CupoDTO;
-import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
-import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
-import com.equipo3.SIGEVA.exception.IdentificadorException;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
+import com.equipo3.SIGEVA.dao.CitaDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dao.CupoDao;
+import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.dao.VacunaDao;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CupoDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
+import com.equipo3.SIGEVA.dto.VacunaDTO;
+import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.exception.IdentificadorException;
+import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Vacuna;
 
 @CrossOrigin
 @RestController
@@ -64,7 +86,7 @@ public class CupoController {
 	}
 
 	@PostMapping("/prepararCuposCitas")
-	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // ¡Requerirá tiempo!
+	public List<CupoDTO> prepararCuposCitas(@RequestBody CentroSaludDTO centroSaludDTO) { // ¡Requerirá tiempo!
 		if (centroSaludDTO != null) {
 			List<CupoDTO> cuposDTO = calcularCuposCitas(centroSaludDTO);
 
@@ -107,8 +129,13 @@ public class CupoController {
 	CitaDao citaDao;
 
 	@GetMapping("/prueba")
-	public void prueba() {
-
+	public void prueba() throws IdentificadorException {
+//		Date fecha = new Date(125,0,1);
+//		Cupo cupo = new Cupo();
+//		cupo.setFechaYHoraInicio(fecha);
+//		cupo.setUuidCentroSalud("f05b31fe-aaa3-45bc-a18d-93723b3316b4");
+//		cupo.setTamanoActual(1);
+//		cupoDao.save(cupo);
 	}
 
 }
