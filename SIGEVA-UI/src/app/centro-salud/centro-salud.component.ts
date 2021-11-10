@@ -31,6 +31,7 @@ export class CentroSaludComponent implements OnInit {
           setTimeout(function(){ window.location.reload(); }, 3000);
         },err=> {
           this.errorMessage = err.error.message;
+ 		  setTimeout(function(){ self.errorMessage=""; }, 3000);
           console.log(err);
         });
     
