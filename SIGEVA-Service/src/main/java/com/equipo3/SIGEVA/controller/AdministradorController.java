@@ -146,7 +146,6 @@ public class AdministradorController {
 			centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
 			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
-			System.out.println(cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date())); 
 			if(optCentroSalud.isPresent()) {
 				if(cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
 					centroSaludDao.deleteById(centroSalud.getId());

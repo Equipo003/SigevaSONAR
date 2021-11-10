@@ -21,6 +21,10 @@ import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.componen
 import { CentroSaludComponent } from './centro-salud/centro-salud.component';
 import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
 import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
+import { VentanaEmergenteComponent } from './ventana-emergente/ventana-emergente.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonModule} from "@angular/material/button";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -38,14 +42,18 @@ import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.componen
     SolicitarCitaComponent,
     CentroSaludComponent,
     CentrosSaludSistemaComponent,
-    EditarUsuarioComponent
+    EditarUsuarioComponent,
+    VentanaEmergenteComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     routing,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+	MatButtonModule,
+    MatDialogModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

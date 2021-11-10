@@ -6,6 +6,7 @@
       <h3 class="centrar-texto">Dirección: {{cs.direccion}}</h3>
       <h3 class="centrar-texto ">Número de vacunas disponibles: {{cs.numVacunasDisponibles}}</h3>
       <button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar Centro</button>
+      <p></p>
       <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
       <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
   </div>

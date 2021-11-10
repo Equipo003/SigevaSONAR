@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
 import { CentroSalud } from '../Model/centro-salud';
 import {JsonService} from "../Service/json.service";
+import { VentanaEmergenteComponent } from '../ventana-emergente/ventana-emergente.component';
 @Component({
   selector: 'app-centro-salud',
   templateUrl: './centro-salud.component.html',
@@ -12,7 +14,7 @@ export class CentroSaludComponent implements OnInit {
   public message: string;
   public errorMessage: string;
 
-  constructor(private json: JsonService) {
+  constructor( public dialog: MatDialog,private json: JsonService) {
 	this.cs = new CentroSalud("", "", 0);
 	this.idCentro="";
 	this.errorMessage = "";
@@ -22,10 +24,27 @@ export class CentroSaludComponent implements OnInit {
   ngOnInit(): void {
 	
   }
+   openDialog() {
+	   let self = this;
+       const dialogRef = this.dialog.open(VentanaEmergenteComponent);
+       dialogRef.afterClosed().subscribe(result => {
+		 if(result){
+			this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
+        result => {
+          this.message = "Centro eliminado correctamente.";
+          setTimeout(function(){ window.location.reload(); }, 3000);
+        },err=> {
+          this.errorMessage = err.error.message;
+ 		  setTimeout(function(){ self.errorMessage=""; }, 3000);
+        });
+		}
+       });
+     }
   enviarDatosBack() {
    
       let self = this;
-      this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
+	  this.openDialog();
+	/*this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
         result => {
           this.message = "Centro eliminado correctamente.";
           setTimeout(function(){ window.location.reload(); }, 3000);
@@ -33,7 +52,8 @@ export class CentroSaludComponent implements OnInit {
           this.errorMessage = err.error.message;
  		  setTimeout(function(){ self.errorMessage=""; }, 3000);
           console.log(err);
-        });
+        });*/
+      
     
   }
 }
