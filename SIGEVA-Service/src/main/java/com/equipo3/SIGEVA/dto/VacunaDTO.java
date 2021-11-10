@@ -13,20 +13,6 @@ public class VacunaDTO {
         this.id = UUID.randomUUID().toString();
     }
 
-    public VacunaDTO(String nombre, int diasEntreDosis, int numDosis){
-        this.id = UUID.randomUUID().toString();
-        this.nombre = nombre;
-        this.diasEntreDosis = diasEntreDosis;
-        this.numDosis = numDosis;
-    }
-    
-    public VacunaDTO(String id, String nombre, int diasEntreDosis, int numDosis) {
-		this.id = id;
-		this.nombre = nombre;
-		this.diasEntreDosis = diasEntreDosis;
-		this.numDosis = numDosis;
-	}
-
 	public String getId() {
         return id;
     }
