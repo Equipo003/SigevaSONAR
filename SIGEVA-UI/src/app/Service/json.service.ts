@@ -10,7 +10,7 @@ export class JsonService {
   url : string;
 
   constructor(private http : HttpClient) {
-    this.url = '' ;
+    this.url = 'http://localhost:8080/' ;
   }
 
   getJson(url : string):Observable<any>{
