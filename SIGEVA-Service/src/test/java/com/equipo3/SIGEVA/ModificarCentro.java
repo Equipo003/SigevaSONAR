@@ -12,6 +12,7 @@ import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dao.VacunaDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.UsuarioDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
@@ -36,8 +37,8 @@ class ModificarCentro {
 		csDto.setDireccion("test modificación centro");
 		csDto.setNombreCentro("CentroTest modificación");
 		csDto.setNumVacunasDisponibles(80);
-		csDto.setVacuna(administradorController.getVacunaByNombre("Pfizer"));
-		System.out.println(csDto.toString());
+		
+		administradorController.crearCentroSalud(csDto);
 	}
 	
 	@BeforeAll
@@ -46,16 +47,22 @@ class ModificarCentro {
 		usuarioDto.setCentroSalud(csDto);
 		usuarioDto.setRol(administradorController.getRolByNombre("Paciente"));
 		usuarioDto.setCorreo("correo@gmail.com");
+		
+		administradorController.crearUsuarioPaciente((PacienteDTO) usuarioDto);
+		
 	}
 	
 	@Test
 	void modificarCentroPaciente() {
-		administradorController.modificarCentroSalud(usuarioDto, csDto);
+		csDto.setNumVacunasDisponibles(80);
+		administradorController.modificarCentroSalud(usuarioDto.getIdUsuario(), csDto);
 	}
 	
 	@Test
 	void modificarCentroSanitario() {
-		
+		csDto.setDireccion("Modofcación dirección");
+		usuarioDto.setRol(administradorController.getRolByNombre("Sanitario"));
+		administradorController.modificarCentroSalud(usuarioDto.getIdUsuario(), csDto);
 	}
 	
 	@Test

@@ -37,6 +37,7 @@ import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
+import com.equipo3.SIGEVA.exception.DeniedAccessException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
 @CrossOrigin
@@ -438,6 +439,22 @@ public class AdministradorController {
 		}
 	}
 
-	public void modificarCentroSalud(UsuarioDTO usuarioDto, CentroSaludDTO csDto) {
+	public void modificarCentroSalud(@RequestParam String idUser, @RequestBody CentroSaludDTO csDto) {
+		try {
+			Optional<Usuario> usuarioOpt = administradorDao.findById(idUser);
+			if(!usuarioOpt.isPresent()) {
+				throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+				
+			}
+			UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+			if(usuariodto.getRol().equals(this.getRolByNombre("Administrador"))) {
+				centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
+			}else {
+				throw new DeniedAccessException("No tienes los permisos necesarios, para realizar la operación");
+			}
+				
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		}
 	}
 }
