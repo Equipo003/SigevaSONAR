@@ -437,4 +437,7 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+
+	public void modificarCentroSalud(UsuarioDTO usuarioDto, CentroSaludDTO csDto) {
+	}
 }
