@@ -37,56 +37,56 @@ class ConfiguracionCuposTest {
     @Autowired
     private AdministradorController administradorController;
 
-//    @Test
-//    void crearConfiguracionCupos(){
-//        if(this.administradorController.existConfiguracionCupos()==false){
-//            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-//            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
-//            this.administradorController.eliminarConfiguracionCupos();
-//
-//        } else {
-//            existConfiguracionCuposDTO = administradorController.getConfiguracionCupos();
-//            this.administradorController.eliminarConfiguracionCupos();
-//
-//            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-//            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
-//
-//            this.administradorController.eliminarConfiguracionCupos();
-//            this.administradorController.crearConfiguracionCupos(existConfiguracionCuposDTO);
-//        }
-//    }
-//
-//    @Test
-//    void crearConfiguracionCuposYaExistente(){
-//        boolean configuracionExistente = true;
-//        try {
-//            configuracionCuposDTO.setId(UUID.randomUUID().toString());
-//            if (this.administradorController.existConfiguracionCupos()==false) {
-//                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-//                configuracionExistente = false;
-//                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-//            }
-//            else {
-//                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-//            }
-//        } catch (Exception e) {
-//            if (configuracionExistente==false){
-//                this.administradorController.eliminarConfiguracionCupos();
-//            }
-//            assertEquals(e.getMessage(), "208 ALREADY_REPORTED \"Ya existe una configuración de cupos\"");
-//
-//        }
-//    }
+    @Test
+    void crearConfiguracionCupos(){
+        if(this.administradorController.existConfiguracionCupos()==false){
+            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
+            this.administradorController.eliminarConfiguracionCupos();
 
-//    @Test
-//    void getConfiguracionCupos(){
-//        if(this.administradorController.existConfiguracionCupos()==false){
-//            Assertions.assertThatExceptionOfType(ResponseStatusException.class).isThrownBy(()->{
-//                this.administradorController.getConfiguracionCupos();
-//            });
-//        }else{
-//            ConfiguracionCuposDTO configuracionCuposDTO = this.administradorController.getConfiguracionCupos();
-//            assertTrue(configuracionCuposDTO!=null);
-//        }
-//    }
+        } else {
+            existConfiguracionCuposDTO = administradorController.getConfiguracionCupos();
+            this.administradorController.eliminarConfiguracionCupos();
+
+            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
+
+            this.administradorController.eliminarConfiguracionCupos();
+            this.administradorController.crearConfiguracionCupos(existConfiguracionCuposDTO);
+        }
+    }
+
+    @Test
+    void crearConfiguracionCuposYaExistente(){
+        boolean configuracionExistente = true;
+        try {
+            configuracionCuposDTO.setId(UUID.randomUUID().toString());
+            if (this.administradorController.existConfiguracionCupos()==false) {
+                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+                configuracionExistente = false;
+                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            }
+            else {
+                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            }
+        } catch (Exception e) {
+            if (configuracionExistente==false){
+                this.administradorController.eliminarConfiguracionCupos();
+            }
+            assertEquals(e.getMessage(), "208 ALREADY_REPORTED \"Ya existe una configuración de cupos\"");
+
+        }
+    }
+
+    @Test
+    void getConfiguracionCupos(){
+        if(this.administradorController.existConfiguracionCupos()==false){
+            Assertions.assertThatExceptionOfType(ResponseStatusException.class).isThrownBy(()->{
+                this.administradorController.getConfiguracionCupos();
+            });
+        }else{
+            ConfiguracionCuposDTO configuracionCuposDTO = this.administradorController.getConfiguracionCupos();
+            assertTrue(configuracionCuposDTO!=null);
+        }
+    }
 }
