@@ -1,24 +1,18 @@
 package com.equipo3.SIGEVA.dto;
 
+import com.equipo3.SIGEVA.model.*;
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.Administrador;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.Cita;
-import com.equipo3.SIGEVA.model.ConfiguracionCupos;
-import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Sanitario;
-import com.equipo3.SIGEVA.model.Vacuna;
 
 @Component
 public class WrapperDTOtoModel {
 
 	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
-		administrador.setIdUsuario(administradorDTO.getIdUsuario());
+		if (!administradorDTO.getIdUsuario().equals("undefined"))
+			administrador.setIdUsuario(administradorDTO.getIdUsuario());
+
 		administrador.setRol(administradorDTO.getRol().getId());
 		administrador.setCentroSalud(administradorDTO.getCentroSalud().getId());
 		administrador.setUsername(administradorDTO.getUsername());
@@ -34,7 +28,9 @@ public class WrapperDTOtoModel {
 
 	public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO) {
 		Sanitario sanitario = new Sanitario();
-		sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
+		if(!sanitarioDTO.getIdUsuario().equals("undefined"))
+			sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
+
 		sanitario.setRol(sanitarioDTO.getRol().getId());
 		sanitario.setCentroSalud(sanitarioDTO.getCentroSalud().getId());
 		sanitario.setUsername(sanitarioDTO.getUsername());
@@ -50,6 +46,9 @@ public class WrapperDTOtoModel {
 
 	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
+		if(!pacienteDTO.getIdUsuario().equals("undefined"))
+			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
+
 		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 		paciente.setRol(pacienteDTO.getRol().getId());
 		paciente.setCentroSalud(pacienteDTO.getCentroSalud().getId());
@@ -124,5 +123,4 @@ public class WrapperDTOtoModel {
 		cita.setDosis(citaDTO.getDosis());
 		return cita;
 	}
-
 }

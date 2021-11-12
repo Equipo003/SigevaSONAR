@@ -40,13 +40,18 @@
         </div>
 
         <div class="control-group">
-          <strong>Contraseña:</strong>
+          <strong>Contraseña actual:</strong>
           <input type="password" placeholder="Password" name="password" #password="ngModel" [(ngModel)]="usuario.hashPassword" required>
           <div>
             <small *ngIf="!password.valid && password.touched" class="textoColorRojo">
               El campo no puede estar vacío
             </small>
           </div>
+        </div>
+
+        <div class="control-group">
+          <strong>Nueva contraseña</strong>
+          <input type="password" placeholder="Nueva contraseña" name="newPassword">
         </div>
 
         <div class="control-group">
@@ -59,7 +64,7 @@
           </div>
         </div>
         <div class="control-group">
-          <strong>Nombre:</strong>
+          <strong>Nombre del usuario:</strong>
           <input type="email" placeholder="Nombre" name="nombre" #nombre="ngModel" [(ngModel)]="usuario.nombre" required>
           <div>
             <small *ngIf="!nombre.valid && nombre.touched" class="textoColorRojo">
@@ -94,7 +99,13 @@
         </div>
 
         <img *ngIf="usuario.imagen" alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
-        <button class="btn" type="submit" [disabled]="editarUsuariosForm.invalid">GUARDAR</button>
+
+        <div class="alineacion-botones">
+          <button class="btn-cancel" type="submit" [disabled]="editarUsuariosForm.invalid"
+                  (click)=openDialogCancelar()>CANCELAR</button>
+          <button class="btn" type="submit" [disabled]="editarUsuariosForm.invalid"
+                  (click)=openDialogGuardar()>GUARDAR</button>
+        </div>
       </form>
 
       <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>

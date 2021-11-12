@@ -93,7 +93,7 @@ select, option {
 }
 
 .control-group2 {
-	margin-bottom: 10px auto;
+	margin-bottom: 10px;
 	/*font-family: Lucida Console;*/
 }
 
@@ -121,7 +121,7 @@ select, option {
 	background: #ffffff;
 	color: #000000;
 	font-size: 16px;
-	line-height: 25px auto;
+	line-height: 25px;
 	padding: 39px 0;
 	text-decoration: none;
 	text-shadow: none;
@@ -292,5 +292,30 @@ select, option {
 .textoColorRojo {
 	color: Red;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.btn-cancel {
+  border: 2px solid transparent;
+  background: red;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 250px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.alineacion-botones{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+/*html, body { height: 100%; }*/
+/*body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
