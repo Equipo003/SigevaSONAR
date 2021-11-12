@@ -5,6 +5,9 @@ html {
 	font-size: 14px;
 	line-height: 1.5em;
 }
+*tabla-centrosSalud { /*mirar*/
+	text-align: left;
+}
 
 *:focus {
 	outline: none;
@@ -289,3 +292,5 @@ select, option {
 .textoColorRojo {
 	color: Red;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

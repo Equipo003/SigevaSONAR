@@ -38,10 +38,9 @@ public class listarUsuariosTest {
     }
 
     @Test void getPacientes(){
-        RolDTO rolDTO = administradorController.getRolByNombre("Paciente");
-        for (PacienteDTO pacienteDTO : administradorController.getPacientes(rolDTO.getId())){
-            System.out.println(pacienteDTO.toString());
+        for (PacienteDTO pacienteDTO : administradorController.getPacientes()){
+            assertNotNull(pacienteDTO);
         }
-        assertNotNull(administradorController.getPacientes(rolDTO.getId()));
+
     }
 }
