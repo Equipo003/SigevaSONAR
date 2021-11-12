@@ -3,6 +3,8 @@ import {Usuario} from "../Model/Usuario";
 import {Rol} from "../Model/rol";
 import {HttpParams} from "@angular/common/http";
 import {JsonService} from "../Service/json.service";
+import {CitaConObjetos} from "../Model/cita-con-objetos";
+import {Paciente} from "../Model/paciente";
 
 @Component({
   selector: 'app-listado-pacientes',
@@ -15,6 +17,7 @@ export class ListadoPacientesComponent implements OnInit {
   pacienteSeleccionado:Usuario;
   startDate:Date;
   endDate : Date;
+  citas : CitaConObjetos[];
 
   constructor(private json:JsonService) {
     this.pacientes = [];
@@ -23,6 +26,7 @@ export class ListadoPacientesComponent implements OnInit {
       "", "", "", "", "25100ecd-136f-43a5-886e-0e7de585d5ea");
     this.startDate = new Date();
     this.endDate = new Date();
+    this.citas = [];
 
   }
 
@@ -70,6 +74,27 @@ export class ListadoPacientesComponent implements OnInit {
 
   mostrar(){
     console.log(this.endDate);
+  }
+
+  getPacientePrueba(){
+    this.json.getJson("cita/getPacientePrueba").subscribe(
+      result => {
+        let paciente : Paciente;
+        paciente = JSON.parse(result);
+        this.getCitas(paciente);
+      }, error => {
+        console.log(error);
+      });
+  }
+
+
+  getCitas(paciente : Paciente) {
+    this.json.postJson("cita/obtenerCitasFuturasPaciente", paciente).subscribe(
+      result => {
+        this.citas = JSON.parse(JSON.stringify(result));
+      }, error => {
+        console.log(error);
+      });
   }
 
 }

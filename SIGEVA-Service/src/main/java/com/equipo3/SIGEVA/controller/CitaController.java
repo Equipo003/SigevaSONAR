@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,10 @@ public class CitaController {
 	@Autowired
 	WrapperModelToDTO wrapper;
 
+	@Autowired
+	UsuarioDao usuarioDao;
+
+
 	@GetMapping("/obtenerCitasFuturasDelPaciente")
 	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente)
 			throws UsuarioInvalidoException {
@@ -50,6 +55,12 @@ public class CitaController {
 		for (int i = 0; i < citasDTO.size(); i++) {
 			citaDao.deleteById(citasDTO.get(i).getUuidCita());
 		}
+	}
+
+	@GetMapping("/getPacientePrueba")
+	public PacienteDTO getPacientePrueba(){
+		return wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("jorgeee45").get());
+
 	}
 
 }
