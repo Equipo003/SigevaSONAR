@@ -642,4 +642,5 @@ public class AdministradorController {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
 		}
 	}
+	
 }
