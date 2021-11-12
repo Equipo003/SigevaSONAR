@@ -8,27 +8,25 @@
 }
 
 .contenedor-dividido{
-  width: 80%;
-  height: 100vh;
+  width: 90%;
+  height: 100%;
   display: inline-block;
 }
 
 .listado-form{
-  background-color: #3498DB;
+  background-color: black;
   float:left;
-  width: 70%;
+  width: auto;
+  min-width: 1100px;
   height: auto;
 
 }
 
 .vacunas{
-  background-color: #3498DB;
-  float:right;
-  width: 30%;
-  height: 100%;
-  margin: 0 auto;
-  align-items: center;
-
+  background-color: red;
+  float: right ;
+  width: 300px;
+  height: 300px;
 }
 
 .listado{
@@ -45,8 +43,8 @@
 }
 
 .contenedor-paciente{
-  height: auto;
-  width: 100%;
+  height: 300px;
+  width: 300px;
   background-color: white;
   margin: 5px auto;
   border-radius: 5px;
@@ -68,50 +66,32 @@
   line-height: 25px;
 
   position:relative;
-  left: 50%;
-  bottom:20px;
+  top:10px;
+  margin: 0 auto;
+
 }
 
 .imagen-paciente{
   position:relative;
-  right:35%;
-  top:25px;
+  top:10px;
 }
 
 .nombre-paciente{
   position:relative;
-  right: 35%;
-  top:20px;
+  top:10px;
   margin: 0 auto;
 }
 
 .dni-paciente {
-  position: relative;
-  right: 10%;
-  bottom: 90px;
+  position:relative;
+  top:10px;
   margin: 0 auto;
 }
 
 .fecha-nacimiento {
-  position: relative;
-  left: 1%;
-  bottom: 80px;
+  position:relative;
+  top:10px;
   margin: 0 auto;
-}
-
-
-.vacuna-form {
-  background-color: #FFF;
-  padding: 20px;
-  height: auto;
-  border-radius: 5px;
-  margin: 0 auto;
-}
-
-.vacuna-group {
-  background-color: #FFF;
-  margin-bottom: 10px;
-  height: 100%;
 }
 
 .separation {

@@ -1,33 +1,32 @@
 <div class = contenedor-dividido>
-  <div class="listado-form">
 
+  <div class="listado-form">
     <div class="filtro">
-      <input type="date">
+      <mat-form-field appearance="fill">
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+          <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <button (click)="this.mostrar()"></button>
     </div>
 
     <!-- Inicio de la lista de pacientes -->
       <div class="listado">
-        <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
-          <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
-          <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
-          <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
-          <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
-          <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Seleccionar</button>
+        <div class="contenedor-items">
+          <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
+            <div class="control-group">
+              <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
+              <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
+              <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
+              <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
+              <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Seleccionar</button>
+            </div>
         </div>
-        <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
-          <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
-          <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
-          <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
-          <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
-          <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Seleccionar</button>
-        </div>
-        <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
-          <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
-          <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
-          <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
-          <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
-          <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Seleccionar</button>
-        </div>
+      </div>
       </div>
 
   </div>
@@ -38,10 +37,15 @@
     <div class="separation"></div>
       <div class="vacuna-form">
         <div class="vacuna-group">
-          <img alt="imagen paciente" width="100" height="100" src="{{this.pacienteSeleccionado.imagen}}" >
-          <p>{{this.pacienteSeleccionado.nombre}}</p>
-          <p>{{this.pacienteSeleccionado.dni}}</p>
-          <button  >Aplicar dosis</button>
+          <div class="contenedor-paciente">
+          <div class="control-group">
+            <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{this.pacienteSeleccionado.imagen}}">
+            <h3 class="nombre-paciente">{{this.pacienteSeleccionado.nombre}}</h3>
+            <h4 class="dni-paciente">DNI: {{this.pacienteSeleccionado.dni}}</h4>
+            <h4 class="fecha-nacimiento">Fecha nacimiento: {{this.pacienteSeleccionado.fechaNacimiento | date:'mediumDate'}}</h4>
+            <button class="btn-vacunar" (click)="this.vacunar(this.pacienteSeleccionado)" >Seleccionar</button>
+          </div>
+        </div>
         </div>
       </div>
   </div>

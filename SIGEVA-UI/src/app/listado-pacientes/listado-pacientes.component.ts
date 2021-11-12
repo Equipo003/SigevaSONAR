@@ -13,12 +13,17 @@ export class ListadoPacientesComponent implements OnInit {
   pacientes : Usuario[];
   roles : Rol[];
   pacienteSeleccionado:Usuario;
+  startDate:Date;
+  endDate : Date;
 
   constructor(private json:JsonService) {
     this.pacientes = [];
     this.roles = [];
     this.pacienteSeleccionado = new Usuario("", "eb972b1a-b1f0-41c9-bae4-ac729b6b967b", "vasilesan", "", "", "",
       "", "", "", "", "25100ecd-136f-43a5-886e-0e7de585d5ea");
+    this.startDate = new Date();
+    this.endDate = new Date();
+
   }
 
   ngOnInit(): void {
@@ -61,6 +66,10 @@ export class ListadoPacientesComponent implements OnInit {
 
   vacunar(paciente : Usuario){
     this.pacienteSeleccionado = paciente;
+  }
+
+  mostrar(){
+    console.log(this.endDate);
   }
 
 }

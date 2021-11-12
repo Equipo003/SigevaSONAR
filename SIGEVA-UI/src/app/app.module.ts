@@ -26,6 +26,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ListadoPacientesComponent } from './listado-pacientes/listado-pacientes.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 
 
 @NgModule({
@@ -44,7 +47,7 @@ import { ListadoPacientesComponent } from './listado-pacientes/listado-pacientes
     CentroSaludComponent,
     CentrosSaludSistemaComponent,
     EditarUsuarioComponent,
-    ListadoPacientesComponent
+    ListadoPacientesComponent,
     EditarUsuarioComponent,
     VentanaEmergenteComponent
   ],
@@ -55,8 +58,11 @@ import { ListadoPacientesComponent } from './listado-pacientes/listado-pacientes
     routing,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-	MatButtonModule,
-    MatDialogModule
+    MatButtonModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
