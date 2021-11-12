@@ -40,6 +40,14 @@ import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
 import com.equipo3.SIGEVA.exception.DeniedAccessException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
+/**
+ * Controlador perteneciente al sistema web, sobre la gestión de vacunas COVID
+ * SIGEVA, en el se especifican funcionalidades las cuales las puede realizar
+ * solo el administrador.S
+ * 
+ * @author Equipo3
+ *
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("user")
@@ -66,6 +74,12 @@ public class AdministradorController {
 
 	private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
+	/**
+	 * Recurso web para la creación de un Administrador.
+	 * 
+	 * @param administradorDTO Datos del administrador proporcionados por otro administrador
+	 *                     (usuario), a través de la interfaz gráfica del front end.
+	 */
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
@@ -82,6 +96,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la creación de un Paciente.
+	 * 
+	 * @param pacienteDTO Datos del paciente proporcionados por el administrador
+	 *                     (usuario), a través de la interfaz gráfica del front end.
+	 */
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
@@ -98,6 +118,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la creación de un Sanitario.
+	 * 
+	 * @param sanitarioDTO Datos del sanitario proporcionados por el administrador
+	 *                     (usuario), a través de la interfaz gráfica del front end.
+	 */
 	@PostMapping("/crearUsuarioSanitario")
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
@@ -114,6 +140,13 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la creación de un nuevo centro de salud en el sistema.
+	 * 
+	 * @param centroSaludDTO Centro de salud que viene del front end y que se crea a
+	 *                       partir de los datos proporcionados por el administrador
+	 *                       (usuario).
+	 */
 	@PostMapping("/newCentroSalud")
 	public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
@@ -133,6 +166,13 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la eliminación de un centro de salud registrador en el
+	 * sistema.
+	 * 
+	 * @param centroSaludDTO Centro de salud que se quiere eliminar y que viene del
+	 *                       front end.
+	 */
 	@PostMapping("/deleteCentroSalud")
 	public void borrarCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
 		try {
@@ -157,6 +197,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la creación de un rol.
+	 * 
+	 * @param rolDTO Rol el cual se quiere crear en la bbdd.
+	 */
 	public void crearRol(@RequestBody RolDTO rolDTO) {
 		try {
 			rolDao.save(WrapperDTOtoModel.rolDTOToRol(rolDTO));
@@ -165,11 +210,24 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la obtención de todos los centros de salud que tiene el
+	 * sistema registrados.
+	 * 
+	 * @return List<CentroSaludDTO> Lista que contiene todos los centros de salud
+	 *         que tiene el sistema.
+	 */
 	@GetMapping("/getCentros")
 	public List<CentroSaludDTO> listarCentros() {
 		return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
 	}
 
+	/**
+	 * Recurso web para la obtención de todos los roles que se encuentran en la
+	 * bbdd.
+	 * 
+	 * @return List<RolDTO> Roles que se encuentran en la bbdd.
+	 */
 	@GetMapping("/getRoles")
 	public List<RolDTO> listarRoles() {
 		try {
@@ -179,6 +237,14 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso para la obtención de todos los usuario por Rol, teniendo la opción de
+	 * devolver todos (rol=Todos)
+	 * 
+	 * @param rol Identificador del rol que van a tener los usuarios, los cuales se
+	 *            quieren obtener.
+	 * @return List<UsuarioDTO> Lista de usuarios que tiene el rol especificado.
+	 */
 	@GetMapping("/getUsuariosByRol")
 	public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
 		try {
@@ -192,6 +258,13 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la obtención de un paciente a partir de su identificador.
+	 * 
+	 * @param id Identificador del paciente que se quiere obtener de la bbdd.
+	 * @return PacienteDTO Paciente obtenido de la bbdd a partir de su
+	 *         identificador.
+	 */
 	public PacienteDTO getPaciente(String id) {
 		try {
 			Optional<Usuario> optPaciente = administradorDao.findById(id);
@@ -204,6 +277,14 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la asiganción de centro de salud a los sanitarios.
+	 * 
+	 * @param username Nombre de usuario del sanitario al que se le va a asignar el
+	 *                 centro de salud.
+	 * @param centro   Identificador del centro de salud que se va a asignar al
+	 *                 sanitario.
+	 */
 	@PutMapping("/fijarCentro/{username}/{centro}")
 	public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
 		try {
@@ -218,6 +299,13 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la creción de la configuración de cupos que va a tener
+	 * activa el sistema.
+	 * 
+	 * @param configuracionCuposDTO Configuración de cupos que le llega desde el
+	 *                              front end.
+	 */
 	@PostMapping("/crearConfCupos")
 	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
@@ -237,6 +325,11 @@ public class AdministradorController {
 
 	}
 
+	/**
+	 * Método que comprueba si hay o no una configuración de cupos.
+	 * 
+	 * @return boolean Si tiene el sistema una configuración activa o no.
+	 */
 	@GetMapping("/existConfCupos")
 	public boolean existConfiguracionCupos() {
 		try {
@@ -248,6 +341,11 @@ public class AdministradorController {
 
 	}
 
+	/**
+	 * Obtención de la cofiguración de cupos que tiene configurada el sistema.
+	 * 
+	 * @return ConfiguracionCuposDTO Configuración que tiene activada el sistema.
+	 */
 	@GetMapping("/getConfCupos")
 	public ConfiguracionCuposDTO getConfiguracionCupos() {
 		try {
@@ -263,6 +361,10 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la eliminación de la configuración de cupos que tiene activada el
+	 * sistema
+	 */
 	public void eliminarConfiguracionCupos() {
 		try {
 			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
@@ -275,6 +377,15 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la modificación de la dosis disponibles que tiene un centro
+	 * de salud.
+	 * 
+	 * @param centroSalud Identificador del centro de salud de cual se quieren
+	 *                    modificar las dosis de vacunas disponibles.
+	 * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
+	 *                    del centro de salud.S
+	 */
 	@PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
 	public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
 		try {
@@ -290,6 +401,13 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la obtención de un centro de salud a partir de su identificador.
+	 * 
+	 * @param centroSalud Identificador del centro de salud, el cual queremos
+	 *                    obtener de la bbdd.
+	 * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
+	 */
 	public CentroSaludDTO getCentroById(String centroSalud) {
 		try {
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
@@ -302,6 +420,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Obtención del rol a partir de su identificador.
+	 * 
+	 * @param rol Identificador del rol, el cual se quiere obtener de la bbdd.
+	 * @return RolDTO Rol obtenido de la bbdd.
+	 */
 	public RolDTO getRolById(String rol) {
 		try {
 			Optional<Rol> optRol = rolDao.findById(rol);
@@ -334,6 +458,12 @@ public class AdministradorController {
 	 * }
 	 */
 
+	/**
+	 * Recurso web para la obtención de un usuario a partir de su identificador.
+	 * 
+	 * @param idUsuario Identificador de usuario que se quiere obtener de la bbdd.s
+	 * @return UsuarioDTO Usuario obtenido de la bbdd a partir de su identificador.
+	 */
 	@GetMapping("/getUsuarioById")
 	public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
 		try {
@@ -347,6 +477,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Eliminación de usuario a partir del nombre de usuario.
+	 * 
+	 * @param username Nombre de usuario que tiene dicho usuario.
+	 */
 	public void eliminarUsuario(String username) {
 		try {
 			administradorDao.deleteByUsername(username);
@@ -355,6 +490,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Eliminación de Centro de Salud a partir del identificador de él.
+	 * 
+	 * @param idCentro Identificador del centro de salud.
+	 */
 	public void eliminarCentro(String idCentro) {
 		try {
 			centroSaludDao.deleteById(idCentro);
@@ -363,6 +503,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Obtención de un rol de la bbdd, a partir del nombre del rol.
+	 * 
+	 * @param nombreRol Nombre del rol que queremos obtener.
+	 * @return RolDTO Rol obtenido de la bbdd.
+	 */
 	public RolDTO getRolByNombre(String nombreRol) {
 		try {
 			Optional<Rol> optRol = rolDao.findByNombre(nombreRol);
@@ -375,6 +521,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Obtención de los pacientes que están gestionados a partir de SIGEVA.
+	 * 
+	 * @return List<PacienteDTO> Lista de pacientes que contiene todos los Pacientes
+	 *         que se encuentran en el sistema.
+	 */
 	public List<PacienteDTO> getPacientes() {
 		try {
 			List<Usuario> optUsuario = administradorDao.findAllByClass("com.equipo3.SIGEVA.model.Paciente");
@@ -387,6 +539,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la inserción de una vacuna a la bbdd´.
+	 * 
+	 * @param vacunaDTO Vacuna que se va a crear en la bbdd.
+	 */
 	public void addVacuna(VacunaDTO vacunaDTO) {
 		try {
 			Vacuna vacuna = WrapperDTOtoModel.vacunaDTOToVacuna(vacunaDTO);
@@ -396,6 +553,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la obtención de la vacuna a partir del nombre de ella.
+	 * 
+	 * @param pfizer Nombre que tiene la vacuna.
+	 * @return VacunaDTO Vacuna obtenida de la BBDD a partir de su nombre.
+	 */
 	public VacunaDTO getVacunaByNombre(String pfizer) {
 		try {
 			Optional<Vacuna> optVacuna = vacunaDao.findByNombre(pfizer);
@@ -408,6 +571,12 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la obtención de la vacuna a partir del identificador de ella.
+	 * 
+	 * @param id Identificador de la vacuna que queremos encontrar en la BBDD.
+	 * @return VacunaDTO Vacuna obtenida de la BBDD a partir de su identificador.
+	 */
 	public VacunaDTO getVacunaById(String id) {
 		try {
 			Optional<Vacuna> optVacuna = vacunaDao.findById(id);
@@ -420,6 +589,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Método para la eliminación de una vacuna, la cual esta disponible.
+	 * 
+	 * @param idVacuna Identificador de la vacuna que se quiere eliminar.s
+	 */
 	public void eliminarVacuna(String idVacuna) {
 		try {
 			vacunaDao.deleteById(idVacuna);
@@ -428,6 +602,11 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Metodo para la eliminación de un rol.
+	 * 
+	 * @param idRol Identificador del rol que se quiere eliminar.
+	 */
 	public void eliminarRol(String idRol) {
 		try {
 			rolDao.deleteById(idRol);
@@ -436,6 +615,14 @@ public class AdministradorController {
 		}
 	}
 
+	/**
+	 * Recurso web para la modificación de los centros de salud por parte de los
+	 * administradores.
+	 * 
+	 * @param idUser Identificador del usuario que va a realizar la modificación de
+	 *               centro.
+	 * @param csDto  Centro de salud modificado
+	 */
 	@PostMapping("/updateCS")
 	public void modificarCentroSalud(@RequestParam String idUser, @RequestBody CentroSaludDTO csDto) {
 		try {
