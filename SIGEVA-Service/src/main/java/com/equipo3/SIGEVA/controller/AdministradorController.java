@@ -241,7 +241,7 @@ public class AdministradorController {
 	public boolean existConfiguracionCupos() {
 		try {
 			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-			return configuracionCuposList.isEmpty();
+			return !configuracionCuposList.isEmpty();
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
