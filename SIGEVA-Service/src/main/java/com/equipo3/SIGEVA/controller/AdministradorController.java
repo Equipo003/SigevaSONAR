@@ -164,11 +164,15 @@ public class AdministradorController {
 			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
 			if (optCentroSalud.isPresent()) {
-				if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty() || usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
-					System.out.println(usuarioDao.findAllByCentroSalud(centroSalud.getId()));
-					centroSaludDao.deleteById(centroSalud.getId());
+				if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
+					if(usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
+						centroSaludDao.deleteById(centroSalud.getId());
+					}else {
+						throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener usuarios.");
+					}
+				
 				} else {
-					throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas o usuarios.");
+					throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
 				}
 			} else {
 				throw new CentroInvalidoException("El centro de salud NO existe.");
