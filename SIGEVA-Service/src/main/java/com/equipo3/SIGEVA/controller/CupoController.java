@@ -138,4 +138,14 @@ public class CupoController {
 //		cupoDao.save(cupo);
 	}
 
+	public void prepararCupos(CentroSalud centroSalud) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void borrarCupos(CentroSalud centroSalud) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
