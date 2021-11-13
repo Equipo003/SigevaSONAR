@@ -12,7 +12,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class TerstModificarVacunas {
+public class ModificarNumVacunasTest {
 
     @Autowired
     private AdministradorController administradorController;

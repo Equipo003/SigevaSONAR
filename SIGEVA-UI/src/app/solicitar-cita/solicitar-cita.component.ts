@@ -38,7 +38,7 @@ export class SolicitarCitaComponent {
 				"username": String(this.paciente.username)
 			}
 		});
-		this.json.getJsonP("cupo/buscarParDeCuposLibresAPartirDeHoy", params).subscribe(
+		this.json.getJsonP("cupo/buscarYAsignarCitas", params).subscribe(
 			result => {
 				this.citas = JSON.parse(result.toString());
 				this.cita1 = this.citas[0];

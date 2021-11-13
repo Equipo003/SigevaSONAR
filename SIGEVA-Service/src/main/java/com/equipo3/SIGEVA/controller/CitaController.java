@@ -52,4 +52,11 @@ public class CitaController {
 		}
 	}
 
+	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
+		List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
+		for (int i = 0; i < citasDTO.size(); i++) {
+			citaDao.deleteById(citasDTO.get(i).getUuidCita());
+		}
+	}
+
 }
