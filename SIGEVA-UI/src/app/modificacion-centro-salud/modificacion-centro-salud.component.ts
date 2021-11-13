@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CentroSalud } from '../Model/centro-salud';
 import { ActivatedRoute, Params } from "@angular/router";
-import { HttpParams } from "@angular/common/http";
+import { HttpHeaders, HttpParams } from "@angular/common/http";
 import { JsonService } from '../Service/json.service';
 
 @Component({
@@ -45,9 +45,31 @@ export class ModificacionCentroSaludComponent implements OnInit {
 				console.log(error);
 			});
 	}
-	
-	modificarCentroSalud() {
 
+	modificarCentroSalud() {
+		let params = new HttpParams({
+			fromObject: {
+				idUser: "4da33823-0218-41f2-86a6-65cdafe27e2e",
+			}
+		});
+		
+		let headers = new HttpHeaders();
+		headers.append("Content-Type", "aplication/json"),
+		headers.append("observe", "body");
+
+		let options = ({
+			headers: headers,
+			params: params,
+			body: this.cs
+		});
+		
+		this.json.postJsonUpdateCS("user/updateCS", this.cs, options).subscribe(
+			result => {
+				this.message = "Centro modificado correctamente";
+			}, error => {
+				this.message="";
+				this.errorMessage = error.error.message;
+			});
 	}
 
 }
