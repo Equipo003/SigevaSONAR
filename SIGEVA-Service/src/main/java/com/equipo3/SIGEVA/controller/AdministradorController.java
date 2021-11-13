@@ -58,6 +58,8 @@ public class AdministradorController {
 	@Autowired
 	private RolDao rolDao;
 	@Autowired
+	private UsuarioDao usuarioDao;
+	@Autowired
 	private CentroSaludDao centroSaludDao;
 	@Autowired
 	private ConfiguracionCuposDao configuracionCuposDao;
@@ -65,7 +67,8 @@ public class AdministradorController {
 	private VacunaDao vacunaDao;
 	@Autowired
 	private CupoDao cupoDao;
-
+	@Autowired
+	private CupoController cupoController;
 	@Autowired
 	private WrapperModelToDTO wrapperModelToDTO;
 
@@ -90,6 +93,7 @@ public class AdministradorController {
 			}
 
 			administradorDao.save(administrador);
+			System.out.println("HECHO SAVE ADMIN");
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -112,6 +116,7 @@ public class AdministradorController {
 			}
 
 			administradorDao.save(paciente);
+			System.out.println("HECHO SAVE PACIENTE");
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -128,12 +133,15 @@ public class AdministradorController {
 	public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
 		try {
 			Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+			System.out.println("ANTES find");
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
+			System.out.println("DESPUES find  " + optUsuario.toString() );
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
 			}
 
 			administradorDao.save(sanitario);
+			System.out.println("HECHO SAVE SANITARIO");
 
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -158,7 +166,7 @@ public class AdministradorController {
 			}
 
 			centroSaludDao.save(centroSalud);
-			// cupoController.prepararCupos(centroSalud);
+			cupoController.prepararCupos(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,16 +188,17 @@ public class AdministradorController {
 			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
 			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
 			if (optCentroSalud.isPresent()) {
-				if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
+				if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty() || usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
+					System.out.println(usuarioDao.findAllByCentroSalud(centroSalud.getId()));
 					centroSaludDao.deleteById(centroSalud.getId());
 				} else {
-					throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
+					throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas o usuarios.");
 				}
 			} else {
 				throw new CentroInvalidoException("El centro de salud NO existe.");
 			}
 
-			// cupoController.prepararCuposCitas(centroSalud);
+			cupoController.borrarCupos(centroSalud);
 
 		} catch (Exception e) {
 			e.printStackTrace();
