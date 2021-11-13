@@ -58,6 +58,9 @@ public class AdministradorController {
     private WrapperModelToDTO wrapperModelToDTO;
 
     @Autowired
+    private CitaController citaController;
+
+    @Autowired
     private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
@@ -640,13 +643,14 @@ public class AdministradorController {
             if (!usuarioOpt.isPresent()) {
                 throw new UsuarioInvalidoException("Usuario no existe en el sistema");
             }
-
-            List<Cita> citas = citaDao.buscarCitasDelPaciente(usuarioOpt.get().getIdUsuario());
-            if (!citas.isEmpty()) {
-                CitaDTO citaDTO = wrapperModelToDTO.citaToCitaDTO(citas.get(0));
-
-                if (citaDTO.getCupo().getFechaYHoraInicio().compareTo(new Date()) < 0) {
-                    throw new UsuarioInvalidoException("El centro del usuario NO se puede modificar por estar ya vacunado en el centro\"");
+            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+            if (usuariodto.getRol().getNombre().equals("Paciente")) {
+                PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
+                if (pacienteDTO.getNumDosisAplicadas() != 0) {
+                    throw new UsuarioInvalidoException("No puedes modificar el centro de un usuario que ya ha aplicado una dosis");
+                }
+                else {
+                    citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
                 }
             }
 
