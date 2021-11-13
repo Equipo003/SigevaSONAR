@@ -16,13 +16,8 @@ public interface UsuarioDao extends MongoRepository <Usuario, String> {
 
     List<Usuario> findAllByRol(String id);
     
-<<<<<<< HEAD
-    Optional<Usuario> findById(String id);
-    
-=======
     List<Usuario> findAllByCentroSalud(String centroSalud);
-
->>>>>>> refs/remotes/origin/develop
+    
     @Query("{ '_class' : ?0 }")
     List<Usuario> findAllByClass(String className);
 

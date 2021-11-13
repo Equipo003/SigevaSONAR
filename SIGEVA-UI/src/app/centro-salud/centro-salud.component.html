@@ -27,13 +27,11 @@
 				</tr>
 
 			</table>
-			<div>
+			<div class="alineacion-botones">
 				<br>
 				<button class="btn" type="submit"
-					[routerLink]="['/editarCS', cs.id]">Modificar Centro</button>
-				<br>
-				<button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar
-					Centro</button>
+					[routerLink]="['/editarCS', cs.id]">Editar</button>
+				<button class="btn-cancel" (click)="enviarDatosBack()">Eliminar</button>
 			</div>
 			<p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
 			<p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>

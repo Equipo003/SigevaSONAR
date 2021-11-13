@@ -4,12 +4,11 @@
 <div class="register">
 	<div class="register-screen">
 		<div class="register-form">
-			<form #editarCentroSaludForm="ngForm" id="editarCs" (ngSubmit)="modificarCentroSalud()">
+			<form #editarCentroSaludForm="ngForm" id="editarCs">
 				<div class="control-group">
-					<b>Nombre centro de salud:</b>
-					<input type="text" disabled="true"
+					<b>Nombre centro de salud:</b> <input type="text" disabled="true"
 						placeholder="Nombre centro salud" #nombreCS="ngModel"
-						[(ngModel)]="cs.nombreCentro"  name="nombreCentro" required>
+						[(ngModel)]="cs.nombreCentro" name="nombreCentro" required>
 					<div>
 						<small *ngIf="!nombreCS.valid && nombreCS.touched"
 							class="textoColorRojo"> El campo no puede estar vacio </small>
@@ -17,9 +16,9 @@
 				</div>
 
 				<div class="control-group">
-					<b>Dirección:</b>
-					<input type="text" placeholder="Dirección centro salud"
-						#direccionCS="ngModel" [(ngModel)]="cs.direccion" name="direccion" required>
+					<b>Dirección:</b> <input type="text"
+						placeholder="Dirección centro salud" #direccionCS="ngModel"
+						[(ngModel)]="cs.direccion" name="direccion" required>
 					<div>
 						<small *ngIf="!direccionCS.valid && direccionCS.touched"
 							class="textoColorRojo"> El campo no puede estar vacio </small>
@@ -27,16 +26,20 @@
 				</div>
 
 				<div class="control-group">
-					<b>Nº Vacunas:</b>
-					<input type="number" placeholder="Nº vacunas" #vacunasCS="ngModel"
-						[(ngModel)]="cs.numVacunasDisponibles" name="numVacunasDisponibles" required>
+					<b>Nº Vacunas:</b> <input type="number" placeholder="Nº vacunas"
+						#vacunasCS="ngModel" [(ngModel)]="cs.numVacunasDisponibles"
+						name="numVacunasDisponibles" required>
 					<div>
 						<small *ngIf="!vacunasCS.valid && vacunasCS.touched"
 							class="textoColorRojo"> El campo no puede estar vacio </small>
 					</div>
 				</div>
-				<button class="btn" type="submit"
-					[disabled]="editarCentroSaludForm.invalid">Guardar Cambios</button>
+				<div class="alineacion-botones">
+					<button class="btn" type="submit" [disabled]="editarCentroSaludForm.invalid"
+						(click)=openDialogGuardar()>Guardar Cambios</button>
+					<button class="btn-cancel" type="submit" [disabled]="editarCentroSaludForm.invalid"
+						(click)=openDialogCancelar()>CANCELAR</button>
+				</div>
 			</form>
 			<p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
 			<p class="resaltadoPositivo" *ngIf="message">{{message}}</p>

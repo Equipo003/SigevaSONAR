@@ -181,25 +181,6 @@ public class AdministradorController {
 
 
     /**
-     * Método para la obtención de un paciente a partir de su identificador.
-     *
-     * @param id Identificador del paciente que se quiere obtener de la bbdd.
-     * @return PacienteDTO Paciente obtenido de la bbdd a partir de su
-     * identificador.
-     */
-    public PacienteDTO getPaciente(String id) {
-        try {
-            Optional<Usuario> optPaciente = administradorDao.findById(id);
-            if (optPaciente.isPresent()) {
-                return wrapperModelToDTO.pacienteToPacienteDTO(optPaciente.get());
-            }
-            throw new UsuarioInvalidoException("El paciente no existe en la base de datos");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-    /**
      * Método para la creación de un rol.
      *
      * @param rolDTO Rol el cual se quiere crear en la bbdd.
@@ -207,111 +188,6 @@ public class AdministradorController {
     public void crearRol(@RequestBody RolDTO rolDTO) {
         try {
             rolDao.save(WrapperDTOtoModel.rolDTOToRol(rolDTO));
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Recurso web para la asiganción de centro de salud a los sanitarios.
-     *
-     * @param username Nombre de usuario del sanitario al que se le va a asignar el
-     *                 centro de salud.
-     * @param centro   Identificador del centro de salud que se va a asignar al
-     *                 sanitario.
-     */
-    @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Recurso web para la asiganción de centro de salud a los sanitarios.
-     *
-     * @param username Nombre de usuario del sanitario al que se le va a asignar el
-     *                 centro de salud.
-     * @param centro   Identificador del centro de salud que se va a asignar al
-     *                 sanitario.
-     */
-    @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Recurso web para la asiganción de centro de salud a los sanitarios.
-     *
-     * @param username Nombre de usuario del sanitario al que se le va a asignar el
-     *                 centro de salud.
-     * @param centro   Identificador del centro de salud que se va a asignar al
-     *                 sanitario.
-     */
-    @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Recurso web para la asiganción de centro de salud a los sanitarios.
-     *
-     * @param username Nombre de usuario del sanitario al que se le va a asignar el
-     *                 centro de salud.
-     * @param centro   Identificador del centro de salud que se va a asignar al
-     *                 sanitario.
-     */
-    @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Recurso web para la asiganción de centro de salud a los sanitarios.
-     *
-     * @param username Nombre de usuario del sanitario al que se le va a asignar el
-     *                 centro de salud.
-     * @param centro   Identificador del centro de salud que se va a asignar al
-     *                 sanitario.
-     */
-    @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -328,15 +204,6 @@ public class AdministradorController {
     public List<CentroSaludDTO> listarCentros() {
         return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
     }
-    /**
-     * Recurso web para la creción de la configuración de cupos que va a tener
-     * activa el sistema.
-     *
-     * @param configuracionCuposDTO Configuración de cupos que le llega desde el
-     *                              front end.
-     */
-    @PostMapping("/crearConfCupos")
-    public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
     /**
      * Recurso web para la obtención de todos los roles que se encuentran en la
@@ -352,9 +219,6 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-        try {
-            ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
-                    .configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
 
     /**
      * Recurso para la obtención de todos los usuario por Rol, teniendo la opción de
@@ -376,15 +240,6 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-            if (configuracionCuposDTOList.isEmpty())
-                configuracionCuposDao.save(configuracionCupos);
-            else
-                throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
-        }
 
     /**
      * Método para la obtención de un paciente a partir de su identificador.
@@ -403,7 +258,6 @@ public class AdministradorController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
-    }
     }
 
     /**
@@ -427,19 +281,6 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-    /**
-     * Método que comprueba si hay o no una configuración de cupos.
-     *
-     * @return boolean Si tiene el sistema una configuración activa o no.
-     */
-    @GetMapping("/existConfCupos")
-    public boolean existConfiguracionCupos() {
-        try {
-            List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-            return !configuracionCuposList.isEmpty();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
 
     /**
      * Recurso web para la creción de la configuración de cupos que va a tener
@@ -450,7 +291,6 @@ public class AdministradorController {
      */
     @PostMapping("/crearConfCupos")
     public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
-    }
 
         try {
             ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
@@ -465,16 +305,7 @@ public class AdministradorController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
         }
-            if (configuracionCuposDTOList.isEmpty())
-                throw new IdentificadorException("No existe una configuración de cupos");
-            if (configuracionCuposDTOList.isEmpty())
-                throw new IdentificadorException("No existe una configuración de cupos");
 
-    }
-            return configuracionCuposDTOList.get(0);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
     }
 
     /**
@@ -490,21 +321,7 @@ public class AdministradorController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-    /**
-     * Método para la eliminación de la configuración de cupos que tiene activada el
-     * sistema
-     */
-    public void eliminarConfiguracionCupos() {
-        try {
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-            configuracionCuposDao.delete(
-                    WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
 
-    }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
     }
 
     /**
@@ -517,143 +334,13 @@ public class AdministradorController {
         try {
             List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
                     .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-    /**
-     * Recurso web para la modificación de la dosis disponibles que tiene un centro
-     * de salud.
-     *
-     * @param centroSalud Identificador del centro de salud de cual se quieren
-     *                    modificar las dosis de vacunas disponibles.
-     * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
-     *                    del centro de salud.S
-     */
-    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
-            }
-    /**
-     * Recurso web para la modificación de la dosis disponibles que tiene un centro
-     * de salud.
-     *
-     * @param centroSalud Identificador del centro de salud de cual se quieren
-     *                    modificar las dosis de vacunas disponibles.
-     * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
-     *                    del centro de salud.S
-     */
-    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
-            }
-    /**
-     * Recurso web para la modificación de la dosis disponibles que tiene un centro
-     * de salud.
-     *
-     * @param centroSalud Identificador del centro de salud de cual se quieren
-     *                    modificar las dosis de vacunas disponibles.
-     * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
-     *                    del centro de salud.S
-     */
-    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
-            }
 
             if (configuracionCuposDTOList.isEmpty())
                 throw new IdentificadorException("No existe una configuración de cupos");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
 
             return configuracionCuposDTOList.get(0);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-    /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
-     *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
-     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-     */
-    public CentroSaludDTO getCentroById(String centroSalud) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-            }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
-     *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
-     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-     */
-    public CentroSaludDTO getCentroById(String centroSalud) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-            }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
-     *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
-     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-     */
-    public CentroSaludDTO getCentroById(String centroSalud) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-            }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-    /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
-     *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
-     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-     */
-    public CentroSaludDTO getCentroById(String centroSalud) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-            }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -667,6 +354,56 @@ public class AdministradorController {
                     .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
             configuracionCuposDao.delete(
                     WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    /**
+     * Recurso web para la modificación de la dosis disponibles que tiene un centro
+     * de salud.
+     *
+     * @param centroSalud Identificador del centro de salud de cual se quieren
+     *                    modificar las dosis de vacunas disponibles.
+     * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
+     *                    del centro de salud.S
+     */
+    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
+    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
+        try {
+            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
+            if (optCentroSalud.isPresent()) {
+                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
+                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+            }
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    /**
+     * Recurso web para la obtención de un centro de salud a partir de su identificador.
+     *
+     * @param centroSalud Identificador del centro de salud, el cual queremos
+     *                    obtener de la bbdd.
+     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
+     */
+    @GetMapping("/getCentroSaludById")
+    public CentroSaludDTO getCentroById(@RequestParam String idCentroSalud) {
+        try {
+            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(idCentroSalud);
+            if (optCentroSalud.isPresent()) {
+                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+            }
+            throw new IdentificadorException("Identificador Centro Salud " + idCentroSalud + " no existe");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
     /**
      * Obtención del rol a partir de su identificador.
      *
@@ -684,92 +421,6 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    /**
-     * Recurso web para la modificación de la dosis disponibles que tiene un centro
-     * de salud.
-     *
-     * @param centroSalud Identificador del centro de salud de cual se quieren
-     *                    modificar las dosis de vacunas disponibles.
-     * @param vacunas     Número de vacunas que se quieren añadir a las disponibles
-     *                    del centro de salud.S
-     */
-    @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
-            }
-    /**
-     * Recurso web para la obtención de un usuario a partir de su identificador.
-     *
-     * @param idUsuario Identificador de usuario que se quiere obtener de la bbdd.s
-     * @return UsuarioDTO Usuario obtenido de la bbdd a partir de su identificador.
-     */
-    @GetMapping("/getUsuarioById")
-    public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) {
-        try {
-            Optional<Usuario> optUsuario = administradorDao.findById(idUsuario);
-            if (optUsuario.isPresent()) {
-                return wrapperModelToDTO.usuarioToUsuarioDTO(optUsuario.get());
-            }
-            throw new IdentificadorException("Identificador Usuario " + idUsuario + " no encontrado");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-    /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
-     *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
-     * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-     */
-    public CentroSaludDTO getCentroById(String centroSalud) {
-        try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-            }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-	/**
-	 * Recurso web para la obtención de un centro de salud a partir de su identificador.
-	 * 
-	 * @param idCentroSalud Identificador del centro de salud, el cual queremos
-	 *                    obtener de la bbdd.
-	 * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
-	 */
-	@GetMapping("/getCentroSaludById")
-	public CentroSaludDTO getCentroById(@RequestParam String idCentroSalud) {
-		try {
-			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(idCentroSalud);
-			if (optCentroSalud.isPresent()) {
-				return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-			}
-			throw new IdentificadorException("Identificador Centro Salud " + idCentroSalud + " no existe");
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
 
     /*
      * @GetMapping("/getPacientesJornada") public List<PacienteDTO>

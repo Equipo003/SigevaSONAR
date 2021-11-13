@@ -28,10 +28,6 @@ export class EditarUsuarioComponent implements OnInit {
     this.errorMessage = "";
     this.message = "";
     this.idUsuario = "";
-<<<<<<< HEAD
-=======
-    ;
->>>>>>> refs/remotes/origin/develop
   }
 
   ngOnInit() {

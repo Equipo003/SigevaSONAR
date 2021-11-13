@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CentroSalud } from '../Model/centro-salud';
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { HttpHeaders, HttpParams } from "@angular/common/http";
 import { JsonService } from '../Service/json.service';
+import { MatDialog } from '@angular/material/dialog';
+import { VentanaEmergenteComponent } from '../ventana-emergente/ventana-emergente.component';
 
 @Component({
 	selector: 'app-modificacion-centro-salud',
@@ -15,7 +17,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
 	public message: string;
 	public errorMessage: string;
 
-	constructor(private json: JsonService, private rutaActu: ActivatedRoute) {
+	constructor(private json: JsonService, private rutaActu: ActivatedRoute, private router: Router, public dialog: MatDialog) {
 		this.cs = new CentroSalud("", "", 0);
 		this.idCS = "",
 			this.errorMessage = "";
@@ -45,29 +47,53 @@ export class ModificacionCentroSaludComponent implements OnInit {
 				console.log(error);
 			});
 	}
-
-	modificarCentroSalud() {
-		let params = new HttpParams({
-			fromObject: {
-				idUser: "4da33823-0218-41f2-86a6-65cdafe27e2e",
+	openDialogCancelar() {
+		const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
+			data: { mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición' },
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.router.navigate(['centrosSalud']);
 			}
 		});
-		
+	}
+	openDialogGuardar() {
+		let self = this;
+		const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
+			data: { mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición' },
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				this.modificarCentroSalud();
+			}
+		});
+	}
+
+	modificarCentroSalud() {
+		let self = this;
+		let params = new HttpParams({
+			fromObject: {
+				idUser: "24badd05-374b-4a3c-af77-5977d47866fd",
+			}
+		});
+
 		let headers = new HttpHeaders();
 		headers.append("Content-Type", "aplication/json"),
-		headers.append("observe", "body");
+			headers.append("observe", "body");
 
 		let options = ({
 			headers: headers,
 			params: params,
 			body: this.cs
 		});
-		
+
 		this.json.postJsonUpdateCS("user/updateCS", this.cs, options).subscribe(
 			result => {
 				this.message = "Centro modificado correctamente";
+				setTimeout(function() { self.router.navigate(['centrosSalud']); }, 3000);
+				this.errorMessage = "";
 			}, error => {
-				this.message="";
+				this.message = "";
 				this.errorMessage = error.error.message;
 			});
 	}

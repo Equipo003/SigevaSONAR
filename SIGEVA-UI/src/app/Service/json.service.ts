@@ -69,11 +69,12 @@ export class JsonService {
     return this.http.post(url, body, options);
   }
 
-<<<<<<< HEAD
+
   postJsonUpdateCS(url : string, body : Object, options : Object){
       url = this.url + url;
     return this.http.post(url, body, options);
-=======
+  }
+
   deleteJson(url : string, parameter1 : string){
     let options : Object =  {
       "observe" : 'body',
@@ -81,6 +82,6 @@ export class JsonService {
     }
     url = this.url + url + "/" + parameter1;
     return this.http.delete(url, options);
->>>>>>> refs/remotes/origin/develop
+
   }
 }
