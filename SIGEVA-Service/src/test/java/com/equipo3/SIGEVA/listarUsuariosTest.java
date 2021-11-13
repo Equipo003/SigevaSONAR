@@ -2,6 +2,7 @@ package com.equipo3.SIGEVA;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dao.RolDao;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.model.Rol;
@@ -38,9 +39,27 @@ public class listarUsuariosTest {
     }
 
     @Test void getPacientes(){
+    	PacienteDTO paciente = new PacienteDTO();
+    	paciente.setNombre("Test getPacientes");
+    	paciente.setUsername("Test getPacientes");
+    	paciente.setRol(administradorController.getRolByNombre("Paciente"));
+    	
+    	CentroSaludDTO csDto = new CentroSaludDTO();
+		csDto.setDireccion("test getPacientes direccion");
+		csDto.setNombreCentro("CentroTest getPaciente");
+		csDto.setNumVacunasDisponibles(80);
+		
+		administradorController.crearCentroSalud(csDto);
+		
+		paciente.setCentroSalud(csDto);
+		
+    	administradorController.crearUsuarioPaciente(paciente);
         for (PacienteDTO pacienteDTO : administradorController.getPacientes()){
             assertNotNull(pacienteDTO);
+            administradorController.eliminarUsuario(paciente.getUsername());
         }
+        administradorController.borrarCentroSalud(csDto);
+        
 
     }
 }
