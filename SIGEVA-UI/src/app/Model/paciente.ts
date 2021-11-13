@@ -1,4 +1,4 @@
-import {UsuarioConObjetos} from "./usuario-con-objetos";
+import {UsuarioConObjetos} from "./Usuario-con-objetos";
 import {Rol} from "./rol";
 import {CentroSalud} from "./centro-salud";
 

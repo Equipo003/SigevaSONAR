@@ -2,8 +2,11 @@ package com.equipo3.SIGEVA.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +62,13 @@ public class CitaController {
 
 	@GetMapping("/getPacientePrueba")
 	public PacienteDTO getPacientePrueba(){
-		return wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("jorgeee45").get());
+		Optional<Usuario> opt = this.usuarioDao.findByUsername("No borrar pruebas citas");
+		if(opt.isPresent()) {
+			Usuario paciente = opt.get();
+			Paciente p = (Paciente) paciente;
+			System.out.println(p.getDni());
+		}
+		return wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar pruebas citas").get());
 
 	}
 

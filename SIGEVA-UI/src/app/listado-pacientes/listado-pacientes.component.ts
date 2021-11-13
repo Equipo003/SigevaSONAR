@@ -31,7 +31,8 @@ export class ListadoPacientesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRoles();
+    //this.getRoles();
+    this.getPacientePrueba();
   }
 
   getRoles() {
