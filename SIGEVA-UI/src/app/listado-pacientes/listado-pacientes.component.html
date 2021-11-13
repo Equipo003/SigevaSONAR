@@ -17,13 +17,13 @@
     <!-- Inicio de la lista de pacientes -->
       <div class="listado">
         <div class="contenedor-items">
-          <div class="contenedor-paciente" *ngFor="let paciente of this.pacientes">
+          <div class="contenedor-paciente" *ngFor="let cita of this.citas">
             <div class="control-group">
-              <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{paciente.imagen}}">
-              <h3 class="nombre-paciente">{{paciente.nombre}}</h3>
-              <h4 class="dni-paciente">DNI: {{paciente.dni}}</h4>
-              <h4 class="fecha-nacimiento">Fecha nacimiento: {{paciente.fechaNacimiento | date:'mediumDate'}}</h4>
-              <button class="btn-vacunar" (click)="this.vacunar(paciente)" >Seleccionar</button>
+              <img class="imagen-paciente" alt="imagen paciente" width="100" height="100" src="{{cita.paciente.imagen}}">
+              <h3 class="nombre-paciente">{{cita.paciente.nombre}}</h3>
+              <h4 class="dni-paciente">DNI: {{cita.paciente.dni}}</h4>
+              <h4 class="fecha-nacimiento">Fecha nacimiento: {{cita.paciente.fechaNacimiento | date:'mediumDate'}}</h4>
+              <button class="btn-vacunar" (click)="this.vacunar(cita.paciente)" >Seleccionar</button>
             </div>
         </div>
       </div>

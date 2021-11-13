@@ -14,7 +14,7 @@
 }
 
 .listado-form{
-  background-color: black;
+  background-color: #3498DB;
   float:left;
   width: auto;
   min-width: 1100px;
@@ -23,7 +23,7 @@
 }
 
 .vacunas{
-  background-color: red;
+  background-color: #3498DB;
   float: right ;
   width: 300px;
   height: 300px;

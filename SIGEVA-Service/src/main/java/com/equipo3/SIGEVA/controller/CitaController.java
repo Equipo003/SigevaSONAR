@@ -8,12 +8,7 @@ import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dto.CitaDTO;
@@ -36,7 +31,7 @@ public class CitaController {
 	UsuarioDao usuarioDao;
 
 
-	@GetMapping("/obtenerCitasFuturasDelPaciente")
+	@PostMapping("/obtenerCitasFuturasDelPaciente")
 	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente)
 			throws UsuarioInvalidoException {
 		if (paciente != null) {
@@ -59,6 +54,7 @@ public class CitaController {
 			citaDao.deleteById(citasDTO.get(i).getUuidCita());
 		}
 	}
+
 
 	@GetMapping("/getPacientePrueba")
 	public PacienteDTO getPacientePrueba(){

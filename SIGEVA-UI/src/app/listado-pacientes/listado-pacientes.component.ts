@@ -5,6 +5,7 @@ import {HttpParams} from "@angular/common/http";
 import {JsonService} from "../Service/json.service";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {Paciente} from "../Model/paciente";
+import {CentroSalud} from "../Model/centro-salud";
 
 @Component({
   selector: 'app-listado-pacientes',
@@ -14,7 +15,7 @@ import {Paciente} from "../Model/paciente";
 export class ListadoPacientesComponent implements OnInit {
   pacientes : Usuario[];
   roles : Rol[];
-  pacienteSeleccionado:Usuario;
+  pacienteSeleccionado:Paciente;
   startDate:Date;
   endDate : Date;
   citas : CitaConObjetos[];
@@ -22,8 +23,8 @@ export class ListadoPacientesComponent implements OnInit {
   constructor(private json:JsonService) {
     this.pacientes = [];
     this.roles = [];
-    this.pacienteSeleccionado = new Usuario("", "eb972b1a-b1f0-41c9-bae4-ac729b6b967b", "vasilesan", "", "", "",
-      "", "", "", "", "25100ecd-136f-43a5-886e-0e7de585d5ea");
+    this.pacienteSeleccionado = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre", 1), "vasilesan", "", "", "",
+      "", "", "", "", 0);
     this.startDate = new Date();
     this.endDate = new Date();
     this.citas = [];
@@ -69,7 +70,7 @@ export class ListadoPacientesComponent implements OnInit {
       });
   }
 
-  vacunar(paciente : Usuario){
+  vacunar(paciente : Paciente){
     this.pacienteSeleccionado = paciente;
   }
 
@@ -82,6 +83,7 @@ export class ListadoPacientesComponent implements OnInit {
       result => {
         let paciente : Paciente;
         paciente = JSON.parse(result);
+        console.log(paciente);
         this.getCitas(paciente);
       }, error => {
         console.log(error);
@@ -90,9 +92,10 @@ export class ListadoPacientesComponent implements OnInit {
 
 
   getCitas(paciente : Paciente) {
-    this.json.postJson("cita/obtenerCitasFuturasPaciente", paciente).subscribe(
+    this.json.postJson("cita/obtenerCitasFuturasDelPaciente", paciente).subscribe(
       result => {
         this.citas = JSON.parse(JSON.stringify(result));
+        console.log(result)
       }, error => {
         console.log(error);
       });
