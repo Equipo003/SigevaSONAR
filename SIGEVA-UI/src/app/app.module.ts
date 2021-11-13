@@ -25,6 +25,7 @@ import { VentanaEmergenteComponent } from './ventana-emergente/ventana-emergente
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
+import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     CentroSaludComponent,
     CentrosSaludSistemaComponent,
     EditarUsuarioComponent,
-    VentanaEmergenteComponent
+    VentanaEmergenteComponent,
+    ModificacionCentroSaludComponent
   ],
   imports: [
     BrowserModule,

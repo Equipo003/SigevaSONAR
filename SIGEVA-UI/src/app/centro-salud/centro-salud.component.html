@@ -1,9 +1,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <div class="item centroSalud">
- 
+
 	<div class="contenido-item centrar-texto">
 		<div class="control-group">
 			<table class="tabla-centrosSalud" align="center">
@@ -30,12 +29,14 @@
 			</table>
 			<div>
 				<br>
-				<button type="submit" class="btn">Modificar Centro</button>
+				<button class="btn" type="submit"
+					[routerLink]="['/editarCS', cs.id]">Modificar Centro</button>
 				<br>
-				<button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar Centro</button>
-      <p></p>
-      <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
-      <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+				<button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar
+					Centro</button>
 			</div>
+			<p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+			<p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
 		</div>
 	</div>
+</div>

@@ -1,0 +1,45 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<div class="register">
+	<div class="register-screen">
+		<div class="register-form">
+			<form #editarCentroSaludForm="ngForm" id="editarCs" (ngSubmit)="modificarCentroSalud()">
+				<div class="control-group">
+					<b>Nombre centro de salud:</b>
+					<input type="text" disabled="true"
+						placeholder="Nombre centro salud" #nombreCS="ngModel"
+						[(ngModel)]="cs.nombreCentro"  name="nombreCentro" required>
+					<div>
+						<small *ngIf="!nombreCS.valid && nombreCS.touched"
+							class="textoColorRojo"> El campo no puede estar vacio </small>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<b>Dirección:</b>
+					<input type="text" placeholder="Dirección centro salud"
+						#direccionCS="ngModel" [(ngModel)]="cs.direccion" name="direccion" required>
+					<div>
+						<small *ngIf="!direccionCS.valid && direccionCS.touched"
+							class="textoColorRojo"> El campo no puede estar vacio </small>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<b>Nº Vacunas:</b>
+					<input type="number" placeholder="Nº vacunas" #vacunasCS="ngModel"
+						[(ngModel)]="cs.numVacunasDisponibles" name="numVacunasDisponibles" required>
+					<div>
+						<small *ngIf="!vacunasCS.valid && vacunasCS.touched"
+							class="textoColorRojo"> El campo no puede estar vacio </small>
+					</div>
+				</div>
+				<button class="btn" type="submit"
+					[disabled]="editarCentroSaludForm.invalid">Guardar Cambios</button>
+			</form>
+			<p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+			<p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+		</div>
+	</div>
+</div>

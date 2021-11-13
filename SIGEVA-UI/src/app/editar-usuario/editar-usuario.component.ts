@@ -25,7 +25,7 @@ export class EditarUsuarioComponent implements OnInit {
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
-    this.idUsuario = "";;
+    this.idUsuario = "";
   }
 
   ngOnInit(){
