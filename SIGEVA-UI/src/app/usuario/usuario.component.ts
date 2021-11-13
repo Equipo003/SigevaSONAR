@@ -30,14 +30,14 @@ export class UsuarioComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.json.postJson("user/removeUsuario", this.usuario).subscribe(
+        this.json.deleteJson("user/deleteUsuario", String(this.usuario.idUsuario)).subscribe(
           result => {
             this.message = "Usuario eliminado correctamente";
-            setTimeout(function(){ self.message= ""; self.errorMessage = "" }, 3000);
             this.errorMessage = "";
+            setTimeout(function(){ document.location.reload() }, 3000);
           }, error => {
             this.errorMessage = error.error.message;
-            this.message = "";
+            setTimeout(function(){ self.errorMessage = "" }, 4000);
           });
       }
     });

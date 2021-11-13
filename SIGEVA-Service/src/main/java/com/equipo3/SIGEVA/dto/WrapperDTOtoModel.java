@@ -49,7 +49,6 @@ public class WrapperDTOtoModel {
 		if(!pacienteDTO.getIdUsuario().equals("undefined"))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 
-		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 		paciente.setRol(pacienteDTO.getRol().getId());
 		paciente.setCentroSalud(pacienteDTO.getCentroSalud().getId());
 		paciente.setUsername(pacienteDTO.getUsername());

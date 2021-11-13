@@ -11,15 +11,7 @@ import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
@@ -677,6 +669,29 @@ public class AdministradorController {
                     break;
             }
 
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/deleteUsuario/{idUsuario}")
+    public void deleteUsuarioById(@PathVariable String idUsuario) {
+        try {
+            Optional<Usuario> usuarioOpt = administradorDao.findById(idUsuario);
+            if (!usuarioOpt.isPresent()) {
+                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+            }
+            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+            if (usuariodto.getRol().getNombre().equals("Paciente")) {
+                PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
+                if (pacienteDTO.getNumDosisAplicadas() != 0) {
+                    throw new UsuarioInvalidoException("No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis");
+                }
+                else {
+                    citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
+                }
+            }
+            administradorDao.deleteById(idUsuario);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

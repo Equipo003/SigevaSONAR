@@ -12,7 +12,8 @@
         <button class="btn-cancel" (click)=openDialogEliminar()>Eliminar</button>
         <button class="btn" [routerLink]="['/editarUsuario', usuario.idUsuario]">Editar</button>
       </div>
-
     </div>
+    <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+    <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
   </div>
 </div>
