@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,12 +24,6 @@ import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dao.VacunaDao;
-import com.equipo3.SIGEVA.dto.CentroSaludDTO;
-import com.equipo3.SIGEVA.dto.CupoDTO;
-import com.equipo3.SIGEVA.dto.PacienteDTO;
-import com.equipo3.SIGEVA.dto.VacunaDTO;
-import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
-import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 import com.equipo3.SIGEVA.model.CentroSalud;
@@ -98,6 +94,14 @@ public class CupoController {
 			return cuposDTO;
 		} else {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Centro de salud no contemplado.");
+		}
+	}
+
+	public void eliminarCupo(String idCupo) {
+		try {
+			cupoDao.deleteById(idCupo);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Cupo no encontrado.");
 		}
 	}
 
