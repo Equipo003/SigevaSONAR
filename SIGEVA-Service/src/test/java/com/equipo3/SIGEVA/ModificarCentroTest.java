@@ -36,12 +36,11 @@ import com.equipo3.SIGEVA.model.Usuario;
 class ModificarCentroTest {
 	@Autowired
 	private AdministradorController administradorController = new AdministradorController();
-	@Autowired
-	private WrapperModelToDTO wrapperModelToDTO;
-	@Autowired
-	private WrapperDTOtoModel wrapperDTOtoModel;
 
-	static CentroSaludDTO csDto;
+	private static CentroSaludDTO csDto;
+	private static AdministradorDTO administrador;
+	private static SanitarioDTO sanitario;
+	private static PacienteDTO paciente;
 
 	@BeforeAll
 	static void creacionCentroSalud() {
@@ -58,25 +57,25 @@ class ModificarCentroTest {
 	 */
 	@Test
 	void modificarCentroPaciente() {
-		administradorController.crearCentroSalud(csDto);
-
-		PacienteDTO paciente = new PacienteDTO();
-		paciente.setRol(administradorController.getRolByNombre("Paciente"));
-		paciente.setNombre("Paciente test modificar Paciente");
-		paciente.setCentroSalud(csDto);
-
-		administradorController.crearUsuarioPaciente(paciente);
-
-		csDto.setNumVacunasDisponibles(80);
-		csDto.setDireccion("Modificación centro test paciente");
-
 		try {
+			administradorController.crearCentroSalud(csDto);
+
+			paciente = new PacienteDTO();
+			paciente.setRol(administradorController.getRolByNombre("Paciente"));
+			paciente.setNombre("Paciente test modificar Paciente");
+			paciente.setCentroSalud(csDto);
+
+			administradorController.crearUsuarioPaciente(paciente);
+
+			csDto.setNumVacunasDisponibles(80);
+			csDto.setDireccion("Modificación centro test paciente");
+
 			administradorController.modificarCentroSalud(paciente.getIdUsuario(), csDto);
 		} catch (Exception e) {
 			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
 					e.getMessage());
-			administradorController.borrarCentroSalud(csDto);
 			administradorController.eliminarUsuario(paciente.getUsername());
+			administradorController.eliminarCentro(csDto.getId());
 		}
 
 	}
@@ -87,25 +86,25 @@ class ModificarCentroTest {
 	 */
 	@Test
 	void modificarCentroSanitario() {
-		administradorController.crearCentroSalud(csDto);
-
-		SanitarioDTO sanitario = new SanitarioDTO();
-		sanitario.setRol(administradorController.getRolByNombre("Sanitario"));
-		sanitario.setCentroSalud(csDto);
-		sanitario.setUsername("Test sanitario");
-
-		administradorController.crearUsuarioSanitario(sanitario);
-
-		csDto.setDireccion("Modificación dirección test sanitario");
-
 		try {
+			administradorController.crearCentroSalud(csDto);
+
+			sanitario = new SanitarioDTO();
+			sanitario.setRol(administradorController.getRolByNombre("Sanitario"));
+			sanitario.setCentroSalud(csDto);
+			sanitario.setUsername("Test sanitario");
+
+			administradorController.crearUsuarioSanitario(sanitario);
+
+			csDto.setDireccion("Modificación dirección test sanitario");
+
 			administradorController.modificarCentroSalud(sanitario.getIdUsuario(), csDto);
 
 		} catch (Exception e) {
 			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
 					e.getMessage());
-			administradorController.borrarCentroSalud(csDto);
 			administradorController.eliminarUsuario(sanitario.getUsername());
+			administradorController.eliminarCentro(csDto.getId());
 		}
 
 	}
@@ -117,24 +116,24 @@ class ModificarCentroTest {
 	 */
 	@Test
 	void modificarCentroNombreAdministrador() {
-		administradorController.crearCentroSalud(csDto);
-
-		AdministradorDTO administrador = new AdministradorDTO();
-		administrador.setCentroSalud(csDto);
-		administrador.setRol(administradorController.getRolByNombre("Administrador"));
-		administrador.setUsername("Test modificación centro  admin");
-
-		administradorController.crearUsuarioAdministrador(administrador);
-
-		csDto.setNombreCentro("Hospital test");
-
 		try {
+			administradorController.crearCentroSalud(csDto);
+
+			administrador = new AdministradorDTO();
+			administrador.setCentroSalud(csDto);
+			administrador.setRol(administradorController.getRolByNombre("Administrador"));
+			administrador.setUsername("Test modificación centro  admin");
+
+			administradorController.crearUsuarioAdministrador(administrador);
+
+			csDto.setNombreCentro("Hospital test");
+
 			administradorController.modificarCentroSalud(administrador.getIdUsuario(), csDto);
 		} catch (Exception e) {
 			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
 					e.getMessage());
-			administradorController.borrarCentroSalud(csDto);
 			administradorController.eliminarUsuario(administrador.getUsername());
+			administradorController.eliminarCentro(csDto.getId());
 		}
 
 	}
@@ -144,29 +143,27 @@ class ModificarCentroTest {
 	 */
 	@Test
 	void modificarCentroCorrecto() {
-		boolean throwe = false;
-
-		administradorController.crearCentroSalud(csDto);
-
-		AdministradorDTO administrador = new AdministradorDTO();
-		administrador.setCentroSalud(csDto);
-		administrador.setRol(administradorController.getRolByNombre("Administrador"));
-		administrador.setUsername("Test modificación centro  admin");
-
-		administradorController.crearUsuarioAdministrador(administrador);
-
-		csDto.setDireccion("Modificación dirección test centro Administrador");
-		csDto.setNumVacunasDisponibles(30);
-
 		try {
-			administradorController.modificarCentroSalud(administrador.getIdUsuario(), csDto);
-			administradorController.borrarCentroSalud(csDto);
-			administradorController.eliminarUsuario(administrador.getUsername());
-		} catch (Exception e) {
-			throwe = true;
-		}
+			administradorController.crearCentroSalud(csDto);
 
-		assertFalse(throwe);
+			administrador = new AdministradorDTO();
+			administrador.setCentroSalud(csDto);
+			administrador.setRol(administradorController.getRolByNombre("Administrador"));
+			administrador.setUsername("Test modificación centro  admin");
+
+			administradorController.crearUsuarioAdministrador(administrador);
+
+			csDto.setDireccion("Modificación dirección test centro Administrador");
+			csDto.setNumVacunasDisponibles(30);
+
+			administradorController.modificarCentroSalud(administrador.getIdUsuario(), csDto);
+
+			assertEquals(administradorController.getCentroById(csDto.getId()).toString(), csDto.toString());
+			administradorController.eliminarUsuario(administrador.getUsername());
+			administradorController.eliminarCentro(csDto.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
