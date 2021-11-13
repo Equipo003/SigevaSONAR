@@ -68,4 +68,13 @@ export class JsonService {
       url = this.url + url;
     return this.http.post(url, body, options);
   }
+
+  deleteJson(url : string, parameter1 : string){
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'json'
+    }
+    url = this.url + url + "/" + parameter1;
+    return this.http.delete(url, options);
+  }
 }
