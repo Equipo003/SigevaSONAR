@@ -698,4 +698,23 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public TokenDTO login(@RequestBody UsuarioLoginDTO usuarioLoginDTO) {
+        try {
+            Optional<Usuario> usuarioOpt = administradorDao.findByUsername(usuarioLoginDTO.getUsername());
+            if (!usuarioOpt.isPresent()) {
+                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+            }
+            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+            if (!usuariodto.getHashPassword().equals(usuarioLoginDTO.getHashPassword())) {
+                throw new UsuarioInvalidoException("Contraseña incorrecta");
+            }
+
+            return new TokenDTO(usuariodto.getIdUsuario(), usuariodto.getRol().getNombre());
+
+        }catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
 }

@@ -27,6 +27,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 import { LoginComponent } from './login/login.component';
+import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { LoginComponent } from './login/login.component';
     EditarUsuarioComponent,
     VentanaEmergenteComponent,
     ModificacionCentroSaludComponent,
-    LoginComponent
+    LoginComponent,
+    BarraNavegacionComponent
   ],
   imports: [
     BrowserModule,

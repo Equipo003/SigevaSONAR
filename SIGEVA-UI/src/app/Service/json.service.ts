@@ -82,6 +82,14 @@ export class JsonService {
     }
     url = this.url + url + "/" + parameter1;
     return this.http.delete(url, options);
+  }
 
+  login(url : string, body : Object):Observable<any>{
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'json'
+    }
+    url = this.url + url;
+    return this.http.post(url, body, options);
   }
 }
