@@ -12,6 +12,7 @@ import { SolicitarCitaComponent } from './solicitar-cita/solicitar-cita.componen
 import { CentrosSaludSistemaComponent } from './centros-salud-sistema/centros-salud-sistema.component';
 import {EditarUsuarioComponent} from "./editar-usuario/editar-usuario.component";
 import { ModificacionCentroSaludComponent } from "./modificacion-centro-salud/modificacion-centro-salud.component";
+import {LoginComponent} from "./login/login.component";
 
 const  appRoutes: Routes = [
   {path: '', component :HomeComponent},
@@ -25,7 +26,8 @@ const  appRoutes: Routes = [
   {path: 'solicitarCita', component: SolicitarCitaComponent},
   {path: 'centrosSalud', component: CentrosSaludSistemaComponent},
   {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent},
-  {path: 'editarCS/:idCentroSalud', component: ModificacionCentroSaludComponent}
+  {path: 'editarCS/:idCentroSalud', component: ModificacionCentroSaludComponent},
+  {path: 'login', component: LoginComponent}
 
 ]
 

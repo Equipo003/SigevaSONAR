@@ -26,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/mo
     CentrosSaludSistemaComponent,
     EditarUsuarioComponent,
     VentanaEmergenteComponent,
-    ModificacionCentroSaludComponent
+    ModificacionCentroSaludComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
