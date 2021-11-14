@@ -1,7 +1,25 @@
 <app-barra-navegacion></app-barra-navegacion>
-
-<form #loginForm="ngForm" (ngSubmit)=login()>
-  <input type="text" name="username" [(ngModel)]="loginUsuario.username">
-  <input type="password" name="password" [(ngModel)]="loginUsuario.hashPassword">
-  <button type="submit">Log in</button>
-</form>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>  
+        <div id="contenedor">
+            <div id="central">
+                <div id="login">
+                    <div class="titulo">
+                        Bienvenido
+                    </div>
+                    <form id="loginform" #loginForm="ngForm" (ngSubmit)=login()>
+                   
+                   	 <img src="assets/icons/usuario.png"  >
+                        <input type="text" name="username" placeholder="Usuario" [(ngModel)]="loginUsuario.username" required>
+                        <img src="assets/icons/contrasena.png"  >
+                        <input type="password" placeholder="Contraseña" name="password" [(ngModel)]="loginUsuario.hashPassword" required>
+                        
+                        <button type="submit" title="Ingresar" name="Ingresar">Log in</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+</body>
