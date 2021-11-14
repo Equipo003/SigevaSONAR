@@ -101,6 +101,7 @@ public class CitaController {
 					citasDTO.remove(i--);
 				}
 			}
+			Collections.sort(citasDTO);
 			return citasDTO;
 		} else {
 			throw new UsuarioInvalidoException("Paciente no contemplado en el parámetro.");
