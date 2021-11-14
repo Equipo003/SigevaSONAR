@@ -84,6 +84,7 @@ public class CupoController {
 	@PostMapping("/prepararCupos")
 	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
 		// ¡Requerirá tiempo de ejecución!
+		System.out.println("CREADOS CUPOS");		
 		return null;
 	}
 
