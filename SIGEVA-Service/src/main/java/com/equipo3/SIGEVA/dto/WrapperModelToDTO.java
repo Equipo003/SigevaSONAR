@@ -25,6 +25,8 @@ import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @Component
 public class WrapperModelToDTO {

@@ -27,9 +27,7 @@ const  appRoutes: Routes = [
   {path: 'solicitarCita', component: SolicitarCitaComponent},
   {path: 'centrosSalud', component: CentrosSaludSistemaComponent},
   {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent},
-  {path: 'listadoUsuarios', component: ListadoPacientesComponent}
-
-  {path: 'editarUsuario/:idUsuario', component: EditarUsuarioComponent},
+  {path: 'listadoUsuarios', component: ListadoPacientesComponent},
   {path: 'editarCS/:idCentroSalud', component: ModificacionCentroSaludComponent},
   {path: 'login', component: LoginComponent}
 

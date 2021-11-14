@@ -18,4 +18,7 @@ export class Paciente extends UsuarioConObjetos{
     super(rol, centroSalud, username,correo,hashPassword,dni,nombre,apellidos,fechaNacimiento,imagen,idUsuario);
     this.numDosisAplicadas = numDosisAplicadas;
   }
+
+
 }
+

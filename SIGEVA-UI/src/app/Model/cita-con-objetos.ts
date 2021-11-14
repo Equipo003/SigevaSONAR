@@ -6,6 +6,7 @@ export interface CitaConObjetos{
   dosis : number;
 }
 
+
 export class CitaConObjetos {
   cupo : CupoCitas;
   dosis : number;
@@ -16,4 +17,5 @@ export class CitaConObjetos {
     this.dosis = dosis;
     this.paciente = paciente;
   }
+
 }

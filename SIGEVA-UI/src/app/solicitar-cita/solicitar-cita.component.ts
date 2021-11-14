@@ -1,9 +1,11 @@
 import { Component, } from '@angular/core';
-import { Usuario } from "../Model/Usuario";
 import { CentroSalud  } from "../Model/centro-salud";
-import { CupoCitas } from "../Model/cupo-citas";
 import { JsonService } from '../Service/json.service';
 import { HttpParams } from "@angular/common/http";
+import {CitaConObjetos} from "../Model/cita-con-objetos";
+import {Paciente} from "../Model/paciente";
+import {CupoCitas} from "../Model/cupo-citas";
+import {Rol} from "../Model/rol";
 
 @Component({
 	selector: 'app-solicitar-cita',
@@ -12,47 +14,50 @@ import { HttpParams } from "@angular/common/http";
 })
 
 export class SolicitarCitaComponent {
-	paciente: Usuario;
+	paciente: Paciente;
 	mensaje: string;
 	mensajeError: string;
-	cita1: CupoCitas;
-	cita2: CupoCitas;
-	citas: CupoCitas[];
+	citas: CitaConObjetos[];
 	solicitada: boolean;
 
 	constructor(private json: JsonService) {
-		this.paciente = new Usuario("", "eb972b1a-b1f0-41c9-bae4-ac729b6b967b", "vasilesan", "", "", "",
-			"", "", "", "", "25100ecd-136f-43a5-886e-0e7de585d5ea");
-		this.cita1 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
-		this.cita2 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
+		this.paciente = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre", 1), "vasilesan", "", "", "",
+      "", "", "", "", 0);
 		this.citas = [];
 		this.solicitada = false;
 		this.mensaje = "SOLICITAR CITA";
 		this.mensajeError = "";
-
 	}
 
-	solicitarCita() {
-		let params = new HttpParams({
-			fromObject: {
-				"username": String(this.paciente.username)
-			}
-		});
-		this.json.getJsonP("cupo/buscarYAsignarCitas", params).subscribe(
-			result => {
-				this.citas = JSON.parse(result.toString());
-				this.cita1 = this.citas[0];
-				this.cita2 = this.citas[1];
-				this.mensaje = 'CITA RESERVADA!'
-				this.mensajeError = "";
-				this.solicitada = true;
-			}, err => {
-				this.mensaje = "";
-				this.mensajeError = JSON.parse(err.error)['message'];
-
-			});
+  ngOnInit(): void {
+  }
 
 
-	}
+  solicitarCita(){
+    this.getPacientePrueba();
+  }
+
+  getPacientePrueba(){
+    this.json.getJson("cita/getPacientePrueba").subscribe(
+      result => {
+        let paciente : Paciente;
+        paciente = JSON.parse(result);
+        this.getCitas(paciente);
+      }, error => {
+        console.log(error);
+      });
+  }
+
+
+  getCitas(paciente : Paciente) {
+    this.json.postJson("cita/obtenerCitasFuturasDelPacienteP", paciente).subscribe(
+      result => {
+        this.citas = JSON.parse(JSON.stringify(result));
+        console.log(this.citas[0].cupo.fechaYHoraInicio)
+        this.solicitada = true;
+      }, error => {
+        console.log(error);
+      });
+  }
 
 }

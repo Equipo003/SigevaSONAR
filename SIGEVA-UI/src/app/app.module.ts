@@ -52,7 +52,6 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
     EditarUsuarioComponent,
     ListadoPacientesComponent,
     EditarUsuarioComponent,
-    VentanaEmergenteComponent
     VentanaEmergenteComponent,
     ModificacionCentroSaludComponent,
     LoginComponent,
