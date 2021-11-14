@@ -1,41 +1,41 @@
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <div class="item centroSalud">
- 
-	<div class="contenido-item centrar-texto">
-		<div class="control-group">
-			<table class="tabla-centrosSalud" align="center">
-				<tr>
-					<td><img src="../assets/icons/hospital.png" width="30px"
-						height="30px"></td>
 
-					<td><b>{{cs.nombreCentro}}</b></td>
-				</tr>
+  <div class="contenido-item centrar-texto">
+    <div class="control-group">
+      <table class="tabla-centrosSalud" align="center">
+        <tr>
+          <td><img src="../assets/icons/hospital.png" width="30px"
+                   height="30px"></td>
 
-				<tr>
-					<td><img src="../assets/icons/adress.png" width="30px"
-						height="30px"></td>
+          <td><b>{{cs.nombreCentro}}</b></td>
+        </tr>
 
-					<td><b>{{cs.direccion}}</b></td>
-				</tr>
-				<tr>
-					<td><img src="../assets/icons/vaccine.png" width="30px"
-						height="30px"></td>
+        <tr>
+          <td><img src="../assets/icons/adress.png" width="30px"
+                   height="30px"></td>
 
-					<td><b>{{cs.numVacunasDisponibles}}</b></td>
-				</tr>
+          <td><b>{{cs.direccion}}</b></td>
+        </tr>
+        <tr>
+          <td><img src="../assets/icons/vaccine.png" width="30px"
+                   height="30px"></td>
 
-			</table>
-			<div>
-				<br>
-				<button type="submit" class="btn">Modificar Centro</button>
-				<br>
-				<button type="submit" class="btn" (click)="enviarDatosBack()">Eliminar Centro</button>
-      <p></p>
+          <td><b>{{cs.numVacunasDisponibles}}</b></td>
+        </tr>
+
+      </table>
+      <div class="alineacion-botones">
+        <br>
+        <button class="btn" type="submit"
+                [routerLink]="['/editarCS', cs.id]">Editar
+        </button>
+        <button class="btn-cancel" (click)="enviarDatosBack()">Eliminar</button>
+      </div>
       <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
       <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
-			</div>
-		</div>
-	</div>
+    </div>
+  </div>
+</div>

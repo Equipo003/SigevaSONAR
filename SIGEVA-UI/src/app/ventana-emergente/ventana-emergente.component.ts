@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CentroSaludComponent } from '../centro-salud/centro-salud.component';
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+
 @Component({
   selector: 'app-ventana-emergente',
   templateUrl: './ventana-emergente.component.html',
   styleUrls: ['./ventana-emergente.component.css']
 })
-export class VentanaEmergenteComponent implements OnInit {
+export class VentanaEmergenteComponent {
 
-  constructor() { }
-	
-  ngOnInit(): void {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {mensaje: string, titulo: string}) {
   }
-
 }

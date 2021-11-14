@@ -8,7 +8,12 @@ import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dto.CitaDTO;
@@ -66,6 +71,13 @@ public class CitaController {
 		}
 		return wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar pruebas citas").get());
 
+	}
+
+	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
+		List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
+		for (int i = 0; i < citasDTO.size(); i++) {
+			citaDao.deleteById(citasDTO.get(i).getUuidCita());
+		}
 	}
 
 }

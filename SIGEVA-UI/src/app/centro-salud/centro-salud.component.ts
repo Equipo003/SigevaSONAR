@@ -22,11 +22,13 @@ export class CentroSaludComponent implements OnInit {
   }
 
   ngOnInit(): void {
-	
+
   }
    openDialog() {
 	   let self = this;
-       const dialogRef = this.dialog.open(VentanaEmergenteComponent);
+       const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
+         data: { mensaje: '¿SEGURO QUE QUIERES ELIMINAR EL CENTRO?', titulo: 'Eliminar centro de salud'},
+       });
        dialogRef.afterClosed().subscribe(result => {
 		 if(result){
 			this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
@@ -41,7 +43,7 @@ export class CentroSaludComponent implements OnInit {
        });
      }
   enviarDatosBack() {
-   
+
       let self = this;
 	  this.openDialog();
 	/*this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
@@ -53,7 +55,7 @@ export class CentroSaludComponent implements OnInit {
  		  setTimeout(function(){ self.errorMessage=""; }, 3000);
           console.log(err);
         });*/
-      
-    
+
+
   }
 }

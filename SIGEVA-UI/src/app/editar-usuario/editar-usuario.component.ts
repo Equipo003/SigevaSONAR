@@ -3,8 +3,10 @@ import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
 import {JsonService} from "../Service/json.service";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpParams} from "@angular/common/http";
+import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-editar-usuario',
@@ -19,16 +21,16 @@ export class EditarUsuarioComponent implements OnInit {
   public errorMessage: string;
   public idUsuario: string;
 
-  constructor(private json: JsonService, private rutaActiva: ActivatedRoute) {
-    this.centros = []
+  constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
+    this.centros = [];
     this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
-    this.idUsuario = "";;
+    this.idUsuario = "";
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.message = "";
     this.errorMessage = "";
     this.getCentros();
@@ -40,16 +42,16 @@ export class EditarUsuarioComponent implements OnInit {
     this.getUsuarioById();
   }
 
-  getCentros(){
+  getCentros() {
     this.json.getJson("user/getCentros").subscribe(
-      result=> {
+      result => {
         this.centros = JSON.parse(result);
-      }, error=> {
+      }, error => {
         console.log(error);
       });
   }
 
-  capturarFile (event : any) {
+  capturarFile(event: any) {
     let self = this;
     let file = event.target.files[0];
     let reader = new FileReader();
@@ -65,18 +67,49 @@ export class EditarUsuarioComponent implements OnInit {
     this.usuario.centroSalud = $event;
   }
 
-  getUsuarioById(){
+  getUsuarioById() {
     let params = new HttpParams({
       fromObject: {
         idUsuario: this.idUsuario
       }
     });
     this.json.getJsonP("user/getUsuarioById", params).subscribe(
-      result=> {
+      result => {
         this.usuario = JSON.parse(result);
         this.usuario.fechaNacimiento = this.usuario.fechaNacimiento.substr(0, 10);
-      }, error=> {
+      }, error => {
         console.log(error);
       });
+  }
+
+  openDialogCancelar() {
+    const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
+      data: {mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición'},
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.router.navigate(['usuariosSistema']);
+      }
+    });
+  }
+
+  openDialogGuardar() {
+    let self = this;
+    const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
+      data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.json.postJson("user/updateUsuario", this.usuario).subscribe(
+          result => {
+            this.message = "Usuario editado correctamente";
+            setTimeout(function(){ self.router.navigate(['usuariosSistema']); }, 3000);
+            this.errorMessage = "";
+          }, error => {
+            this.errorMessage = "Error al editar el usuario";
+            this.message = "";
+          });
+      }
+    });
   }
 }

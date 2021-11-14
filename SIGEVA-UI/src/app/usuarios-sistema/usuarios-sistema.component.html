@@ -1,20 +1,22 @@
+<app-barra-navegacion></app-barra-navegacion>
+
 <div class="seccion contenedor">
   <h1 class="centrar-texto">Usuarios sistema: {{rolMostrado}}</h1>
   <div class="contenedorFiltrar">
 
-      <h3>Filtrar por: </h3>
-      <select name="rol" [(ngModel)]="rolSeleccionado">
-        <option>Todos</option>
-        <option *ngFor="let rol of roles">{{rol.nombre}}</option>
-      </select>
-      <button class="btn" type="submit" (click)="cargarUsuarios()">FILTRAR</button>
+    <h3>Filtrar por: </h3>
+    <select name="rol" [(ngModel)]="rolSeleccionado">
+      <option>Todos</option>
+      <option *ngFor="let rol of roles">{{rol.nombre}}</option>
+    </select>
+    <button class="btn" type="submit" (click)="cargarUsuarios()">FILTRAR</button>
 
   </div>
   <div class="separation"></div>
 
   <div class="contenedor-items">
     <app-usuario *ngFor="let usuario of usuarios"
-    [usuario] = usuario
+                 [usuario]=usuario
     ></app-usuario>
   </div>
 </div>

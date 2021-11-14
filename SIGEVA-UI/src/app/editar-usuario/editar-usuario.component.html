@@ -1,7 +1,9 @@
+<app-barra-navegacion></app-barra-navegacion>
+
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
-      <form #editarUsuariosForm="ngForm" id ="form">
+      <form #editarUsuariosForm="ngForm" id="form">
         <h1>EDITAR USUARIO</h1>
 
         <div class="control-group">
@@ -13,15 +15,17 @@
 
         <div class="control-group">
           <strong>Centro asignado:</strong>
-          <select [(ngModel)]="usuario.centroSalud.nombreCentro" (ngModelChange)="onChangeCentro($event)" name="selCentro">
-<!--            <option>{{usuario.centroSalud.nombreCentro}}</option>-->
-            <option [ngValue]="usuario.centroSalud.nombreCentro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
+          <select [(ngModel)]="usuario.centroSalud.nombreCentro" (ngModelChange)="onChangeCentro($event)"
+                  name="selCentro">
+            <option [ngValue]="usuario.centroSalud.nombreCentro"
+                    *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
 
         <div class="control-group">
           <strong>Nombre de Usuario:</strong>
-          <input type="email" placeholder="Nombre de usuario" name="username" #username="ngModel" [(ngModel)]="usuario.username" required>
+          <input type="email" placeholder="Nombre de usuario" name="username" #username="ngModel"
+                 [(ngModel)]="usuario.username" required>
           <div>
             <small *ngIf="!username.valid && username.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -31,7 +35,8 @@
 
         <div class="control-group">
           <strong>Correo del usuario:</strong>
-          <input type="email" placeholder="Correo electrónico" name="correo" #correo="ngModel" [(ngModel)]="usuario.correo" required>
+          <input type="email" placeholder="Correo electrónico" name="correo" #correo="ngModel"
+                 [(ngModel)]="usuario.correo" required>
           <div>
             <small *ngIf="!correo.valid && correo.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -40,13 +45,19 @@
         </div>
 
         <div class="control-group">
-          <strong>Contraseña:</strong>
-          <input type="password" placeholder="Password" name="password" #password="ngModel" [(ngModel)]="usuario.hashPassword" required>
+          <strong>Contraseña actual:</strong>
+          <input type="password" placeholder="Password" name="password" #password="ngModel"
+                 [(ngModel)]="usuario.hashPassword" required>
           <div>
             <small *ngIf="!password.valid && password.touched" class="textoColorRojo">
               El campo no puede estar vacío
             </small>
           </div>
+        </div>
+
+        <div class="control-group">
+          <strong>Nueva contraseña</strong>
+          <input type="password" placeholder="Nueva contraseña" name="newPassword">
         </div>
 
         <div class="control-group">
@@ -59,8 +70,9 @@
           </div>
         </div>
         <div class="control-group">
-          <strong>Nombre:</strong>
-          <input type="email" placeholder="Nombre" name="nombre" #nombre="ngModel" [(ngModel)]="usuario.nombre" required>
+          <strong>Nombre del usuario:</strong>
+          <input type="email" placeholder="Nombre" name="nombre" #nombre="ngModel" [(ngModel)]="usuario.nombre"
+                 required>
           <div>
             <small *ngIf="!nombre.valid && nombre.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -70,7 +82,8 @@
 
         <div class="control-group">
           <strong>Apellidos:</strong>
-          <input type="text" placeholder="Apellidos" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario.apellidos" required>
+          <input type="text" placeholder="Apellidos" name="apellidos" #apellidos="ngModel"
+                 [(ngModel)]="usuario.apellidos" required>
           <div>
             <small *ngIf="!apellidos.valid && apellidos.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -80,7 +93,8 @@
 
         <div class="control-group">
           <strong>Fecha de nacimiento:</strong>
-          <input type="date" placeholder="Fecha Nacimiento" name="fechaNacimiento" #fechaNacimiento="ngModel" [(ngModel)]="usuario.fechaNacimiento" required>
+          <input type="date" placeholder="Fecha Nacimiento" name="fechaNacimiento" #fechaNacimiento="ngModel"
+                 [(ngModel)]="usuario.fechaNacimiento" required>
           <div>
             <small *ngIf="!fechaNacimiento.valid && fechaNacimiento.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -94,7 +108,15 @@
         </div>
 
         <img *ngIf="usuario.imagen" alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
-        <button class="btn" type="submit" [disabled]="editarUsuariosForm.invalid">GUARDAR</button>
+
+        <div class="alineacion-botones">
+          <button class="btn-cancel" type="submit" [disabled]="editarUsuariosForm.invalid"
+                  (click)=openDialogCancelar()>CANCELAR
+          </button>
+          <button class="btn" type="submit" [disabled]="editarUsuariosForm.invalid"
+                  (click)=openDialogGuardar()>GUARDAR
+          </button>
+        </div>
       </form>
 
       <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>

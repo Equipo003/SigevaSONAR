@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -66,6 +66,30 @@ export class JsonService {
           "responseType": 'json'
     }
       url = this.url + url;
+    return this.http.post(url, body, options);
+  }
+
+
+  postJsonUpdateCS(url : string, body : Object, options : Object){
+      url = this.url + url;
+    return this.http.post(url, body, options);
+  }
+
+  deleteJson(url : string, parameter1 : string){
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'json'
+    }
+    url = this.url + url + "/" + parameter1;
+    return this.http.delete(url, options);
+  }
+
+  login(url : string, body : Object):Observable<any>{
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'json'
+    }
+    url = this.url + url;
     return this.http.post(url, body, options);
   }
 }
