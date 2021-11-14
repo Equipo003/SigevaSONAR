@@ -1,3 +1,5 @@
+<app-barra-navegacion></app-barra-navegacion>
+
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
@@ -18,7 +20,8 @@
 
         <div class="control-group">
           <b>Número de vacunas que se van a añadir:</b>
-          <input type='number' name='masVacunas' #newVacunas="ngModel" placeholder='número de vacunas'  [(ngModel)]='vacunasAanadir' required>
+          <input type='number' name='masVacunas' #newVacunas="ngModel" placeholder='número de vacunas'
+                 [(ngModel)]='vacunasAanadir' required>
           <div>
             <small *ngIf="!newVacunas.valid && newVacunas.touched" class="textoColorRojo">
               El campo no puede estar vacío

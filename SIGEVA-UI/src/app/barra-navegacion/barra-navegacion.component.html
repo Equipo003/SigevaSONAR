@@ -1,0 +1,20 @@
+<header class="contenedor site-header inicio">
+  <div class="contenido-header">
+    <div class="barra">
+      <a href="index.html">
+        <img src="../assets/SIGEVA.jpg" width="240" height="45" alt="Logotipo SIGEVA">
+      </a>
+      <nav id="navegacion" class="navegacion">
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="crearCS">Crear Centro</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="crearUsuarios">Crear Usuario</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="cnfgCupos">Configurar Cupos</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="indicarDosisVacunas">Nº Vacunas</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="fijarPersonal">Fijar Personal</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="usuariosSistema">Usuarios sistema</a>
+        <a *ngIf="isLogged && (rol === 'Paciente' || 'SuperAdmin')" href="solicitarCita">Solicitar Cita</a>
+        <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="centrosSalud">Centros Salud sistema</a>
+        <a href="login">Log in</a>
+      </nav>
+    </div>
+  </div>
+</header>

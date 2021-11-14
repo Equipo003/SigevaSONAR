@@ -1,0 +1,7 @@
+<app-barra-navegacion></app-barra-navegacion>
+
+<form #loginForm="ngForm" (ngSubmit)=login()>
+  <input type="text" name="username" [(ngModel)]="loginUsuario.username">
+  <input type="password" name="password" [(ngModel)]="loginUsuario.hashPassword">
+  <button type="submit">Log in</button>
+</form>
