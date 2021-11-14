@@ -1,8 +1,11 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.equipo3.SIGEVA.dto.*;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +36,7 @@ import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
 
 @CrossOrigin
@@ -110,6 +115,38 @@ public class CupoController {
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
 	}
+	
+	@GetMapping("/freeDatesDay")
+	public List<CupoDTO> buscarCuposLibresFecha(@RequestParam String idUsuario/*, @RequestParam Date fecha*/){
+		CentroSalud cs = null;
+		Paciente pacienteUsu = null;
+		List<Cupo> clibday = new ArrayList();
+		try {
+			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
+			if(paciente.isPresent()) {
+			    pacienteUsu = (Paciente) paciente.get();
+			    System.out.println(pacienteUsu.getNumDosisAplicadas());
+			}
+			
+			if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
+				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
+				System.out.println(cs.getNombreCentro());
+			}
+			String entrada = "2020/01/01"; // Entrada recogida como sea (scanner)
+			DateFormat format = new SimpleDateFormat("YYYY/MM/DD"); // Creamos un formato de fecha
+			Date fecha = format.parse(entrada); // Creamos un date con la entrada en el formato especificado
+			clibday = cupoDao.buscarCuposLibreFecha(idUsuario, fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			clibday = cupoDao.findAll();
+			System.out.println(configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			System.out.println(clibday.size());
+			for(int i = 0; i <= clibday.size(); i++) {
+				System.out.println(clibday.get(i).getFechaYHoraInicio());
+			}
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return null;
+	}
 
 	@Autowired
 	VacunaDao vacunaDao;
@@ -132,16 +169,7 @@ public class CupoController {
 	@Autowired
 	CitaDao citaDao;
 
-	@GetMapping("/prueba")
-	public void prueba() throws IdentificadorException {
-//		Date fecha = new Date(125,0,1);
-//		Cupo cupo = new Cupo();
-//		cupo.setFechaYHoraInicio(fecha);
-//		cupo.setUuidCentroSalud("f05b31fe-aaa3-45bc-a18d-93723b3316b4");
-//		cupo.setTamanoActual(1);
-//		cupoDao.save(cupo);
-	}
-
+	
 	public void prepararCupos(CentroSalud centroSalud) {
 		// TODO Auto-generated method stub
 		

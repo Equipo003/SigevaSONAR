@@ -20,5 +20,8 @@ public interface CupoDao extends MongoRepository<Cupo, String> {
 	
 	@Query("{ 'uuidCentroSalud' : ?0, 'tamanoActual' : { '$gt' : 0 } }")
 	public List<Cupo> buscarCuposOcupados(String uuidCentroSalud, Date fecha);
+	
+	@Query("{ 'uuidCentroSalud' : ?0, 'fechaYHoraInicio' : { '$gte' : ?1 }, 'tamanoActual' : { '$lt' : ?2 } }")
+	public List<Cupo> buscarCuposLibreFecha(String uuidCentroSalud, Date fechaYHoraInicio, int tamanoActual);
 
 }
