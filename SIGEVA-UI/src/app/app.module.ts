@@ -49,7 +49,7 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
     VentanaEmergenteComponent,
     ModificacionCentroSaludComponent,
     LoginComponent,
-    BarraNavegacionComponent
+    BarraNavegacionComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,8 +58,8 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
     routing,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-	MatButtonModule,
-    MatDialogModule
+	  MatButtonModule,
+    MatDialogModule,
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

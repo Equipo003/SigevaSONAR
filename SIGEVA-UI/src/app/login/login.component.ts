@@ -5,6 +5,7 @@ import {JsonService} from "../Service/json.service";
 import {Rol} from "../Model/rol";
 import {LoginUsuario} from "../Model/loginUsuario";
 import {Token} from "../Model/token";
+import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,12 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  encriptarPwd() {
+    this.loginUsuario.hashPassword = SHA256(this.loginUsuario.hashPassword).toString(enc.Hex);
+  }
+
   login() {
+    this.encriptarPwd();
     this.json.login("user/login", this.loginUsuario).subscribe(
       result => {
         console.log(result);
