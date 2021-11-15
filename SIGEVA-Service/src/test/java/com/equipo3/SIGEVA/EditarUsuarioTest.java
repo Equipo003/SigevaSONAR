@@ -81,7 +81,7 @@ public class EditarUsuarioTest {
 
             Assertions.assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 
-            citaController.eliminarAllCitasPaciente(pacienteDTO);
+            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
             administradorController.eliminarUsuario(pacienteDTO.getUsername());
             administradorController.eliminarCentro(newCentroSaludDTO.getId());
@@ -109,7 +109,7 @@ public class EditarUsuarioTest {
             administradorController.editarUsuario(pacienteDTO);
         }
         catch (Exception e) {
-            citaController.eliminarAllCitasPaciente(pacienteDTO);
+            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
             administradorController.eliminarUsuario(pacienteDTO.getUsername());
             administradorController.eliminarCentro(newCentroSaludDTO.getId());
