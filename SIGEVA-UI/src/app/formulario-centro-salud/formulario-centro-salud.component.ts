@@ -28,7 +28,7 @@ export class FormularioCentroSaludComponent implements OnInit {
 
  enviarDatosBack() {
     console.log(this.centroSalud);
-   this.generandoCupos = "Generando cupos de citas...";
+   this.generandoCupos = "Generando cupos de citas y centro...";
    this.json.postJson("user/newCentroSalud",this.centroSalud).subscribe(
     result => {
       this.errorMessage = "";
@@ -39,6 +39,14 @@ export class FormularioCentroSaludComponent implements OnInit {
       this.generandoCupos = "";
       this.errorMessage = err.error.message;
     });
+	this.json.postJson("cupo/prepararCupos", this.centroSalud).subscribe(
+        result => {
+          this.message = "";
+         // setTimeout(function(){ window.location.reload(); }, 3000);
+        },err=> {
+          this.errorMessage = err.error.message;
+ 		 // setTimeout(function(){ self.errorMessage=""; }, 3000);
+        });
 
 
   }
