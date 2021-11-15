@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,7 +85,7 @@ public class CupoController {
 	@PostMapping("/prepararCupos")
 	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
 		// ¡Requerirá tiempo de ejecución!
-		System.out.println("CREADOS CUPOS");		
+		System.out.println("CREADOS CUPOS");
 		return null;
 	}
 
@@ -143,6 +144,14 @@ public class CupoController {
 	public void eliminarCupo(String uuidCupo) { // Terminado.
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
+	}
+
+	@PutMapping("/borrarCuposDelCentro")
+	public void borrarCuposDelCentro(CentroSaludDTO centroSaludDTO) {
+		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
+		for (int i = 0; i < cupos.size(); i++) {
+			this.eliminarCupo(cupos.get(i).getUuidCupo());
+		}
 	}
 
 	@SuppressWarnings("deprecation")
