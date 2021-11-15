@@ -46,7 +46,9 @@ export class IndicarDosisVacunasComponent implements OnInit {
 		this.cs.forEach(function(centro2 : CentroSalud){
 			if(centro2.nombreCentro === self.centroSeleccionado){
 				self.nVacunasActual = centro2.numVacunasDisponibles;
-				self.idCentro = centro2.id;
+        if(centro2.id != null) {
+          self.idCentro = centro2.id;
+        }
 			}
 		});
 	}

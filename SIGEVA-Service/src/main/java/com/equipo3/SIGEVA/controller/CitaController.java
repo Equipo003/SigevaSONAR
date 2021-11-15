@@ -1,10 +1,6 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
@@ -13,15 +9,12 @@ import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.model.Cupo;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CitaDao;
@@ -74,10 +67,18 @@ public class CitaController {
 	}
 
 	@SuppressWarnings("deprecation")
-	@GetMapping("/obtenerCitasFecha")
-	public List<CitaDTO> obtenerCitasFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
-		if (centroSaludDTO != null && fecha != null) {
-
+	@GetMapping(value = "/obtenerCitasFecha")
+	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson, @RequestParam(name = "fecha") @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
+		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			CentroSaludDTO centroSaludDTO = null;
+			Date fecha = null;
+			try{
+			 centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
+			 fecha = mapper.readValue(fechaJson, Date.class);
+			}catch (JsonProcessingException j){
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Formato de fecha inválido");
+			}
 			/*
 			 * (Posiblemente se exija desde el frontend pasar String y parseo de fecha de
 			 * String a Date).
@@ -98,7 +99,17 @@ public class CitaController {
 			}
 
 			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citas);
-			Collections.sort(citasDTO); // Ordenación
+			Collections.sort(citasDTO); //
+
+			//Testing: se puede borrar
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),1));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),1));
+			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
+			//
 
 			return citasDTO;
 
@@ -118,6 +129,9 @@ public class CitaController {
 					citasDTO.remove(i--);
 				}
 			}
+			// Parte de pruebas
+			citasDTO.add(citaSimulacion(paciente, 1));
+			citasDTO.add(citaSimulacion(paciente, 2));
 			Collections.sort(citasDTO);
 			return citasDTO;
 		} else {
@@ -125,32 +139,18 @@ public class CitaController {
 		}
 	}
 
-	@PostMapping("/obtenerCitasFuturasDelPacienteP")
-	public List<CitaDTO> obtenerCitasFuturasDelPacientePracticas(@RequestBody PacienteDTO paciente)
-			throws UsuarioInvalidoException {
-		if (paciente != null) {
-			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(paciente.getIdUsuario()));
-			for (int i = 0; i < citasDTO.size(); i++) {
-				if (citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) {
-					citasDTO.remove(i--);
-				}
-			}
 
-
-			CitaDTO cita = new CitaDTO();
-			cita.setPaciente(paciente);
-			CupoDTO cupoDTO = new CupoDTO();
-			Cupo cupo = this.cupoDao.findAll().get(0);
-			cupoDTO.setCentroSalud(this.wrapper.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
-			cita.setCupo(cupoDTO);
-			cita.setDosis(1);
-			citasDTO.add(cita);
-			cita.setDosis(2);
-			citasDTO.add(cita);
-			return citasDTO;
-		} else {
-			throw new UsuarioInvalidoException("Paciente no contemplado en el parámetro.");
-		}
+	private CitaDTO citaSimulacion(PacienteDTO paciente,int dosis){
+		CitaDTO cita = new CitaDTO();
+		cita.setPaciente(paciente);
+		CupoDTO cupoDTO = new CupoDTO();
+		Cupo cupo = this.cupoDao.findAll().get(0);
+		cupoDTO.setCentroSalud(this.wrapper.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
+		cupoDTO.setFechaYHoraInicio(new Date());
+		cita.setCupo(cupoDTO);
+		cita.getPaciente().setNumDosisAplicadas(1);
+		cita.setDosis(dosis);
+		return cita;
 	}
 
 	@PutMapping("/eliminarCita")
@@ -184,7 +184,8 @@ public class CitaController {
 		try {
 			cupoController.anularTamanoActual(uuidCupo);
 		} catch (CupoException e) {
-			e.printStackTrace();
+		}
+	}
 
 	@GetMapping("/getPacientePrueba")
 	public PacienteDTO getPacientePrueba(){

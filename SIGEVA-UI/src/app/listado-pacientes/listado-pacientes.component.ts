@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {Usuario} from "../Model/Usuario";
 import {Rol} from "../Model/rol";
 import {HttpParams} from "@angular/common/http";
@@ -6,6 +6,10 @@ import {JsonService} from "../Service/json.service";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {Paciente} from "../Model/paciente";
 import {CentroSalud} from "../Model/centro-salud";
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {Vacuna} from "../Model/vacuna";
+import {CupoCitas} from "../Model/cupo-citas";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-listado-pacientes',
@@ -15,25 +19,27 @@ import {CentroSalud} from "../Model/centro-salud";
 export class ListadoPacientesComponent implements OnInit {
   pacientes : Usuario[];
   roles : Rol[];
-  pacienteSeleccionado:Paciente;
-  startDate:Date;
-  endDate : Date;
+  citaSeleccionada:CitaConObjetos;
   citas : CitaConObjetos[];
+  pacienteCentroSalud : CentroSalud;
+  pacienteSeleccionado:boolean;
+  today : FormControl;
 
   constructor(private json:JsonService) {
     this.pacientes = [];
     this.roles = [];
-    this.pacienteSeleccionado = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre", 1), "vasilesan", "", "", "",
-      "", "", "", "", 0);
-    this.startDate = new Date();
-    this.endDate = new Date();
+    this.pacienteCentroSalud = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
+    this.citaSeleccionada = new CitaConObjetos(new CupoCitas("",this.pacienteCentroSalud, new Date() ), 0, new Paciente(new Rol("1", "Paciente"),new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "vasilesan", "", "", "",
+      "", "", "", "", 0));
     this.citas = [];
-
+    this.pacienteSeleccionado = false;
+    this.today = new FormControl(new Date());
   }
 
   ngOnInit(): void {
     //this.getRoles();
     this.getPacientePrueba();
+    this.today = new FormControl(new Date());
   }
 
   getRoles() {
@@ -70,35 +76,62 @@ export class ListadoPacientesComponent implements OnInit {
       });
   }
 
-  vacunar(paciente : Paciente){
-    this.pacienteSeleccionado = paciente;
+  vacunar(cita : CitaConObjetos){
+    this.citaSeleccionada = cita;
+    this.pacienteSeleccionado = true;
   }
 
-  mostrar(){
-    console.log(this.endDate);
-  }
 
   getPacientePrueba(){
     this.json.getJson("cita/getPacientePrueba").subscribe(
       result => {
         let paciente : Paciente;
         paciente = JSON.parse(result);
-        console.log(paciente);
-        this.getCitas(paciente);
+        this.pacienteCentroSalud = paciente.centroSalud;
       }, error => {
         console.log(error);
       });
   }
 
+  dataChangeEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.getPacientesFecha(event);
+  }
 
-  getCitas(paciente : Paciente) {
-    this.json.postJson("cita/obtenerCitasFuturasDelPaciente", paciente).subscribe(
+  getPacientesFecha(event : MatDatepickerInputEvent<Date>){
+    let params = new HttpParams({
+      fromObject: {
+        'centroSaludDTO': JSON.stringify(this.pacienteCentroSalud),
+        'fecha' : JSON.stringify(event.value),
+      }
+    });
+    this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
       result => {
-        this.citas = JSON.parse(JSON.stringify(result));
-        console.log(result)
+        this.citas = JSON.parse(result);
+        console.log(this.citas[0]);
       }, error => {
         console.log(error);
       });
+  }
+
+  getPacientesHoy(){
+    let params = new HttpParams({
+      fromObject: {
+        'centroSaludDTO': JSON.stringify(this.pacienteCentroSalud),
+        'fecha' : JSON.stringify(new Date()),
+      }
+    });
+    this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
+      result => {
+        this.citas = JSON.parse(result);
+        console.log(this.citas[0]);
+      }, error => {
+        console.log(error);
+      });
+  }
+
+  aplicarDosis() {
+    this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
+    this.pacienteSeleccionado = false;
   }
 
 }

@@ -5,6 +5,7 @@ import { HttpHeaders, HttpParams } from "@angular/common/http";
 import { JsonService } from '../Service/json.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VentanaEmergenteComponent } from '../ventana-emergente/ventana-emergente.component';
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
 	selector: 'app-modificacion-centro-salud',
@@ -18,7 +19,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
 	public errorMessage: string;
 
 	constructor(private json: JsonService, private rutaActu: ActivatedRoute, private router: Router, public dialog: MatDialog) {
-		this.cs = new CentroSalud("", "", 0);
+		this.cs = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
 		this.idCS = "",
 			this.errorMessage = "";
 		this.message = "";

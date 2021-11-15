@@ -6,6 +6,7 @@ import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {Paciente} from "../Model/paciente";
 import {CupoCitas} from "../Model/cupo-citas";
 import {Rol} from "../Model/rol";
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
 	selector: 'app-solicitar-cita',
@@ -21,7 +22,7 @@ export class SolicitarCitaComponent {
 	solicitada: boolean;
 
 	constructor(private json: JsonService) {
-		this.paciente = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre", 1), "vasilesan", "", "", "",
+		this.paciente = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "vasilesan", "", "", "",
       "", "", "", "", 0);
 		this.citas = [];
 		this.solicitada = false;
@@ -50,7 +51,7 @@ export class SolicitarCitaComponent {
 
 
   getCitas(paciente : Paciente) {
-    this.json.postJson("cita/obtenerCitasFuturasDelPacienteP", paciente).subscribe(
+    this.json.postJson("cita/obtenerCitasFuturasDelPaciente", paciente).subscribe(
       result => {
         this.citas = JSON.parse(JSON.stringify(result));
         console.log(this.citas[0].cupo.fechaYHoraInicio)

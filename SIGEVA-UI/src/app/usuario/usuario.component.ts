@@ -6,6 +6,7 @@ import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.
 import {MatDialog} from "@angular/material/dialog";
 import {JsonService} from "../Service/json.service";
 import {Usuario} from "../Model/Usuario";
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
 	selector: 'app-usuario',
@@ -18,8 +19,7 @@ export class UsuarioComponent {
   message: string = "";
   errorMessage: string = "";
 	constructor(private json: JsonService, public dialog: MatDialog) {
-		this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "",
-      0), "", "", "", "", "", "", "",
+		this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "", "", "", "", "", "", "",
       "");
 	}
 

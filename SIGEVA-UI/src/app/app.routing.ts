@@ -59,6 +59,10 @@ const appRoutes: Routes = [
     path: 'editarCS/:idCentroSalud', component: ModificacionCentroSaludComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
+  {
+    path: 'listarPacientes', component: ListadoPacientesComponent,
+    canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
+  },
   {path: 'login', component: LoginComponent},
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];

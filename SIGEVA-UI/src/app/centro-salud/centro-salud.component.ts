@@ -3,6 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import { CentroSalud } from '../Model/centro-salud';
 import {JsonService} from "../Service/json.service";
 import { VentanaEmergenteComponent } from '../ventana-emergente/ventana-emergente.component';
+import {Vacuna} from "../Model/vacuna";
 @Component({
   selector: 'app-centro-salud',
   templateUrl: './centro-salud.component.html',
@@ -15,7 +16,7 @@ export class CentroSaludComponent implements OnInit {
   public errorMessage: string;
 
   constructor( public dialog: MatDialog,private json: JsonService) {
-	this.cs = new CentroSalud("", "", 0);
+	this.cs = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
 	this.idCentro="";
 	this.errorMessage = "";
     this.message = "";

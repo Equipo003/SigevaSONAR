@@ -4,6 +4,7 @@ import {CentroSalud} from "./centro-salud";
 
 export interface Paciente {
   numDosisAplicadas : number;
+  aplicarDosis(): void;
 }
 
 
@@ -17,6 +18,10 @@ export class Paciente extends UsuarioConObjetos{
               numDosisAplicadas:number,idUsuario?: string) {
     super(rol, centroSalud, username,correo,hashPassword,dni,nombre,apellidos,fechaNacimiento,imagen,idUsuario);
     this.numDosisAplicadas = numDosisAplicadas;
+  }
+
+  aplicarDosis(){
+    this.numDosisAplicadas = this.numDosisAplicadas + 1;
   }
 
 

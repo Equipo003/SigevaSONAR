@@ -32,6 +32,7 @@ import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 import { LoginComponent } from './login/login.component';
 import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonService } from '../Service/json.service';
 import { CentroSalud } from '../Model/centro-salud';
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
   selector: 'app-formulario-centro-salud',
@@ -16,7 +17,7 @@ export class FormularioCentroSaludComponent implements OnInit {
   public generandoCupos: string;
 
   constructor(private json: JsonService) {
-    this.centroSalud = new CentroSalud("", "", 0);
+    this.centroSalud = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
     this.errorMessage = "";
     this.message = "";
     this.generandoCupos = "";

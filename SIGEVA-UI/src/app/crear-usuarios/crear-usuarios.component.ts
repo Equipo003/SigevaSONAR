@@ -3,6 +3,7 @@ import { JsonService } from '../Service/json.service';
 import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
   selector: 'app-crear-usuarios',
@@ -22,7 +23,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.roles = [];
     this.centros = []
 
-    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";

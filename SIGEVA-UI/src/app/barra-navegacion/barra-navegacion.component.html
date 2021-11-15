@@ -13,6 +13,7 @@
         <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="usuariosSistema">Usuarios sistema</a>
         <a *ngIf="isLogged && (rol === 'Paciente' || 'SuperAdmin')" href="solicitarCita">Solicitar Cita</a>
         <a *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" href="centrosSalud">Centros Salud sistema</a>
+        <a *ngIf="isLogged && (rol === 'Sanitario' || 'SuperAdmin')" href="listarPacientes">Vacunar pacientes</a>
         <a href="login">Log in</a>
       </nav>
     </div>
