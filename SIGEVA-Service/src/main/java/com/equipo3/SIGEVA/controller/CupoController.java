@@ -90,23 +90,67 @@ public class CupoController {
 		return null;
 	}
 
-	@GetMapping("/buscarCuposLibres")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO,
-			@RequestBody Date aPartirDeLaFecha) { // Terminado.
-		Date fechaInicio = CupoController.copia(aPartirDeLaFecha);
-		fechaInicio.setHours(0);
-		fechaInicio.setMinutes(0);
-		Date fechaFin = CupoController.copia(fechaInicio);
-		fechaFin.setDate(fechaFin.getDate() + 1);
-		List<Cupo> cupos = cupoDao.buscarCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
-		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupos);
+	@GetMapping("/buscarCuposLibresAPartirDeLaFecha")
+	public List<CupoDTO> buscarCuposLibresAPartirDeLaFecha(@RequestBody CentroSaludDTO centroSaludDTO,
+			@RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupoDao.buscarCuposLibresAPartirDe(
+				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
 		Collections.sort(cuposDTO);
 		return cuposDTO;
 	}
 
 	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
-		return buscarCuposLibresFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
-		// (Terminado)
+		// Este método se utiliza para buscar el próximo cupo libre (para asignar).
+		return buscarCuposLibresAPartirDeLaFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
+	}
+
+	/**
+	 * Método para obtener los cupos LIBRES de ese centro de exactamente ese día.
+	 * 
+	 * @param centroSaludDTO
+	 * @param fecha
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	@GetMapping("/buscarCuposLibresFecha")
+	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar los cupos libres del día (para modificar).
+		// (La hora de la fecha no importa, solamente importa el día)
+		Date fechaInicio = CupoController.copia(fecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO
+				.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin,
+						configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
+		Collections.sort(cuposDTO);
+		return cuposDTO;
+	}
+
+	/**
+	 * Método usado para obtener TODOS los cupos de ese centro de exactamente ese
+	 * día.
+	 * 
+	 * @param centroSaludDTO
+	 * @param fecha
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	@GetMapping("/buscarTodosCuposFecha")
+	public List<CupoDTO> buscarTodosCuposFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar las citas del día (para vacunar).
+		// (La hora de la fecha no importa, solamente importa el día)
+		Date fechaInicio = CupoController.copia(fecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<Cupo> cupos = cupoDao.buscarTodosCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupos);
+		Collections.sort(cuposDTO);
+		return cuposDTO;
 	}
 
 	@SuppressWarnings("static-access")
