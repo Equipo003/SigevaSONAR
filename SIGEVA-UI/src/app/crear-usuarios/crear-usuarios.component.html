@@ -41,10 +41,10 @@
 
         <div class="control-group">
           <input type="password" placeholder="Password" name="password" #password="ngModel"
-                 [(ngModel)]="usuario.hashPassword" required>
+                 [(ngModel)]="usuario.hashPassword" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_].{7,}">
           <div>
             <small *ngIf="!password.valid && password.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              La contraseña debe ser de 8 caracteres y contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial
             </small>
           </div>
         </div>
