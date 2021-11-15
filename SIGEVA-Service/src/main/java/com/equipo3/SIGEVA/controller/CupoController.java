@@ -147,7 +147,7 @@ public class CupoController {
 	}
 
 	@PutMapping("/borrarCuposDelCentro")
-	public void borrarCuposDelCentro(CentroSaludDTO centroSaludDTO) {
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
 		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
 		for (int i = 0; i < cupos.size(); i++) {
 			this.eliminarCupo(cupos.get(i).getUuidCupo());
