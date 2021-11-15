@@ -39,7 +39,7 @@ export class ListadoPacientesComponent implements OnInit {
   ngOnInit(): void {
     //this.getRoles();
     this.getPacientePrueba();
-    this.today = new FormControl(new Date());
+    this.citasHoy();
   }
 
   getRoles() {
@@ -113,7 +113,13 @@ export class ListadoPacientesComponent implements OnInit {
       });
   }
 
-  getPacientesHoy(){
+  aplicarDosis() {
+    this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
+    this.pacienteSeleccionado = false;
+  }
+
+  citasHoy() {
+    this.today = new FormControl(new Date());
     let params = new HttpParams({
       fromObject: {
         'centroSaludDTO': JSON.stringify(this.pacienteCentroSalud),
@@ -128,10 +134,4 @@ export class ListadoPacientesComponent implements OnInit {
         console.log(error);
       });
   }
-
-  aplicarDosis() {
-    this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
-    this.pacienteSeleccionado = false;
-  }
-
 }
