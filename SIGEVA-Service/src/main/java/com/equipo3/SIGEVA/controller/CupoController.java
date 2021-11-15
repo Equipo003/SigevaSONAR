@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -91,9 +92,16 @@ public class CupoController {
 
 	@GetMapping("/buscarCuposLibres")
 	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO,
-			@RequestBody Date aPartirDeLaFecha) { // TODO PENDIENTE
-		// Usado en modificar.
-		return null;
+			@RequestBody Date aPartirDeLaFecha) { // Terminado.
+		Date fechaInicio = CupoController.copia(aPartirDeLaFecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<Cupo> cupos = cupoDao.buscarCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupos);
+		Collections.sort(cuposDTO);
+		return cuposDTO;
 	}
 
 	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
