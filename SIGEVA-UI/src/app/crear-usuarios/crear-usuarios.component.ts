@@ -3,6 +3,7 @@ import { JsonService } from '../Service/json.service';
 import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
+import { SHA256, enc } from "crypto-js";
 
 @Component({
   selector: 'app-crear-usuarios',
@@ -67,7 +68,12 @@ export class CrearUsuariosComponent implements OnInit {
     reader.readAsBinaryString(file);
   }
 
+  encriptarPwd() {
+    this.usuario.hashPassword = SHA256(this.usuario.hashPassword).toString(enc.Hex);
+  }
+
   enviarDatosBack() {
+    this.encriptarPwd();
     this.json.postJson("user/crearUsuario" + this.usuario.rol.nombre, this.usuario).subscribe(
       result => {
         if (result === null) {

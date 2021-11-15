@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -122,15 +124,22 @@ public class CupoController {
 	@PostMapping("/prepararCupos")
 	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
 		// ¡Requerirá tiempo de ejecución!
-		System.out.println("CREADOS CUPOS");		
+		System.out.println("CREADOS CUPOS");
 		return null;
 	}
 
 	@GetMapping("/buscarCuposLibres")
 	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO,
-			@RequestBody Date aPartirDeLaFecha) { // TODO PENDIENTE
-		// Usado en modificar.
-		return null;
+			@RequestBody Date aPartirDeLaFecha) { // Terminado.
+		Date fechaInicio = CupoController.copia(aPartirDeLaFecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<Cupo> cupos = cupoDao.buscarCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupos);
+		Collections.sort(cuposDTO);
+		return cuposDTO;
 	}
 
 	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
@@ -181,6 +190,14 @@ public class CupoController {
 	public void eliminarCupo(String uuidCupo) { // Terminado.
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
+	}
+
+	@PutMapping("/borrarCuposDelCentro")
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
+		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
+		for (int i = 0; i < cupos.size(); i++) {
+			this.eliminarCupo(cupos.get(i).getUuidCupo());
+		}
 	}
 
 	@SuppressWarnings("deprecation")
