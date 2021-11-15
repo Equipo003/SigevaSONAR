@@ -3,36 +3,25 @@ package com.equipo3.SIGEVA.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
-import com.equipo3.SIGEVA.dto.*;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
-import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.dao.VacunaDao;
-import com.equipo3.SIGEVA.exception.IdentificadorException;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.CentroSalud;
-import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CupoDTO;
+import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Vacuna;
 
 @CrossOrigin
 @RestController
@@ -45,8 +34,19 @@ public class CupoController {
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
 
+	@Autowired
+	CitaController citaController;
+
+	@Autowired
+	WrapperModelToDTO wrapperModelToDTO;
+
+	@Autowired
+	WrapperDTOtoModel wrapperDTOtoModel;
+
 	@SuppressWarnings("deprecation")
-	private List<CupoDTO> calcularCuposCitas(@RequestBody CentroSaludDTO centroSalud) { // No requerirá tiempo.
+	private List<CupoDTO> calcularCupos(CentroSaludDTO centroSalud) { // Terminado.
+		// No requerirá tiempo de ejecución.
+
 		List<CupoDTO> momentos = new ArrayList<>();
 
 		ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
@@ -81,75 +81,74 @@ public class CupoController {
 		return momentos;
 	}
 
-	@PostMapping("/prepararCuposCitas")
-	public List<CupoDTO> prepararCuposCitas(@RequestBody CentroSaludDTO centroSaludDTO) { // ¡Requerirá tiempo!
-		if (centroSaludDTO != null) {
-			List<CupoDTO> cuposDTO = calcularCuposCitas(centroSaludDTO);
+	@PostMapping("/prepararCupos")
+	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
+		// ¡Requerirá tiempo de ejecución!
+		System.out.println("CREADOS CUPOS");		
+		return null;
+	}
 
-			for (int i = 0; i < cuposDTO.size(); i++) {
-				// cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cuposDTO.get(i))); // ¡Puede
-				// tardar!
-			}
+	@GetMapping("/buscarCuposLibres")
+	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO,
+			@RequestBody Date aPartirDeLaFecha) { // TODO PENDIENTE
+		// Usado en modificar.
+		return null;
+	}
 
-			return cuposDTO;
+	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
+		return buscarCuposLibresFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
+		// (Terminado)
+	}
+
+	@SuppressWarnings("static-access")
+	public void incrementarTamanoActual(String uuidCupo) throws CupoException { // Terminado.
+		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
+		if (optCupo.isPresent()) {
+			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
+
+			// Lanza excepción si ya está lleno.
+			cupoDTO.incrementarTamanoActual(configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
 		} else {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Centro de salud no contemplado.");
+			throw new CupoException("Cupo no identificado en la base de datos.");
 		}
 	}
 
-	public void eliminarCupo(String idCupo) {
-		try {
-			cupoDao.deleteById(idCupo);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Cupo no encontrado.");
+	@SuppressWarnings("static-access")
+	public void decrementarTamanoActualCupo(String uuidCupo) throws CupoException { // Terminado.
+		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
+		if (optCupo.isPresent()) {
+			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
+
+			// Lanza excepción si ya está vacío.
+			cupoDTO.decrementarTamanoActual();
+			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
+		} else {
+			throw new CupoException("Cupo no identificado en la base de datos.");
 		}
+	}
+
+	@SuppressWarnings("static-access")
+	public void anularTamanoActual(String uuidCupo) throws CupoException { // Terminado.
+		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
+		if (optCupo.isPresent()) {
+			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
+			cupoDTO.setTamanoActual(0);
+			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
+		} else {
+			throw new CupoException("Cupo no identificado en la base de datos.");
+		}
+	}
+
+	public void eliminarCupo(String uuidCupo) { // Terminado.
+		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
+		cupoDao.deleteById(uuidCupo);
 	}
 
 	@SuppressWarnings("deprecation")
-	private static Date copia(Date fecha) { // Desacoplaje del Paso por Referencia.
+	public static Date copia(Date fecha) { // Desacoplaje del Paso por Referencia. // Terminado.
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
-	}
-
-	@Autowired
-	VacunaDao vacunaDao;
-
-	@Autowired
-	CentroSaludDao centroSaludDao;
-
-	@Autowired
-	WrapperModelToDTO wrapper;
-
-	@Autowired
-	WrapperDTOtoModel wrapper2;
-
-	@Autowired
-	UsuarioDao usuarioDao;
-
-	@Autowired
-	RolDao rolDao;
-
-	@Autowired
-	CitaDao citaDao;
-
-	@GetMapping("/prueba")
-	public void prueba() throws IdentificadorException {
-//		Date fecha = new Date(125,0,1);
-//		Cupo cupo = new Cupo();
-//		cupo.setFechaYHoraInicio(fecha);
-//		cupo.setUuidCentroSalud("f05b31fe-aaa3-45bc-a18d-93723b3316b4");
-//		cupo.setTamanoActual(1);
-//		cupoDao.save(cupo);
-	}
-
-	public void prepararCupos(CentroSalud centroSalud) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void borrarCupos(CentroSalud centroSalud) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

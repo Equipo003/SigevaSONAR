@@ -16,5 +16,7 @@ public interface CitaDao extends MongoRepository<Cita, String> {
 
 	@Query("{ 'uuidPaciente' : ?0 }")
 	public List<Cita> buscarCitasDelPaciente(String uuidPaciente);
+	
+	public void deleteAllByUuidCupo(String uuidCupo);
 
 }
