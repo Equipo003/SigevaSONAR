@@ -214,7 +214,7 @@ public class CupoController {
 			System.out.println(fechaInicio);
 			clibday = cupoDao.buscarCuposLibreFecha("292d9d03-f26b-4625-9dcf-1fdc50c99067", fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 			for(int i = 0; i < clibday.size(); i++) {
-				clibday.get(i).getFechaYHoraInicio().setHours(clibday.get(i).getFechaYHoraInicio().getHours()-1);
+				//clibday.get(i).getFechaYHoraInicio().setHours(clibday.get(i).getFechaYHoraInicio().getHours()-1);
 				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
 			}
 			
