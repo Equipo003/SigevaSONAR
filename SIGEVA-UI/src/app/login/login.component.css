@@ -6,13 +6,16 @@ body {
 
     margin: 0;
     background-color: #3498DB;
+    background-image: url("../../assets/ramas.png");
+    
+    background-blend-mode: soft-light;
 }
 
 #contenedor {
     display: flex;
     align-items: center;
     justify-content: center;
-
+	
     margin: 0;
     padding: 0;
     min-width: 100vw;
@@ -25,6 +28,7 @@ body {
     max-width: 320px;
     width: 100%;
     display: inline-block;
+    
 }
 
 .titulo {
@@ -34,15 +38,12 @@ body {
     margin-bottom: 20px;
 	font-family: Arial Black;
 	padding-bottom: 15px;
-	text-shadow: 0 1px 0 #ddd, 0 2px 0 #ccc, 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 0 #acacac, 0 6px 1px rgba(0,0,0,0.1), 0 0 5px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.3), 0 3px 5px rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.2), 0 20px 20px rgba(0,0,0,0.15);
+	text-shadow: 1px 1px #666, 2px 2px #86D6D3, 3px 3px #666, 4px 4px #86D6D3;
 }
-.centrarMismaFila {
-	 display: inline-block;
 
-	}
 
 #login {
-    width: 100%;
+    width: 120%;
     padding: 50px 30px;
     background-color: #0080c0;
 
@@ -79,7 +80,7 @@ body {
 
 #login input::placeholder {
     font-family: 'Overpass', sans-serif;
-    color: #E4E4E4;
+    color: #808080;
 }
 
 #login button {
@@ -90,13 +91,13 @@ body {
     height: 40px;
     border: none;
 
-    border-radius: 3px 3px 3px 3px;
-    -moz-border-radius: 3px 3px 3px 3px;
-    -webkit-border-radius: 3px 3px 3px 3px;
+    border-radius: 60px/20px;
+ 
 
     background-color: #bbe1fa;
 
-    margin-top: 10px;
+    margin-top: 30px;
+    
 }
 
 #login button:hover {
