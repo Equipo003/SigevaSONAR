@@ -28,6 +28,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 import { LoginComponent } from './login/login.component';
 import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -51,16 +52,17 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
     LoginComponent,
     BarraNavegacionComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    routing,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-	  MatButtonModule,
-    MatDialogModule,
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        routing,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatMenuModule,
+    ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
 })

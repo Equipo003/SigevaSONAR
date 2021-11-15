@@ -47,7 +47,7 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Paciente', 'SuperAdmin']}
   },
   {
-    path: 'centrosSalud', component: CentrosSaludSistemaComponent,
+    path: 'centrosSistema', component: CentrosSaludSistemaComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
   {
