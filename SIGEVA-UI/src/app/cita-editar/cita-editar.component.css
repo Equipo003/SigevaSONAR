@@ -1,0 +1,32 @@
+
+.cita-screen {
+  background-color: #FFF;
+  padding: 20px;
+  border-radius: 5px;
+  min-width: 270px;
+  margin: 30px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.radio-button {
+  margin: 5px;
+}
+
+.btn {
+  max-width: 120px;
+  margin: 10px;
+}
+
+.btn-cancel {
+  max-width: 120px;
+  margin: 10px;
+}
+
+.calendar{
+  width: 270px;
+}

@@ -42,10 +42,10 @@ public class EditarUsuarioTest {
     @BeforeAll
     static void setUpCita() {
         centroSaludDTO = new CentroSaludDTO();
-        centroSaludDTO.setNombreCentro("Centro de Salud de pruebas");
+        centroSaludDTO.setNombreCentro("Centro de Salud de pruebas 2");
 
         newCentroSaludDTO = new CentroSaludDTO();
-        newCentroSaludDTO.setNombreCentro("Otro centro de Salud");
+        newCentroSaludDTO.setNombreCentro("Otro centro de Salud 2");
 
         cupoDTO = new CupoDTO();
         cupoDTO.setCentroSalud(centroSaludDTO);

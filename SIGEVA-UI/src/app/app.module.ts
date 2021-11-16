@@ -35,6 +35,8 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
 import {MatInputModule} from "@angular/material/input";
 import {MatMenuModule} from "@angular/material/menu";
 import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.component';
+import {MatRadioModule} from "@angular/material/radio";
+import { CitaEditarComponent } from './cita-editar/cita-editar.component';
 
 
 @NgModule({
@@ -60,22 +62,24 @@ import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.co
     LoginComponent,
     BarraNavegacionComponent,
     ContenedorCitasComponent,
+    CitaEditarComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    routing,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatMenuModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        routing,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatMenuModule,
+        MatRadioModule
+    ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
 })

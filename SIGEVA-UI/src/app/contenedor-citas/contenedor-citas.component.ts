@@ -5,6 +5,8 @@ import {LoginUsuario} from "../Model/loginUsuario";
 import {TokenService} from "../Service/token.service";
 import {HttpParams} from "@angular/common/http";
 import {CentroSalud} from "../Model/centro-salud";
+import {CitaConObjetos} from "../Model/cita-con-objetos";
+import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-contenedor-citas',
@@ -13,16 +15,35 @@ import {CentroSalud} from "../Model/centro-salud";
 })
 export class ContenedorCitasComponent implements OnInit {
 
-  citas: CupoCitas[];
-  cita1: CupoCitas;
-  cita2: CupoCitas;
+  citas: CitaConObjetos[] = [];
   idUsuario: string;
+  fechaCita: string = "";
+  minDate: Date;
+  maxDate: Date;
+  editMode: boolean = false;
+  daySelected: boolean = false;
+  rangosHoras: string[] = [];
+  selectedTime: string = "";
 
   constructor(private json: JsonService, private tokenService: TokenService) {
-    this.citas = [];
     this.idUsuario = String(tokenService.getIdUsuario());
-    this.cita1 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
-    this.cita2 = new CupoCitas("", new CentroSalud("", "", 0, ""), new Date());
+    this.rangosHoras.push("08:00");
+    this.rangosHoras.push("09:00");
+    this.rangosHoras.push("10:00");
+    this.rangosHoras.push("11:00");
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDay = today.getDate();
+
+    this.minDate = new Date(currentYear, currentMonth, currentDay);
+    this.maxDate = new Date(currentYear + 1, 0, 31);
+  }
+
+  addEvent(event: MatDatepickerInputEvent<Date>) {
+    console.log(event.value);
+    this.daySelected = true;
   }
 
   ngOnInit(): void {
@@ -39,11 +60,14 @@ export class ContenedorCitasComponent implements OnInit {
       data => {
         // console.log(data);
         this.citas = data;
-        this.cita1 = this.citas[0];
-
-        console.log(this.cita1)
+        this.citas.push(this.citas[0]);
       }
     );
   }
+
+  editarCita(){
+    this.editMode = true;
+  }
+
 
 }
