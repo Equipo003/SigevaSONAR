@@ -15,7 +15,7 @@ public interface CupoDao extends MongoRepository<Cupo, String> {
 	@Query("{ 'uuidCentroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 } , 'tamanoActual' : { '$lt' : ?2 } }")
 	public List<Cupo> buscarCuposLibresAPartirDe(String uuidCentroSalud, Date aPartirDeLaFecha, int maximo);
 
-	@Query("{ 'uuidCentroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 , '$lt' : ?2 }, 'tamanoActual' : { '$lt' : ?3 } }")
+	@Query("{ 'uuidCentroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 , '$lte' : ?2 }, 'tamanoActual' : { '$lt' : ?3 } }")
 	public List<Cupo> buscarCuposLibresDelTramo(String uuidCentroSalud, Date fechaInicio, Date fechaFin, int maximo);
 
 	@Query("{ 'uuidCentroSalud' : ?0 , 'fechaYHoraInicio' : { '$gte' : ?1 , '$lt' : ?2 } }")
