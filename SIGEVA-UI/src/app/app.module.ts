@@ -29,6 +29,7 @@ import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/mo
 import { LoginComponent } from './login/login.component';
 import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
 import {MatMenuModule} from "@angular/material/menu";
+import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.component';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import {MatMenuModule} from "@angular/material/menu";
     ModificacionCentroSaludComponent,
     LoginComponent,
     BarraNavegacionComponent,
+    ContenedorCitasComponent,
   ],
     imports: [
         BrowserModule,

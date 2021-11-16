@@ -14,6 +14,7 @@ import {EditarUsuarioComponent} from "./editar-usuario/editar-usuario.component"
 import {ModificacionCentroSaludComponent} from "./modificacion-centro-salud/modificacion-centro-salud.component";
 import {LoginComponent} from "./login/login.component";
 import {FuncionalidadesGuardService as guard} from "./guards/funcionalidades-guard.service";
+import {ContenedorCitasComponent} from "./contenedor-citas/contenedor-citas.component";
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
@@ -59,6 +60,7 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
   {path: 'login', component: LoginComponent},
+  {path: 'misCitas', component: ContenedorCitasComponent},
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];
 
