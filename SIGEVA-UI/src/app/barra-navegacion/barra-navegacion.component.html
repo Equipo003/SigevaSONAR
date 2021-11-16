@@ -27,6 +27,8 @@
 
         <button mat-button routerLink="/misCitas" class="btn-nav">Mis Citas</button>
 
+        <a *ngIf="isLogged && (rol === 'Sanitario' || 'SuperAdmin')" href="listarPacientes">Vacunar pacientes</a>
+
       </nav>
     </div>
   </div>

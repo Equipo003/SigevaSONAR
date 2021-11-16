@@ -1,19 +1,22 @@
+import {Vacuna} from "./vacuna";
+
 export interface CentroSalud{
-  	direccion: string;
+
 	nombreCentro : string;
 	numVacunasDisponibles : number;
+  direccion: string;
+  vacuna : Vacuna;
 	id : string;
 }
 
 export class CentroSalud {
 
-	constructor(direccion: string, nombreCentro : string,numVacunasDisponibles : number, id?: string){
-    if (id != null) {
-      this.id = id;
-    }
+	constructor(direccion: string, nombreCentro : string,numVacunasDisponibles : number, vacuna:Vacuna, id: string){
+    this.nombreCentro = nombreCentro;
+	  this.numVacunasDisponibles = numVacunasDisponibles;
     this.direccion = direccion;
-	this.nombreCentro = nombreCentro;
-	this.numVacunasDisponibles = numVacunasDisponibles;
+    this.vacuna = vacuna;
+    this.id = id;
 
 	}
 }

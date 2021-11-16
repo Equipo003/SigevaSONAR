@@ -25,9 +25,14 @@ import { VentanaEmergenteComponent } from './ventana-emergente/ventana-emergente
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
+import { ListadoPacientesComponent } from './listado-pacientes/listado-pacientes.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 import { LoginComponent } from './login/login.component';
 import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
+import {MatInputModule} from "@angular/material/input";
 import {MatMenuModule} from "@angular/material/menu";
 import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.component';
 
@@ -48,23 +53,29 @@ import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.co
     CentroSaludComponent,
     CentrosSaludSistemaComponent,
     EditarUsuarioComponent,
+    ListadoPacientesComponent,
+    EditarUsuarioComponent,
     VentanaEmergenteComponent,
     ModificacionCentroSaludComponent,
     LoginComponent,
     BarraNavegacionComponent,
     ContenedorCitasComponent,
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        routing,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatMenuModule,
-    ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    routing,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatMenuModule
+  ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
 })

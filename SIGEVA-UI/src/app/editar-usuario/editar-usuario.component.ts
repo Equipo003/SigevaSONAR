@@ -7,6 +7,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpParams} from "@angular/common/http";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Vacuna} from "../Model/vacuna";
 import {enc, SHA256} from "crypto-js";
 
 @Component({
@@ -25,7 +26,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
     this.centros = [];
-    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
