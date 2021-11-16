@@ -25,5 +25,13 @@ public interface CupoDao extends MongoRepository<Cupo, String> {
 	public List<Cupo> buscarCuposOcupados(String uuidCentroSalud, Date fecha);
 
 	public List<Cupo> findAllByUuidCentroSalud(String uuidCentroSalud);
+	
+	@Query(value="{fechaYHoraInicio' : { $lte: ?1, $gte: ?2}}")
+	public List<Cupo> findByFechaYHoraInicioBetween(Date fechaInicio, Date fechaFin);
+
+	
+	
+	 
+
 
 }

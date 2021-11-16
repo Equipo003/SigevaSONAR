@@ -7,23 +7,31 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CupoException;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @CrossOrigin
 @RestController
@@ -32,6 +40,12 @@ public class CupoController {
 
 	@Autowired
 	CupoDao cupoDao;
+	
+	@Autowired
+	CentroSaludDao centroSaludDao;
+	
+	@Autowired
+	UsuarioDao usuarioDao;
 
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
@@ -125,6 +139,11 @@ public class CupoController {
 		List<CupoDTO> cuposDTO = wrapperModelToDTO
 				.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin,
 						configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
+		
+		for(int i = 0; i<cuposDTO.size(); i++) {
+			System.out.println(cuposDTO.get(i).getFechaYHoraInicio());
+		}
+		
 		Collections.sort(cuposDTO);
 		return cuposDTO;
 	}
@@ -211,5 +230,43 @@ public class CupoController {
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
 	}
+	
+	@SuppressWarnings("deprecation")
+	@GetMapping("/freeDatesDay")
+	public List<CupoDTO> buscarCuposLibresFecha(@RequestParam String idUsuario, @RequestParam Date fecha){
+		CentroSalud cs = null;
+		Paciente pacienteUsu = null;
+		List<Cupo> clibday = new ArrayList();
+		try {
+			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
+			if(paciente.isPresent()) {
+			    pacienteUsu = (Paciente) paciente.get();
+			    System.out.println(pacienteUsu.getNumDosisAplicadas());
+			}
+			
+			if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
+				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
+				System.out.println(cs.getNombreCentro());
+			}
+			Date fechaInicio = (Date) fecha.clone();
+			Date fechaFin = (Date) fecha.clone();
+			//fechaInicio.setHours(0);
+			fechaFin.setHours(24);
+			System.out.println(fechaFin);
+			System.out.println(fechaInicio);
+			//clibday = cupoDao.findByFechaYHoraInicioBetween("292d9d03-f26b-4625-9dcf-1fdc50c99067", fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			clibday = cupoDao.findByFechaYHoraInicioBetween(fechaInicio, fechaFin);
+			for(int i = 0; i < clibday.size(); i++) {
+				//clibday.get(i).getFechaYHoraInicio().setHours(clibday.get(i).getFechaYHoraInicio().getHours()-1);
+				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
+			}
+			
+			return null;
+			//return wrapperDTOtoModel.allCupoToCupoDTO(clibday);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+	
 
 }
