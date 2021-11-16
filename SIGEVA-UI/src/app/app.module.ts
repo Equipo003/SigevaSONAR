@@ -33,6 +33,7 @@ import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/mo
 import { LoginComponent } from './login/login.component';
 import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.component';
 import {MatInputModule} from "@angular/material/input";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -56,7 +57,7 @@ import {MatInputModule} from "@angular/material/input";
     VentanaEmergenteComponent,
     ModificacionCentroSaludComponent,
     LoginComponent,
-    BarraNavegacionComponent
+    BarraNavegacionComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,7 +71,8 @@ import {MatInputModule} from "@angular/material/input";
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatMenuModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

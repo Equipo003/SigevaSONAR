@@ -86,16 +86,11 @@ public class CitaController {
 
 			// (La hora de la fecha no importa, solamente importa el día)
 
-			Date fechaInicio = CupoController.copia(fecha);
-			fechaInicio.setHours(0);
-			fechaInicio.setMinutes(0);
-			Date fechaFin = CupoController.copia(fechaInicio);
-			fechaFin.setDate(fechaFin.getDate() + 1);
-			List<Cupo> cupos = cupoDao.buscarCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
+			List<CupoDTO> cuposDTO = cupoController.buscarTodosCuposFecha(centroSaludDTO, fecha);
 
 			List<Cita> citas = new ArrayList<>();
-			for (int i = 0; i < cupos.size(); i++) {
-				citas.addAll(citaDao.buscarCitasDelCupo(cupos.get(i).getUuidCupo()));
+			for (int i = 0; i < cuposDTO.size(); i++) {
+				citas.addAll(citaDao.buscarCitasDelCupo(cuposDTO.get(i).getUuidCupo()));
 			}
 
 			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citas);

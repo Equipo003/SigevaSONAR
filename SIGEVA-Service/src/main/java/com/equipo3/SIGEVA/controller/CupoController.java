@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,20 +86,71 @@ public class CupoController {
 	@PostMapping("/prepararCupos")
 	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
 		// ¡Requerirá tiempo de ejecución!
-		System.out.println("CREADOS CUPOS");		
+		System.out.println("CREADOS CUPOS");
 		return null;
 	}
 
-	@GetMapping("/buscarCuposLibres")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO,
-			@RequestBody Date aPartirDeLaFecha) { // TODO PENDIENTE
-		// Usado en modificar.
-		return null;
+	@GetMapping("/buscarCuposLibresAPartirDeLaFecha")
+	public List<CupoDTO> buscarCuposLibresAPartirDeLaFecha(@RequestBody CentroSaludDTO centroSaludDTO,
+			@RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupoDao.buscarCuposLibresAPartirDe(
+				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
+		Collections.sort(cuposDTO);
+		return cuposDTO;
 	}
 
 	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
-		return buscarCuposLibresFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
-		// (Terminado)
+		// Este método se utiliza para buscar el próximo cupo libre (para asignar).
+		return buscarCuposLibresAPartirDeLaFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
+	}
+
+	/**
+	 * Método para obtener los cupos LIBRES de ese centro de exactamente ese día.
+	 * 
+	 * @param centroSaludDTO
+	 * @param fecha
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	@GetMapping("/buscarCuposLibresFecha")
+	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar los cupos libres del día (para modificar).
+		// (La hora de la fecha no importa, solamente importa el día)
+		Date fechaInicio = CupoController.copia(fecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO
+				.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin,
+						configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
+		Collections.sort(cuposDTO);
+		return cuposDTO;
+	}
+
+	/**
+	 * Método usado para obtener TODOS los cupos de ese centro de exactamente ese
+	 * día.
+	 * 
+	 * @param centroSaludDTO
+	 * @param fecha
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	@GetMapping("/buscarTodosCuposFecha")
+	public List<CupoDTO> buscarTodosCuposFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+		// Este método se utiliza para buscar las citas del día (para vacunar).
+		// (La hora de la fecha no importa, solamente importa el día)
+		Date fechaInicio = CupoController.copia(fecha);
+		fechaInicio.setHours(0);
+		fechaInicio.setMinutes(0);
+		Date fechaFin = CupoController.copia(fechaInicio);
+		fechaFin.setDate(fechaFin.getDate() + 1);
+		List<Cupo> cupos = cupoDao.buscarTodosCuposDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin);
+		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupos);
+		Collections.sort(cuposDTO);
+		return cuposDTO;
 	}
 
 	@SuppressWarnings("static-access")
@@ -143,6 +196,14 @@ public class CupoController {
 	public void eliminarCupo(String uuidCupo) { // Terminado.
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
+	}
+
+	@PutMapping("/borrarCuposDelCentro")
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
+		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
+		for (int i = 0; i < cupos.size(); i++) {
+			this.eliminarCupo(cupos.get(i).getUuidCupo());
+		}
 	}
 
 	@SuppressWarnings("deprecation")

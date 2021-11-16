@@ -45,19 +45,14 @@
         </div>
 
         <div class="control-group">
-          <strong>Contraseña actual:</strong>
+          <strong>Nueva contraseña</strong>
           <input type="password" placeholder="Password" name="password" #password="ngModel"
-                 [(ngModel)]="usuario.hashPassword" required>
+                 [(ngModel)]="newPassword" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_].{7,}">
           <div>
-            <small *ngIf="!password.valid && password.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+            <small *ngIf="!password.valid" class="textoColorRojo">
+              La contraseña debe ser de 8 caracteres y contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial
             </small>
           </div>
-        </div>
-
-        <div class="control-group">
-          <strong>Nueva contraseña</strong>
-          <input type="password" placeholder="Nueva contraseña" name="newPassword">
         </div>
 
         <div class="control-group">

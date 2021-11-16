@@ -40,6 +40,14 @@ export class CentroSaludComponent implements OnInit {
           this.errorMessage = err.error.message;
  		  setTimeout(function(){ self.errorMessage=""; }, 3000);
         });
+		this.json.postJson("cupo/borrarCuposDelCentro", this.cs).subscribe(
+        result => {
+          this.message = "";
+         // setTimeout(function(){ window.location.reload(); }, 3000);
+        },err=> {
+          this.errorMessage = err.error.message;
+ 		 // setTimeout(function(){ self.errorMessage=""; }, 3000);
+        });
 
 
 		}
