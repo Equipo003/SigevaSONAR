@@ -1,6 +1,10 @@
 package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
@@ -28,7 +32,7 @@ public class WrapperDTOtoModel {
 
 	public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO) {
 		Sanitario sanitario = new Sanitario();
-		if(!sanitarioDTO.getIdUsuario().equals("undefined"))
+		if (!sanitarioDTO.getIdUsuario().equals("undefined"))
 			sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
 
 		sanitario.setRol(sanitarioDTO.getRol().getId());
@@ -46,7 +50,7 @@ public class WrapperDTOtoModel {
 
 	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
-		if(!pacienteDTO.getIdUsuario().equals("undefined"))
+		if (!pacienteDTO.getIdUsuario().equals("undefined"))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 
 		paciente.setRol(pacienteDTO.getRol().getId());
@@ -112,6 +116,13 @@ public class WrapperDTOtoModel {
 		cupo.setFechaYHoraInicio(cupoDTO.getFechaYHoraInicio());
 		cupo.setTamanoActual(cupoDTO.getTamanoActual());
 		return cupo;
+	}
+
+	public static List<Cupo> allCupoDTOtoCupo(List<CupoDTO> cuposDTO) {
+		List<Cupo> cupos = new ArrayList<>();
+		for (int i = 0; i < cuposDTO.size(); i++)
+			cupos.add(cupoDTOToCupo(cuposDTO.get(i)));
+		return cupos;
 	}
 
 	public static Cita citaDTOToCita(CitaDTO citaDTO) {
