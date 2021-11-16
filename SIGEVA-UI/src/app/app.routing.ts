@@ -15,6 +15,7 @@ import {ModificacionCentroSaludComponent} from "./modificacion-centro-salud/modi
 import {ListadoPacientesComponent} from "./listado-pacientes/listado-pacientes.component";
 import {LoginComponent} from "./login/login.component";
 import {FuncionalidadesGuardService as guard} from "./guards/funcionalidades-guard.service";
+import {ContenedorCitasComponent} from "./contenedor-citas/contenedor-citas.component";
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
@@ -64,6 +65,7 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
   },
   {path: 'login', component: LoginComponent},
+  {path: 'misCitas', component: ContenedorCitasComponent},
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];
 

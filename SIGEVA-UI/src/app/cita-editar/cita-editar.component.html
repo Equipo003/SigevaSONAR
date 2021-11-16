@@ -1,0 +1,55 @@
+
+
+<div class="cita-screen">
+  <div class="cita-form">
+    <h1 class="titulo">Cita 1</h1>
+    <hr>
+    <table aria-describedby="Información cita">
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-calendar"></p>
+        </th>
+        <td>
+          <p *ngIf="!editMode">{{this.cita.cupo.fechaYHoraInicio | date : 'medium'}}</p>
+          <mat-form-field *ngIf="editMode" class="calendar" appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" (dateInput)="addEvent($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </tr>
+      <th scope="row">
+        <p class="fontawesome-clock"></p>
+      </th>
+      <td>
+        <mat-radio-group [(ngModel)]="selectedTime" class="radio-group" *ngIf="daySelected">
+          <mat-radio-button class="radio-button" *ngFor="let rango of rangosHoras"
+                            [value]="rango">{{rango}}</mat-radio-button>
+        </mat-radio-group>
+      </td>
+      <tr>
+        <th scope="row">
+          <p class="fontawesome-hospital"></p>
+        </th>
+        <td>
+          <p>{{this.cita.cupo.centroSalud.nombreCentro}}</p>
+        </td>
+      </tr>
+      <!--          <tr>-->
+      <!--            <th scope="row">-->
+      <!--              <p class="fontawesome-map-marker"></p>-->
+      <!--            </th>-->
+      <!--            <td>-->
+      <!--              <p>{{this.citas[0].cupo.centroSalud.direccion}}</p>-->
+      <!--            </td>-->
+      <!--          </tr>-->
+    </table>
+    <div class="alineacion-botones">
+      <button class="btn-cancel" *ngIf="!editMode">ELIMINAR</button>
+      <button class="btn" (click)="editarCita()" *ngIf="!editMode">EDITAR</button>
+      <button class="btn-cancel" *ngIf="editMode">CANCELAR</button>
+      <button class="btn" (click)="editarCita()" *ngIf="editMode">GUARDAR</button>
+    </div>
+  </div>
+</div>

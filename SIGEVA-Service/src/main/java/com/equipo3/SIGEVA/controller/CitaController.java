@@ -11,6 +11,9 @@ import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -38,16 +41,16 @@ public class CitaController {
 	CitaDao citaDao;
 
 	@Autowired
-	CupoController cupoController;
-
-	@Autowired
-	WrapperModelToDTO wrapper;
+	CupoDao cupoDao;
 
 	@Autowired
 	UsuarioDao usuarioDao;
 
 	@Autowired
-	CupoDao cupoDao;
+	CupoController cupoController;
+
+	@Autowired
+	WrapperModelToDTO wrapper;
 
 	@Autowired
 	CentroSaludDao centroSaludDao;
@@ -115,18 +118,21 @@ public class CitaController {
 	}
 
 	@GetMapping("/obtenerCitasFuturasDelPaciente")
-	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente)
+	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente)
 			throws UsuarioInvalidoException { // Terminado.
-		if (paciente != null) {
-			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(paciente.getIdUsuario()));
+
+		Optional<Usuario> optUsuario = usuarioDao.findById(idPaciente);
+
+		if (optUsuario != null) {
+			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(idPaciente));
 			for (int i = 0; i < citasDTO.size(); i++) {
 				if (citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) {
 					citasDTO.remove(i--);
 				}
 			}
 			// Parte de pruebas
-			citasDTO.add(citaSimulacion(paciente, 1));
-			citasDTO.add(citaSimulacion(paciente, 2));
+//			citasDTO.add(citaSimulacion(paciente, 1));
+//			citasDTO.add(citaSimulacion(paciente, 2));
 			Collections.sort(citasDTO);
 			return citasDTO;
 		} else {
@@ -167,7 +173,7 @@ public class CitaController {
 
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
 	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) throws UsuarioInvalidoException { // Terminado
-		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente));
+		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente.getIdUsuario()));
 	}
 
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) { // Terminado
