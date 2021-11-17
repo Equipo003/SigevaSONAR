@@ -3,9 +3,12 @@ package com.equipo3.SIGEVA.model;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.ulisesbocchio.jasyptspringboot.annotation.EncryptablePropertySource;
 
 @Document
 public class Usuario {
@@ -25,6 +28,7 @@ public class Usuario {
 	@Field
 	private String dni;
 	@Field
+	@Value("${encryptedv.property}")
 	private String nombre;
 	@Field
 	private String apellidos;

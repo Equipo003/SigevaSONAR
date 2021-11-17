@@ -250,7 +250,8 @@ public class AdministradorController {
      * @return PacienteDTO Paciente obtenido de la bbdd a partir de su
      * identificador.
      */
-    public PacienteDTO getPaciente(String id) {
+    @GetMapping("/paciente")
+    public PacienteDTO getPaciente(@RequestParam String id) {
         try {
             Optional<Usuario> optPaciente = administradorDao.findById(id);
             if (optPaciente.isPresent()) {

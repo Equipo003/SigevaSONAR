@@ -1,11 +1,12 @@
 package com.equipo3.SIGEVA.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class Paciente extends Usuario {
-
+	
 	@Field
 	private int numDosisAplicadas;
 
