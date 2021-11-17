@@ -1,19 +1,12 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-=======
-import org.springframework.data.mongodb.core.aggregation.DateOperators.Hour;
->>>>>>> branch 'JMD' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,19 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
-<<<<<<< HEAD
-=======
-import com.equipo3.SIGEVA.dao.CitaDao;
->>>>>>> branch 'JMD' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
-<<<<<<< HEAD
 import com.equipo3.SIGEVA.dao.UsuarioDao;
-=======
-import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.dao.VacunaDao;
->>>>>>> branch 'JMD' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
@@ -48,13 +31,7 @@ import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
 import com.equipo3.SIGEVA.model.Paciente;
-<<<<<<< HEAD
 import com.equipo3.SIGEVA.model.Usuario;
-=======
-import com.equipo3.SIGEVA.model.Rol;
-import com.equipo3.SIGEVA.model.Usuario;
-import com.equipo3.SIGEVA.model.Vacuna;
->>>>>>> branch 'JMD' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 
 @CrossOrigin
 @RestController
@@ -75,27 +52,6 @@ public class CupoController {
 
 	@Autowired
 	CitaController citaController;
-	
-	@Autowired
-	VacunaDao vacunaDao;
-
-	@Autowired
-	CentroSaludDao centroSaludDao;
-
-	@Autowired
-	WrapperModelToDTO wrapper;
-
-	@Autowired
-	WrapperDTOtoModel wrapper2;
-
-	@Autowired
-	UsuarioDao usuarioDao;
-
-	@Autowired
-	RolDao rolDao;
-
-	@Autowired
-	CitaDao citaDao;
 
 	@Autowired
 	WrapperModelToDTO wrapperModelToDTO;
@@ -292,10 +248,9 @@ public class CupoController {
 				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
 				System.out.println(cs.getNombreCentro());
 			}
-<<<<<<< HEAD
 			Date fechaInicio = (Date) fecha.clone();
 			Date fechaFin = (Date) fecha.clone();
-			fechaFin.setHours(24); //Metodo
+			fechaFin.setHours(24);
 			System.out.println(fechaFin);
 			System.out.println(fechaInicio);
 			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
@@ -309,34 +264,5 @@ public class CupoController {
 		}
 	}
 	
-=======
-			Date fechaInicio = fecha;
-			Date fechaFin = fecha;
-			fechaInicio.setHours(0);
-			fechaFin.setHours(24);
-			System.out.println(fechaFin);
-			System.out.println(fechaInicio);
-			clibday = cupoDao.buscarCuposLibreFecha("292d9d03-f26b-4625-9dcf-1fdc50c99067", fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
-			for(int i = 0; i < clibday.size(); i++) {
-				//clibday.get(i).getFechaYHoraInicio().setHours(clibday.get(i).getFechaYHoraInicio().getHours()-1);
-				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
-			}
-			
-			return wrapper.allCupoToCupoDTO(clibday);
-		}catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
->>>>>>> branch 'JMD' of https://ISOEquipo3@dev.azure.com/ISOEquipo3/PracticaISO/_git/PracticaISO
 
-	
-	public void prepararCupos(CentroSalud centroSalud) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void borrarCupos(CentroSalud centroSalud) {
-		// TODO Auto-generated method stub
-		
-	}
 }
