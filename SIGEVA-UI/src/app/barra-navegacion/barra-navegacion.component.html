@@ -6,28 +6,28 @@
       </a>
       <nav id="navegacion" class="navegacion">
 
-        <button mat-button [matMenuTriggerFor]="menuUsuarios" class="btn-nav">Usuarios</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Administrador' || rol === 'SuperAdmin')" [matMenuTriggerFor]="menuUsuarios" class="btn-nav"><mat-icon>keyboard_arrow_down</mat-icon>Usuarios</button>
         <mat-menu #menuUsuarios="matMenu">
-          <button mat-menu-item *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/crearUsuarios">Crear Usuario</button>
-          <button mat-menu-item *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/usuariosSistema">Ver todos los usuarios</button>
+          <button mat-menu-item routerLink="/crearUsuarios">Crear Usuario</button>
+          <button mat-menu-item routerLink="/usuariosSistema">Ver todos los usuarios</button>
         </mat-menu>
 
-        <button mat-button [matMenuTriggerFor]="menuCentros" class="btn-nav">Centros</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Administrador' || rol === 'SuperAdmin')" [matMenuTriggerFor]="menuCentros" class="btn-nav"><mat-icon>keyboard_arrow_down</mat-icon>Centros</button>
         <mat-menu #menuCentros="matMenu">
-          <button mat-menu-item *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/crearCS">Crear Centro</button>
-          <button mat-menu-item *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/centrosSistema">Ver todos los centros</button>
-          <button mat-menu-item *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/indicarDosisVacunas">Añadir vacunas a un centro</button>
+          <button mat-menu-item routerLink="/crearCS">Crear Centro</button>
+          <button mat-menu-item routerLink="/centrosSistema">Ver todos los centros</button>
+          <button mat-menu-item routerLink="/indicarDosisVacunas">Añadir vacunas a un centro</button>
         </mat-menu>
 
-        <button mat-button *ngIf="isLogged && (rol === 'Administrador' || 'SuperAdmin')" routerLink="/cnfgCupos" class="btn-nav">Configurar Cupos</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Administrador' || rol === 'SuperAdmin')" routerLink="/cnfgCupos" class="btn-nav">Configurar Cupos</button>
 
-        <button mat-button *ngIf="isLogged && (rol === 'Paciente' || 'SuperAdmin')" routerLink="/solicitarCita" class="btn-nav">Solicitar Cita</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Paciente' || rol === 'SuperAdmin')" routerLink="/solicitarCita" class="btn-nav">Solicitar Cita</button>
 
-        <button mat-button routerLink="/login" class="btn-nav">Log in</button>
+        <button mat-button *ngIf="!isLogged" routerLink="/login" class="btn-nav">Log in</button>
 
-        <button mat-button routerLink="/misCitas" class="btn-nav">Mis Citas</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Sanitario' || rol === 'SuperAdmin')" routerLink="/misCitas" class="btn-nav">Mis Citas</button>
 
-        <a *ngIf="isLogged && (rol === 'Sanitario' || 'SuperAdmin')" href="listarPacientes">Vacunar pacientes</a>
+        <a *ngIf="isLogged && (rol === 'Sanitario' || rol === 'SuperAdmin')" href="listarPacientes">Vacunar pacientes</a>
 
       </nav>
     </div>

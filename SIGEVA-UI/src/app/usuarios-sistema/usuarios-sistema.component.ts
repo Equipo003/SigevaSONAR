@@ -13,6 +13,7 @@ import { UsuarioConObjetos } from "../Model/Usuario-con-objetos";
 })
 export class UsuariosSistemaComponent implements OnInit {
 	usuarios: UsuarioConObjetos[];
+  existeConfiguracion = false;
 	roles: Rol[];
   	rolMostrado: string;
   	rolSeleccionado: string;
@@ -22,7 +23,15 @@ export class UsuariosSistemaComponent implements OnInit {
 		this.roles = [];
     this.rolSeleccionado = "Todos";
     this.rolMostrado = "Todos";
+    this.getConfiguracion();
 	}
+
+  getConfiguracion(){
+    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+      this.existeConfiguracion = JSON.parse(res);
+    });
+  }
+
 	ngOnInit(): void {
 		this.cargarRoles();
 		this.cargarUsuarios();

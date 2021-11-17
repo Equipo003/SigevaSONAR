@@ -1,4 +1,4 @@
-<div class="item usuario">
+<div class="item usuario" *ngIf="!usuarioEliminado">
   <div class="contenido-item centrar-texto">
 
     <div class="control-group">
@@ -9,8 +9,8 @@
       <h3 class="centrar-texto fontawesome-hospital">  {{usuario.centroSalud.nombreCentro}}</h3>
 
       <div class="alineacion-botones">
-        <button class="btn-cancel" (click)=openDialogEliminar()>Eliminar</button>
-        <button class="btn" [routerLink]="['/editarUsuario', usuario.idUsuario]">Editar</button>
+        <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)=openDialogEliminar()>Eliminar</button>
+        <button class="btn" [disabled]="!existeConfiguracion" [routerLink]="['/editarUsuario', usuario.idUsuario]">Editar</button>
       </div>
     </div>
     <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>

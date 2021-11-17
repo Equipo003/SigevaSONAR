@@ -27,7 +27,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import { ListadoPacientesComponent } from './listado-pacientes/listado-pacientes.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import { ModificacionCentroSaludComponent } from './modificacion-centro-salud/modificacion-centro-salud.component';
 import { LoginComponent } from './login/login.component';
@@ -37,6 +37,9 @@ import {MatMenuModule} from "@angular/material/menu";
 import { ContenedorCitasComponent } from './contenedor-citas/contenedor-citas.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { CitaEditarComponent } from './cita-editar/cita-editar.component';
+import {MatSelectModule} from "@angular/material/select";
+import {MatIconModule} from "@angular/material/icon";
+import { MensajeConfiguracionComponent } from './mensaje-configuracion/mensaje-configuracion.component';
 
 
 @NgModule({
@@ -63,6 +66,7 @@ import { CitaEditarComponent } from './cita-editar/cita-editar.component';
     BarraNavegacionComponent,
     ContenedorCitasComponent,
     CitaEditarComponent,
+    MensajeConfiguracionComponent,
   ],
     imports: [
         BrowserModule,
@@ -78,7 +82,10 @@ import { CitaEditarComponent } from './cita-editar/cita-editar.component';
         MatFormFieldModule,
         MatInputModule,
         MatMenuModule,
-        MatRadioModule
+        MatRadioModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatIconModule
     ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

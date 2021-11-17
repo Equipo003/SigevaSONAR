@@ -16,7 +16,9 @@ import {Vacuna} from "../Model/vacuna";
 
 export class UsuarioComponent {
 	@Input() usuario: UsuarioConObjetos;
+  @Input() existeConfiguracion: boolean = false;
   message: string = "";
+  usuarioEliminado = false;
   errorMessage: string = "";
 	constructor(private json: JsonService, public dialog: MatDialog) {
 		this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "", "", "", "", "", "", "",
@@ -30,11 +32,12 @@ export class UsuarioComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.usuarioEliminado = true;
         this.json.deleteJson("user/deleteUsuario", String(this.usuario.idUsuario)).subscribe(
           result => {
             this.message = "Usuario eliminado correctamente";
             this.errorMessage = "";
-            setTimeout(function(){ document.location.reload() }, 3000);
+            this.usuarioEliminado = true;
           }, error => {
             this.errorMessage = error.error.message;
             setTimeout(function(){ self.errorMessage = "" }, 4000);

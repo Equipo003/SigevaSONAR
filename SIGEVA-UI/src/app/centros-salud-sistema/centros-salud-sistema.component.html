@@ -2,10 +2,11 @@
 
 <div class="seccion contenedor">
   <h1 class="centrar-texto">Centros de salud</h1>
+  <app-mensaje-configuracion></app-mensaje-configuracion>
   <div class="contenedor-items">
     <app-centro-salud *ngFor="let centroS of centrosSalud"
                       [cs]=centroS
+                      [existeConfiguracion] = existeConfiguracion
     ></app-centro-salud>
-
   </div>
 </div>

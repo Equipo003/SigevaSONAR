@@ -11,6 +11,7 @@ import {Vacuna} from "../Model/vacuna";
 })
 export class CentroSaludComponent implements OnInit {
   @Input() cs: CentroSalud;
+  @Input() existeConfiguracion = false;
   idCentro: string;
   public message: string;
   public errorMessage: string;
@@ -22,9 +23,8 @@ export class CentroSaludComponent implements OnInit {
     this.message = "";
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
 
-  }
    openDialog() {
 	   let self = this;
        const dialogRef = this.dialog.open(VentanaEmergenteComponent, {

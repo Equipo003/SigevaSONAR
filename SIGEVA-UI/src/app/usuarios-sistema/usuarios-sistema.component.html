@@ -2,6 +2,8 @@
 
 <div class="seccion contenedor">
   <h1 class="centrar-texto">Usuarios sistema: {{rolMostrado}}</h1>
+  <app-mensaje-configuracion></app-mensaje-configuracion>
+
   <div class="contenedorFiltrar">
 
     <h3>Filtrar por: </h3>
@@ -17,6 +19,7 @@
   <div class="contenedor-items">
     <app-usuario *ngFor="let usuario of usuarios"
                  [usuario]=usuario
+                 [existeConfiguracion] = existeConfiguracion
     ></app-usuario>
   </div>
 </div>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {TokenService} from "../Service/token.service";
+import {routing} from "../app.routing";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -12,7 +15,9 @@ export class HomeComponent implements OnInit {
   mensajeBoton4: string;
   mensajeBoton5: string;
   mensajeBoton6: string;
-  constructor() {
+
+  constructor(private tokenService: TokenService, private router: Router) {
+
 	this.mensajeBoton1="Crear Usuarios";
 	this.mensajeBoton2="Crear Centro de Salud";
 	this.mensajeBoton3="Establecer Cupos";
@@ -22,6 +27,9 @@ export class HomeComponent implements OnInit {
 }
 
   ngOnInit(): void {
+    if (this.tokenService.getToken() == null) {
+      this.router.navigate(['/login']);
+    }
   }
 
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { CentroSalud } from '../Model/centro-salud';
-import { JsonService } from '../Service/json.service';
+import {Component, OnInit} from '@angular/core';
+import {CentroSalud} from '../Model/centro-salud';
+import {JsonService} from '../Service/json.service';
 
 @Component({
   selector: 'app-centros-salud-sistema',
@@ -9,25 +9,33 @@ import { JsonService } from '../Service/json.service';
 })
 export class CentrosSaludSistemaComponent implements OnInit {
   centrosSalud: CentroSalud[];
+  existeConfiguracion = false;
 
   constructor(private json: JsonService) {
-	this.centrosSalud = [];
+    this.centrosSalud = [];
   }
 
   ngOnInit(): void {
-	this.listarCentroSalud();
+    this.listarCentroSalud();
+    this.getConfiguracion();
   }
 
-  listarCentroSalud(){
-	let self = this;
-	this.json.getJson("user/getCentros").subscribe(
-		(res : any) => {
-			this.centrosSalud = JSON.parse(res);
-		},
-		error => {
-			console.log(error);
-		}
-	);
+  getConfiguracion(){
+    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+      this.existeConfiguracion = JSON.parse(res);
+    });
+  }
+
+  listarCentroSalud() {
+    let self = this;
+    this.json.getJson("user/getCentros").subscribe(
+      (res: any) => {
+        this.centrosSalud = JSON.parse(res);
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
   }
 
