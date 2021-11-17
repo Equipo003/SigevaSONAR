@@ -91,6 +91,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.json.postJson("user/crearUsuario" + this.usuario.rol.nombre, this.usuario).subscribe(
       result => {
         if (result === null) {
+		  console.log("Fecha: " + this.usuario.fechaNacimiento);
           this.errorMessage = "";
           this.message = "Usuario creado correctamente"
         }

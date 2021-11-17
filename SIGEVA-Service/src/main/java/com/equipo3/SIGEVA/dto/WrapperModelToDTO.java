@@ -183,10 +183,11 @@ public class WrapperModelToDTO {
 
 	public CupoDTO getCupoDTOfromUuid(String uuidCupo) throws IdentificadorException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
-
+		System.out.println("i DENTRO DEL GETCUODTO from uuid "+uuidCupo);
+		System.out.println(optCupo.get().getUuidCupo());
 		if (optCupo.isPresent()) {
 			Cupo cupo = optCupo.get();
-
+			
 			CupoDTO cupoDTO = new CupoDTO();
 
 			cupoDTO.setUuidCupo(cupo.getUuidCupo());
@@ -203,7 +204,7 @@ public class WrapperModelToDTO {
 	}
 
 	public CupoDTO cupoToCupoDTO(Cupo cupo) {
-		try {
+		try {System.out.println("Identificador dentro del warpper " + cupo.getUuidCupo());
 			return getCupoDTOfromUuid(cupo.getUuidCupo());
 		} catch (IdentificadorException e) {
 			e.printStackTrace();
