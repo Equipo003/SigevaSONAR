@@ -18,8 +18,12 @@ import {FuncionalidadesGuardService as guard} from "./guards/funcionalidades-gua
 import {ContenedorCitasComponent} from "./contenedor-citas/contenedor-citas.component";
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'home', component: HomeComponent},
+  {
+    path: '', component: HomeComponent
+  },
+  {
+    path: 'home', component: HomeComponent
+  },
   {
     path: 'crearCS', component: FormularioCentroSaludComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
@@ -65,7 +69,11 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
   },
   {path: 'login', component: LoginComponent},
-  {path: 'misCitas', component: ContenedorCitasComponent},
+
+  {path: 'misCitas', component: ContenedorCitasComponent,
+    canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
+  },
+
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];
 

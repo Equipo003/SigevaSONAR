@@ -280,8 +280,8 @@ select, option {
 }
 
 .resaltadoNegativo {
-	background: #ff0000;
-	border: 3px solid #ff0000;
+	background: #EE4646;
+	border: 3px solid red;
 	border-radius: 10px;
 	color: #000000;
 	font-weight: 300;
@@ -316,6 +316,17 @@ select, option {
   justify-content: center;
   align-items: center;
   padding-top: 0.5rem;
+  text-align: center;
 }
-/*html, body { height: 100%; }*/
-/*body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
+
+.btn-cancel:disabled {
+  background-color:#F99191;
+  cursor: default;
+}
+
+.btn:disabled {
+  background-color: #87D7FB;
+  cursor: default;
+}
+
+

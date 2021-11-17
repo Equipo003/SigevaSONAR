@@ -30,3 +30,23 @@
 .calendar{
   width: 270px;
 }
+
+.input-hora {
+  width: 270px;
+}
+
+.alineación-izquierda {
+  display: flex;
+  justify-content: normal;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+
+p {
+  margin: 0;
+}
+
+mat-icon {
+  margin-right: 5px;
+  margin-left: 30px;
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {TokenService} from "../Service/token.service";
+import {JsonService} from "../Service/json.service";
 
 @Component({
   selector: 'app-barra-navegacion',
@@ -8,9 +9,10 @@ import {TokenService} from "../Service/token.service";
 })
 export class BarraNavegacionComponent implements OnInit {
 
-  superAdmin = true;
+  superAdmin = false;
   isLogged = false;
   rol = "";
+  existeConfiguracion = false;
 
   constructor(private tokenService: TokenService) { }
 
@@ -28,5 +30,4 @@ export class BarraNavegacionComponent implements OnInit {
       this.rol = "SuperAdmin";
     }
   }
-
 }
