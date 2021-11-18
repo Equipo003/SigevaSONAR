@@ -1,67 +1,32 @@
-@import url(https://fonts.googleapis.com/css?family=Erica+One);
-/* BODY */
-body {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;  
-  height: 100%;
-  background-color: pink;
- 
-  background-attachment: fixed;
-  background-size: 100% 100%;
-  overflow: hidden;
-}
-::selection {
-  background: transparent;
-}
-
 h1 {
-  cursor: default;
-  position: static;
-  top:  auto;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 50px auto;
-  margin: auto;
-  display: run-in;
-  -webkit-animation: bounce .3s ease infinite alternate;
-  
-  font-family: 'Erica One', cursive;
-  font-size: 80px;
-  color: #FFF;
-  text-align: center;
-  line-height: 100px;
-  text-shadow: 0 1px 0 #CCC,
-               0 2px 0 #CCC,
-               0 3px 0 #CCC,
-               0 4px 0 #CCC,
-               0 5px 0 #CCC,
-               0 6px 0 transparent,
-               0 7px 0 transparent,
-               0 8px 0 transparent,
-               0 9px 0 transparent,
-               0 10px 10px rgba(0, 0, 0, .6);
+  font-size: 70px;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-top: 40px;
+  padding-bottom: 20px;
 }
-/* ANIMATION */
 
-@-webkit-keyframes bounce {
-  100% {
-    top: -30px;
-    
-    text-shadow: 0 1px 0 #CCC,
-                 0 2px 0 #CCC,
-                 0 3px 0 #CCC,
-                 0 4px 0 #CCC,
-                 0 5px 0 #CCC,
-                 0 6px 0 #CCC,
-                 0 7px 0 #CCC,
-                 0 8px 0 #CCC,
-                 0 9px 0 #CCC,
-                 0 30px 30px rgba(0, 0, 0, .3);
-  }
+.alineación-izquierda {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+
+p {
+  margin: 0;
+  font-size: 25px;
+}
+
+mat-icon {
+  margin-right: 5px;
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.space {
+  margin-top: 20px;
 }
 

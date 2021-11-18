@@ -36,4 +36,9 @@ export class TokenService {
     }
     return null;
   }
+
+  removeToken() {
+    window.sessionStorage.removeItem(ID_USUARIO);
+    window.sessionStorage.removeItem(ROL_USUARIO);
+  }
 }
