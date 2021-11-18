@@ -9,6 +9,10 @@ import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.*;
+
+import Auxiliar.Encriptador;
+import org.jasypt.util.text.AES256TextEncryptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +64,8 @@ public class AdministradorController {
     private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
+    @Autowired
+    private Encriptador var = new Encriptador();
 
     /**
      * Recurso web para la creación de un Administrador.
@@ -334,6 +340,7 @@ public class AdministradorController {
      */
     @GetMapping("/getConfCupos")
     public ConfiguracionCuposDTO getConfiguracionCupos() {
+    	System.out.println(var.getClave());
         try {
             List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
                     .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());

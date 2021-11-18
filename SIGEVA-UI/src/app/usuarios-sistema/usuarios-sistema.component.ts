@@ -13,24 +13,24 @@ import { UsuarioConObjetos } from "../Model/Usuario-con-objetos";
 })
 export class UsuariosSistemaComponent implements OnInit {
 	usuarios: UsuarioConObjetos[];
-  existeConfiguracion = false;
+	existeConfiguracion = false;
 	roles: Rol[];
-  	rolMostrado: string;
-  	rolSeleccionado: string;
+	rolMostrado: string;
+	rolSeleccionado: string;
 
 	constructor(private json: JsonService) {
 		this.usuarios = [];
 		this.roles = [];
-    this.rolSeleccionado = "Todos";
-    this.rolMostrado = "Todos";
-    this.getConfiguracion();
+		this.rolSeleccionado = "Todos";
+		this.rolMostrado = "Todos";
+		this.getConfiguracion();
 	}
 
-  getConfiguracion(){
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
-      this.existeConfiguracion = JSON.parse(res);
-    });
-  }
+	getConfiguracion() {
+		this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+			this.existeConfiguracion = JSON.parse(res);
+		});
+	}
 
 	ngOnInit(): void {
 		this.cargarRoles();
@@ -48,26 +48,26 @@ export class UsuariosSistemaComponent implements OnInit {
 		);
 	}
 
-  cambiarRolaId(){
-    if (this.rolSeleccionado != "Todos"){
-      let self = this;
-      this.roles.forEach(function (rol: Rol) {
-        if (self.rolSeleccionado === rol.nombre) {
-          self.rolSeleccionado = rol.id;
-        }
-      })
-    }
-  }
+	cambiarRolaId() {
+		if (this.rolSeleccionado != "Todos") {
+			let self = this;
+			this.roles.forEach(function(rol: Rol) {
+				if (self.rolSeleccionado === rol.nombre) {
+					self.rolSeleccionado = rol.id;
+				}
+			})
+		}
+	}
 
 	cargarUsuarios() {
-    this.rolMostrado = this.rolSeleccionado;
-    this.cambiarRolaId();
+		this.rolMostrado = this.rolSeleccionado;
+		this.cambiarRolaId();
 		let params = new HttpParams({
 			fromObject: {
 				rol: this.rolSeleccionado
 			}
 		});
-    this.rolSeleccionado = "Todos";
+		this.rolSeleccionado = "Todos";
 		this.json.getJsonP("user/getUsuariosByRol", params).subscribe(
 			result => {
 				this.usuarios = JSON.parse(result);

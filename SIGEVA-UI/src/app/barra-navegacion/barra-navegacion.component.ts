@@ -9,7 +9,7 @@ import {JsonService} from "../Service/json.service";
 })
 export class BarraNavegacionComponent implements OnInit {
 
-  superAdmin = false;
+  superAdmin = true;
   isLogged = false;
   rol = "";
   existeConfiguracion = false;
