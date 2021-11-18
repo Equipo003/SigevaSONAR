@@ -16,3 +16,9 @@ select {
   align-items: center;
   padding-top: 0.5rem;
 }
+
+h1 {
+  padding-top: 20px;
+  margin: 0px;
+  font-size: 35px;
+}
