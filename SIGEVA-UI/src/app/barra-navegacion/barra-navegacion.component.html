@@ -25,9 +25,9 @@
 
         <button mat-button *ngIf="isLogged && (rol === 'Paciente' || rol === 'SuperAdmin')" routerLink="/solicitarCita" class="btn-nav">Solicitar Cita</button>
 
-        <button mat-button *ngIf="isLogged && (rol === 'Sanitario' || rol === 'SuperAdmin')" routerLink="/misCitas" class="btn-nav">Mis Citas</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Paciente' || rol === 'SuperAdmin')" routerLink="/misCitas" class="btn-nav">Mis Citas</button>
 
-        <button mat-button *ngIf="isLogged && (rol === 'Sanitario' || rol === 'SuperAdmin')" href="listarPacientes">Vacunar pacientes</button>
+        <button mat-button *ngIf="isLogged && (rol === 'Sanitario' || rol === 'SuperAdmin')" href="listarPacientes" class="btn-nav">Vacunar pacientes</button>
 
 <!--        <button mat-button *ngIf="isLogged" routerLink="/login" class="btn-nav"><mat-icon>login</mat-icon>Log in</button>-->
         <button mat-button *ngIf="isLogged" (click)="openDialogCerrarSesion()" class="btn-nav" style="color: red"><mat-icon>exit_to_app</mat-icon>Cerrar Sesión</button>
