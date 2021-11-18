@@ -8,7 +8,7 @@ import {TokenService} from "../Service/token.service";
 
 export class FuncionalidadesGuardService implements CanActivate {
   realRol: string = "";
-  superAdmin: boolean = false;
+  superAdmin: boolean = true;
 
   constructor(private tokenService: TokenService, private router: Router) {  }
 

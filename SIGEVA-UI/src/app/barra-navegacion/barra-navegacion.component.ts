@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
 })
 export class BarraNavegacionComponent implements OnInit {
 
-  superAdmin = false;
+  superAdmin = true;
   isLogged = false;
   rol = "";
   existeConfiguracion = false;
