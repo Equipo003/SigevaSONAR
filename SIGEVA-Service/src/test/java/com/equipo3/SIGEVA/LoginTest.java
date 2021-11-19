@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.dto.AdministradorDTO;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.dto.SanitarioDTO;
+import com.equipo3.SIGEVA.dto.TokenDTO;
 import com.equipo3.SIGEVA.dto.UsuarioLoginDTO;
 
 @SpringBootTest
@@ -26,9 +28,12 @@ class LoginTest {
 	public static AdministradorDTO adminDTO;
 	public static SanitarioDTO sanitarioDTO;
 	public static CentroSaludDTO csDto;
+	public static TokenDTO tokenDto;
 	
     @Autowired
     private AdministradorController administradorController;
+    @Autowired
+    private CitaController citaController;
     
     @BeforeAll
 	static void creacionCentroSalud() {
@@ -98,10 +103,8 @@ class LoginTest {
     		administradorController.eliminarUsuario(adminDTO.getUsername());
     		administradorController.eliminarCentro(csDto.getId());
     	}
-    
-    	
-    	
     }
+    
     @Test
     void loginPacienteTest(){
     	try {
@@ -140,6 +143,50 @@ class LoginTest {
         	administradorController.eliminarCentro(csDto.getId());
     	}
     	
+    }
+    
+    @Test
+    void loginSanitarioMalTest(){
+    	try {
+    		administradorController.crearCentroSalud(csDto);
+    		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+    		sanitarioDTO.setCentroSalud(csDto);
+        	administradorController.crearUsuarioSanitario(sanitarioDTO);
+        	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
+        	usuarioLogin.setUsername(sanitarioDTO.getUsername());
+        	usuarioLogin.setHashPassword("falla");
+        	administradorController.login(usuarioLogin);
+    	}catch(Exception e){
+    		assertNotNull(e);
+    		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+        	administradorController.eliminarCentro(csDto.getId());
+    	}
+    }
+    /*
+     * request.getSession().setAttribute(USERID_KEY, usuarioDTO.id);
+request.getSession().setAttribute(ROL_KEY, usuarioDTO.rol.nombre)
+     * if (request.getSession().getAttribute(USERID_KEY) != null and request.getSession().getAttribute(ROL_KEY).equals("Administrador"){
+	//todo el codigo del método
+}*/
+    @Test
+    void loginAdminPedirCitaTest(){
+    	try {
+    		administradorController.crearCentroSalud(csDto);
+        	adminDTO.setRol(administradorController.getRolByNombre("Administrador"));
+        	administradorController.crearUsuarioAdministrador(adminDTO);
+        	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
+        	usuarioLogin.setUsername(adminDTO.getUsername());
+        	usuarioLogin.setHashPassword(adminDTO.getHashPassword());
+        	tokenDto= administradorController.login(usuarioLogin);
+        	System.out.println(tokenDto.getRol());
+        	citaController.buscarYAsignarCitas(adminDTO.getIdUsuario());
+        	administradorController.eliminarUsuario(adminDTO.getUsername());
+    		administradorController.eliminarCentro(csDto.getId());
+    	}catch(Exception e){
+    		assertNotNull(e);
+    		administradorController.eliminarUsuario(adminDTO.getUsername());
+    		administradorController.eliminarCentro(csDto.getId());
+    	}
     }
    
 }

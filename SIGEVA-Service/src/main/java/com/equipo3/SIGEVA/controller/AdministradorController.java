@@ -1,10 +1,11 @@
 package com.equipo3.SIGEVA.controller;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import javax.servlet.*;
 import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
@@ -60,6 +61,7 @@ public class AdministradorController {
     private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
+	private static final String TOKEN_KEY = "token";
 
     /**
      * Recurso web para la creación de un Administrador.
@@ -700,7 +702,8 @@ public class AdministradorController {
     }
 
     @PostMapping("/login")
-    public TokenDTO login(@RequestBody UsuarioLoginDTO usuarioLoginDTO) {
+    public TokenDTO login(@RequestBody UsuarioLoginDTO usuarioLoginDTO,HttpServletRequest request) {
+    	
         try {
             Optional<Usuario> usuarioOpt = administradorDao.findByUsername(usuarioLoginDTO.getUsername());
             if (!usuarioOpt.isPresent()) {
@@ -710,8 +713,9 @@ public class AdministradorController {
             if (!usuariodto.getHashPassword().equals(usuarioLoginDTO.getHashPassword())) {
                 throw new UsuarioInvalidoException("Contraseña incorrecta");
             }
-
-            return new TokenDTO(usuariodto.getIdUsuario(), usuariodto.getRol().getNombre());
+            TokenDTO token = new TokenDTO(usuariodto.getIdUsuario(), usuariodto.getRol().getNombre());
+            request.getSession().setAttribute(TOKEN_KEY, token);
+            return token;
 
         }catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
