@@ -141,7 +141,7 @@ public class WrapperDTOtoModel {
 		paciente.setHashPassword(pacienteDTO.getHashPassword());
 		paciente.setRol(pacienteDTO.getRol().getId());
 
-		paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 
 		return paciente;
 	}
