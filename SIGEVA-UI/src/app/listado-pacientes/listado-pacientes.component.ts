@@ -24,6 +24,7 @@ export class ListadoPacientesComponent implements OnInit {
   pacienteCentroSalud : CentroSalud;
   pacienteSeleccionado:boolean;
   today : FormControl;
+  dateSelectedIsToday : boolean;
 
   constructor(private json:JsonService) {
     this.pacientes = [];
@@ -34,6 +35,7 @@ export class ListadoPacientesComponent implements OnInit {
     this.citas = [];
     this.pacienteSeleccionado = false;
     this.today = new FormControl(new Date());
+    this.dateSelectedIsToday = true;
   }
 
   ngOnInit(): void {
@@ -77,6 +79,7 @@ export class ListadoPacientesComponent implements OnInit {
   }
 
   vacunar(cita : CitaConObjetos){
+
     this.citaSeleccionada = cita;
     this.pacienteSeleccionado = true;
   }
@@ -94,6 +97,9 @@ export class ListadoPacientesComponent implements OnInit {
   }
 
   dataChangeEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    let fecha = event.value;
+    let hoy: Date = new Date();
+    this.dateSelectedIsToday = fecha?.getDate()==hoy.getDate() && fecha?.getMonth()==hoy.getMonth() && fecha?.getFullYear()==hoy.getFullYear();
     this.getPacientesFecha(event);
   }
 
@@ -107,15 +113,18 @@ export class ListadoPacientesComponent implements OnInit {
     this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
       result => {
         this.citas = JSON.parse(result);
-        console.log(this.citas[0]);
       }, error => {
         console.log(error);
       });
   }
 
   aplicarDosis() {
-    this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
-    this.pacienteSeleccionado = false;
+    this.json.postJson('cita/vacunar',this.citaSeleccionada).subscribe((res: any) => {
+      this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
+      this.pacienteSeleccionado = false;
+    },err=> {
+    });
+
   }
 
   citasHoy() {
@@ -129,7 +138,6 @@ export class ListadoPacientesComponent implements OnInit {
     this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
       result => {
         this.citas = JSON.parse(result);
-        console.log(this.citas[0]);
       }, error => {
         console.log(error);
       });

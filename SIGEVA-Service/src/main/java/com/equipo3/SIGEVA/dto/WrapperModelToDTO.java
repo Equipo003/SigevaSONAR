@@ -25,12 +25,15 @@ import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
+
+import Auxiliar.Encriptador;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Component
 public class WrapperModelToDTO {
-
+	private static  Encriptador var = new Encriptador();
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
 
@@ -231,7 +234,6 @@ public class WrapperModelToDTO {
 		if (optUsuario.isPresent()) {
 			Usuario usuario = optUsuario.get();
 			RolDTO rol = getRolDTOfromUuid(usuario.getRol());
-
 			switch (rol.getNombre()) { // Patrón Factory.
 
 			case "Administrador":
@@ -291,9 +293,8 @@ public class WrapperModelToDTO {
 				pacienteDTO.setApellidos(paciente.getApellidos());
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
-
-				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
-
+				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
+				
 				return pacienteDTO;
 			}
 
@@ -347,7 +348,7 @@ public class WrapperModelToDTO {
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
 
-				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
+				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
 
 				return pacienteDTO;
 

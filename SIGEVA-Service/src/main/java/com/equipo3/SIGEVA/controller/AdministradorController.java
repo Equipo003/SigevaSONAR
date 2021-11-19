@@ -10,7 +10,13 @@ import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.*;
+
+import Auxiliar.Encriptador;
+import org.jasypt.util.text.AES256TextEncryptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -235,9 +241,11 @@ public class AdministradorController {
     @GetMapping("/getUsuariosByRol")
     public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
         try {
+        	System.out.println(rol);
             if (rol.equals("Todos")) {
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
             } else {
+            	System.out.println("dasod");
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
             }
         } catch (Exception e) {
@@ -252,7 +260,8 @@ public class AdministradorController {
      * @return PacienteDTO Paciente obtenido de la bbdd a partir de su
      * identificador.
      */
-    public PacienteDTO getPaciente(String id) {
+    @GetMapping("/paciente")
+    public PacienteDTO getPaciente(@RequestParam String id) {
         try {
             Optional<Usuario> optPaciente = administradorDao.findById(id);
             if (optPaciente.isPresent()) {

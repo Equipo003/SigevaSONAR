@@ -132,6 +132,12 @@ p {
   justify-items: center;
 }
 
+.date-button{
+  background-color: rgb(43, 89, 40);
+  top: 0px;
+  position: relative;
+}
+
 .mensaje-guia{
   height:350px;
   width: 300px;

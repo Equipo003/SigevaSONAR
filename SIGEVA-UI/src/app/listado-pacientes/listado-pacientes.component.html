@@ -12,7 +12,7 @@
               <h3 class="campo-pacientes">{{cita.paciente.nombre}}</h3>
               <h4 class="entypo-vcard campo-pacientes"> {{cita.paciente.dni}}</h4>
               <h4 class="entypo-clock campo-pacientes"> {{this.citaSeleccionada.cupo.fechaYHoraInicio | date:'shortTime'}}</h4>
-              <button class="btn-vacunar campo-pacientes" *ngIf="cita.paciente.numDosisAplicadas < cita.dosis" (click)="this.vacunar(cita)" >Seleccionar</button>
+              <button class="btn-vacunar campo-pacientes" *ngIf="cita.paciente.numDosisAplicadas < cita.dosis && this.dateSelectedIsToday" (click)="this.vacunar(cita)" >Seleccionar</button>
               <p *ngIf="cita.paciente.numDosisAplicadas == cita.dosis" class="stick entypo-check"></p>
               <img class="campo-pacientes extra" src="../assets/icons/vaccine.png" width="30px"
                    height="30px" *ngIf="cita.paciente.numDosisAplicadas>=1">
@@ -40,7 +40,7 @@
           </mat-form-field>
         </tr>
         <tr>
-          <button (click)="citasHoy()">Hoy</button>
+          <button class="stick date-button" (click)="citasHoy()">Hoy</button>
         </tr>
       </table>
     </div>
@@ -54,7 +54,7 @@
               <h4 class="campo-pacientes">Fecha nacimiento: {{this.citaSeleccionada.paciente.fechaNacimiento | date:'mediumDate'}}</h4>
               <h4 class="campo-pacientes">Dosis recibidas: {{this.citaSeleccionada.paciente.numDosisAplicadas}}</h4>
               <h4 class="campo-pacientes">Dosis de la cita: {{this.citaSeleccionada.dosis}}</h4>
-              <button class="campo-pacientes" (click)="this.aplicarDosis()" >Vacunar</button>
+              <button class="btn-vacunar campo-pacientes" (click)="this.aplicarDosis()" >Vacunar</button>
             </div>
             <div class="control-group" *ngIf="!this.pacienteSeleccionado">
               <div class="mensaje-guia">
