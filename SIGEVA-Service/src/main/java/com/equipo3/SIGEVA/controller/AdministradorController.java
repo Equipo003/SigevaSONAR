@@ -389,11 +389,9 @@ public class AdministradorController {
     @GetMapping("/getUsuariosByRol")
     public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
         try {
-        	System.out.println(rol);
             if (rol.equals("Todos")) {
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
             } else {
-            	System.out.println("dasod");
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
             }
         } catch (Exception e) {
@@ -775,25 +773,19 @@ public class AdministradorController {
      * Recurso web para la modificación de los centros de salud por parte de los
      * administradores.
      *
-     * @param idUser Identificador del usuario que va a realizar la modificación de
-     *               centro.
      * @param csDto  Centro de salud modificado
      */
     @PostMapping("/updateCS")
-    public void modificarCentroSalud(@RequestParam String idUser, @RequestBody CentroSaludDTO csDto) {
+    public void modificarCentroSalud(@RequestBody CentroSaludDTO csDto) {
         try {
-            Optional<Usuario> usuarioOpt = administradorDao.findById(idUser);
-            if (!usuarioOpt.isPresent()) {
-                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
 
+            Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
+            if (!optCentro.isPresent()) {
+                throw new CentroInvalidoException("El centro de salud no existe");
             }
-            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
-            if (usuariodto.getRol().equals(this.getRolByNombre("Administrador"))
-                    && (csDto.getNombreCentro().equals(this.getCentroById(csDto.getId()).getNombreCentro()))) {
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
-            } else {
-                throw new DeniedAccessException("No tienes los permisos necesarios, para realizar la operación");
-            }
+
+            centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
+
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

@@ -30,6 +30,8 @@ export class CitaEditarComponent implements OnInit {
   horaSeleccionada: string = "";
   message: string = "";
   errorMessage: string = "";
+  fecha = "2021-12-22T23:00:00.000+00:00";
+  nombreCentro = "Centro de pruebas";
 
   constructor(private json: JsonService, public dialog: MatDialog) {
     this.cita = new CitaConObjetos(new CupoCitas("", new CentroSalud("", "", 0, new Vacuna("", 0, 0, ""), ""), new Date()),
