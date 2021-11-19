@@ -71,7 +71,7 @@ const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
 
   {path: 'misCitas', component: ContenedorCitasComponent,
-    canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
+    canActivate: [guard], data: {expectedRol: ['Paciente', 'SuperAdmin']}
   },
 
   {path: '**', redirectTo: '', pathMatch: 'full'}

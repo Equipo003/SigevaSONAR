@@ -72,23 +72,8 @@ export class ModificacionCentroSaludComponent implements OnInit {
 
 	modificarCentroSalud() {
 		let self = this;
-		let params = new HttpParams({
-			fromObject: {
-				idUser: "24badd05-374b-4a3c-af77-5977d47866fd",
-			}
-		});
 
-		let headers = new HttpHeaders();
-		headers.append("Content-Type", "aplication/json"),
-			headers.append("observe", "body");
-
-		let options = ({
-			headers: headers,
-			params: params,
-			body: this.cs
-		});
-
-		this.json.postJsonUpdateCS("user/updateCS", this.cs, options).subscribe(
+		this.json.postJson("user/updateCS", this.cs).subscribe(
 			result => {
 				this.message = "Centro modificado correctamente";
 				setTimeout(function() { self.router.navigate(['centrosSalud']); }, 3000);

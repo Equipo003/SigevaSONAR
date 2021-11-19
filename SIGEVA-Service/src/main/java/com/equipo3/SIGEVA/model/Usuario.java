@@ -26,7 +26,6 @@ public class Usuario {
 	@Field
 	private String dni;
 	@Field
-	@Value("${encryptedv.property}")
 	private String nombre;
 	@Field
 	private String apellidos;

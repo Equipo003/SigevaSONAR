@@ -38,9 +38,6 @@ class ModificarCentroTest {
 	private AdministradorController administradorController = new AdministradorController();
 
 	private static CentroSaludDTO csDto;
-	private static AdministradorDTO administrador;
-	private static SanitarioDTO sanitario;
-	private static PacienteDTO paciente;
 
 	@BeforeAll
 	static void creacionCentroSalud() {
@@ -51,94 +48,6 @@ class ModificarCentroTest {
 	}
 
 	/**
-	 * Test modificación por parte de un paciente, acción que los pacientes no
-	 * pueden realizar.
-	 * 
-	 */
-	@Test
-	void modificarCentroPaciente() {
-		try {
-			administradorController.crearCentroSalud(csDto);
-
-			paciente = new PacienteDTO();
-			paciente.setRol(administradorController.getRolByNombre("Paciente"));
-			paciente.setNombre("Paciente test modificar Paciente");
-			paciente.setCentroSalud(csDto);
-
-			administradorController.crearUsuarioPaciente(paciente);
-
-			csDto.setNumVacunasDisponibles(80);
-			csDto.setDireccion("Modificación centro test paciente");
-
-			administradorController.modificarCentroSalud(paciente.getIdUsuario(), csDto);
-		} catch (Exception e) {
-			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
-					e.getMessage());
-			administradorController.eliminarUsuario(paciente.getUsername());
-			administradorController.eliminarCentro(csDto.getId());
-		}
-
-	}
-
-	/**
-	 * Test modificación de centro de salud, lo sanitarios no pueden realizar dicha
-	 * acción.
-	 */
-	@Test
-	void modificarCentroSanitario() {
-		try {
-			administradorController.crearCentroSalud(csDto);
-
-			sanitario = new SanitarioDTO();
-			sanitario.setRol(administradorController.getRolByNombre("Sanitario"));
-			sanitario.setCentroSalud(csDto);
-			sanitario.setUsername("Test sanitario");
-
-			administradorController.crearUsuarioSanitario(sanitario);
-
-			csDto.setDireccion("Modificación dirección test sanitario");
-
-			administradorController.modificarCentroSalud(sanitario.getIdUsuario(), csDto);
-
-		} catch (Exception e) {
-			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
-					e.getMessage());
-			administradorController.eliminarUsuario(sanitario.getUsername());
-			administradorController.eliminarCentro(csDto.getId());
-		}
-
-	}
-
-	/**
-	 * Test para la modificación de centro de salud por parte del Administrador
-	 * modificando el nombre; el cual, si puede realizar dicha acción pero no puede
-	 * modificarse el nombre del centro de salud.
-	 */
-	@Test
-	void modificarCentroNombreAdministrador() {
-		try {
-			administradorController.crearCentroSalud(csDto);
-
-			administrador = new AdministradorDTO();
-			administrador.setCentroSalud(csDto);
-			administrador.setRol(administradorController.getRolByNombre("Administrador"));
-			administrador.setUsername("Test modificación centro  admin");
-
-			administradorController.crearUsuarioAdministrador(administrador);
-
-			csDto.setNombreCentro("Hospital test");
-
-			administradorController.modificarCentroSalud(administrador.getIdUsuario(), csDto);
-		} catch (Exception e) {
-			assertEquals("401 UNAUTHORIZED \"No tienes los permisos necesarios, para realizar la operación\"",
-					e.getMessage());
-			administradorController.eliminarUsuario(administrador.getUsername());
-			administradorController.eliminarCentro(csDto.getId());
-		}
-
-	}
-
-	/**
 	 * Test modificación correta de centro de salud, por parte del administrador, caso de éxito.
 	 */
 	@Test
@@ -146,20 +55,13 @@ class ModificarCentroTest {
 		try {
 			administradorController.crearCentroSalud(csDto);
 
-			administrador = new AdministradorDTO();
-			administrador.setCentroSalud(csDto);
-			administrador.setRol(administradorController.getRolByNombre("Administrador"));
-			administrador.setUsername("Test modificación centro  admin");
-
-			administradorController.crearUsuarioAdministrador(administrador);
-
 			csDto.setDireccion("Modificación dirección test centro Administrador");
 			csDto.setNumVacunasDisponibles(30);
 
-			administradorController.modificarCentroSalud(administrador.getIdUsuario(), csDto);
+			administradorController.modificarCentroSalud(csDto);
 
 			assertEquals(administradorController.getCentroById(csDto.getId()).toString(), csDto.toString());
-			administradorController.eliminarUsuario(administrador.getUsername());
+
 			administradorController.eliminarCentro(csDto.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
