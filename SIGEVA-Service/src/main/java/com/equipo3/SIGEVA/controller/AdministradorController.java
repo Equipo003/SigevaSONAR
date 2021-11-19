@@ -69,6 +69,75 @@ public class AdministradorController {
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 	private static final String TOKEN_KEY = "token";
 
+	/**
+     * Recurso web para conseguir la instancia de un Administrador.
+     *
+     * @param administradorDTO Datos del administrador proporcionados por otro administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+
+    public Optional<Usuario> conseguirUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
+        try {
+        
+        	Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+        	Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
+        	if (optUsuario.isPresent()) {
+        		return optUsuario;
+        	}else {
+        		return null;
+        	}
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    
+    /**
+     * Recurso web para conseguir la instancia de un Paciente.
+     *
+     * @param pacienteDTO Datos del paciente proporcionados por un administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+
+    public Optional<Usuario> conseguirUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
+        try {
+        
+        	Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+        	Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
+        	if (optUsuario.isPresent()) {
+        		return optUsuario;
+        	}else {
+        		return null;
+        	}
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    
+    /**
+     * Recurso web para conseguir la instancia de un Sanitario.
+     *
+     * @param sanitarioDTO Datos del sanitario proporcionados por un administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+
+    public Optional<Usuario> conseguirUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
+        try {
+        
+        	Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+        	Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
+        	if (optUsuario.isPresent()) {
+        		return optUsuario;
+        	}else {
+        		return null;
+        	}
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+	
     /**
      * Recurso web para la creación de un Administrador.
      *
@@ -76,15 +145,41 @@ public class AdministradorController {
      *                         (usuario), a través de la interfaz gráfica del front end.
      */
     @PostMapping("/crearUsuarioAdministrador")
-    public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
+    public void crearUsuarioAdministrador(HttpServletRequest request,@RequestBody AdministradorDTO administradorDTO) {
         try {
-            Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
-            if (optUsuario.isPresent()) {
-                throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
-            }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
 
-            administradorDao.save(administrador);
+                 administradorDao.save(administrador);
+        	}
+           
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    
+    /**
+     * Recurso web para la creación de un Administrador sin restricciones.
+     *
+     * @param administradorDTO Datos del administrador proporcionados por otro administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+    public void crearUsuarioAdministradorSinRestricciones(@RequestBody AdministradorDTO administradorDTO) {
+        try {
+        		 Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
+
+                 administradorDao.save(administrador);
+        
+           
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -92,20 +187,70 @@ public class AdministradorController {
     }
 
     /**
+     * Recurso web para la creación de un Paciente sin restricciones.
+     *
+     * @param pacienteDTO Datos del paciente proporcionados por un administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+    public void crearUsuarioPacienteSinRestricciones(@RequestBody PacienteDTO pacienteDTO) {
+        try {
+        		 Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
+
+                 administradorDao.save(paciente);
+        
+           
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    
+    /**
+     * Recurso web para la creación de un Paciente sin restricciones.
+     *
+     * @param pacienteDTO Datos del paciente proporcionados por un administrador
+     *                         (usuario), a través de la interfaz gráfica del front end.
+     */
+    public void crearUsuarioSanitarioSinRestricciones(@RequestBody SanitarioDTO sanitarioDTO) {
+        try {
+        		 Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
+
+                 administradorDao.save(sanitario);
+        
+           
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    
+    
+    /**
      * Recurso web para la creación de un Paciente.
      *
      * @param pacienteDTO Datos del paciente proporcionados por el administrador
      *                    (usuario), a través de la interfaz gráfica del front end.
      */
     @PostMapping("/crearUsuarioPaciente")
-    public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
+    public void crearUsuarioPaciente(HttpServletRequest request,@RequestBody PacienteDTO pacienteDTO) {
         try {
-            Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
-            if (optUsuario.isPresent()) {
-                throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
-            }
-            administradorDao.save(paciente);
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
+                 administradorDao.save(paciente);
+        	}
+           
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -119,15 +264,18 @@ public class AdministradorController {
      *                     (usuario), a través de la interfaz gráfica del front end.
      */
     @PostMapping("/crearUsuarioSanitario")
-    public void crearUsuarioSanitario(@RequestBody SanitarioDTO sanitarioDTO) {
+    public void crearUsuarioSanitario(HttpServletRequest request,@RequestBody SanitarioDTO sanitarioDTO) {
         try {
-            Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
-            if (optUsuario.isPresent()) {
-                throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
-            }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Sanitario sanitario = WrapperDTOtoModel.sanitarioDTOtoSanitario(sanitarioDTO);
+                 Optional<Usuario> optUsuario = administradorDao.findByUsername(sanitario.getUsername());
+                 if (optUsuario.isPresent()) {
+                     throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
+                 }
 
-            administradorDao.save(sanitario);
+                 administradorDao.save(sanitario);
+        	}
+           
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -355,6 +503,18 @@ public class AdministradorController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+    
+    /**
+     * Método para verificar el rol del usuario para acceder a unas funciones u otras
+     */
+    public boolean verificarAutenticidad(HttpServletRequest request, String rolRequerido) throws UsuarioInvalidoException {
+    	TokenDTO token = (TokenDTO) request.getSession().getAttribute(TOKEN_KEY);
+    	if(token !=null && token.getRol().equals(rolRequerido)) {
+    		return true;
+    	}else {
+    		throw new UsuarioInvalidoException("No tiene permisos para realizar esta acción.");
+    	}
     }
 
     /**

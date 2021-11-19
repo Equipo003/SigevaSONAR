@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +52,8 @@ public class CitaController {
 
 	@Autowired
 	CupoController cupoController;
+	@Autowired
+	AdministradorController adminController;
 
 	@Autowired
 	WrapperModelToDTO wrapper;
@@ -65,9 +67,14 @@ public class CitaController {
 
 	@PostMapping("/obtenerCitasFuturasDelPaciente")
 	@GetMapping("/buscarYAsignarCitas")
-	public List<CitaDTO> buscarYAsignarCitas(@RequestBody String uuidPaciente) {
-		// TODO PENDIENTE
-		return null;
+	public List<CitaDTO> buscarYAsignarCitas(HttpServletRequest request,@RequestBody String uuidPaciente) throws UsuarioInvalidoException {
+		// TODO PENDIENTE	
+		List<CitaDTO> list = new ArrayList<CitaDTO>();
+		if (adminController.verificarAutenticidad(request,"Paciente")) {
+			return list;
+		}else {
+			return null;
+		}
 	}
 
 	@GetMapping("/confirmarCita")
