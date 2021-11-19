@@ -1,7 +1,9 @@
 <app-barra-navegacion></app-barra-navegacion>
 
 <div class="seccion contenedor">
-  <h1 class="centrar-texto">Usuarios sistema: {{rolMostrado}}</h1>
+  <div class="contenedorResaltado resaltadoBlanco">
+    <h1 class="centrar-texto">USUARIOS DEL SISTEMA: {{rolMostrado}}</h1>
+  </div>
   <app-mensaje-configuracion></app-mensaje-configuracion>
 
   <div class="contenedorFiltrar">
@@ -19,7 +21,7 @@
   <div class="contenedor-items">
     <app-usuario *ngFor="let usuario of usuarios"
                  [usuario]=usuario
-                 [existeConfiguracion] = existeConfiguracion
+                 [existeConfiguracion]=existeConfiguracion
     ></app-usuario>
   </div>
 </div>

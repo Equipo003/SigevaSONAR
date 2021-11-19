@@ -37,5 +37,11 @@ p.entypo-calendar {
   animation: 5s shake 10s infinite alternate;
 }
 
+.titulo {
+  padding-top: 20px;
+  margin: 0px;
+  font-size: 35px;
+}
+
 
 

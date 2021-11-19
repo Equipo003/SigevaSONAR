@@ -1,36 +1,40 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.CupoDao;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.dto.CupoDTO;
-import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
+
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.equipo3.SIGEVA.dao.UsuarioDao;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CitaDao;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
-import com.equipo3.SIGEVA.dto.CentroSaludDTO;
-import com.equipo3.SIGEVA.dto.CitaDTO;
-import com.equipo3.SIGEVA.dto.CupoDTO;
-import com.equipo3.SIGEVA.dto.PacienteDTO;
-import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+
 import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+
 import com.equipo3.SIGEVA.model.Cita;
 import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
+import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
+
+import com.equipo3.SIGEVA.dto.*;
+
 
 @CrossOrigin
 @RestController
@@ -51,6 +55,9 @@ public class CitaController {
 
 	@Autowired
 	WrapperModelToDTO wrapper;
+
+	@Autowired
+	WrapperDTOtoModel wrapperDTOtoModel;
 
 	@Autowired
 	CentroSaludDao centroSaludDao;
@@ -76,6 +83,8 @@ public class CitaController {
 			ObjectMapper mapper = new ObjectMapper();
 			CentroSaludDTO centroSaludDTO = null;
 			Date fecha = null;
+
+			SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 			try{
 			 centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
 			 fecha = mapper.readValue(fechaJson, Date.class);
@@ -98,16 +107,6 @@ public class CitaController {
 
 			List<CitaDTO> citasDTO = wrapper.allCitaToCitaDTO(citas);
 			Collections.sort(citasDTO); //
-
-			//Testing: se puede borrar
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),1));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),1));
-			citasDTO.add(this.citaSimulacion(this.wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get()),2));
-			//
 
 			return citasDTO;
 
@@ -194,7 +193,6 @@ public class CitaController {
 		if(opt.isPresent()) {
 			Usuario paciente = opt.get();
 			Paciente p = (Paciente) paciente;
-			System.out.println(p.getDni());
 		}
 		return wrapper.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get());
 
@@ -211,6 +209,22 @@ public class CitaController {
 	public CitaDTO modificarCita(@RequestBody CitaDTO citaAntigua, @RequestBody CupoDTO cupoNuevo) { // PENDIENTE
 		// TODO PENDIENTE
 		return null;
+	}
+
+
+	@PostMapping("/vacunar")
+	public void vacunarPaciente(@RequestBody CitaDTO cita){
+		try{
+			cita.getPaciente().setNumDosisAplicadas(cita.getPaciente().getNumDosisAplicadas() + 1);
+			if(cita.getDosis()==cita.getPaciente().getNumDosisAplicadas()) {
+				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOToPaciente(cita.getPaciente()));
+			}else{
+				throw new Exception();
+			}
+		}catch (Exception e){
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Las dosis del paciente no coinciden con la dosis supuesta para la cita");
+		}
+
 	}
 
 }
