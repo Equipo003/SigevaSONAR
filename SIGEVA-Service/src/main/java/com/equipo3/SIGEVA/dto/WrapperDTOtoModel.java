@@ -2,9 +2,8 @@ package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.model.*;
 
-import Auxiliar.Encriptador;
+import com.equipo3.SIGEVA.utils.Encriptador;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
