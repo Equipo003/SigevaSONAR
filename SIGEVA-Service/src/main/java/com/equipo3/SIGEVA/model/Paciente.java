@@ -8,23 +8,23 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Paciente extends Usuario {
 	
 	@Field
-	private int numDosisAplicadas;
+	private String numDosisAplicadas;
 
 	public Paciente() {
 		super();
 	}
 
-	public Paciente(int numDosisAplicadas) {
+	public Paciente(String numDosisAplicadas) {
 		super();
 		this.numDosisAplicadas = numDosisAplicadas;
 	}
 
-	public int getNumDosisAplicadas() {
+	public String getNumDosisAplicadas() {
 		return numDosisAplicadas;
 	}
 
-	public void setNumDosisAplicadas(int numDosisAplicadas) {
-		this.numDosisAplicadas = numDosisAplicadas;
+	public void setNumDosisAplicadas(String dosis) {
+		this.numDosisAplicadas = dosis;
 	}
 
 	@Override

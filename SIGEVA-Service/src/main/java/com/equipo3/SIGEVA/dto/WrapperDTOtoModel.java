@@ -1,13 +1,17 @@
 package com.equipo3.SIGEVA.dto;
 
 import com.equipo3.SIGEVA.model.*;
+
+import Auxiliar.Encriptador;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
 @Component
 public class WrapperDTOtoModel {
-
+	private static  Encriptador var = new Encriptador();
 	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
 		if (!administradorDTO.getIdUsuario().equals("undefined"))
@@ -28,7 +32,7 @@ public class WrapperDTOtoModel {
 
 	public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO) {
 		Sanitario sanitario = new Sanitario();
-		if(!sanitarioDTO.getIdUsuario().equals("undefined"))
+		if (!sanitarioDTO.getIdUsuario().equals("undefined"))
 			sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
 
 		sanitario.setRol(sanitarioDTO.getRol().getId());
@@ -46,7 +50,7 @@ public class WrapperDTOtoModel {
 
 	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
-		if(!pacienteDTO.getIdUsuario().equals("undefined"))
+		if (!pacienteDTO.getIdUsuario().equals("undefined"))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 
 		paciente.setRol(pacienteDTO.getRol().getId());
@@ -59,7 +63,7 @@ public class WrapperDTOtoModel {
 		paciente.setApellidos(pacienteDTO.getApellidos());
 		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
 		paciente.setImagen(pacienteDTO.getImagen());
-		paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 		return paciente;
 	}
 

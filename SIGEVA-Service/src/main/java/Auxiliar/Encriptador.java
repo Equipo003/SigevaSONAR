@@ -1,12 +1,7 @@
 package Auxiliar;
 
 import org.jasypt.util.text.AES256TextEncryptor;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Clase destinada a la creación de un encriptador para encriptar la información
@@ -15,16 +10,15 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Equipo3
  *
  */
+@Component
 public class Encriptador {
-	//@Autowired
-	private Environment env;
-	private final String CLAVE = env.getProperty("encrypted.key");
+	private final String key = "2189474sdGHSGDA223hdf";
 	AES256TextEncryptor encriptador;
 
 	
 	public Encriptador() {
 		encriptador = new AES256TextEncryptor();
-		encriptador.setPassword(CLAVE);
+		encriptador.setPassword(key);
 	}
 
 	public String encriptar(String cadena) {
@@ -41,7 +35,7 @@ public class Encriptador {
 	}
 
 	public String getClave() {
-		return CLAVE;
+		return key;
 	}
 
 }

@@ -14,6 +14,8 @@ import Auxiliar.Encriptador;
 import org.jasypt.util.text.AES256TextEncryptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -64,8 +66,6 @@ public class AdministradorController {
     private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
-    @Autowired
-    private Encriptador var = new Encriptador();
 
     /**
      * Recurso web para la creación de un Administrador.
@@ -239,9 +239,11 @@ public class AdministradorController {
     @GetMapping("/getUsuariosByRol")
     public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
         try {
+        	System.out.println(rol);
             if (rol.equals("Todos")) {
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
             } else {
+            	System.out.println("dasod");
                 return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
             }
         } catch (Exception e) {
@@ -340,7 +342,6 @@ public class AdministradorController {
      */
     @GetMapping("/getConfCupos")
     public ConfiguracionCuposDTO getConfiguracionCupos() {
-    	System.out.println(var.getClave());
         try {
             List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
                     .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
