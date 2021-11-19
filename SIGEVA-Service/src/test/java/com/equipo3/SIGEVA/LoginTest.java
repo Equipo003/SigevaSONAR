@@ -178,7 +178,7 @@ class LoginTest {
     	try {
     		administradorController.crearCentroSalud(csDto);
     		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-        	administradorController.crearUsuarioPaciente(requestMock,pacienteDTO);
+        	administradorController.crearUsuarioPacienteSinRestricciones(pacienteDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(pacienteDTO.getUsername());
         	usuarioLogin.setHashPassword(pacienteDTO.getHashPassword());
