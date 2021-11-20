@@ -1,5 +1,7 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.util.Date;
+
 public class Condicionamientos {
 
 	private static final boolean CONTROL = true;
@@ -27,6 +29,11 @@ public class Condicionamientos {
 
 	public static int anyoFin() {
 		return ANYO_FIN;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static Date fechaFin() {
+		return new Date(ANYO_FIN - 1900, MES_FIN - 1, DIA_FIN);
 	}
 
 	public static int tiempoEntreDosis() {

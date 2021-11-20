@@ -1,31 +1,34 @@
-
-
 <div class="cita-screen">
   <div class="cita-form">
     <h1 class="titulo">Cita 1</h1>
 
-    <div class="alineación-izquierda">
-          <mat-icon>access_time</mat-icon>
-          <p *ngIf="!editMode">{{this.cita.cupo.fechaYHoraInicio | date : 'medium'}}</p>
+    <div class="alineacion-izquierda">
+      <mat-icon *ngIf="!editMode">access_time</mat-icon>
+      <!--          <p *ngIf="!editMode">{{this.cita.cupo.fechaYHoraInicio | date : 'medium'}}</p>-->
+      <p *ngIf="!editMode">{{this.fecha | date : 'medium'}}</p>
     </div>
 
-          <mat-form-field *ngIf="editMode" class="calendar" appearance="fill">
-            <mat-label>Selecciona el nuevo día</mat-label>
-            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" (dateInput)="addEvent($event)">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+    <div>
+      <mat-form-field *ngIf="editMode" class="calendar" appearance="fill">
+        <mat-label>Selecciona el nuevo día</mat-label>
+        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" (dateInput)="addEvent($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" *ngIf="daySelected && editMode" class="input-hora">
+        <mat-label>Selecciona la nueva hora</mat-label>
+        <mat-select [ngModel]="horaSeleccionada" name="hora">
+          <mat-option *ngFor="let rango of rangosHoras" [value]="rango">{{rango}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-        <mat-form-field appearance="fill" *ngIf="daySelected && editMode" class="input-hora">
-          <mat-label>Selecciona la nueva hora</mat-label>
-          <mat-select [ngModel]="horaSeleccionada" name="hora">
-            <mat-option *ngFor="let rango of rangosHoras" [value]="rango">{{rango}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-    <div class="alineación-izquierda">
-          <mat-icon> local_hospital</mat-icon>
-          <p>{{this.cita.cupo.centroSalud.nombreCentro}}</p>
+    <div class="alineacion-izquierda">
+      <mat-icon> local_hospital</mat-icon>
+      <!--          <p>{{this.cita.cupo.centroSalud.nombreCentro}}</p>-->
+      <p>{{this.nombreCentro}}</p>
     </div>
 
     <div class="alineacion-botones">
@@ -37,5 +40,6 @@
 
     <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
     <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+
   </div>
 </div>

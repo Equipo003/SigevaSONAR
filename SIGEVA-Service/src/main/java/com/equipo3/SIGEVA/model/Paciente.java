@@ -1,29 +1,30 @@
 package com.equipo3.SIGEVA.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class Paciente extends Usuario {
-
+	
 	@Field
-	private int numDosisAplicadas;
+	private String numDosisAplicadas;
 
 	public Paciente() {
 		super();
 	}
 
-	public Paciente(int numDosisAplicadas) {
+	public Paciente(String numDosisAplicadas) {
 		super();
 		this.numDosisAplicadas = numDosisAplicadas;
 	}
 
-	public int getNumDosisAplicadas() {
+	public String getNumDosisAplicadas() {
 		return numDosisAplicadas;
 	}
 
-	public void setNumDosisAplicadas(int numDosisAplicadas) {
-		this.numDosisAplicadas = numDosisAplicadas;
+	public void setNumDosisAplicadas(String dosis) {
+		this.numDosisAplicadas = dosis;
 	}
 
 	@Override

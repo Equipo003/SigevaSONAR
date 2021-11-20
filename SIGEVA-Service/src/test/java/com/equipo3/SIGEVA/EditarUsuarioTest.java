@@ -42,10 +42,10 @@ public class EditarUsuarioTest {
     @BeforeAll
     static void setUpCita() {
         centroSaludDTO = new CentroSaludDTO();
-        centroSaludDTO.setNombreCentro("Centro de Salud de pruebas 2");
+        centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
         newCentroSaludDTO = new CentroSaludDTO();
-        newCentroSaludDTO.setNombreCentro("Otro centro de Salud 2");
+        newCentroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
         cupoDTO = new CupoDTO();
         cupoDTO.setCentroSalud(centroSaludDTO);
@@ -68,12 +68,13 @@ public class EditarUsuarioTest {
         try {
             pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
-            cupoDTO.setFechaYHoraInicio(new Date(121, 1, 23));
+            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
             administradorController.crearCentroSalud(centroSaludDTO);
             administradorController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
             administradorController.crearUsuarioPaciente(pacienteDTO);
+            System.out.println(cupoDao.toString());
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 

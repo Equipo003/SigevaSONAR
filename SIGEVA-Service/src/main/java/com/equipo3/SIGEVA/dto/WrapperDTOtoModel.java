@@ -1,12 +1,26 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.model.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Sanitario;
+import com.equipo3.SIGEVA.model.Vacuna;
+
+import Auxiliar.Encriptador;
 
 @Component
 public class WrapperDTOtoModel {
+	private static Encriptador var = new Encriptador();
 
 	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
@@ -28,7 +42,7 @@ public class WrapperDTOtoModel {
 
 	public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO) {
 		Sanitario sanitario = new Sanitario();
-		if(!sanitarioDTO.getIdUsuario().equals("undefined"))
+		if (!sanitarioDTO.getIdUsuario().equals("undefined"))
 			sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
 
 		sanitario.setRol(sanitarioDTO.getRol().getId());
@@ -46,7 +60,7 @@ public class WrapperDTOtoModel {
 
 	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
-		if(!pacienteDTO.getIdUsuario().equals("undefined"))
+		if (!pacienteDTO.getIdUsuario().equals("undefined"))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 
 		paciente.setRol(pacienteDTO.getRol().getId());
@@ -59,7 +73,7 @@ public class WrapperDTOtoModel {
 		paciente.setApellidos(pacienteDTO.getApellidos());
 		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
 		paciente.setImagen(pacienteDTO.getImagen());
-		paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 		return paciente;
 	}
 
@@ -114,6 +128,13 @@ public class WrapperDTOtoModel {
 		return cupo;
 	}
 
+	public static List<Cupo> allCupoDTOtoCupo(List<CupoDTO> cuposDTO) {
+		List<Cupo> cupos = new ArrayList<>();
+		for (int i = 0; i < cuposDTO.size(); i++)
+			cupos.add(cupoDTOToCupo(cuposDTO.get(i)));
+		return cupos;
+	}
+
 	public static Cita citaDTOToCita(CitaDTO citaDTO) {
 		Cita cita = new Cita();
 		cita.setUuidCita(citaDTO.getUuidCita());
@@ -123,7 +144,7 @@ public class WrapperDTOtoModel {
 		return cita;
 	}
 
-	public Paciente pacienteDTOToPaciente(PacienteDTO pacienteDTO){
+	public Paciente pacienteDTOToPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
 		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 		paciente.setNombre(pacienteDTO.getNombre());
@@ -137,7 +158,7 @@ public class WrapperDTOtoModel {
 		paciente.setHashPassword(pacienteDTO.getHashPassword());
 		paciente.setRol(pacienteDTO.getRol().getId());
 
-		paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 
 		return paciente;
 	}

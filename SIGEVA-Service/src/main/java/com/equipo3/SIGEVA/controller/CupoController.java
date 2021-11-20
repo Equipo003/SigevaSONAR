@@ -24,9 +24,11 @@ import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CupoException;
+import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
@@ -60,7 +62,7 @@ public class CupoController {
 	WrapperDTOtoModel wrapperDTOtoModel;
 
 	@SuppressWarnings("deprecation")
-	private List<CupoDTO> calcularCupos(CentroSaludDTO centroSalud) { // Terminado.
+	private List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
 		// No requerirá tiempo de ejecución.
 
 		List<CupoDTO> momentos = new ArrayList<>();
@@ -84,7 +86,7 @@ public class CupoController {
 			fechaFinDiaria.setMinutes(fechaFinAbsoluta.getMinutes());
 
 			while (fechaIterada.before(fechaFinDiaria)) {
-				momentos.add(new CupoDTO(centroSalud, copia(fechaIterada), 0));
+				momentos.add(new CupoDTO(centroSaludDTO, copia(fechaIterada), 0));
 				fechaIterada.setMinutes(fechaIterada.getMinutes() + duracionTramo);
 			}
 			fechaIterada.setDate(fechaIterada.getDate() + 1); // Cambio de día.
@@ -97,55 +99,69 @@ public class CupoController {
 		return momentos;
 	}
 
+	@SuppressWarnings("static-access")
 	@PostMapping("/prepararCupos")
-	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
-		// ¡Requerirá tiempo de ejecución!
-		System.out.println("CREADOS CUPOS");
-		return null;
+	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) {
+		if (centroSaludDTO != null) {
+			List<CupoDTO> cuposDTO = calcularCupos(centroSaludDTO);
+			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
+			for (int i = 0; i < cupos.size(); i++) {
+				cupoDao.save(cupos.get(i));
+			}
+			return cuposDTO;
+		} else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Centro de salud no contemplado.");
+		}
 	}
 
-	@GetMapping("/buscarCuposLibresAPartirDeLaFecha")
-	public List<CupoDTO> buscarCuposLibresAPartirDeLaFecha(@RequestBody CentroSaludDTO centroSaludDTO,
-			@RequestBody Date fecha) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
 		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupoDao.buscarCuposLibresAPartirDe(
 				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
 		Collections.sort(cuposDTO);
+		if (cuposDTO.size() == 0) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"¡No hay hueco disponible a partir de " + fecha + "!");
+		}
 		return cuposDTO;
 	}
 
-	public CupoDTO buscarPrimerCupoLibreFecha(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
+	public CupoDTO buscarPrimerCupoLibreAPartirDe(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
 		// Este método se utiliza para buscar el próximo cupo libre (para asignar).
 		return buscarCuposLibresAPartirDeLaFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
+		// Lanzará exception en caso de no haber hueco.
 	}
 
-	/**
-	 * Método para obtener los cupos LIBRES de ese centro de exactamente ese día.
-	 * 
-	 * @param centroSaludDTO
-	 * @param fecha
-	 * @return
-	 */
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestBody String uuidPaciente, @RequestBody Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los cupos libres del día (para modificar).
 		// (La hora de la fecha no importa, solamente importa el día)
-		Date fechaInicio = CupoController.copia(fecha);
-		fechaInicio.setHours(0);
-		fechaInicio.setMinutes(0);
-		Date fechaFin = CupoController.copia(fechaInicio);
-		fechaFin.setDate(fechaFin.getDate() + 1);
-		List<CupoDTO> cuposDTO = wrapperModelToDTO
-				.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(centroSaludDTO.getId(), fechaInicio, fechaFin,
-						configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
-		
-		for(int i = 0; i<cuposDTO.size(); i++) {
-			System.out.println(cuposDTO.get(i).getFechaYHoraInicio());
+		if (uuidPaciente != null) {
+			PacienteDTO pacienteDTO = null;
+			try {
+				pacienteDTO = wrapperModelToDTO.getPacienteDTOfromUuid(uuidPaciente);
+			} catch (IdentificadorException e) {
+				e.printStackTrace();
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado en BD.");
+			}
+			Date fechaInicio = CupoController.copia(fecha);
+			fechaInicio.setHours(0);
+			fechaInicio.setMinutes(0);
+			Date fechaFin = CupoController.copia(fechaInicio);
+			fechaFin.setDate(fechaFin.getDate() + 1);
+			List<CupoDTO> cuposDTO = wrapperModelToDTO
+					.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(pacienteDTO.getCentroSalud().getId(),
+							fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
+			Collections.sort(cuposDTO);
+			if (cuposDTO.size() == 0) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT,
+						"¡No hay hueco disponible en este día (" + fecha + ")!");
+			}
+			return cuposDTO;
+		} else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "UUID de paciente no contemplado.");
 		}
-		
-		Collections.sort(cuposDTO);
-		return cuposDTO;
 	}
 
 	/**
@@ -157,8 +173,7 @@ public class CupoController {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	@GetMapping("/buscarTodosCuposFecha")
-	public List<CupoDTO> buscarTodosCuposFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+	public List<CupoDTO> buscarTodosCuposFecha(CentroSaludDTO centroSaludDTO, Date fecha) { // Terminado.
 		// Este método se utiliza para buscar las citas del día (para vacunar).
 		// (La hora de la fecha no importa, solamente importa el día)
 		Date fechaInicio = CupoController.copia(fecha);
@@ -233,10 +248,10 @@ public class CupoController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/freeDatesDay")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestParam String idUsuario, @RequestParam Date fecha){
+	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha){
 		CentroSalud cs = null;
 		Paciente pacienteUsu = null;
-		List<Cupo> clibday = new ArrayList();
+		List<Cupo> clibday = new ArrayList<>();
 		try {
 			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
 			if(paciente.isPresent()) {
@@ -261,6 +276,7 @@ public class CupoController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
+	
 	
 
 }

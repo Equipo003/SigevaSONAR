@@ -5,11 +5,13 @@ import com.equipo3.SIGEVA.dao.RolDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
+import com.equipo3.SIGEVA.dto.UsuarioDTO;
 import com.equipo3.SIGEVA.model.Rol;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest

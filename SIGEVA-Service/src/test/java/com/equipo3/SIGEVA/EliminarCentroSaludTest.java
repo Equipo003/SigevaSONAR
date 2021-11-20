@@ -57,8 +57,8 @@ class EliminarCentroSaludTest {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
+			administradorController.eliminarCentro(centroSaludDTO.getId());
 		}
-		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}
 
 	@Test
@@ -88,13 +88,12 @@ class EliminarCentroSaludTest {
 		try {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
-			assertNotNull(e);	
+			assertNotNull(e);
+			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			administradorController.eliminarUsuario(administradorDTO.getUsername());
+			administradorController.eliminarCentro(centroSaludDTO.getId());
 		}
-
-		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-		administradorController.eliminarUsuario(pacienteDTO.getUsername());
-		administradorController.eliminarUsuario(administradorDTO.getUsername());
-		administradorController.eliminarCentro(centroSaludDTO.getId());
 	}
 	
 	@Test
@@ -113,10 +112,9 @@ class EliminarCentroSaludTest {
 		try {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
-			assertNotNull(e);	
+			assertNotNull(e);
+			administradorController.eliminarCentro(centroSaludDTO.getId());
 		}
-		administradorController.eliminarCentro(centroSaludDTO.getId());
-		
 	}
 
 }

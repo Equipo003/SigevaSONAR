@@ -1,40 +1,32 @@
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
-<div class="item centroSalud">
-
+<div class="item centroSalud" *ngIf="!centroEliminado">
   <div class="contenido-item centrar-texto">
-    <div class="control-group">
-      <table class="tabla-centrosSalud" align="center">
-        <tr>
-          <td><img src="../assets/icons/hospital.png" width="30px"
-                   height="30px"></td>
 
-          <td><b>{{cs.nombreCentro}}</b></td>
-        </tr>
-        <tr>
-          <td><img src="../assets/icons/adress.png" width="50px"
-                   height="30px"></td>
+    <h1>{{cs.nombreCentro}}</h1>
 
-          <td><b>{{cs.direccion}}</b></td>
-        </tr>
-        <tr>
-          <td><img src="../assets/icons/vaccine.png" width="30px"
-                   height="30px"></td>
-
-          <td><b>{{cs.numVacunasDisponibles}}</b></td>
-        </tr>
-
-      </table>
-      <div class="alineacion-botones">
-        <br>
-        <button class="btn" type="submit" [disabled]="!existeConfiguracion"
-                [routerLink]="['/editarCS', cs.id]">Editar
-        </button>
-        <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)="enviarDatosBack()">Eliminar</button>
+      <div class="alineacion-izquierda">
+        <mat-icon> place</mat-icon>
+        <p>{{cs.direccion}}</p>
       </div>
+
+    <div class="control-group">
+      <div class="alineacion-izquierda">
+        <img src="../assets/icons/vaccine.png"> <p class="centrar-texto">{{cs.numVacunasDisponibles}}</p>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="alineacion-botones">
+        <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)="enviarDatosBack()">Eliminar
+        </button>
+        <button class="btn" type="submit" [disabled]="!existeConfiguracion" [routerLink]="['/editarCS', cs.id]">Editar
+        </button>
+      </div>
+    </div>
+
+    <div class="control-group">
       <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
       <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
     </div>
+
   </div>
 </div>

@@ -9,21 +9,21 @@ import {Usuario} from "../Model/Usuario";
 import {Vacuna} from "../Model/vacuna";
 
 @Component({
-	selector: 'app-usuario',
-	templateUrl: './usuario.component.html',
-	styleUrls: ['./usuario.component.css']
+  selector: 'app-usuario',
+  templateUrl: './usuario.component.html',
+  styleUrls: ['./usuario.component.css']
 })
 
 export class UsuarioComponent {
-	@Input() usuario: UsuarioConObjetos;
+  @Input() usuario: UsuarioConObjetos;
   @Input() existeConfiguracion: boolean = false;
   message: string = "";
   usuarioEliminado = false;
   errorMessage: string = "";
-	constructor(private json: JsonService, public dialog: MatDialog) {
-		this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "", "", "", "", "", "", "",
+  constructor(private json: JsonService, public dialog: MatDialog) {
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""), "", "", "", "", "", "", "",
       "");
-	}
+  }
 
   openDialogEliminar() {
     let self = this;
