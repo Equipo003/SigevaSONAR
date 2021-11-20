@@ -251,8 +251,6 @@ public class CupoController {
 			Date fechaInicio = (Date) fecha.clone();
 			Date fechaFin = (Date) fecha.clone();
 			fechaFin.setHours(24);
-			System.out.println(fechaFin);
-			System.out.println(fechaInicio);
 			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 			for(int i = 0; i < clibday.size(); i++) {
 				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
