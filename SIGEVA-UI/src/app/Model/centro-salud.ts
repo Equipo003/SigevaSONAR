@@ -4,8 +4,8 @@ export interface CentroSalud{
 
 	nombreCentro : string;
 	numVacunasDisponibles : number;
-  direccion: string;
-  vacuna : Vacuna;
+  	direccion: string;
+  	vacuna : Vacuna;
 	id : string;
 }
 
