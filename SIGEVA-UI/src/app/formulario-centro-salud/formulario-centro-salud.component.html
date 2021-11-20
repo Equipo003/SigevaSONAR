@@ -9,7 +9,6 @@
         <h1>CREAR CENTRO DE SALUD</h1>
 
         <div class="control-group">
-          <span class="fontawesome-hospital"> </span>
           <input type="text" placeholder="Nombre del centro de salud" name="nombreCentro" #nombreCentro="ngModel"
                  [(ngModel)]="centroSalud.nombreCentro" required [disabled]="!existeConfiguracion">
           <div>
@@ -20,7 +19,6 @@
         </div>
 
         <div class="control-group">
-          <span class="fontawesome-map-marker "> </span>
           <input type="text" placeholder="Dirección del Centro de Salud" name="direccionCentro"
                  #direccionCentro="ngModel" [(ngModel)]="centroSalud.direccion" required [disabled]="!existeConfiguracion">
           <div>
@@ -32,8 +30,6 @@
 
         <div class="control-group">
           <b>Número de Vacunas Disponibles:</b>
-          <br>
-          <span class="fontawesome-caret-right "> </span>
           <input type="number" min="0" placeholder="Número de Vacunas Disponibles" name="numVacunas"
                  #numVacunas="ngModel" [(ngModel)]="centroSalud.numVacunasDisponibles" required [disabled]="!existeConfiguracion">
           <div>

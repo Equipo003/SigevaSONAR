@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class CitaDTO implements Comparable<CitaDTO> {
@@ -12,6 +11,13 @@ public class CitaDTO implements Comparable<CitaDTO> {
 
 	public CitaDTO() {
 		this.uuidCita = UUID.randomUUID().toString();
+	}
+
+	public CitaDTO(CupoDTO cupo, PacienteDTO paciente, int dosis) {
+		this.uuidCita = UUID.randomUUID().toString();
+		this.cupo = cupo;
+		this.paciente = paciente;
+		this.dosis = dosis;
 	}
 
 	public String getUuidCita() {

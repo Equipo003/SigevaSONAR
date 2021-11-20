@@ -1,4 +1,4 @@
-package com.equipo3.SIGEVA.utils;
+package Auxiliar;
 
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.springframework.stereotype.Component;

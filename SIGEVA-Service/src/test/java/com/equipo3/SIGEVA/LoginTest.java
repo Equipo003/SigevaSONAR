@@ -1,18 +1,24 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.controller.CitaController;
-import com.equipo3.SIGEVA.dto.*;
-import com.equipo3.SIGEVA.utils.Utilidades;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.PrintStream;
+import java.util.Date;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.dto.AdministradorDTO;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
+import com.equipo3.SIGEVA.dto.RolDTO;
+import com.equipo3.SIGEVA.dto.SanitarioDTO;
+import com.equipo3.SIGEVA.dto.UsuarioLoginDTO;
 
 @SpringBootTest
 class LoginTest {
@@ -23,31 +29,6 @@ class LoginTest {
 	
     @Autowired
     private AdministradorController administradorController;
-
-	@Autowired
-	private Utilidades utilidades;
-    
-	public static MockHttpServletRequest requestMockAdmin;
-	public static MockHttpServletRequest requestMockSan;
-	public static MockHttpServletRequest requestMockPa;
-	static TokenDTO tokenDTOAdmin;
-	static TokenDTO tokenDTOSan;
-	static TokenDTO tokenDTOPa;
-
-	@BeforeAll
-	static void creacionRequest() {
-		requestMockAdmin = new MockHttpServletRequest();
-		tokenDTOAdmin = new TokenDTO("adm", "Administrador");
-		requestMockAdmin.getSession().setAttribute("token", tokenDTOAdmin);
-
-		requestMockSan = new MockHttpServletRequest();
-		tokenDTOSan = new TokenDTO("san", "Sanitario");
-		requestMockSan.getSession().setAttribute("token", tokenDTOSan);
-		
-		requestMockPa = new MockHttpServletRequest();
-		tokenDTOPa = new TokenDTO("pa", "Paciente");
-		requestMockPa.getSession().setAttribute("token", tokenDTOPa);
-	}
     
     @BeforeAll
 	static void creacionCentroSalud() {
@@ -103,34 +84,38 @@ class LoginTest {
     @Test
     void loginAdminTest(){
     	try {
-    		administradorController.crearCentroSalud(requestMockAdmin,csDto);
+    		administradorController.crearCentroSalud(csDto);
         	adminDTO.setRol(administradorController.getRolByNombre("Administrador"));
-			utilidades.crearUsuarioAdministradorSinRestricciones(adminDTO);
+        	administradorController.crearUsuarioAdministrador(adminDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(adminDTO.getUsername());
         	usuarioLogin.setHashPassword(adminDTO.getHashPassword());
-        	assertNotNull(administradorController.login(requestMockAdmin, usuarioLogin));
+        	assertNotNull(administradorController.login(usuarioLogin));
         	administradorController.eliminarUsuario(adminDTO.getUsername());
     		administradorController.eliminarCentro(csDto.getId());
     	}catch(Exception e){
+    		assertNotNull(e);
     		administradorController.eliminarUsuario(adminDTO.getUsername());
     		administradorController.eliminarCentro(csDto.getId());
     	}
-    }
     
+    	
+    	
+    }
     @Test
     void loginPacienteTest(){
     	try {
-    		administradorController.crearCentroSalud(requestMockAdmin,csDto);
+    		administradorController.crearCentroSalud(csDto);
     		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-			utilidades.crearUsuarioPacienteSinRestricciones(pacienteDTO);
+        	administradorController.crearUsuarioPaciente(pacienteDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(pacienteDTO.getUsername());
         	usuarioLogin.setHashPassword(pacienteDTO.getHashPassword());
-        	assertNotNull(administradorController.login(requestMockPa, usuarioLogin));
+        	assertNotNull(administradorController.login(usuarioLogin));
         	administradorController.eliminarUsuario(pacienteDTO.getUsername());
     		administradorController.eliminarCentro(csDto.getId());
     	}catch(Exception e) {
+    		assertNotNull(e);
     		administradorController.eliminarUsuario(pacienteDTO.getUsername());
     		administradorController.eliminarCentro(csDto.getId());
     	}
@@ -139,37 +124,22 @@ class LoginTest {
     @Test
     void loginSanitarioTest(){
     	try {
-    		administradorController.crearCentroSalud(requestMockAdmin,csDto);
+    		administradorController.crearCentroSalud(csDto);
     		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
     		sanitarioDTO.setCentroSalud(csDto);
-			utilidades.crearUsuarioSanitarioSinRestricciones(sanitarioDTO);
+        	administradorController.crearUsuarioSanitario(sanitarioDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(sanitarioDTO.getUsername());
         	usuarioLogin.setHashPassword(sanitarioDTO.getHashPassword());
-        	assertNotNull(administradorController.login(requestMockSan, usuarioLogin));
+        	assertNotNull(administradorController.login(usuarioLogin));
         	administradorController.eliminarUsuario(sanitarioDTO.getUsername());
         	administradorController.eliminarCentro(csDto.getId());
     	}catch(Exception e){
+    		assertNotNull(e);
     		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
         	administradorController.eliminarCentro(csDto.getId());
     	}
     	
     }
-    
-    @Test
-    void loginSanitarioMalTest(){
-    	try {
-    		administradorController.crearCentroSalud(requestMockAdmin,csDto);
-    		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-    		sanitarioDTO.setCentroSalud(csDto);
-			utilidades.crearUsuarioSanitarioSinRestricciones(sanitarioDTO);
-        	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
-        	usuarioLogin.setUsername(sanitarioDTO.getUsername());
-        	usuarioLogin.setHashPassword("falla");
-        	administradorController.login(requestMockSan, usuarioLogin);
-    	}catch(Exception e){
-    		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-        	administradorController.eliminarCentro(csDto.getId());
-    	}
-    }
+   
 }

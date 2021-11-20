@@ -26,7 +26,9 @@ import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
 
-import com.equipo3.SIGEVA.utils.Encriptador;
+import Auxiliar.Encriptador;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Component

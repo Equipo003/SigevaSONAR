@@ -1,7 +1,5 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Date;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dao.RolDao;
@@ -43,27 +40,7 @@ class FijarUsuarioCentroSalud {
 	static CentroSaludDTO centroSaludDTO;
 	static CentroSaludDTO newCentroSaludDTO;
 	static SanitarioDTO sanitarioDTO;
-	public static MockHttpServletRequest requestMockAdmin;
-	public static MockHttpServletRequest requestMockSan;
-	public static MockHttpServletRequest requestMockPa;
-	static TokenDTO tokenDTOAdmin;
-	static TokenDTO tokenDTOSan;
-	static TokenDTO tokenDTOPa;
 
-	@BeforeAll
-	static void creacionRequest() {
-		requestMockAdmin = new MockHttpServletRequest();
-		tokenDTOAdmin = new TokenDTO("adm", "Administrador");
-		requestMockAdmin.getSession().setAttribute("token", tokenDTOAdmin);
-
-		requestMockSan = new MockHttpServletRequest();
-		tokenDTOSan = new TokenDTO("san", "Sanitario");
-		requestMockSan.getSession().setAttribute("token", tokenDTOSan);
-		
-		requestMockPa = new MockHttpServletRequest();
-		tokenDTOPa = new TokenDTO("pa", "Paciente");
-		requestMockPa.getSession().setAttribute("token", tokenDTOPa);
-	}
 	@BeforeAll
 	static void crearCentroSalud(){
 		centroSaludDTO = new CentroSaludDTO();
@@ -93,63 +70,22 @@ class FijarUsuarioCentroSalud {
 
 	@Test
 	void AsignarCentroSalud() {
-		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
+		administradorController.crearCentroSalud(centroSaludDTO);
 		sanitarioDTO.setCentroSalud((centroSaludDTO));
 
 		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
 
-		administradorController.crearUsuarioSanitario(requestMockAdmin,sanitarioDTO);
+		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
-		administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
+		administradorController.crearCentroSalud(newCentroSaludDTO);
 
-		administradorController.fijarPersonal(requestMockAdmin,sanitarioDTO.getUsername(), newCentroSaludDTO.getId());
+		administradorController.fijarPersonal(sanitarioDTO.getUsername(), newCentroSaludDTO.getId());
 
 		UsuarioDTO newSanitarioDTO = administradorController.getUsuarioById(sanitarioDTO.getIdUsuario());
 
 		Assertions.assertEquals(newSanitarioDTO.getCentroSalud().getId(), newCentroSaludDTO.getId());
 
 		administradorController.eliminarCentro(centroSaludDTO.getId());
-		administradorController.eliminarCentro(newCentroSaludDTO.getId());
 		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-	}
-	
-	@Test
-	void AsignarCentroSaludPorPaciente() {
-		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-		sanitarioDTO.setCentroSalud((centroSaludDTO));
-
-		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-
-		administradorController.crearUsuarioSanitario(requestMockAdmin,sanitarioDTO);
-
-		administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
-		try {
-			administradorController.fijarPersonal(requestMockPa,sanitarioDTO.getUsername(), newCentroSaludDTO.getId());
-		}catch(Exception e) {
-			assertEquals(e.getMessage(), "409 CONFLICT \"No tiene permisos para realizar esta acción.\"");
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarCentro(newCentroSaludDTO.getId());
-			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-		}
-	}
-	
-	@Test
-	void AsignarCentroSaludPorSanitario() {
-		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-		sanitarioDTO.setCentroSalud((centroSaludDTO));
-
-		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
-
-		administradorController.crearUsuarioSanitario(requestMockAdmin,sanitarioDTO);
-
-		administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
-		try {
-			administradorController.fijarPersonal(requestMockSan,sanitarioDTO.getUsername(), newCentroSaludDTO.getId());
-		}catch(Exception e) {
-			assertEquals(e.getMessage(), "409 CONFLICT \"No tiene permisos para realizar esta acción.\"");
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarCentro(newCentroSaludDTO.getId());
-			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-		}
 	}
 }

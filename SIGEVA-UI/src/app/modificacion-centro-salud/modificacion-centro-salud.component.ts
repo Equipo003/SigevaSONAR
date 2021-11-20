@@ -54,7 +54,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
-				this.router.navigate(['centrosSalud']);
+				this.router.navigate(['/centrosSistema']);
 			}
 		});
 	}

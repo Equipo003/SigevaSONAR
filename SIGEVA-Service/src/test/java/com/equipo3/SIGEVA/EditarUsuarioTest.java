@@ -11,9 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Date;
 import java.util.UUID;
@@ -41,28 +38,7 @@ public class EditarUsuarioTest {
 
     @Autowired
     CitaDao citaDao;
-    public static MockHttpServletRequest requestMockAdmin;
-	public static MockHttpServletRequest requestMockSan;
-	public static MockHttpServletRequest requestMockPa;
-	static TokenDTO tokenDTOAdmin;
-	static TokenDTO tokenDTOSan;
-	static TokenDTO tokenDTOPa;
 
-	@BeforeAll
-	static void creacionRequest() {
-		requestMockAdmin = new MockHttpServletRequest();
-		tokenDTOAdmin = new TokenDTO("adm", "Administrador");
-		requestMockAdmin.getSession().setAttribute("token", tokenDTOAdmin);
-
-		requestMockSan = new MockHttpServletRequest();
-		tokenDTOSan = new TokenDTO("san", "Sanitario");
-		requestMockSan.getSession().setAttribute("token", tokenDTOSan);
-		
-		requestMockPa = new MockHttpServletRequest();
-		tokenDTOPa = new TokenDTO("pa", "Paciente");
-		requestMockPa.getSession().setAttribute("token", tokenDTOPa);
-	}
-	
     @BeforeAll
     static void setUpCita() {
         centroSaludDTO = new CentroSaludDTO();
@@ -94,15 +70,15 @@ public class EditarUsuarioTest {
             pacienteDTO.setNumDosisAplicadas(0);
             cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
-            administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-            administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
+            administradorController.crearCentroSalud(centroSaludDTO);
+            administradorController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(requestMockAdmin,pacienteDTO);
+            administradorController.crearUsuarioPaciente(pacienteDTO);
             System.out.println(cupoDao.toString());
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(requestMockAdmin,pacienteDTO);
+            administradorController.editarUsuario(pacienteDTO);
 
             Assertions.assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 
@@ -116,91 +92,7 @@ public class EditarUsuarioTest {
             e.printStackTrace();
         }
     }
-    
-    @Test
-    public void usuarioSinDosisPuestaEdicionPorPaciente() {
-        try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-            pacienteDTO.setNumDosisAplicadas(0);
-            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
-            administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-            administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
-            pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(requestMockAdmin,pacienteDTO);
-            cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
-            citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
-         
-            administradorController.editarUsuario(requestMockPa,pacienteDTO);
-
-        }
-        catch (Exception e) {
-        	assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No tiene permisos para realizar esta acción.\"");
-        	citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
-        }
-    }
-    
-    @Test
-    public void usuarioSinDosisPuestaEdicionPorSanitario() {
-        try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-            pacienteDTO.setNumDosisAplicadas(0);
-            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
-
-            administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-            administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
-            pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(requestMockAdmin,pacienteDTO);
-            cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
-            citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
-         
-            administradorController.editarUsuario(requestMockSan,pacienteDTO);
-
-        }
-        catch (Exception e) {
-        	assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No tiene permisos para realizar esta acción.\"");
-        	citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
-        }
-    }
-
-//    @Test
-//    public void usuarioSinDosisPuestaEdicionIncorrectaPorPaciente() {
-//        try {
-//            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-//            pacienteDTO.setNumDosisAplicadas(0);
-//            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
-//
-//            administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-//            administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
-//            pacienteDTO.setCentroSalud(newCentroSaludDTO);
-//            administradorController.crearUsuarioPaciente(requestMockAdmin,pacienteDTO);
-//            System.out.println(cupoDao.toString());
-//            cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
-//            citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
-//
-//            administradorController.editarUsuario(pacienteDTO);
-//
-//            Assertions.assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
-//
-//            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-//            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-//            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-//            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-//            administradorController.eliminarCentro(centroSaludDTO.getId());
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-    
     @Test
     public void usuarioConDosisPuestaEdicionIncorrecta() {
         try {
@@ -208,14 +100,14 @@ public class EditarUsuarioTest {
             pacienteDTO.setNumDosisAplicadas(1);
             cupoDTO.setFechaYHoraInicio(new Date(121, 1, 23));
 
-            administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
-            administradorController.crearCentroSalud(requestMockAdmin,newCentroSaludDTO);
+            administradorController.crearCentroSalud(centroSaludDTO);
+            administradorController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(requestMockAdmin,pacienteDTO);
+            administradorController.crearUsuarioPaciente(pacienteDTO);
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(requestMockAdmin,pacienteDTO);
+            administradorController.editarUsuario(pacienteDTO);
         }
         catch (Exception e) {
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);

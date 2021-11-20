@@ -23,6 +23,7 @@ export class EditarUsuarioComponent implements OnInit {
   public errorMessage: string;
   public idUsuario: string;
   public newPassword: string;
+  public hide = false;
 
   constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
     this.centros = [];
