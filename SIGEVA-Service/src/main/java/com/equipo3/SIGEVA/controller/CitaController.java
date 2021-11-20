@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CitaDao;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
@@ -28,6 +29,7 @@ import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 
 @CrossOrigin
 @RestController
@@ -42,6 +44,9 @@ public class CitaController {
 
 	@Autowired
 	CupoController cupoController;
+
+	@Autowired
+	ConfiguracionCuposDao configuracionCuposDao;
 
 	@Autowired
 	WrapperModelToDTO wrapperModelToDTO;
@@ -132,6 +137,7 @@ public class CitaController {
 				CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
 				List<CitaDTO> lista = new ArrayList<>();
 				lista.add(citaProgramadaSegundaDosis);
+				// El paciente ya tenía aplicada la primera dosis.
 				return lista;
 
 			}
@@ -179,17 +185,20 @@ public class CitaController {
 				CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
 				List<CitaDTO> lista = new ArrayList<>();
 				lista.add(citaProgramadaSegundaDosis);
+				// El paciente no tiene dosis aplicadas, pero ya tenía programada la cita futura
+				// para su primera dosis.
 				return lista;
 
 			} else { // CASO 3.3. numCitasFuturasAsignadas == 0.
 
-				// PENDIENTE REMATAR (SJR).
+				// CASO 3.3.1.
+				if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 2) {
+					throw new ResponseStatusException(HttpStatus.CONFLICT,
+							"El centro de salud no tiene suficiente stock (2).");
+				}
 
 				/*
-				 * 3.3. Si NO tiene citas programadas:
-				 * 
-				 * 3.3.1. Si el centro no tiene stock de vacunación para 2 dosis, se informa.
-				 * (Omitible).
+				 * EXACTAMENTE PENDIENTE:
 				 * 
 				 * 3.3.2. (Consecuencia de los siguientes puntos) Téngase en cuenta de que
 				 * después de 21 días antes de la fecha tope, no se establecerá segunda cita.
@@ -224,18 +233,26 @@ public class CitaController {
 		return null;
 	}
 
+	@SuppressWarnings("static-access")
 	public CitaDTO confirmarCita(CupoDTO cupoDTO, PacienteDTO pacienteDTO, int dosis) {
 		// TODO PENDIENTE
 
-		/*
-		 * Aclarativo Restar 1 unidad en tamanoActual del cupo. No requerirá demasiada
-		 * complejidad, pues ya estaría controlada en buscarYAsignarCitas.
-		 */
-		/*
-		 * NOTA PARA MODIFICAR: En caso de utilizar el método para modificar, indicar en
-		 * el parámetro int dosis la misma dosis de la cita a modificar.
-		 */
-		return null;
+		CitaDTO citaDTO = new CitaDTO(cupoDTO, pacienteDTO, dosis);
+
+		ConfiguracionCupos configuracionCupos = configuracionCuposDao.findAll().get(0);
+		try {
+			cupoDTO.incrementarTamanoActual(configuracionCupos.getNumeroPacientes());
+		} catch (CupoException e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error del servidor. " + e);
+			// No debería saltar la excepción, salvo por cuestiones de concurrencia, porque
+			// solamente traemos cupos libres.
+		}
+
+		cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
+		citaDao.save(wrapperDTOtoModel.citaDTOToCita(citaDTO));
+
+		return citaDTO;
 	}
 
 	@PutMapping("/modificarCita")
