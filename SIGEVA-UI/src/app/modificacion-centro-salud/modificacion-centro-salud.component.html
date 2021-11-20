@@ -37,11 +37,11 @@
           </div>
         </div>
         <div class="alineacion-botones">
-          <button class="btn" type="submit" [disabled]="editarCentroSaludForm.invalid"
-                  (click)=openDialogGuardar()>Guardar Cambios
-          </button>
           <button class="btn-cancel" type="submit" [disabled]="editarCentroSaludForm.invalid"
                   (click)=openDialogCancelar()>CANCELAR
+          </button>
+          <button class="btn" type="submit" [disabled]="editarCentroSaludForm.invalid"
+                  (click)=openDialogGuardar()>Guardar Cambios
           </button>
         </div>
       </form>

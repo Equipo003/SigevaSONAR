@@ -1,7 +1,8 @@
 <app-barra-navegacion></app-barra-navegacion>
 
 <div class="contenedor">
-  <h1 class="titulo">CONFIGURACIÓN DE CUPOS</h1>
+  <div class="separation"></div>
+  <h1 class="page-name">CONFIGURACIÓN DE CUPOS</h1>
   <div class="register">
     <div *ngIf="this.configuracionExistente == true" class="register-screen">
       <div class="register-form">
@@ -19,6 +20,12 @@
               <p class="entypo-back-in-time"> {{this.fechaInicio | date: 'shortTime'}}
                 - {{this.fecha | date:'shortTime'}}</p>
             </td>
+          </tr>
+          <tr>
+            <th> </th>
+          </tr>
+          <tr>
+            <td> </td>
           </tr>
           <tr>
             <th scope="col">Tamaño de los cupos</th>

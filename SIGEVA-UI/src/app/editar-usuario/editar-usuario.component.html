@@ -45,9 +45,12 @@
         </div>
 
         <div class="control-group">
-          <strong>Nueva contraseña</strong>
-          <input type="password" placeholder="Password" name="password" #password="ngModel"
+          <strong>Nueva contraseña:</strong>
+          <input class="pwd" [type]="hide ? 'password' : 'text'" placeholder="Password" name="password" #password="ngModel"
                  [(ngModel)]="newPassword" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_].{7,}">
+          <button mat-icon-button matSuffix (click)="hide = !hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <div>
             <small *ngIf="!password.valid" class="textoColorRojo">
               La contraseña debe ser de 8 caracteres y contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial

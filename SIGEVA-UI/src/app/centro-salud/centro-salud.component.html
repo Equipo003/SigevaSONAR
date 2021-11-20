@@ -16,10 +16,9 @@
 
     <div class="control-group">
       <div class="alineacion-botones">
-        <br>
-        <button class="btn" type="submit" [disabled]="!existeConfiguracion" [routerLink]="['/editarCS', cs.id]">Editar
-        </button>
         <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)="enviarDatosBack()">Eliminar
+        </button>
+        <button class="btn" type="submit" [disabled]="!existeConfiguracion" [routerLink]="['/editarCS', cs.id]">Editar
         </button>
       </div>
     </div>

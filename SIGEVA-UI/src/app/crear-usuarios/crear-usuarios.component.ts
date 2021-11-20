@@ -21,6 +21,7 @@ export class CrearUsuariosComponent implements OnInit {
   public errorMessage: string;
   public pwd: string;
   public existeConfiguracion = false;
+  public hide = true;
 
   constructor(private json: JsonService) {
     this.roles = [];
