@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,10 +25,12 @@ import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CitaDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CupoException;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
@@ -52,6 +56,8 @@ public class CupoController {
 
 	@Autowired
 	CitaController citaController;
+	@Autowired
+	AdministradorController adminController;
 
 	@Autowired
 	WrapperModelToDTO wrapperModelToDTO;
@@ -98,10 +104,20 @@ public class CupoController {
 	}
 
 	@PostMapping("/prepararCupos")
-	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
+	public List<CupoDTO> prepararCupos(HttpServletRequest request,@RequestBody CentroSaludDTO centroSaludDTO) { // TODO PENDIENTE
 		// ¡Requerirá tiempo de ejecución!
-		System.out.println("CREADOS CUPOS");
-		return null;
+		List<CupoDTO> list = new ArrayList<CupoDTO>();
+		try {
+			if (adminController.verificarAutenticidad(request,"Administrador")) {
+				return list;
+			}else {
+				return null;
+			}
+		} catch (UsuarioInvalidoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@GetMapping("/buscarCuposLibresAPartirDeLaFecha")
@@ -218,11 +234,18 @@ public class CupoController {
 	}
 
 	@PutMapping("/borrarCuposDelCentro")
-	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
-		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
-		for (int i = 0; i < cupos.size(); i++) {
-			this.eliminarCupo(cupos.get(i).getUuidCupo());
+	public void borrarCuposDelCentro(HttpServletRequest request,@RequestBody CentroSaludDTO centroSaludDTO) {
+		try {
+			if (adminController.verificarAutenticidad(request,"Administrador")) {
+				List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
+				for (int i = 0; i < cupos.size(); i++) {
+					this.eliminarCupo(cupos.get(i).getUuidCupo());
+				}
+			}
+		} catch (UsuarioInvalidoException e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -233,32 +256,35 @@ public class CupoController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/freeDatesDay")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestParam String idUsuario, @RequestParam Date fecha){
+	public List<CupoDTO> buscarCuposLibresFecha(HttpServletRequest request,@RequestParam String idUsuario, @RequestParam Date fecha){
 		CentroSalud cs = null;
 		Paciente pacienteUsu = null;
 		List<Cupo> clibday = new ArrayList();
 		try {
-			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
-			if(paciente.isPresent()) {
-			    pacienteUsu = (Paciente) paciente.get();
-			    System.out.println(pacienteUsu.getNumDosisAplicadas());
+			if (adminController.verificarAutenticidad(request,"Administrador")) {
+				Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
+				if(paciente.isPresent()) {
+				    pacienteUsu = (Paciente) paciente.get();
+				    System.out.println(pacienteUsu.getNumDosisAplicadas());
+				}
+				
+				if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
+					cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
+					System.out.println(cs.getNombreCentro());
+				}
+				Date fechaInicio = (Date) fecha.clone();
+				Date fechaFin = (Date) fecha.clone();
+				fechaFin.setHours(24);
+				System.out.println(fechaFin);
+				System.out.println(fechaInicio);
+				clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+				for(int i = 0; i < clibday.size(); i++) {
+					System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
+				}
+				
+				return wrapperModelToDTO.allCupoToCupoDTO(clibday);
 			}
-			
-			if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
-				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
-				System.out.println(cs.getNombreCentro());
-			}
-			Date fechaInicio = (Date) fecha.clone();
-			Date fechaFin = (Date) fecha.clone();
-			fechaFin.setHours(24);
-			System.out.println(fechaFin);
-			System.out.println(fechaInicio);
-			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
-			for(int i = 0; i < clibday.size(); i++) {
-				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
-			}
-			
-			return wrapperModelToDTO.allCupoToCupoDTO(clibday);
+			return null;
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
