@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,7 +18,7 @@ import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
-
+import com.equipo3.SIGEVA.exception.CitaException;
 import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
@@ -34,7 +32,6 @@ import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 
 import com.equipo3.SIGEVA.dto.*;
-
 
 @CrossOrigin
 @RestController
@@ -62,7 +59,6 @@ public class CitaController {
 	@Autowired
 	CentroSaludDao centroSaludDao;
 
-
 	@PostMapping("/obtenerCitasFuturasDelPaciente")
 	@GetMapping("/buscarYAsignarCitas")
 	public List<CitaDTO> buscarYAsignarCitas(@RequestBody String uuidPaciente) {
@@ -78,18 +74,19 @@ public class CitaController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping(value = "/obtenerCitasFecha")
-	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson, @RequestParam(name = "fecha") @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
+	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson,
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
 		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			CentroSaludDTO centroSaludDTO = null;
 			Date fecha = null;
 
 			SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-			try{
-			 centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
-			 fecha = mapper.readValue(fechaJson, Date.class);
-			}catch (JsonProcessingException j){
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Formato de fecha inválido");
+			try {
+				centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
+				fecha = mapper.readValue(fechaJson, Date.class);
+			} catch (JsonProcessingException j) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de fecha inválido");
 			}
 			/*
 			 * (Posiblemente se exija desde el frontend pasar String y parseo de fecha de
@@ -139,13 +136,13 @@ public class CitaController {
 		}
 	}
 
-
-	private CitaDTO citaSimulacion(PacienteDTO paciente,int dosis){
+	private CitaDTO citaSimulacion(PacienteDTO paciente, int dosis) {
 		CitaDTO cita = new CitaDTO();
 		cita.setPaciente(paciente);
 		CupoDTO cupoDTO = new CupoDTO();
 		Cupo cupo = this.cupoDao.findAll().get(0);
-		cupoDTO.setCentroSalud(this.wrapper.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
+		cupoDTO.setCentroSalud(
+				this.wrapper.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
 		cupoDTO.setFechaYHoraInicio(new Date());
 		cita.setCupo(cupoDTO);
 		cita.getPaciente().setNumDosisAplicadas(1);
@@ -188,9 +185,9 @@ public class CitaController {
 	}
 
 	@GetMapping("/getPacientePrueba")
-	public PacienteDTO getPacientePrueba(){
+	public PacienteDTO getPacientePrueba() {
 		Optional<Usuario> opt = this.usuarioDao.findByUsername("No borrar prueba citas");
-		if(opt.isPresent()) {
+		if (opt.isPresent()) {
 			Usuario paciente = opt.get();
 			Paciente p = (Paciente) paciente;
 		}
@@ -205,24 +202,46 @@ public class CitaController {
 		}
 	}
 
+	/**
+	 * Recurso web para la modficación de la cita de un paciente
+	 * 
+	 * @param idCita    Identificador de la cita que se va a modificar
+	 * @param cupoNuevo Identificador del nuevo cupo al que va a pertenecer la cita
+	 *                  del paciente y el cual contiene la fecha y hora de la
+	 *                  vacunación
+	 */
 	@PutMapping("/modificarCita")
-	public CitaDTO modificarCita(@RequestBody CitaDTO citaAntigua, @RequestBody CupoDTO cupoNuevo) { // PENDIENTE
-		// TODO PENDIENTE
-		return null;
+	public void modificarCita(@RequestParam String idCita, @RequestParam String cupoNuevo) {
+		try {
+			Cita cita = null;
+			if (citaDao.findById(idCita).isPresent()) {
+				cita = citaDao.findById(idCita).get();
+			} else {
+				throw new CitaException("La cita que se intenta modifcar no existe");
+			}
+
+			cita.setUuidCupo(cupoNuevo);
+			citaDao.save(cita);
+
+		} catch (CitaException e) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
 	}
 
-
 	@PostMapping("/vacunar")
-	public void vacunarPaciente(@RequestBody CitaDTO cita){
-		try{
+	public void vacunarPaciente(@RequestBody CitaDTO cita) {
+		try {
 			cita.getPaciente().setNumDosisAplicadas(cita.getPaciente().getNumDosisAplicadas() + 1);
-			if(cita.getDosis()==cita.getPaciente().getNumDosisAplicadas()) {
+			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {
 				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOToPaciente(cita.getPaciente()));
-			}else{
+			} else {
 				throw new Exception();
 			}
-		}catch (Exception e){
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Las dosis del paciente no coinciden con la dosis supuesta para la cita");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"Las dosis del paciente no coinciden con la dosis supuesta para la cita");
 		}
 
 	}
