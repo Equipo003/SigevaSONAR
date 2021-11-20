@@ -197,40 +197,41 @@ public class CitaController {
 							"El centro de salud no tiene suficiente stock (2).");
 				}
 
-				/*
-				 * EXACTAMENTE PENDIENTE:
-				 * 
-				 * 3.3.2. (Consecuencia de los siguientes puntos) Téngase en cuenta de que
-				 * después de 21 días antes de la fecha tope, no se establecerá segunda cita.
-				 * 
-				 * 3.3.3. Se procura buscar hueco para la primera cita.
-				 * 
-				 * 3.3.3.1. Si no hay hueco a partir de la fecha mínima de búsqueda, se informa.
-				 * 
-				 * 3.3.3.2. En caso satisfactorio, se asigna y se mete a la lista, la cual
-				 * todavía no se devuelve.
-				 * 
-				 * 3.3.4. Si la fechaAsignadaPrimeraDosis + 21 días supera la fecha tope, se
-				 * asignó primera dosis pero no se informa de nada más (al no poder devolver y
-				 * lanzar excepción a la vez).
-				 * 
-				 * 3.3.5. Si no supera, se procura buscar hueco para la segunda cita.
-				 * 
-				 * 3.3.5.1. Si no hay hueco a partir de la fecha mínima de búsqueda, se informa.
-				 * 
-				 * 3.3.5.2. En caso satisfactorio, se asigna, se mete a la lista.
-				 * 
-				 * 3.4. Al final, se devuelve la lista con 1 o 2 citas, (si no se ha informado
-				 * de mensaje de error).
-				 */
+				// 3.3.2. Automático
+
+				// 3.3.3.
+				CupoDTO primerCupoLibreDTO = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
+						new Date());
+				// 3.3.3.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
+
+				// 3.3.3.2.
+				CitaDTO primeraCitaDTO = confirmarCita(primerCupoLibreDTO, pacienteDTO, 1);
+				List<CitaDTO> lista = new ArrayList<>();
+				lista.add(primeraCitaDTO);
+
+				// 3.3.4.
+				Date fechaPrimeraCita = primeraCitaDTO.getCupo().getFechaYHoraInicio();
+				Date fechaSegundaCita = (Date) fechaPrimeraCita.clone();
+				fechaSegundaCita.setDate(fechaSegundaCita.getDate() + Condicionamientos.tiempoEntreDosis());
+				if (fechaSegundaCita.after(Condicionamientos.fechaFin())) {
+					// La fecha de la segunda cita supera la fecha máxima.
+					return lista; // Con solo la primera dosis.
+				}
+				
+				// 3.3.5.
+				CupoDTO cupoLibreDTOSegundaCita = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita);
+				// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
+				
+				// 3.3.5.2.
+				CitaDTO segundaCitaDTO = confirmarCita(cupoLibreDTOSegundaCita, pacienteDTO, 2);
+				lista.add(segundaCitaDTO);
+				return lista; // Con las dos citas.
 
 			}
 
 		}
 
 		// Revisar con respecto al código de confirmación del primer sprint.
-
-		return null;
 	}
 
 	@SuppressWarnings("static-access")
@@ -253,16 +254,6 @@ public class CitaController {
 		citaDao.save(wrapperDTOtoModel.citaDTOToCita(citaDTO));
 
 		return citaDTO;
-	}
-
-	@PutMapping("/modificarCita")
-	public CitaDTO modificarCita(@RequestBody String uuidCupoNuevo, @RequestBody String uuidCitaAntigua) {
-		// TODO PENDIENTE
-		/*
-		 * Aclarativo: Eliminar cita, y después confirmar cita en el nuevo cupo. O bien,
-		 * resettear Cp del Ct, restar Cp1, sumar Cp2 y guardar los 3.
-		 */
-		return null;
 	}
 
 	public CitaDTO buscarUltimaCitaPinchazo(PacienteDTO pacienteDTO, int dosis) {
