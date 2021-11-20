@@ -718,4 +718,21 @@ public class AdministradorController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
+    @GetMapping("/getCentroSanitario")
+    public CentroSaludDTO getCentroSanitario(@RequestParam String idUsuario){
+        try{
+            Optional<Usuario> optUsuario = this.usuarioDao.findById(idUsuario);
+            if(!optUsuario.isPresent()){
+                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+            }
+            Usuario usuario = optUsuario.get();
+            CentroSaludDTO centroSaludDTO = this.wrapperModelToDTO.centroSaludToCentroSaludDTO(this.centroSaludDao.findById(usuario.getCentroSalud()).get());
+
+            return centroSaludDTO;
+
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
 }
