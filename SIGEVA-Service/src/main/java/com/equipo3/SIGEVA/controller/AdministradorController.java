@@ -619,10 +619,9 @@ public class AdministradorController {
         try {
 
             Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
-            if (!optCentro.isPresent()) {
+            if (!optCentro.isPresent()) { 
                 throw new CentroInvalidoException("El centro de salud no existe");
             }
-
             centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
 
         } catch (Exception e) {

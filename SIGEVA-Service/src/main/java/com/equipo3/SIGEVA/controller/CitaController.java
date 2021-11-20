@@ -214,13 +214,33 @@ public class CitaController {
 	public void modificarCita(@RequestParam String idCita, @RequestParam String cupoNuevo) {
 		try {
 			Cita cita = null;
+			Cupo cupo = null;
+			
 			if (citaDao.findById(idCita).isPresent()) {
 				cita = citaDao.findById(idCita).get();
 			} else {
 				throw new CitaException("La cita que se intenta modifcar no existe");
 			}
-
+			
+			if(cupoDao.findById(cita.getUuidCupo()).isPresent()) {
+				cupo = cupoDao.findById(cita.getUuidCupo()).get();
+			}else {
+				throw new CupoException("El cupo que tiene asociado la cita no existe");
+			}
+			
+			cupo.setTamanoActual(cupo.getTamanoActual()-1);
+			cupoDao.save(cupo);
+			
+			if(cupoDao.findById(cupoNuevo).isPresent()) {
+				cupo = cupoDao.findById(cupoNuevo).get();
+			}else {
+				throw new CupoException("El cupo no existe");
+			}
+			
+			cupo.setTamanoActual(cupo.getTamanoActual()+1);
 			cita.setUuidCupo(cupoNuevo);
+			
+			cupoDao.save(cupo);
 			citaDao.save(cita);
 
 		} catch (CitaException e) {
