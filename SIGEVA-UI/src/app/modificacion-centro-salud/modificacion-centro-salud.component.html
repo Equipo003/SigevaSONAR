@@ -8,7 +8,7 @@
     <div class="register-form">
       <form #editarCentroSaludForm="ngForm" id="editarCs">
         <div class="control-group">
-          <b>Nombre centro de salud:</b> <input type="text" disabled="true"
+          <b>Nombre centro de salud:</b> <input type="text"
                                                 placeholder="Nombre centro salud" #nombreCS="ngModel"
                                                 [(ngModel)]="cs.nombreCentro" name="nombreCentro" required>
           <div>
@@ -37,11 +37,11 @@
           </div>
         </div>
         <div class="alineacion-botones">
-          <button class="btn" type="submit" [disabled]="editarCentroSaludForm.invalid"
-                  (click)=openDialogGuardar()>Guardar Cambios
-          </button>
           <button class="btn-cancel" type="submit" [disabled]="editarCentroSaludForm.invalid"
                   (click)=openDialogCancelar()>CANCELAR
+          </button>
+          <button class="btn" type="submit" [disabled]="editarCentroSaludForm.invalid"
+                  (click)=openDialogGuardar()>Guardar Cambios
           </button>
         </div>
       </form>

@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class CitaDTO implements Comparable<CitaDTO> {
@@ -16,13 +15,6 @@ public class CitaDTO implements Comparable<CitaDTO> {
 
 	public CitaDTO(CupoDTO cupo, PacienteDTO paciente, int dosis) {
 		this.uuidCita = UUID.randomUUID().toString();
-		this.cupo = cupo;
-		this.paciente = paciente;
-		this.dosis = dosis;
-	}
-
-	public CitaDTO(String uuidCita, CupoDTO cupo, PacienteDTO paciente, int dosis) {
-		this.uuidCita = uuidCita;
 		this.cupo = cupo;
 		this.paciente = paciente;
 		this.dosis = dosis;
@@ -58,29 +50,6 @@ public class CitaDTO implements Comparable<CitaDTO> {
 
 	public void setDosis(int dosis) {
 		this.dosis = dosis;
-	}
-
-	@Override
-	public String toString() {
-		return "CitaDTO [uuidCita=" + uuidCita + ", cupo=" + cupo + ", paciente=" + paciente + ", dosis=" + dosis + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(cupo, dosis, paciente, uuidCita);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CitaDTO other = (CitaDTO) obj;
-		return Objects.equals(cupo, other.cupo) && dosis == other.dosis && Objects.equals(paciente, other.paciente)
-				&& Objects.equals(uuidCita, other.uuidCita);
 	}
 
 	@Override

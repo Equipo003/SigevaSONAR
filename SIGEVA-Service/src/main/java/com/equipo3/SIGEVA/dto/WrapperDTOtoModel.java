@@ -1,16 +1,26 @@
 package com.equipo3.SIGEVA.dto;
 
-import com.equipo3.SIGEVA.model.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
+import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.model.Sanitario;
+import com.equipo3.SIGEVA.model.Vacuna;
+
+import Auxiliar.Encriptador;
 
 @Component
 public class WrapperDTOtoModel {
+	private static Encriptador var = new Encriptador();
 
 	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
@@ -63,7 +73,7 @@ public class WrapperDTOtoModel {
 		paciente.setApellidos(pacienteDTO.getApellidos());
 		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
 		paciente.setImagen(pacienteDTO.getImagen());
-		paciente.setNumDosisAplicadas(pacienteDTO.getNumDosisAplicadas());
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 		return paciente;
 	}
 
@@ -132,5 +142,24 @@ public class WrapperDTOtoModel {
 		cita.setUuidPaciente(citaDTO.getPaciente().getIdUsuario());
 		cita.setDosis(citaDTO.getDosis());
 		return cita;
+	}
+
+	public Paciente pacienteDTOToPaciente(PacienteDTO pacienteDTO) {
+		Paciente paciente = new Paciente();
+		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
+		paciente.setNombre(pacienteDTO.getNombre());
+		paciente.setApellidos(pacienteDTO.getApellidos());
+		paciente.setUsername(pacienteDTO.getUsername());
+		paciente.setCorreo(pacienteDTO.getCorreo());
+		paciente.setDni(pacienteDTO.getDni());
+		paciente.setCentroSalud(pacienteDTO.getCentroSalud().getId());
+		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
+		paciente.setImagen(pacienteDTO.getImagen());
+		paciente.setHashPassword(pacienteDTO.getHashPassword());
+		paciente.setRol(pacienteDTO.getRol().getId());
+
+		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
+
+		return paciente;
 	}
 }

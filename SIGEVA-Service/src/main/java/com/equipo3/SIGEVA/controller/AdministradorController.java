@@ -9,7 +9,13 @@ import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.*;
+
+import Auxiliar.Encriptador;
+import org.jasypt.util.text.AES256TextEncryptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -250,7 +256,8 @@ public class AdministradorController {
      * @return PacienteDTO Paciente obtenido de la bbdd a partir de su
      * identificador.
      */
-    public PacienteDTO getPaciente(String id) {
+    @GetMapping("/paciente")
+    public PacienteDTO getPaciente(@RequestParam String id) {
         try {
             Optional<Usuario> optPaciente = administradorDao.findById(id);
             if (optPaciente.isPresent()) {
@@ -387,19 +394,20 @@ public class AdministradorController {
     }
 
     /**
-     * Método para la obtención de un centro de salud a partir de su identificador.
+     * Recurso para la obtención de un centro de salud a partir de su identificador.
      *
-     * @param centroSalud Identificador del centro de salud, el cual queremos
+     * @param idCentroSalud Identificador del centro de salud, el cual queremos
      *                    obtener de la bbdd.
      * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
      */
-    public CentroSaludDTO getCentroById(String centroSalud) {
+    @GetMapping("/getCentroSaludById")
+    public CentroSaludDTO getCentroById(@RequestParam String idCentroSalud) {
         try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
+            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(idCentroSalud);
             if (optCentroSalud.isPresent()) {
                 return wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
             }
-            throw new IdentificadorException("Identificador Centro Salud " + centroSalud + " no existe");
+            throw new IdentificadorException("Identificador Centro Salud " + idCentroSalud + " no existe");
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -604,25 +612,18 @@ public class AdministradorController {
      * Recurso web para la modificación de los centros de salud por parte de los
      * administradores.
      *
-     * @param idUser Identificador del usuario que va a realizar la modificación de
-     *               centro.
      * @param csDto  Centro de salud modificado
      */
     @PostMapping("/updateCS")
-    public void modificarCentroSalud(@RequestParam String idUser, @RequestBody CentroSaludDTO csDto) {
+    public void modificarCentroSalud(@RequestBody CentroSaludDTO csDto) {
         try {
-            Optional<Usuario> usuarioOpt = administradorDao.findById(idUser);
-            if (!usuarioOpt.isPresent()) {
-                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
 
+            Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
+            if (!optCentro.isPresent()) { 
+                throw new CentroInvalidoException("El centro de salud no existe");
             }
-            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
-            if (usuariodto.getRol().equals(this.getRolByNombre("Administrador"))
-                    && (csDto.getNombreCentro().equals(this.getCentroById(csDto.getId()).getNombreCentro()))) {
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
-            } else {
-                throw new DeniedAccessException("No tienes los permisos necesarios, para realizar la operación");
-            }
+            centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
+
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

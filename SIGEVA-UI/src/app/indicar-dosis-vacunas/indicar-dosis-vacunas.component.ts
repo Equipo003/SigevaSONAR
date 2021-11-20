@@ -16,6 +16,7 @@ export class IndicarDosisVacunasComponent implements OnInit {
 	public idCentro : string;
 	public message : string;
   public errorMessage: string;
+  public existeConfiguracion = false;
 
 	constructor(private json: JsonService) {
 		this.cs = [];
@@ -29,7 +30,14 @@ export class IndicarDosisVacunasComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.listarCentros();
+    this.getConfiguracion();
 	}
+
+  getConfiguracion(){
+    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+      this.existeConfiguracion = JSON.parse(res);
+    });
+  }
 
 	listarCentros() {
 		this.json.getJson('user/getCentros').subscribe(
@@ -46,7 +54,9 @@ export class IndicarDosisVacunasComponent implements OnInit {
 		this.cs.forEach(function(centro2 : CentroSalud){
 			if(centro2.nombreCentro === self.centroSeleccionado){
 				self.nVacunasActual = centro2.numVacunasDisponibles;
-				self.idCentro = centro2.id;
+        if(centro2.id != null) {
+          self.idCentro = centro2.id;
+        }
 			}
 		});
 	}

@@ -26,9 +26,14 @@ import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.equipo3.SIGEVA.model.Vacuna;
 
+import Auxiliar.Encriptador;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+
 @Component
 public class WrapperModelToDTO {
-
+	private static  Encriptador var = new Encriptador();
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
 
@@ -181,10 +186,11 @@ public class WrapperModelToDTO {
 
 	public CupoDTO getCupoDTOfromUuid(String uuidCupo) throws IdentificadorException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
-
+		System.out.println("i DENTRO DEL GETCUODTO from uuid "+uuidCupo);
+		System.out.println(optCupo.get().getUuidCupo());
 		if (optCupo.isPresent()) {
 			Cupo cupo = optCupo.get();
-
+			
 			CupoDTO cupoDTO = new CupoDTO();
 
 			cupoDTO.setUuidCupo(cupo.getUuidCupo());
@@ -201,7 +207,7 @@ public class WrapperModelToDTO {
 	}
 
 	public CupoDTO cupoToCupoDTO(Cupo cupo) {
-		try {
+		try {System.out.println("Identificador dentro del warpper " + cupo.getUuidCupo());
 			return getCupoDTOfromUuid(cupo.getUuidCupo());
 		} catch (IdentificadorException e) {
 			e.printStackTrace();
@@ -228,7 +234,6 @@ public class WrapperModelToDTO {
 		if (optUsuario.isPresent()) {
 			Usuario usuario = optUsuario.get();
 			RolDTO rol = getRolDTOfromUuid(usuario.getRol());
-
 			switch (rol.getNombre()) { // Patrón Factory.
 
 			case "Administrador":
@@ -288,9 +293,8 @@ public class WrapperModelToDTO {
 				pacienteDTO.setApellidos(paciente.getApellidos());
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
-
-				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
-
+				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
+				
 				return pacienteDTO;
 			}
 
@@ -344,7 +348,7 @@ public class WrapperModelToDTO {
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
 
-				pacienteDTO.setNumDosisAplicadas(paciente.getNumDosisAplicadas());
+				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
 
 				return pacienteDTO;
 

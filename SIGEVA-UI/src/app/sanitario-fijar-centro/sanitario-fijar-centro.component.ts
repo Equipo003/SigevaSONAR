@@ -3,6 +3,7 @@ import {CentroSalud} from "../Model/centro-salud";
 import {JsonService} from "../Service/json.service";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
 import {Rol} from "../Model/rol";
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
   selector: 'app-sanitario-fijar-centro',
@@ -20,9 +21,9 @@ export class SanitarioFijarCentroComponent implements OnInit {
 
   constructor(private json: JsonService) {
     this.centros = [];
-    this.sanitario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),"", "", "", "", "", "", "", "");
-    this.newSanitario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),"", "", "", "", "", "", "", "");
-    this.newCentroSeleccionado = new CentroSalud("", "", 0);
+    this.sanitario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),"", "", "", "", "", "", "", "");
+    this.newSanitario = new UsuarioConObjetos(new Rol("", ""),new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),"", "", "", "", "", "", "", "");
+    this.newCentroSeleccionado = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
     this.errorMessage = "";
     this.message = "";
   }

@@ -12,12 +12,18 @@ import {SolicitarCitaComponent} from './solicitar-cita/solicitar-cita.component'
 import {CentrosSaludSistemaComponent} from './centros-salud-sistema/centros-salud-sistema.component';
 import {EditarUsuarioComponent} from "./editar-usuario/editar-usuario.component";
 import {ModificacionCentroSaludComponent} from "./modificacion-centro-salud/modificacion-centro-salud.component";
+import {ListadoPacientesComponent} from "./listado-pacientes/listado-pacientes.component";
 import {LoginComponent} from "./login/login.component";
 import {FuncionalidadesGuardService as guard} from "./guards/funcionalidades-guard.service";
+import {ContenedorCitasComponent} from "./contenedor-citas/contenedor-citas.component";
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'home', component: HomeComponent},
+  {
+    path: '', component: HomeComponent
+  },
+  {
+    path: 'home', component: HomeComponent
+  },
   {
     path: 'crearCS', component: FormularioCentroSaludComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
@@ -47,7 +53,7 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Paciente', 'SuperAdmin']}
   },
   {
-    path: 'centrosSalud', component: CentrosSaludSistemaComponent,
+    path: 'centrosSistema', component: CentrosSaludSistemaComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
   {
@@ -58,7 +64,16 @@ const appRoutes: Routes = [
     path: 'editarCS/:idCentroSalud', component: ModificacionCentroSaludComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
+  {
+    path: 'listarPacientes', component: ListadoPacientesComponent,
+    canActivate: [guard], data: {expectedRol: ['Sanitario', 'SuperAdmin']}
+  },
   {path: 'login', component: LoginComponent},
+
+  {path: 'misCitas', component: ContenedorCitasComponent,
+    canActivate: [guard], data: {expectedRol: ['Paciente', 'SuperAdmin']}
+  },
+
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];
 

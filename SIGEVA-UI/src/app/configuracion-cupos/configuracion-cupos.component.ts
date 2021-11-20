@@ -63,7 +63,6 @@ export class ConfiguracionCuposComponent implements OnInit {
      this.json.getJson('user/getConfCupos').subscribe((res: any) => {
                    let configuracionCupos : ConfiguracionCupos;
                    configuracionCupos = JSON.parse(res);
-                   console.log(res);
                    this.fechaInicio = configuracionCupos.fechaInicio;
                    this.duracionMinutos = configuracionCupos.duracionMinutos;
                    this.duracionJornadaHoras = configuracionCupos.duracionJornadaHoras;

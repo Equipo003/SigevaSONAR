@@ -1,5 +1,7 @@
 <app-barra-navegacion></app-barra-navegacion>
 
+<div class="contenedor">
+  <app-mensaje-configuracion></app-mensaje-configuracion>
 <div class="register">
   <div class="register-screen">
     <div class="register-form">
@@ -7,9 +9,8 @@
         <h1>CREAR CENTRO DE SALUD</h1>
 
         <div class="control-group">
-          <span class="fontawesome-hospital"> </span>
           <input type="text" placeholder="Nombre del centro de salud" name="nombreCentro" #nombreCentro="ngModel"
-                 [(ngModel)]="centroSalud.nombreCentro" required>
+                 [(ngModel)]="centroSalud.nombreCentro" required [disabled]="!existeConfiguracion">
           <div>
             <small *ngIf="!nombreCentro.valid && nombreCentro.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -18,9 +19,8 @@
         </div>
 
         <div class="control-group">
-          <span class="fontawesome-map-marker "> </span>
           <input type="text" placeholder="Dirección del Centro de Salud" name="direccionCentro"
-                 #direccionCentro="ngModel" [(ngModel)]="centroSalud.direccion" required>
+                 #direccionCentro="ngModel" [(ngModel)]="centroSalud.direccion" required [disabled]="!existeConfiguracion">
           <div>
             <small *ngIf="!direccionCentro.valid && direccionCentro.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -30,10 +30,8 @@
 
         <div class="control-group">
           <b>Número de Vacunas Disponibles:</b>
-          <br>
-          <span class="fontawesome-caret-right "> </span>
           <input type="number" min="0" placeholder="Número de Vacunas Disponibles" name="numVacunas"
-                 #numVacunas="ngModel" [(ngModel)]="centroSalud.numVacunasDisponibles">
+                 #numVacunas="ngModel" [(ngModel)]="centroSalud.numVacunasDisponibles" required [disabled]="!existeConfiguracion">
           <div>
             <small *ngIf="!numVacunas.valid && numVacunas.touched" class="textoColorRojo">
               El campo no puede estar vacío
@@ -42,7 +40,7 @@
         </div>
 
         <div class="control-group">
-          <button class="btn" type="submit" [disabled]="crearCentroForm.invalid">Crear Centro</button>
+          <button class="btn" type="submit" [disabled]="crearCentroForm.invalid || !existeConfiguracion">Crear Centro</button>
         </div>
       </form>
 
@@ -52,4 +50,5 @@
 
     </div>
   </div>
+</div>
 </div>

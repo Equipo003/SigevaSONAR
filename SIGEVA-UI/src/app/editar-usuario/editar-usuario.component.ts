@@ -7,6 +7,8 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpParams} from "@angular/common/http";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Vacuna} from "../Model/vacuna";
+import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-editar-usuario',
@@ -20,14 +22,17 @@ export class EditarUsuarioComponent implements OnInit {
   public message: string;
   public errorMessage: string;
   public idUsuario: string;
+  public newPassword: string;
+  public hide = false;
 
   constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
     this.centros = [];
-    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("", "", 0),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
     this.idUsuario = "";
+    this.newPassword = "";
   }
 
   ngOnInit() {
@@ -93,7 +98,14 @@ export class EditarUsuarioComponent implements OnInit {
     });
   }
 
+  checkNewPassword(){
+    if (this.newPassword != ""){
+      this.usuario.hashPassword = SHA256(this.newPassword).toString(enc.Hex);
+    }
+  }
+
   openDialogGuardar() {
+    this.checkNewPassword();
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
       data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},

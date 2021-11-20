@@ -1,20 +1,27 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
@@ -25,11 +32,18 @@ import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.exception.CitaException;
 import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
+import com.equipo3.SIGEVA.exception.VacunaException;
 import com.equipo3.SIGEVA.model.Cita;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
+import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -41,6 +55,9 @@ public class CitaController {
 
 	@Autowired
 	CupoDao cupoDao;
+
+	@Autowired
+	UsuarioDao usuarioDao;
 
 	@Autowired
 	CupoController cupoController;
@@ -55,7 +72,7 @@ public class CitaController {
 	WrapperDTOtoModel wrapperDTOtoModel;
 
 	@Autowired
-	UsuarioDao usuarioDao;
+	CentroSaludDao centroSaludDao;
 
 	private static final int PRIMERA_DOSIS = 1;
 	private static final int SEGUNDA_DOSIS = 2;
@@ -92,7 +109,7 @@ public class CitaController {
 
 			List<CitaDTO> citasFuturasDTO = null;
 			try {
-				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO);
+				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 			} catch (UsuarioInvalidoException e) {
 				// Controlado con anterioridad.
 				e.printStackTrace();
@@ -146,7 +163,7 @@ public class CitaController {
 
 			List<CitaDTO> citasFuturasDTO = null;
 			try {
-				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO);
+				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 			} catch (UsuarioInvalidoException e) {
 				// Controlado con anterioridad.
 				e.printStackTrace();
@@ -217,11 +234,12 @@ public class CitaController {
 					// La fecha de la segunda cita supera la fecha máxima.
 					return lista; // Con solo la primera dosis.
 				}
-				
+
 				// 3.3.5.
-				CupoDTO cupoLibreDTOSegundaCita = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita);
+				CupoDTO cupoLibreDTOSegundaCita = cupoController
+						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita);
 				// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
-				
+
 				// 3.3.5.2.
 				CitaDTO segundaCitaDTO = confirmarCita(cupoLibreDTOSegundaCita, pacienteDTO, 2);
 				lista.add(segundaCitaDTO);
@@ -236,7 +254,6 @@ public class CitaController {
 
 	@SuppressWarnings("static-access")
 	public CitaDTO confirmarCita(CupoDTO cupoDTO, PacienteDTO pacienteDTO, int dosis) {
-		// TODO PENDIENTE
 
 		CitaDTO citaDTO = new CitaDTO(cupoDTO, pacienteDTO, dosis);
 
@@ -293,7 +310,7 @@ public class CitaController {
 				// y si no, fecha fin:
 				List<CitaDTO> citasDTO = null;
 				try {
-					citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente());
+					citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
 				} catch (UsuarioInvalidoException e) {
 					e.printStackTrace();
 				}
@@ -321,9 +338,27 @@ public class CitaController {
 		}
 	}
 
-	@GetMapping("/obtenerCitasFecha")
-	public List<CitaDTO> obtenerCitasFecha(@RequestBody CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
-		if (centroSaludDTO != null && fecha != null) {
+	@GetMapping(value = "/obtenerCitasFecha")
+	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson,
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
+		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			CentroSaludDTO centroSaludDTO = null;
+			Date fecha = null;
+
+			SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			try {
+				centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
+				fecha = mapper.readValue(fechaJson, Date.class);
+			} catch (JsonProcessingException j) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de fecha inválido");
+			}
+			/*
+			 * (Posiblemente se exija desde el frontend pasar String y parseo de fecha de
+			 * String a Date).
+			 */
+
+			// (La hora de la fecha no importa, solamente importa el día)
 
 			List<CupoDTO> cuposDTO = cupoController.buscarTodosCuposFecha(centroSaludDTO, fecha);
 
@@ -344,11 +379,14 @@ public class CitaController {
 	}
 
 	@GetMapping("/obtenerCitasFuturasDelPaciente")
-	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestBody PacienteDTO pacienteDTO)
+	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente)
 			throws UsuarioInvalidoException { // Terminado.
-		if (pacienteDTO != null) {
-			List<CitaDTO> citasDTO = wrapperModelToDTO
-					.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
+		if (idPaciente == null) {
+			throw new UsuarioInvalidoException("UUID no contemplado en el parámetro.");
+		}
+		Optional<Usuario> optUsuario = usuarioDao.findById(idPaciente);
+		if (optUsuario.isPresent()) {
+			List<CitaDTO> citasDTO = wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(idPaciente));
 			for (int i = 0; i < citasDTO.size(); i++) {
 				if (citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) { // ¿Es antigua?
 					citasDTO.remove(i--);
@@ -357,7 +395,7 @@ public class CitaController {
 			Collections.sort(citasDTO);
 			return citasDTO;
 		} else {
-			throw new UsuarioInvalidoException("Paciente no contemplado en el parámetro.");
+			throw new UsuarioInvalidoException("Paciente no contemplado en la BD.");
 		}
 	}
 
@@ -374,8 +412,30 @@ public class CitaController {
 	}
 
 	@SuppressWarnings("static-access")
-	@PutMapping("/eliminarCita")
-	public void eliminarCita(@RequestBody CitaDTO citaDTO) { // Terminado
+	private CitaDTO citaSimulacion(PacienteDTO paciente, int dosis) {
+		CitaDTO cita = new CitaDTO();
+		cita.setPaciente(paciente);
+		CupoDTO cupoDTO = new CupoDTO();
+		Cupo cupo = this.cupoDao.findAll().get(0);
+		cupoDTO.setCentroSalud(this.wrapperModelToDTO
+				.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
+		cupoDTO.setFechaYHoraInicio(new Date());
+		cita.setCupo(cupoDTO);
+		cita.getPaciente().setNumDosisAplicadas(1);
+		cita.setDosis(dosis);
+		return cita;
+	}
+
+	@SuppressWarnings("static-access")
+	@DeleteMapping("/eliminarCita")
+	public void eliminarCita(@RequestBody String uuidCita) { // Terminado
+
+		CitaDTO citaDTO = null;
+		try {
+			citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
+		} catch (IdentificadorException e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+		}
 
 		// ¿Era primera o segunda?
 		int dosis = citaDTO.getDosis();
@@ -395,7 +455,7 @@ public class CitaController {
 
 			List<CitaDTO> citasDTO = null;
 			try {
-				citasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO); // Nueva consulta BD
+				citasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario()); // Nueva consulta BD
 			} catch (UsuarioInvalidoException e) {
 				e.printStackTrace();
 			}
@@ -413,12 +473,13 @@ public class CitaController {
 
 	public void eliminarCitas(List<CitaDTO> citasDTO) { // Terminado
 		for (int i = 0; i < citasDTO.size(); i++) {
-			eliminarCita(citasDTO.get(i));
+			eliminarCita(citasDTO.get(i).getUuidCita());
 		}
 	}
 
-	public void eliminarCitasFuturasDelPaciente(PacienteDTO paciente) throws UsuarioInvalidoException { // Terminado
-		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente));
+	@PutMapping("/eliminarCitasFuturasDelPaciente")
+	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) throws UsuarioInvalidoException { // Terminado
+		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente.getIdUsuario()));
 	}
 
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) { // Terminado
@@ -430,8 +491,92 @@ public class CitaController {
 		try {
 			cupoController.anularTamanoActual(uuidCupo);
 		} catch (CupoException e) {
-			e.printStackTrace();
 		}
+	}
+
+	@GetMapping("/getPacientePrueba")
+	public PacienteDTO getPacientePrueba() {
+		Optional<Usuario> opt = this.usuarioDao.findByUsername("No borrar prueba citas");
+		if (opt.isPresent()) {
+			Usuario paciente = opt.get();
+			Paciente p = (Paciente) paciente;
+		}
+		return wrapperModelToDTO.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get());
+
+	}
+
+	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
+		List<CitaDTO> citasDTO = wrapperModelToDTO
+				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
+		for (int i = 0; i < citasDTO.size(); i++) {
+			citaDao.deleteById(citasDTO.get(i).getUuidCita());
+		}
+	}
+
+	/**
+	 * Recurso web para la modficación de la cita de un paciente
+	 * 
+	 * @param idCita    Identificador de la cita que se va a modificar
+	 * @param cupoNuevo Identificador del nuevo cupo al que va a pertenecer la cita
+	 *                  del paciente y el cual contiene la fecha y hora de la
+	 *                  vacunación
+	 */
+	@PutMapping("/modificarCita")
+	public void modificarCita(@RequestParam String idCita, @RequestParam String cupoNuevo) {
+		try {
+			Cita cita = null;
+			Cupo cupo = null;
+
+			if (citaDao.findById(idCita).isPresent()) {
+				cita = citaDao.findById(idCita).get();
+			} else {
+				throw new CitaException("La cita que se intenta modifcar no existe");
+			}
+
+			if (cupoDao.findById(cita.getUuidCupo()).isPresent()) {
+				cupo = cupoDao.findById(cita.getUuidCupo()).get();
+			} else {
+				throw new CupoException("El cupo que tiene asociado la cita no existe");
+			}
+
+			cupo.setTamanoActual(cupo.getTamanoActual() - 1);
+			cupoDao.save(cupo);
+
+			if (cupoDao.findById(cupoNuevo).isPresent()) {
+				cupo = cupoDao.findById(cupoNuevo).get();
+			} else {
+				throw new CupoException("El cupo no existe");
+			}
+
+			cupo.setTamanoActual(cupo.getTamanoActual() + 1);
+			cita.setUuidCupo(cupoNuevo);
+
+			cupoDao.save(cupo);
+			citaDao.save(cita);
+
+		} catch (CitaException e) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	@PostMapping("/vacunar")
+	public void vacunarPaciente(@RequestBody CitaDTO cita) {
+		try {
+			cita.getPaciente().setNumDosisAplicadas(cita.getPaciente().getNumDosisAplicadas() + 1);
+			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
+			centroSalud.decrementarNumVacunasDisponibles();
+			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {
+				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOToPaciente(cita.getPaciente()));
+				centroSaludDao.save(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSalud));
+			} else {
+				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");
+			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+
 	}
 
 }

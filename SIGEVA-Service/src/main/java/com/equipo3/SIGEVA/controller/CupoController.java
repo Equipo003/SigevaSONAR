@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
+import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
@@ -26,8 +29,11 @@ import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
+import com.equipo3.SIGEVA.model.Paciente;
+import com.equipo3.SIGEVA.model.Usuario;
 
 @CrossOrigin
 @RestController
@@ -36,6 +42,12 @@ public class CupoController {
 
 	@Autowired
 	CupoDao cupoDao;
+	
+	@Autowired
+	CentroSaludDao centroSaludDao;
+	
+	@Autowired
+	UsuarioDao usuarioDao;
 
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
@@ -122,10 +134,9 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
-	public List<CupoDTO> buscarCuposLibresFecha(@RequestBody String uuidPaciente, @RequestBody Date fecha) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestBody String uuidPaciente, @RequestBody Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los cupos libres del día (para modificar).
 		// (La hora de la fecha no importa, solamente importa el día)
-
 		if (uuidPaciente != null) {
 			PacienteDTO pacienteDTO = null;
 			try {
@@ -234,5 +245,40 @@ public class CupoController {
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
 	}
+	
+	@SuppressWarnings("deprecation")
+	@GetMapping("/freeDatesDay")
+	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha){
+		CentroSalud cs = null;
+		Paciente pacienteUsu = null;
+		List<Cupo> clibday = new ArrayList<>();
+		try {
+			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
+			if(paciente.isPresent()) {
+			    pacienteUsu = (Paciente) paciente.get();
+			    System.out.println(pacienteUsu.getNumDosisAplicadas());
+			}
+			
+			if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
+				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
+				System.out.println(cs.getNombreCentro());
+			}
+			Date fechaInicio = (Date) fecha.clone();
+			Date fechaFin = (Date) fecha.clone();
+			fechaFin.setHours(24);
+			System.out.println(fechaFin);
+			System.out.println(fechaInicio);
+			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			for(int i = 0; i < clibday.size(); i++) {
+				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
+			}
+			
+			return wrapperModelToDTO.allCupoToCupoDTO(clibday);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+	
+	
 
 }

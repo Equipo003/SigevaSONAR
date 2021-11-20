@@ -5,6 +5,7 @@ import { HttpHeaders, HttpParams } from "@angular/common/http";
 import { JsonService } from '../Service/json.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VentanaEmergenteComponent } from '../ventana-emergente/ventana-emergente.component';
+import {Vacuna} from "../Model/vacuna";
 
 @Component({
 	selector: 'app-modificacion-centro-salud',
@@ -18,7 +19,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
 	public errorMessage: string;
 
 	constructor(private json: JsonService, private rutaActu: ActivatedRoute, private router: Router, public dialog: MatDialog) {
-		this.cs = new CentroSalud("", "", 0);
+		this.cs = new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), "");
 		this.idCS = "",
 			this.errorMessage = "";
 		this.message = "";
@@ -53,7 +54,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
-				this.router.navigate(['centrosSalud']);
+				this.router.navigate(['/centrosSistema']);
 			}
 		});
 	}
@@ -71,23 +72,8 @@ export class ModificacionCentroSaludComponent implements OnInit {
 
 	modificarCentroSalud() {
 		let self = this;
-		let params = new HttpParams({
-			fromObject: {
-				idUser: "24badd05-374b-4a3c-af77-5977d47866fd",
-			}
-		});
 
-		let headers = new HttpHeaders();
-		headers.append("Content-Type", "aplication/json"),
-			headers.append("observe", "body");
-
-		let options = ({
-			headers: headers,
-			params: params,
-			body: this.cs
-		});
-
-		this.json.postJsonUpdateCS("user/updateCS", this.cs, options).subscribe(
+		this.json.postJson("user/updateCS", this.cs).subscribe(
 			result => {
 				this.message = "Centro modificado correctamente";
 				setTimeout(function() { self.router.navigate(['centrosSalud']); }, 3000);
