@@ -329,4 +329,15 @@ select, option {
   cursor: default;
 }
 
+.page-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
+  text-align: center;
+  /*background-color: #A4F57E;*/
+  background-color: #F4BF8B;
+  border-radius: 10px;
+}
+
 

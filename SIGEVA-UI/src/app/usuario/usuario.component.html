@@ -3,10 +3,25 @@
 
     <div class="control-group">
       <img alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
-      <h3 class="centrar-texto fontawesome-user">  {{usuario.nombre}} {{usuario.apellidos}}</h3>
-      <h3 class="centrar-texto fontawesome-passport">DNI: {{usuario.dni}}</h3>
-      <h3 class="centrar-texto fontawesome-user-plus">Rol: {{usuario.rol.nombre}}</h3>
-      <h3 class="centrar-texto fontawesome-hospital">  {{usuario.centroSalud.nombreCentro}}</h3>
+      <div class="alineacion-izquierda">
+        <mat-icon>person</mat-icon>
+        <strong>{{usuario.nombre}} {{usuario.apellidos}}</strong>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>assignment</mat-icon>
+        <p>{{usuario.dni}}</p>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>verified_user</mat-icon>
+        <p>{{usuario.rol.nombre}}</p>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>local_hospital</mat-icon>
+        <p>{{usuario.centroSalud.nombreCentro}}</p>
+      </div>
 
       <div class="alineacion-botones">
         <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)=openDialogEliminar()>Eliminar</button>
