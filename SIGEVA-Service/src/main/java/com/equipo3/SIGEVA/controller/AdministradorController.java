@@ -143,15 +143,18 @@ public class AdministradorController {
      *                       (usuario).
      */
     @PostMapping("/newCentroSalud")
-    public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
+    public void crearCentroSalud(HttpServletRequest request,@RequestBody CentroSaludDTO centroSaludDTO) {
         try {
-            centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
-            CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
-            if (optCentroSalud.isPresent()) {
-                throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
-            }
-            centroSaludDao.save(centroSalud);
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
+                CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
+                Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
+                if (optCentroSalud.isPresent()) {
+                    throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
+                }
+                centroSaludDao.save(centroSalud);
+        	}
+            
         }  catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -165,25 +168,28 @@ public class AdministradorController {
      *                       front end.
      */
     @PostMapping("/deleteCentroSalud")
-    public void borrarCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
+    public void borrarCentroSalud(HttpServletRequest request,@RequestBody CentroSaludDTO centroSaludDTO) {
         try {
-            centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
-            CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
-            if (optCentroSalud.isPresent()) {
-                if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
-                    if(usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
-                        centroSaludDao.deleteById(centroSalud.getId());
-                    }else {
-                        throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener usuarios.");
-                    }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
+                 CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
+                 Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
+                 if (optCentroSalud.isPresent()) {
+                     if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
+                         if(usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
+                             centroSaludDao.deleteById(centroSalud.getId());
+                         }else {
+                             throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener usuarios.");
+                         }
 
-                } else {
-                    throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
-                }
-            } else {
-                throw new CentroInvalidoException("El centro de salud NO existe.");
-            }
+                     } else {
+                         throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
+                     }
+                 } else {
+                     throw new CentroInvalidoException("El centro de salud NO existe.");
+                 }
+        	}
+           
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -212,8 +218,16 @@ public class AdministradorController {
      * que tiene el sistema.
      */
     @GetMapping("/getCentros")
-    public List<CentroSaludDTO> listarCentros() {
-        return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
+    public List<CentroSaludDTO> listarCentros(HttpServletRequest request) {
+    	
+    	try {
+			if (verificarAutenticidad(request,"Administrador")) {
+				return wrapperModelToDTO.allCentroSaludToCentroSaludDTO(centroSaludDao.findAll());
+			}
+		} catch (UsuarioInvalidoException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+        return null;
     }
 
     /**
@@ -223,12 +237,16 @@ public class AdministradorController {
      * @return List<RolDTO> Roles que se encuentran en la bbdd.
      */
     @GetMapping("/getRoles")
-    public List<RolDTO> listarRoles() {
+    public List<RolDTO> listarRoles(HttpServletRequest request) {
         try {
-            return wrapperModelToDTO.allRolToRolDTO(rolDao.findAll());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		return wrapperModelToDTO.allRolToRolDTO(rolDao.findAll());
+        	}
+            
+        } catch (UsuarioInvalidoException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
+        return null;
     }
 
     /**
@@ -240,13 +258,17 @@ public class AdministradorController {
      * @return List<UsuarioDTO> Lista de usuarios que tiene el rol especificado.
      */
     @GetMapping("/getUsuariosByRol")
-    public List<UsuarioDTO> getUsuarioByRol(@RequestParam String rol) {
+    public List<UsuarioDTO> getUsuarioByRol(HttpServletRequest request,@RequestParam String rol) {
         try {
-            if (rol.equals("Todos")) {
-                return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
-            } else {
-                return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
-            }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 if (rol.equals("Todos")) {
+                     return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAll());
+                 } else {
+                     return wrapperModelToDTO.allUsuarioToUsuarioDTO(administradorDao.findAllByRol(rol));
+                 }
+        	}
+        	return null;
+           
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -281,14 +303,17 @@ public class AdministradorController {
      *                 sanitario.
      */
     @PutMapping("/fijarCentro/{username}/{centro}")
-    public void fijarPersonal(@PathVariable String username, @PathVariable String centro) {
+    public void fijarPersonal(HttpServletRequest request,@PathVariable String username, @PathVariable String centro) {
         try {
-            Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
-            if (optUsuario.isPresent()) {
-                Usuario sanitario = optUsuario.get();
-                sanitario.setCentroSalud(centro);
-                administradorDao.save(sanitario);
-            }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Optional<Usuario> optUsuario = administradorDao.findByUsername(username);
+                 if (optUsuario.isPresent()) {
+                     Usuario sanitario = optUsuario.get();
+                     sanitario.setCentroSalud(centro);
+                     administradorDao.save(sanitario);
+                 }
+        	}
+           
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -302,18 +327,21 @@ public class AdministradorController {
      *                              front end.
      */
     @PostMapping("/crearConfCupos")
-    public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
+    public void crearConfiguracionCupos(HttpServletRequest request,@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
         try {
-            ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
-                    .configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
+                        .configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
 
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-            if (configuracionCuposDTOList.isEmpty())
-                configuracionCuposDao.save(configuracionCupos);
-            else
-                throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
+                List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+                        .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+                if (configuracionCuposDTOList.isEmpty())
+                    configuracionCuposDao.save(configuracionCupos);
+                else
+                    throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
+        	}
+            
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
         }
@@ -326,10 +354,13 @@ public class AdministradorController {
      * @return boolean Si tiene el sistema una configuración activa o no.
      */
     @GetMapping("/existConfCupos")
-    public boolean existConfiguracionCupos() {
+    public boolean existConfiguracionCupos(HttpServletRequest request) {
         try {
-            List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-            return !configuracionCuposList.isEmpty();
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
+                return !configuracionCuposList.isEmpty();
+        	}
+            return false;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -342,15 +373,18 @@ public class AdministradorController {
      * @return ConfiguracionCuposDTO Configuración que tiene activada el sistema.
      */
     @GetMapping("/getConfCupos")
-    public ConfiguracionCuposDTO getConfiguracionCupos() {
+    public ConfiguracionCuposDTO getConfiguracionCupos(HttpServletRequest request) {
         try {
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
+                        .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
-            if (configuracionCuposDTOList.isEmpty())
-                throw new IdentificadorException("No existe una configuración de cupos");
+                if (configuracionCuposDTOList.isEmpty())
+                    throw new IdentificadorException("No existe una configuración de cupos");
 
-            return configuracionCuposDTOList.get(0);
+                return configuracionCuposDTOList.get(0);
+        	}
+            return null;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -372,15 +406,18 @@ public class AdministradorController {
      * Método para la eliminación de la configuración de cupos que tiene activada el
      * sistema
      */
-    public void eliminarConfiguracionCupos() {
+    public void eliminarConfiguracionCupos(HttpServletRequest request) {
         try {
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-            configuracionCuposDao.delete(
-                    WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+                         .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+                 configuracionCuposDao.delete(
+                         WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+        	}
+           
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -394,14 +431,17 @@ public class AdministradorController {
      *                    del centro de salud.S
      */
     @PutMapping("/modificarDosisDisponibles/{centroSalud}/{vacunas}")
-    public void modificarNumeroVacunasDisponibles(@PathVariable String centroSalud, @PathVariable int vacunas) {
+    public void modificarNumeroVacunasDisponibles(HttpServletRequest request,@PathVariable String centroSalud, @PathVariable int vacunas) {
         try {
-            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
-            if (optCentroSalud.isPresent()) {
-                CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
-                centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
-                centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
-            }
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud);
+                 if (optCentroSalud.isPresent()) {
+                     CentroSaludDTO centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+                     centroSaludDTO.incrementarNumVacunasDisponibles(vacunas);
+                     centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO));
+                 }
+        	}
+           
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -629,15 +669,17 @@ public class AdministradorController {
      * @param csDto  Centro de salud modificado
      */
     @PostMapping("/updateCS")
-    public void modificarCentroSalud(@RequestBody CentroSaludDTO csDto) {
+    public void modificarCentroSalud(HttpServletRequest request,@RequestBody CentroSaludDTO csDto) {
         try {
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
+                 if (!optCentro.isPresent()) {
+                     throw new CentroInvalidoException("El centro de salud no existe");
+                 }
 
-            Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
-            if (!optCentro.isPresent()) {
-                throw new CentroInvalidoException("El centro de salud no existe");
-            }
-
-            centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
+                 centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
+        	}
+           
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -645,47 +687,50 @@ public class AdministradorController {
     }
 
     @PostMapping("/updateUsuario")
-    public void editarUsuario(@RequestBody UsuarioDTO newUsuarioDTO) {
+    public void editarUsuario(HttpServletRequest request,@RequestBody UsuarioDTO newUsuarioDTO) {
         try {
-            boolean updateValido = true;
-            Optional<Usuario> usuarioOpt = administradorDao.findById(newUsuarioDTO.getIdUsuario());
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 boolean updateValido = true;
+                 Optional<Usuario> usuarioOpt = administradorDao.findById(newUsuarioDTO.getIdUsuario());
 
-            if (!usuarioOpt.isPresent()) {
-                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
-            }
-            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
-            if (usuariodto.getRol().getNombre().equals("Paciente")) {
-                PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
-                if (pacienteDTO.getNumDosisAplicadas() != 0) {
-                    throw new UsuarioInvalidoException("No puedes modificar el centro de un usuario que ya ha aplicado una dosis");
-                }
-                else {
-                    citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
-                }
-            }
+                 if (!usuarioOpt.isPresent()) {
+                     throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+                 }
+                 UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+                 if (usuariodto.getRol().getNombre().equals("Paciente")) {
+                     PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
+                     if (pacienteDTO.getNumDosisAplicadas() != 0) {
+                         throw new UsuarioInvalidoException("No puedes modificar el centro de un usuario que ya ha aplicado una dosis");
+                     }
+                     else {
+                         citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
+                     }
+                 }
 
-            UsuarioDTO oldUsuario = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
-            oldUsuario.setCentroSalud(newUsuarioDTO.getCentroSalud());
-            oldUsuario.setUsername(newUsuarioDTO.getUsername());
-            oldUsuario.setCorreo(newUsuarioDTO.getCorreo());
-            oldUsuario.setHashPassword(newUsuarioDTO.getHashPassword());
-            oldUsuario.setDni(newUsuarioDTO.getDni());
-            oldUsuario.setNombre(newUsuarioDTO.getNombre());
-            oldUsuario.setApellidos(newUsuarioDTO.getApellidos());
-            oldUsuario.setFechaNacimiento(newUsuarioDTO.getFechaNacimiento());
-            oldUsuario.setImagen(newUsuarioDTO.getImagen());
+                 UsuarioDTO oldUsuario = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+                 oldUsuario.setCentroSalud(newUsuarioDTO.getCentroSalud());
+                 oldUsuario.setUsername(newUsuarioDTO.getUsername());
+                 oldUsuario.setCorreo(newUsuarioDTO.getCorreo());
+                 oldUsuario.setHashPassword(newUsuarioDTO.getHashPassword());
+                 oldUsuario.setDni(newUsuarioDTO.getDni());
+                 oldUsuario.setNombre(newUsuarioDTO.getNombre());
+                 oldUsuario.setApellidos(newUsuarioDTO.getApellidos());
+                 oldUsuario.setFechaNacimiento(newUsuarioDTO.getFechaNacimiento());
+                 oldUsuario.setImagen(newUsuarioDTO.getImagen());
 
-            switch (newUsuarioDTO.getRol().getNombre()) {
-                case "Administrador":
-                    administradorDao.save(wrapperDTOtoModel.administradorDTOtoAdministrador((AdministradorDTO) oldUsuario));
-                    break;
-                case "Paciente":
-                    administradorDao.save(wrapperDTOtoModel.pacienteDTOtoPaciente((PacienteDTO) oldUsuario));
-                    break;
-                case "Sanitario":
-                    administradorDao.save(wrapperDTOtoModel.sanitarioDTOtoSanitario((SanitarioDTO) oldUsuario));
-                    break;
-            }
+                 switch (newUsuarioDTO.getRol().getNombre()) {
+                     case "Administrador":
+                         administradorDao.save(wrapperDTOtoModel.administradorDTOtoAdministrador((AdministradorDTO) oldUsuario));
+                         break;
+                     case "Paciente":
+                         administradorDao.save(wrapperDTOtoModel.pacienteDTOtoPaciente((PacienteDTO) oldUsuario));
+                         break;
+                     case "Sanitario":
+                         administradorDao.save(wrapperDTOtoModel.sanitarioDTOtoSanitario((SanitarioDTO) oldUsuario));
+                         break;
+                 }
+        	}
+           
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -693,23 +738,26 @@ public class AdministradorController {
     }
 
     @DeleteMapping("/deleteUsuario/{idUsuario}")
-    public void deleteUsuarioById(@PathVariable String idUsuario) {
+    public void deleteUsuarioById(HttpServletRequest request,@PathVariable String idUsuario) {
         try {
-            Optional<Usuario> usuarioOpt = administradorDao.findById(idUsuario);
-            if (!usuarioOpt.isPresent()) {
-                throw new UsuarioInvalidoException("Usuario no existe en el sistema");
-            }
-            UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
-            if (usuariodto.getRol().getNombre().equals("Paciente")) {
-                PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
-                if (pacienteDTO.getNumDosisAplicadas() != 0) {
-                    throw new UsuarioInvalidoException("No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis");
-                }
-                else {
-                    citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
-                }
-            }
-            administradorDao.deleteById(idUsuario);
+        	if (verificarAutenticidad(request,"Administrador")) {
+        		 Optional<Usuario> usuarioOpt = administradorDao.findById(idUsuario);
+                 if (!usuarioOpt.isPresent()) {
+                     throw new UsuarioInvalidoException("Usuario no existe en el sistema");
+                 }
+                 UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+                 if (usuariodto.getRol().getNombre().equals("Paciente")) {
+                     PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
+                     if (pacienteDTO.getNumDosisAplicadas() != 0) {
+                         throw new UsuarioInvalidoException("No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis");
+                     }
+                     else {
+                         citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
+                     }
+                 }
+                 administradorDao.deleteById(idUsuario);
+        	}
+           
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

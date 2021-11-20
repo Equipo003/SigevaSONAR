@@ -1,12 +1,18 @@
 package com.equipo3.SIGEVA.utils;
 
+import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.AdministradorDTO;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.SanitarioDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.Administrador;
+import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Usuario;
@@ -20,9 +26,17 @@ import java.util.Optional;
 
 @RestController
 public class Utilidades {
-
+	
+	@Autowired
+	private CentroSaludDao centroSaludDao;
     @Autowired
     private UsuarioDao administradorDao;
+    @Autowired
+    private AdministradorController adminController;
+    @Autowired
+    private WrapperModelToDTO wrapperModelToDTO;
+    @Autowired
+    private WrapperDTOtoModel wrapperDTOtoModel = new WrapperDTOtoModel();
 
     private static final String FRASE_USUARIO_EXISTENTE = "El usuario ya existe en la base de datos";
 
@@ -95,7 +109,7 @@ public class Utilidades {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-
+    
     /**
      * Recurso web para conseguir la instancia de un Administrador.
      *

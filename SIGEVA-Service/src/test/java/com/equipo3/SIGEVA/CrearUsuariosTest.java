@@ -26,8 +26,10 @@ class CrearUsuariosTest {
 	static CentroSaludDTO centroSaludDTO;
 	public static MockHttpServletRequest requestMockAdmin;
 	public static MockHttpServletRequest requestMockSan;
+	public static MockHttpServletRequest requestMockPa;
 	static TokenDTO tokenDTOAdmin;
 	static TokenDTO tokenDTOSan;
+	static TokenDTO tokenDTOPa;
 
 	@BeforeAll
 	static void creacionRequest() {
@@ -38,6 +40,10 @@ class CrearUsuariosTest {
 		requestMockSan = new MockHttpServletRequest();
 		tokenDTOSan = new TokenDTO("san", "Sanitario");
 		requestMockSan.getSession().setAttribute("token", tokenDTOSan);
+		
+		requestMockPa = new MockHttpServletRequest();
+		tokenDTOPa = new TokenDTO("pa", "Paciente");
+		requestMockPa.getSession().setAttribute("token", tokenDTOPa);
 	}
 
 	@BeforeAll
@@ -97,7 +103,7 @@ class CrearUsuariosTest {
 	void insercionCorrectaAdministrador() {
 		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 		administradorDTO.setCentroSalud((centroSaludDTO));
 
 		administradorController.crearUsuarioAdministrador(requestMockAdmin, administradorDTO);
@@ -114,7 +120,7 @@ class CrearUsuariosTest {
 			administradorDTO.setUsername(uuid);
 			administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 			administradorDTO.setCentroSalud((centroSaludDTO));
 
 			administradorController.crearUsuarioAdministrador(requestMockAdmin, administradorDTO);
@@ -131,7 +137,7 @@ class CrearUsuariosTest {
 	void insercionCorrectaSanitario() {
 		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 		sanitarioDTO.setCentroSalud((centroSaludDTO));
 
 		administradorController.crearUsuarioSanitario(requestMockAdmin, sanitarioDTO);
@@ -149,7 +155,7 @@ class CrearUsuariosTest {
 			sanitarioDTO.setUsername(uuid);
 			sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 			sanitarioDTO.setCentroSalud((centroSaludDTO));
 
 			administradorController.crearUsuarioSanitario(requestMockAdmin, sanitarioDTO);
@@ -166,7 +172,7 @@ class CrearUsuariosTest {
 
 		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 		pacienteDTO.setCentroSalud((centroSaludDTO));
 
 		administradorController.crearUsuarioPaciente(requestMockAdmin, pacienteDTO);
@@ -183,18 +189,17 @@ class CrearUsuariosTest {
 		try {
 			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 			pacienteDTO.setCentroSalud((centroSaludDTO));
 
 			administradorController.crearUsuarioPaciente(requestMockSan, pacienteDTO);
 
-			assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
-
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
-			administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
+					
 
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), "409 CONFLICT \"No tiene permisos para realizar esta acción.\"");
+			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			administradorController.eliminarCentro(administradorDTO.getCentroSalud().getId());
 		}
 
 	}
@@ -206,7 +211,7 @@ class CrearUsuariosTest {
 			pacienteDTO.setUsername(uuid);
 			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearCentroSalud(requestMockAdmin,centroSaludDTO);
 			pacienteDTO.setCentroSalud((centroSaludDTO));
 
 			administradorController.crearUsuarioPaciente(requestMockAdmin, pacienteDTO);

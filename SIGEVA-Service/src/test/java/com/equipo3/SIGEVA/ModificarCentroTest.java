@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
@@ -16,6 +17,7 @@ import com.equipo3.SIGEVA.dto.AdministradorDTO;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.SanitarioDTO;
+import com.equipo3.SIGEVA.dto.TokenDTO;
 import com.equipo3.SIGEVA.dto.UsuarioDTO;
 import com.equipo3.SIGEVA.dto.VacunaDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
@@ -38,7 +40,27 @@ class ModificarCentroTest {
 	private AdministradorController administradorController = new AdministradorController();
 
 	private static CentroSaludDTO csDto;
+	public static MockHttpServletRequest requestMockAdmin;
+	public static MockHttpServletRequest requestMockSan;
+	public static MockHttpServletRequest requestMockPa;
+	static TokenDTO tokenDTOAdmin;
+	static TokenDTO tokenDTOSan;
+	static TokenDTO tokenDTOPa;
 
+	@BeforeAll
+	static void creacionRequest() {
+		requestMockAdmin = new MockHttpServletRequest();
+		tokenDTOAdmin = new TokenDTO("adm", "Administrador");
+		requestMockAdmin.getSession().setAttribute("token", tokenDTOAdmin);
+
+		requestMockSan = new MockHttpServletRequest();
+		tokenDTOSan = new TokenDTO("san", "Sanitario");
+		requestMockSan.getSession().setAttribute("token", tokenDTOSan);
+		
+		requestMockPa = new MockHttpServletRequest();
+		tokenDTOPa = new TokenDTO("pa", "Paciente");
+		requestMockPa.getSession().setAttribute("token", tokenDTOPa);
+	}
 	@BeforeAll
 	static void creacionCentroSalud() {
 		csDto = new CentroSaludDTO();
@@ -53,12 +75,12 @@ class ModificarCentroTest {
 	@Test
 	void modificarCentroCorrecto() {
 		try {
-			administradorController.crearCentroSalud(csDto);
+			administradorController.crearCentroSalud(requestMockAdmin,csDto);
 
 			csDto.setDireccion("Modificación dirección test centro Administrador");
 			csDto.setNumVacunasDisponibles(30);
 
-			administradorController.modificarCentroSalud(csDto);
+			administradorController.modificarCentroSalud(requestMockAdmin,csDto);
 
 			assertEquals(administradorController.getCentroById(csDto.getId()).toString(), csDto.toString());
 
@@ -69,4 +91,35 @@ class ModificarCentroTest {
 
 	}
 
+	@Test
+	void modificarCentroPorPaciente() {
+		try {
+			administradorController.crearCentroSalud(requestMockAdmin,csDto);
+
+			csDto.setDireccion("Modificación dirección test centro Administrador");
+			csDto.setNumVacunasDisponibles(30);
+
+			administradorController.modificarCentroSalud(requestMockPa,csDto);
+			
+		} catch (Exception e) {
+			assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No tiene permisos para realizar esta acción.\"");
+			administradorController.eliminarCentro(csDto.getId());
+		}
+	}
+	
+	@Test
+	void modificarCentroPorSanitario() {
+		try {
+			administradorController.crearCentroSalud(requestMockAdmin,csDto);
+
+			csDto.setDireccion("Modificación dirección test centro Administrador");
+			csDto.setNumVacunasDisponibles(30);
+
+			administradorController.modificarCentroSalud(requestMockSan,csDto);
+			
+		} catch (Exception e) {
+			assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No tiene permisos para realizar esta acción.\"");
+			administradorController.eliminarCentro(csDto.getId());
+		}
+	}
 }
