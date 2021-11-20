@@ -186,8 +186,6 @@ public class WrapperModelToDTO {
 
 	public CupoDTO getCupoDTOfromUuid(String uuidCupo) throws IdentificadorException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
-		System.out.println("i DENTRO DEL GETCUODTO from uuid "+uuidCupo);
-		System.out.println(optCupo.get().getUuidCupo());
 		if (optCupo.isPresent()) {
 			Cupo cupo = optCupo.get();
 			

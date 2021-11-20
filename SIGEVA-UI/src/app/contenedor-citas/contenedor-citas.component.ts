@@ -51,20 +51,16 @@ export class ContenedorCitasComponent implements OnInit {
   }
 
   getCitas(){
-    // let params = new HttpParams({
-    //   fromObject: {
-    //     idPaciente: "ca4cbb02-6325-4e6f-8edf-af3b4de6eedc",
-    //   }
-    // });
-    // this.json.getJsonPJ('/cita/obtenerCitasFuturasDelPaciente', params).subscribe(
-    //   data => {
-    //     // console.log(data);
-    //     this.citas = data;
-    //     this.citas.push(this.citas[0]);
-    //   }
-    // );
-    // this.citas[0].cupo.fechaYHoraInicio = new Date(2021, 11, 23);
-    // this.citas[0].cupo.centroSalud.nombreCentro = "Centro Salud";
+    let params = new HttpParams({
+      fromObject: {
+        idPaciente: "74467d37-9b85-49fc-b932-06125f80488e",
+      }
+    });
+    this.json.getJsonPJ('/cita/obtenerCitasFuturasDelPaciente', params).subscribe(
+      data => {
+        this.citas = data;
+      }
+    );
   }
 
   editarCita(){

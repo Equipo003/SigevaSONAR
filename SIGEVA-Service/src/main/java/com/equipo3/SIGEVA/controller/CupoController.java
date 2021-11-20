@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -100,12 +101,20 @@ public class CupoController {
 	}
 
 	@SuppressWarnings("static-access")
-	@PostMapping("/prepararCupos")
-	public List<CupoDTO> prepararCupos(@RequestBody CentroSaludDTO centroSaludDTO) {
+	@GetMapping("/prepararCupos")
+	public List<CupoDTO> prepararCupos(@RequestParam String uuidCentroSalud) {
+		Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(uuidCentroSalud);
+		CentroSaludDTO centroSaludDTO = null;
+		if (optCentroSalud.isPresent()) {
+			centroSaludDTO = wrapperModelToDTO.centroSaludToCentroSaludDTO(optCentroSalud.get());
+		}
 		if (centroSaludDTO != null) {
 			List<CupoDTO> cuposDTO = calcularCupos(centroSaludDTO);
+			System.out.println("Cupos preparados: " + cuposDTO.size());
+			System.out.println("CentroSaludDTO: " + centroSaludDTO.getId());
 			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
 			for (int i = 0; i < cupos.size(); i++) {
+//				System.out.println("Cupo: " + cupos.get(i).toString());
 				cupoDao.save(cupos.get(i));
 			}
 			return cuposDTO;
@@ -114,19 +123,28 @@ public class CupoController {
 		}
 	}
 
-	public List<CupoDTO> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+	public List<Cupo> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
-		List<CupoDTO> cuposDTO = wrapperModelToDTO.allCupoToCupoDTO(cupoDao.buscarCuposLibresAPartirDe(
-				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
-		Collections.sort(cuposDTO);
-		if (cuposDTO.size() == 0) {
+		SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+
+		if (formateador.format(fecha).equals(formateador.format(new Date())) && Condicionamientos.buscarAPartirDeMañana()){
+			fecha.setDate(fecha.getDate() + 1);
+			fecha.setHours(0);
+			fecha.setMinutes(0);
+			fecha.setSeconds(0);
+		}
+
+		List<Cupo> cupos = cupoDao.buscarCuposLibresAPartirDe(
+				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+		Collections.sort(cupos);
+		if (cupos.size() == 0) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"¡No hay hueco disponible a partir de " + fecha + "!");
 		}
-		return cuposDTO;
+		return cupos;
 	}
 
-	public CupoDTO buscarPrimerCupoLibreAPartirDe(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
+	public Cupo buscarPrimerCupoLibreAPartirDe(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
 		// Este método se utiliza para buscar el próximo cupo libre (para asignar).
 		return buscarCuposLibresAPartirDeLaFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
 		// Lanzará exception en caso de no haber hueco.
@@ -134,7 +152,7 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
-	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestBody String uuidPaciente, @RequestBody Date fecha) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam String uuidPaciente, @RequestParam Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los cupos libres del día (para modificar).
 		// (La hora de la fecha no importa, solamente importa el día)
 		if (uuidPaciente != null) {
@@ -278,7 +296,4 @@ public class CupoController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}
-	
-	
-
 }

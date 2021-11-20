@@ -69,6 +69,15 @@ export class JsonService {
     return this.http.post(url, body, options);
   }
 
+  postJsonCrearCentro(url : string, body : Object) : Observable<any>{
+    let options : Object =  {
+      "observe" : 'body',
+      "responseType": 'text'
+    }
+    url = this.url + url;
+    return this.http.post(url, body, options);
+  }
+
 
   postJsonUpdateCS(url : string, body : Object, options : Object){
       url = this.url + url;

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-public class Cupo {
+public class Cupo implements Comparable<Cupo> {
 
 	@Id
 	private String uuidCupo;
@@ -78,4 +78,8 @@ public class Cupo {
 				+ fechaYHoraInicio + ", tamanoActual=" + tamanoActual + "]";
 	}
 
+	@Override
+	public int compareTo(Cupo o) {
+		return fechaYHoraInicio.compareTo(o.getFechaYHoraInicio());
+	}
 }

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {JsonService} from '../Service/json.service';
 import {CentroSalud} from '../Model/centro-salud';
 import {Vacuna} from "../Model/vacuna";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-formulario-centro-salud',
@@ -16,9 +17,10 @@ export class FormularioCentroSaludComponent implements OnInit {
   public errorMessage: string;
   public generandoCupos: string;
   public existeConfiguracion = false;
+  public uuidCentroSalud = "";
 
   constructor(private json: JsonService) {
-    this.centroSalud = new CentroSalud("", "", 0, new Vacuna("vacuna", 21, 15), "");
+    this.centroSalud = new CentroSalud("", "", 0, new Vacuna("vacuna", 21, 15), "undefined");
     this.errorMessage = "";
     this.message = "";
     this.generandoCupos = "";
@@ -35,22 +37,33 @@ export class FormularioCentroSaludComponent implements OnInit {
   }
 
   enviarDatosBack() {
-    console.log(this.centroSalud);
-    this.generandoCupos = "Generando cupos de citas y centro...";
-    this.json.postJson("user/newCentroSalud", this.centroSalud).subscribe(
+    // this.generandoCupos = "Generando cupos de citas y centro...";
+    this.json.postJsonCrearCentro("user/newCentroSalud", this.centroSalud).subscribe(
       result => {
         this.errorMessage = "";
         this.generandoCupos = "";
         this.message = "Centro creado correctamente";
-        setTimeout('document.location.reload()', 2000);
+        console.log(result);
+        this.generarCupos(result);
+        // setTimeout('document.location.reload()', 2000);
       }, err => {
+        console.log(err);
         this.generandoCupos = "";
         this.errorMessage = err.error.message;
       });
-    this.json.postJson("cupo/prepararCupos", this.centroSalud).subscribe(
+  }
+
+  generarCupos(idCentroSalud: string) {
+    console.log(idCentroSalud);
+    let params = new HttpParams({
+      fromObject: {
+        uuidCentroSalud: idCentroSalud
+      }
+    });
+    this.json.getJsonPJ("cupo/prepararCupos", params).subscribe(
       result => {
         this.message = "";
-        // setTimeout(function(){ window.location.reload(); }, 3000);
+        console.log("CUPOS GENERADOS");
       }, err => {
         this.errorMessage = err.error.message;
         // setTimeout(function(){ self.errorMessage=""; }, 3000);
