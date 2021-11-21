@@ -14,11 +14,14 @@
         </div>
 
         <div class="control-group">
-          <strong>Centro asignado:</strong>
-          <select [(ngModel)]="usuario.centroSalud.nombreCentro" (ngModelChange)="onChangeCentro($event)"
-                  name="selCentro">
-            <option [ngValue]="usuario.centroSalud.nombreCentro"
-                    *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
+          <strong>Centro actual:</strong>
+            <p>{{usuario.centroSalud.nombreCentro}}</p>
+        </div>
+
+        <div class="control-group">
+          <strong>Nuevo centro asignado:</strong>
+          <select [(ngModel)]="usuario.centroSalud.nombreCentro" (ngModelChange)="onChangeCentro($event)" name="selCentro">
+            <option [ngValue]="centro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
 

@@ -24,6 +24,7 @@ export class EditarUsuarioComponent implements OnInit {
   public idUsuario: string;
   public newPassword: string;
   public hide = false;
+  public newCentro: CentroSalud;
 
   constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
     this.centros = [];
@@ -33,6 +34,7 @@ export class EditarUsuarioComponent implements OnInit {
     this.message = "";
     this.idUsuario = "";
     this.newPassword = "";
+    this.newCentro = new CentroSalud("", "", 0, new Vacuna("", 0, 0), "");
   }
 
   ngOnInit() {
@@ -69,6 +71,7 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   onChangeCentro($event: any) {
+    console.log($event);
     this.usuario.centroSalud = $event;
   }
 
@@ -111,6 +114,7 @@ export class EditarUsuarioComponent implements OnInit {
       data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
     });
     dialogRef.afterClosed().subscribe(result => {
+      console.log(this.usuario.centroSalud.nombreCentro);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
           result => {
