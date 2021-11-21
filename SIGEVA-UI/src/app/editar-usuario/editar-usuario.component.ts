@@ -72,8 +72,11 @@ export class EditarUsuarioComponent implements OnInit {
 
   onChangeCentro($event: any) {
     console.log($event);
-    this.usuario.centroSalud = $event;
+	this.usuario.centroSalud = $event;
+
   }
+
+
 
   getUsuarioById() {
     let params = new HttpParams({
@@ -85,6 +88,7 @@ export class EditarUsuarioComponent implements OnInit {
       result => {
         this.usuario = JSON.parse(result);
         this.usuario.fechaNacimiento = this.usuario.fechaNacimiento.substr(0, 10);
+		this.newCentro = this.usuario.centroSalud;
       }, error => {
         console.log(error);
       });
@@ -92,7 +96,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   openDialogCancelar() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: 'Â¿SEGURO QUE QUIERES CANCELAR LA EDICIÃ“N?', titulo: 'Cancelar EdiciÃ³n'},
+      data: {mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición'},
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -111,10 +115,10 @@ export class EditarUsuarioComponent implements OnInit {
     this.checkNewPassword();
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: 'Â¿SEGURO QUE QUIERES GUARDAR LA EDICIÃ“N?', titulo: 'Guardar EdiciÃ³n'},
+      data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(this.usuario.centroSalud.nombreCentro);
+      console.log(this.usuario.centroSalud);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
           result => {

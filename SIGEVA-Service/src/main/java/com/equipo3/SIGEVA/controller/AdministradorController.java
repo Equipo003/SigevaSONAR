@@ -643,6 +643,7 @@ public class AdministradorController {
                 throw new UsuarioInvalidoException("Usuario no existe en el sistema");
             }
             UsuarioDTO usuariodto = wrapperModelToDTO.usuarioToUsuarioDTO(usuarioOpt.get());
+            
             if (usuariodto.getRol().getNombre().equals("Paciente")) {
                 PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
                 if (pacienteDTO.getNumDosisAplicadas() != 0) {
