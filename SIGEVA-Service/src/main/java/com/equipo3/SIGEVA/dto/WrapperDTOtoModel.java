@@ -79,7 +79,8 @@ public class WrapperDTOtoModel {
 
 	public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
 		CentroSalud centroSalud = new CentroSalud();
-		centroSalud.setId(centroSaludDTO.getId());
+		if (!centroSaludDTO.getId().equals("undefined"))
+			centroSalud.setId(centroSaludDTO.getId());
 		centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
 		centroSalud.setDireccion(centroSaludDTO.getDireccion());
 		try {

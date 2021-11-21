@@ -10,15 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
@@ -79,7 +71,7 @@ public class CitaController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarYAsignarCitas")
-	public List<CitaDTO> buscarYAsignarCitas(@RequestBody String uuidPaciente) {
+	public List<CitaDTO> buscarYAsignarCitas(@RequestParam String uuidPaciente) {
 		if (uuidPaciente == null) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "UUID no contemplado.");
 		}
@@ -91,6 +83,8 @@ public class CitaController {
 			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no contemplado en BBDD.");
 		}
+
+//		pacienteDTO.setNumDosisAplicadas(1);
 
 		if (new Date().after(Condicionamientos.fechaFin())) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -108,12 +102,9 @@ public class CitaController {
 			// Objetivo: Comprobar con respecto a la segunda cita.
 
 			List<CitaDTO> citasFuturasDTO = null;
-			try {
-				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
-			} catch (UsuarioInvalidoException e) {
-				// Controlado con anterioridad.
-				e.printStackTrace();
-			}
+
+			citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+
 
 			int numCitasFuturasAsignadas = citasFuturasDTO.size();
 
@@ -146,8 +137,8 @@ public class CitaController {
 				}
 
 				// CASO 2.2.3.
-				CupoDTO cupoLibre = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						fechaMinimaSegundoPinchazo);
+				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
+						fechaMinimaSegundoPinchazo));
 				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
 
 				// CASO 2.2.4.
@@ -162,12 +153,9 @@ public class CitaController {
 			// Objetivo: Asegurarse de asignar la primera y segunda cita.
 
 			List<CitaDTO> citasFuturasDTO = null;
-			try {
-				citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
-			} catch (UsuarioInvalidoException e) {
-				// Controlado con anterioridad.
-				e.printStackTrace();
-			}
+
+			citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+
 			int numCitasFuturasAsignadas = citasFuturasDTO.size();
 
 			if (numCitasFuturasAsignadas == 2) { // CASO 3.1.
@@ -182,8 +170,10 @@ public class CitaController {
 					throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud no tiene stock (1).");
 				}
 
-				Date fechaPrimeraDosis = citasFuturasDTO.get(1).getCupo().getFechaYHoraInicio();
+				Date fechaPrimeraDosis = citasFuturasDTO.get(0).getCupo().getFechaYHoraInicio();
 				Date fechaSegundaDosis = (Date) fechaPrimeraDosis.clone();
+
+				fechaSegundaDosis.setDate(fechaSegundaDosis.getDate() + Condicionamientos.tiempoEntreDosis());
 
 				// CASO 3.2.2.
 				if (fechaSegundaDosis.after(Condicionamientos.fechaFin())) {
@@ -194,8 +184,8 @@ public class CitaController {
 				}
 
 				// CASO 3.2.3.
-				CupoDTO cupoLibre = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						fechaSegundaDosis);
+				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
+						fechaSegundaDosis));
 				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
 
 				// CASO 3.2.4.
@@ -217,8 +207,8 @@ public class CitaController {
 				// 3.3.2. Automático
 
 				// 3.3.3.
-				CupoDTO primerCupoLibreDTO = cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						new Date());
+				CupoDTO primerCupoLibreDTO = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
+						new Date()));
 				// 3.3.3.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
 
 				// 3.3.3.2.
@@ -236,8 +226,8 @@ public class CitaController {
 				}
 
 				// 3.3.5.
-				CupoDTO cupoLibreDTOSegundaCita = cupoController
-						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita);
+				CupoDTO cupoLibreDTOSegundaCita = wrapperModelToDTO.cupoToCupoDTO(cupoController
+						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita));
 				// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
 
 				// 3.3.5.2.
@@ -293,7 +283,7 @@ public class CitaController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarDiasModificacionCita")
-	public List<Date> buscarDiasModificacionCita(String uuidCita) {
+	public List<Date> buscarDiasModificacionCita(@RequestParam String uuidCita) {
 		if (uuidCita != null) {
 			List<Date> lista = new ArrayList<>();
 			CitaDTO citaDTO = null;
@@ -303,17 +293,18 @@ public class CitaController {
 				e.printStackTrace();
 			}
 			if (citaDTO.getDosis() == PRIMERA_DOSIS) { // En caso de ser la primera, da igual.
-
-				lista.add(new Date()); // Desde hoy
+				System.out.println("primera dosis");
+				Date hoy = new Date();
+				if (Condicionamientos.buscarAPartirDeMañana())
+						hoy.setDate(hoy.getDate() + 1);
+				lista.add(hoy); // Desde hoy
 
 				// Si tiene segunda cita, es hasta el día anterior a la segunda;
 				// y si no, fecha fin:
 				List<CitaDTO> citasDTO = null;
-				try {
-					citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
-				} catch (UsuarioInvalidoException e) {
-					e.printStackTrace();
-				}
+
+				citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
+
 				if (citasDTO.size() == 2) {
 					Date fechaSegundaCita = citasDTO.get(1).getCupo().getFechaYHoraInicio();
 					Date fechaMaxima = (Date) fechaSegundaCita.clone();
@@ -324,13 +315,24 @@ public class CitaController {
 				}
 
 			} else { // SEGUNDA_DOSIS // En el caso de ser la segunda, +21 días.
-				CitaDTO citaPrimerPinchazo = buscarUltimaCitaPinchazo(citaDTO.getPaciente(), PRIMERA_DOSIS);
+
+				List<CitaDTO> listaCitasFuturas = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
+
+				CitaDTO citaPrimerPinchazo = null;
+
+				if (listaCitasFuturas.size() == 2){
+					citaPrimerPinchazo = listaCitasFuturas.get(0);
+				} else {
+					citaPrimerPinchazo = buscarUltimaCitaPinchazo(citaDTO.getPaciente(), PRIMERA_DOSIS);
+				}
+
 				Date fechaPrimerPinchazo = citaPrimerPinchazo.getCupo().getFechaYHoraInicio();
 				Date fechaMinimaSegundoPinchazo = (Date) fechaPrimerPinchazo.clone();
 				fechaMinimaSegundoPinchazo
 						.setDate(fechaMinimaSegundoPinchazo.getDate() + Condicionamientos.tiempoEntreDosis());
 				lista.add(fechaMinimaSegundoPinchazo);
 				lista.add(Condicionamientos.fechaFin());
+
 			}
 			return lista;
 		} else {
@@ -379,10 +381,9 @@ public class CitaController {
 	}
 
 	@GetMapping("/obtenerCitasFuturasDelPaciente")
-	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente)
-			throws UsuarioInvalidoException { // Terminado.
+	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente) { // Terminado.
 		if (idPaciente == null) {
-			throw new UsuarioInvalidoException("UUID no contemplado en el parámetro.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El parámetro de entrada no se contemplaba");
 		}
 		Optional<Usuario> optUsuario = usuarioDao.findById(idPaciente);
 		if (optUsuario.isPresent()) {
@@ -395,7 +396,7 @@ public class CitaController {
 			Collections.sort(citasDTO);
 			return citasDTO;
 		} else {
-			throw new UsuarioInvalidoException("Paciente no contemplado en la BD.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en la bbdd");
 		}
 	}
 
@@ -427,9 +428,8 @@ public class CitaController {
 	}
 
 	@SuppressWarnings("static-access")
-	@DeleteMapping("/eliminarCita")
-	public void eliminarCita(@RequestBody String uuidCita) { // Terminado
-
+	@DeleteMapping("/eliminarCita/{uuidCita}")
+	public void eliminarCita(@PathVariable String uuidCita) { // Terminado
 		CitaDTO citaDTO = null;
 		try {
 			citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
@@ -454,11 +454,8 @@ public class CitaController {
 			PacienteDTO pacienteDTO = citaDTO.getPaciente();
 
 			List<CitaDTO> citasDTO = null;
-			try {
-				citasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario()); // Nueva consulta BD
-			} catch (UsuarioInvalidoException e) {
-				e.printStackTrace();
-			}
+			citasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario()); // Nueva consulta BD
+
 			if (citasDTO.size() == 1) { // La primera se acaba de borrar y esta es la segunda.
 				CitaDTO segundaCitaDTO = citasDTO.get(0);
 				if (segundaCitaDTO.getDosis() == 2) { // Precaución - Seguridad
@@ -521,7 +518,7 @@ public class CitaController {
 	 *                  del paciente y el cual contiene la fecha y hora de la
 	 *                  vacunación
 	 */
-	@PutMapping("/modificarCita")
+	@GetMapping("/modificarCita")
 	public void modificarCita(@RequestParam String idCita, @RequestParam String cupoNuevo) {
 		try {
 			Cita cita = null;

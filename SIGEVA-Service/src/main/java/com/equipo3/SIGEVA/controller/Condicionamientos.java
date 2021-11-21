@@ -12,6 +12,8 @@ public class Condicionamientos {
 
 	private static final int TIEMPO_ENTRE_DOSIS = 21; // dias
 
+	private static final boolean BUSCAR_A_PARTIR_DE_MAÑANA = true;
+
 	private Condicionamientos() {
 	}
 
@@ -40,4 +42,7 @@ public class Condicionamientos {
 		return TIEMPO_ENTRE_DOSIS;
 	}
 
+    public static boolean buscarAPartirDeMañana() {
+		return BUSCAR_A_PARTIR_DE_MAÑANA;
+    }
 }
