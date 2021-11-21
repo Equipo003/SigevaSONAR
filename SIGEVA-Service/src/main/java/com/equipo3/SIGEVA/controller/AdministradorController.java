@@ -36,24 +36,24 @@ import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 @RestController
 @RequestMapping("user")
 public class AdministradorController {
-	@Autowired
-	private UsuarioDao administradorDao;
-	@Autowired
-	private RolDao rolDao;
-	@Autowired
-	private UsuarioDao usuarioDao;
-	@Autowired
-	private CentroSaludDao centroSaludDao;
-	@Autowired
-	private ConfiguracionCuposDao configuracionCuposDao;
-	@Autowired
-	private VacunaDao vacunaDao;
-	@Autowired
-	private CupoDao cupoDao;
-	@Autowired
-	private CupoController cupoController;
-	@Autowired
-	private WrapperModelToDTO wrapperModelToDTO;
+    @Autowired
+    private UsuarioDao administradorDao;
+    @Autowired
+    private RolDao rolDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
+    @Autowired
+    private CentroSaludDao centroSaludDao;
+    @Autowired
+    private ConfiguracionCuposDao configuracionCuposDao;
+    @Autowired
+    private VacunaDao vacunaDao;
+    @Autowired
+    private CupoDao cupoDao;
+    @Autowired
+    private CupoController cupoController;
+    @Autowired
+    private WrapperModelToDTO wrapperModelToDTO;
 
     @Autowired
     private CitaDao citaDao;
@@ -140,47 +140,51 @@ public class AdministradorController {
      *                       (usuario).
      */
     @PostMapping("/newCentroSalud")
-    public void crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
+    public String crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
         try {
             centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
             CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
             Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
             if (optCentroSalud.isPresent()) {
                 throw new CentroInvalidoException("El centro de salud ya existe en la base de datos");
-            } 
-            centroSaludDao.save(centroSalud);
-            }  catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
             }
+            centroSaludDao.save(centroSalud);
+
+            return centroSalud.getId();
+
+        } catch (Exception e) {
+            System.out.println("He petado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
-	/**
-	 * Recurso web para la eliminación de un centro de salud registrador en el
-	 * sistema.
-	 * 
-	 * @param centroSaludDTO Centro de salud que se quiere eliminar y que viene del
-	 *                       front end.
-	 */
-	@PostMapping("/deleteCentroSalud")
-	public void borrarCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
-		try {
-			centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
-			CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
-			Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
-			if (optCentroSalud.isPresent()) {
-				if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
-					if(usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
-						centroSaludDao.deleteById(centroSalud.getId());
-					}else {
-						throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener usuarios.");
-					}
-				
-				} else {
-					throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
-				}
-			} else {
-				throw new CentroInvalidoException("El centro de salud NO existe.");
-			}
+    /**
+     * Recurso web para la eliminación de un centro de salud registrador en el
+     * sistema.
+     *
+     * @param centroSaludDTO Centro de salud que se quiere eliminar y que viene del
+     *                       front end.
+     */
+    @PostMapping("/deleteCentroSalud")
+    public void borrarCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
+        try {
+            centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
+            CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
+            Optional<CentroSalud> optCentroSalud = centroSaludDao.findById(centroSalud.getId());
+            if (optCentroSalud.isPresent()) {
+                if (cupoDao.buscarCuposOcupados(centroSalud.getId(), new Date()).isEmpty()) {
+                    if (usuarioDao.findAllByCentroSalud(centroSalud.getId()).isEmpty()) {
+                        centroSaludDao.deleteById(centroSalud.getId());
+                    } else {
+                        throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener usuarios.");
+                    }
+
+                } else {
+                    throw new CentroInvalidoException("El centro de salud NO se puede borrar por contener citas.");
+                }
+            } else {
+                throw new CentroInvalidoException("El centro de salud NO existe.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -397,7 +401,7 @@ public class AdministradorController {
      * Recurso para la obtención de un centro de salud a partir de su identificador.
      *
      * @param idCentroSalud Identificador del centro de salud, el cual queremos
-     *                    obtener de la bbdd.
+     *                      obtener de la bbdd.
      * @return CentroSaludDTO Centro de salud obtenido de la bbdd.
      */
     @GetMapping("/getCentroSaludById")
@@ -612,14 +616,14 @@ public class AdministradorController {
      * Recurso web para la modificación de los centros de salud por parte de los
      * administradores.
      *
-     * @param csDto  Centro de salud modificado
+     * @param csDto Centro de salud modificado
      */
     @PostMapping("/updateCS")
     public void modificarCentroSalud(@RequestBody CentroSaludDTO csDto) {
         try {
 
             Optional<CentroSalud> optCentro = centroSaludDao.findById(csDto.getId());
-            if (!optCentro.isPresent()) { 
+            if (!optCentro.isPresent()) {
                 throw new CentroInvalidoException("El centro de salud no existe");
             }
             centroSaludDao.save(wrapperDTOtoModel.centroSaludDTOtoCentroSalud(csDto));
@@ -643,8 +647,7 @@ public class AdministradorController {
                 PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
                 if (pacienteDTO.getNumDosisAplicadas() != 0) {
                     throw new UsuarioInvalidoException("No puedes modificar el centro de un usuario que ya ha aplicado una dosis");
-                }
-                else {
+                } else {
                     citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
                 }
             }
@@ -689,8 +692,7 @@ public class AdministradorController {
                 PacienteDTO pacienteDTO = getPaciente(usuariodto.getIdUsuario());
                 if (pacienteDTO.getNumDosisAplicadas() != 0) {
                     throw new UsuarioInvalidoException("No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis");
-                }
-                else {
+                } else {
                     citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
                 }
             }
@@ -714,7 +716,7 @@ public class AdministradorController {
 
             return new TokenDTO(usuariodto.getIdUsuario(), usuariodto.getRol().getNombre());
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
