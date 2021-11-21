@@ -19,7 +19,7 @@
 
         <div class="control-group">
           <select [ngModel]="usuario.centroSalud" (ngModelChange)="onChangeCentro($event)" name="selCentro" [disabled]="!existeConfiguracion">
-            <option [ngValue]="centro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
+            <option *ngFor="let centro of centros" [value]="centro">{{centro.nombreCentro}}</option>
           </select>
         </div>
 
