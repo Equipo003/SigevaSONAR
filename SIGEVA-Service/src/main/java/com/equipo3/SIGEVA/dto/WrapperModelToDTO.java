@@ -205,7 +205,7 @@ public class WrapperModelToDTO {
 	}
 
 	public CupoDTO cupoToCupoDTO(Cupo cupo) {
-		try {System.out.println("Identificador dentro del warpper " + cupo.getUuidCupo());
+		try {
 			return getCupoDTOfromUuid(cupo.getUuidCupo());
 		} catch (IdentificadorException e) {
 			e.printStackTrace();

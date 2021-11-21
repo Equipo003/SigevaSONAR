@@ -17,33 +17,9 @@ export class ContenedorCitasComponent implements OnInit {
 
   citas: CitaConObjetos[] = [];
   idUsuario: string;
-  fechaCita: string = "";
-  minDate: Date;
-  maxDate: Date;
-  editMode: boolean = false;
-  daySelected: boolean = false;
-  rangosHoras: string[] = [];
-  selectedTime: string = "";
 
   constructor(private json: JsonService, private tokenService: TokenService) {
     this.idUsuario = String(tokenService.getIdUsuario());
-    this.rangosHoras.push("08:00");
-    this.rangosHoras.push("09:00");
-    this.rangosHoras.push("10:00");
-    this.rangosHoras.push("11:00");
-
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-    const currentDay = today.getDate();
-
-    this.minDate = new Date(currentYear, currentMonth, currentDay);
-    this.maxDate = new Date(currentYear + 1, 0, 31);
-  }
-
-  addEvent(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value);
-    this.daySelected = true;
   }
 
   ngOnInit(): void {
@@ -62,10 +38,4 @@ export class ContenedorCitasComponent implements OnInit {
       }
     );
   }
-
-  editarCita(){
-    this.editMode = true;
-  }
-
-
 }

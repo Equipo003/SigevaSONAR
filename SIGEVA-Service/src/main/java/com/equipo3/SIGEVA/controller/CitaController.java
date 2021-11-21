@@ -518,7 +518,7 @@ public class CitaController {
 	 *                  del paciente y el cual contiene la fecha y hora de la
 	 *                  vacunación
 	 */
-	@PutMapping("/modificarCita")
+	@GetMapping("/modificarCita")
 	public void modificarCita(@RequestParam String idCita, @RequestParam String cupoNuevo) {
 		try {
 			Cita cita = null;

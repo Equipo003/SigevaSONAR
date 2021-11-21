@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -152,9 +155,20 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
-	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam String uuidPaciente, @RequestParam Date fecha) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam(name = "uuidPaciente") String uuidPaciente, @RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
 		// Este método se utiliza para buscar los cupos libres del día (para modificar).
 		// (La hora de la fecha no importa, solamente importa el día)
+
+		ObjectMapper mapper = new ObjectMapper();
+		Date fecha = null;
+
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		try {
+			fecha = mapper.readValue(fechaJson, Date.class);
+		} catch (JsonProcessingException j) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de fecha inválido");
+		}
+
 		if (uuidPaciente != null) {
 			PacienteDTO pacienteDTO = null;
 			try {
