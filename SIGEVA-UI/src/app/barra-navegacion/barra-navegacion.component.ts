@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TokenService} from "../Service/token.service";
-import {JsonService} from "../Service/json.service";
 import {MatDialog} from "@angular/material/dialog";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
 import {Router} from "@angular/router";
@@ -17,25 +16,24 @@ export class BarraNavegacionComponent implements OnInit {
   rol = "";
   existeConfiguracion = false;
 
-  constructor(private tokenService: TokenService, public dialog: MatDialog, private router: Router) { }
+  constructor(private tokenService: TokenService, public dialog: MatDialog, private router: Router) {
+  }
 
   ngOnInit() {
     if (this.tokenService.getToken() != null) {
       this.isLogged = true;
       this.rol = String(this.tokenService.getRol());
-    }
-    else {
+    } else {
       this.isLogged = false;
     }
 
-    if (this.superAdmin){
+    if (this.superAdmin) {
       this.isLogged = true;
       this.rol = "SuperAdmin";
     }
   }
 
-  openDialogCerrarSesion(){
-    let self = this;
+  openDialogCerrarSesion() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
       data: {mensaje: '¿SEGURO QUE QUIERES CERRAR SESIÓN?', titulo: 'Cerrar Sesión'},
     });

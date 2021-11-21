@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
@@ -8,6 +8,6 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 })
 export class VentanaEmergenteComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {mensaje: string, titulo: string}) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { mensaje: string, titulo: string }) {
   }
 }

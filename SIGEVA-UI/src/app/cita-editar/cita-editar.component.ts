@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {CupoCitas} from "../Model/cupo-citas";
@@ -6,11 +6,8 @@ import {Paciente} from "../Model/paciente";
 import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {Vacuna} from "../Model/vacuna";
-import {FormControl} from "@angular/forms";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
-import {enc, SHA256} from "crypto-js";
 import {JsonService} from "../Service/json.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpParams} from "@angular/common/http";
 
@@ -19,7 +16,7 @@ import {HttpParams} from "@angular/common/http";
   templateUrl: './cita-editar.component.html',
   styleUrls: ['./cita-editar.component.css']
 })
-export class CitaEditarComponent implements OnInit {
+export class CitaEditarComponent {
 
   @Input() cita: CitaConObjetos;
   fechaCita: string = "";
@@ -38,21 +35,16 @@ export class CitaEditarComponent implements OnInit {
     this.cita = new CitaConObjetos(new CupoCitas("", new CentroSalud("", "", 0, new Vacuna("", 0, 0, ""), ""), new Date()),
       0,
       new Paciente(new Rol("", ""),
-                  new CentroSalud("", "", 0, new Vacuna("", 0, 0), ""),
-                "", "", "", "", "", "", "", "", 0, ""), "");
+        new CentroSalud("", "", 0, new Vacuna("", 0, 0), ""),
+        "", "", "", "", "", "", "", "", 0, ""), "");
 
     this.minDate = new Date();
     this.maxDate = new Date();
     this.cupoSeleccionado = new CupoCitas("", new CentroSalud("", "", 0, new Vacuna("", 0, 0, ""), ""), new Date());
   }
 
-  ngOnInit(): void {
-  }
-
   addEvent(event: MatDatepickerInputEvent<Date>) {
     this.daySelected = true;
-    const fecha = new Date(Number(event.value?.getFullYear()), Number(event.value?.getMonth()), Number(event.value?.getDay()));
-    const fechaString = fecha.toLocaleDateString();
 
     let params = new HttpParams({
       fromObject: {
@@ -64,7 +56,7 @@ export class CitaEditarComponent implements OnInit {
     this.json.getJsonPJ("cupo/buscarCuposLibresFecha", params).subscribe(
       result => {
         this.rangosHoras = JSON.parse(JSON.stringify(result));
-        this.rangosHoras.forEach( function (rango) {
+        this.rangosHoras.forEach(function (rango) {
           rango.fechaYHoraInicio = new Date(rango.fechaYHoraInicio);
         });
       }
@@ -77,7 +69,6 @@ export class CitaEditarComponent implements OnInit {
       data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(this.cita.cupo.uuid);
       if (result) {
         let params = new HttpParams({
           fromObject: {
@@ -86,20 +77,19 @@ export class CitaEditarComponent implements OnInit {
           }
         });
         this.json.getJsonPJ("cita/modificarCita", params).subscribe(
-          result => {
-            console.log(result);
+          res => {
             self.editMode = false;
             this.message = "Cita editada correctamente";
-            setTimeout(function(){ location.reload() }, 2000);
+            setTimeout(function () {
+              location.reload()
+            }, 2000);
           }
         )
       }
     });
   }
 
-  onChangeHora($event: any){
-    console.log($event);
-    // this.cupoSeleccionado = $event;
+  onChangeHora($event: any) {
     this.cita.cupo.uuid = $event.uuidCupo;
   }
 
@@ -136,9 +126,11 @@ export class CitaEditarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.json.deleteJson("cita/eliminarCita", String(this.cita.uuidCita)).subscribe(
-          result => {
+          res => {
             this.message = "Cita eliminada correctamente";
-            setTimeout(function(){ window.location.reload() }, 2000);
+            setTimeout(function () {
+              window.location.reload()
+            }, 2000);
             this.errorMessage = "";
           }, error => {
             this.errorMessage = "Error al eliminar la cita";
