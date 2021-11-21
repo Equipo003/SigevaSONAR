@@ -7,7 +7,7 @@
     <div *ngIf="this.configuracionExistente == true" class="register-screen">
       <div class="register-form">
         <h1>Datos de la vacunación</h1>
-        <table>
+        <table aria-describedby="Tabla de configuracion">
           <tr>
             <th scope="col">Periodo de vacunación</th>
             <th scope="col">Duración de las jornadas</th>
@@ -22,10 +22,10 @@
             </td>
           </tr>
           <tr>
-            <th> </th>
+            <th scope="col"></th>
           </tr>
           <tr>
-            <td> </td>
+            <td></td>
           </tr>
           <tr>
             <th scope="col">Tamaño de los cupos</th>
@@ -42,7 +42,7 @@
     <div *ngIf="this.configuracionExistente == true" class="register-screen">
       <div class="register-form">
         <h1>Estadísticas</h1>
-        <table>
+        <table aria-describedby="Tabla de configuracion">
           <tr>
             <th scope="row" class="entypo-chart-line"> Pacientes vacunados/minuto:</th>
             <td>

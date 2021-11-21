@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -7,71 +7,70 @@ import {Observable} from "rxjs";
 })
 export class JsonService {
 
-  url : string;
+  url: string;
 
-  constructor(private http : HttpClient) {
-    this.url = 'http://localhost:8080/' ;
+  constructor(private http: HttpClient) {
+    this.url = 'http://localhost:8080/';
   }
 
-  getJson(url : string):Observable<any>{
-    let options : Object =  {
-      "observe" : 'body',
+  getJson(url: string): Observable<any> {
+    let options: Object = {
+      "observe": 'body',
       "responseType": 'text'
     }
-      url = this.url + url;
+    url = this.url + url;
     return this.http.get(url, options);
   }
 
-  getJsonP(url : string, params : HttpParams):Observable<any>{
-      let headers = new HttpHeaders();
-      headers.append("Content-Type", "aplication/json");
-      headers.append("observe","body");
-
-        url = this.url + url;
-      return this.http.get(url, {headers,params,responseType:'text'});
-    }
-
-  getJsonPJ(url : string, params : HttpParams):Observable<any>{
+  getJsonP(url: string, params: HttpParams): Observable<any> {
     let headers = new HttpHeaders();
     headers.append("Content-Type", "aplication/json");
-    headers.append("observe","body");
+    headers.append("observe", "body");
 
     url = this.url + url;
-    return this.http.get(url, {headers,params,responseType:'json'});
+    return this.http.get(url, {headers, params, responseType: 'text'});
+  }
+
+  getJsonPJ(url: string, params: HttpParams): Observable<any> {
+    let headers = new HttpHeaders();
+    headers.append("Content-Type", "aplication/json");
+    headers.append("observe", "body");
+
+    url = this.url + url;
+    return this.http.get(url, {headers, params, responseType: 'json'});
   }
 
 
-
-  putJsonVacunas(url : string, parameter1 : string, parameter2 : number){
-	let options : Object =  {
-      "observe" : 'body',
+  putJsonVacunas(url: string, parameter1: string, parameter2: number) {
+    let options: Object = {
+      "observe": 'body',
       "responseType": 'text'
     }
-	url = this.url +url+ "/" + parameter1 + "/" + parameter2;
-	return this.http.put(url, options);
-  }
-
-  putJsonSanitario(url : string, parameter1 : string, parameter2 : string){
-    let options : Object =  {
-      "observe" : 'body',
-      "responseType": 'text'
-    }
-    url = this.url +url+ "/" + parameter1 + "/" + parameter2;
+    url = this.url + url + "/" + parameter1 + "/" + parameter2;
     return this.http.put(url, options);
   }
 
-  postJson(url : string, body : Object){
-    let options : Object =  {
-          "observe" : 'body',
-          "responseType": 'json'
+  putJsonSanitario(url: string, parameter1: string, parameter2: string) {
+    let options: Object = {
+      "observe": 'body',
+      "responseType": 'text'
     }
-      url = this.url + url;
+    url = this.url + url + "/" + parameter1 + "/" + parameter2;
+    return this.http.put(url, options);
+  }
+
+  postJson(url: string, body: Object) {
+    let options: Object = {
+      "observe": 'body',
+      "responseType": 'json'
+    }
+    url = this.url + url;
     return this.http.post(url, body, options);
   }
 
-  postJsonCrearCentro(url : string, body : Object) : Observable<any>{
-    let options : Object =  {
-      "observe" : 'body',
+  postJsonCrearCentro(url: string, body: Object): Observable<any> {
+    let options: Object = {
+      "observe": 'body',
       "responseType": 'text'
     }
     url = this.url + url;
@@ -79,23 +78,23 @@ export class JsonService {
   }
 
 
-  postJsonUpdateCS(url : string, body : Object, options : Object){
-      url = this.url + url;
+  postJsonUpdateCS(url: string, body: Object, options: Object) {
+    url = this.url + url;
     return this.http.post(url, body, options);
   }
 
-  deleteJson(url : string, parameter1 : string){
-    let options : Object =  {
-      "observe" : 'body',
+  deleteJson(url: string, parameter1: string) {
+    let options: Object = {
+      "observe": 'body',
       "responseType": 'json'
     }
     url = this.url + url + "/" + parameter1;
     return this.http.delete(url, options);
   }
 
-  login(url : string, body : Object):Observable<any>{
-    let options : Object =  {
-      "observe" : 'body',
+  login(url: string, body: Object): Observable<any> {
+    let options: Object = {
+      "observe": 'body',
       "responseType": 'json'
     }
     url = this.url + url;

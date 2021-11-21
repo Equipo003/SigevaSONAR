@@ -27,7 +27,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.roles = [];
     this.centros = []
 
-    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre", 1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
@@ -42,7 +42,7 @@ export class CrearUsuariosComponent implements OnInit {
     this.getConfiguracion();
   }
 
-  getConfiguracion(){
+  getConfiguracion() {
     this.json.getJson('user/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
@@ -100,7 +100,6 @@ export class CrearUsuariosComponent implements OnInit {
     this.json.postJson("user/crearUsuario" + this.usuario.rol.nombre, this.usuario).subscribe(
       result => {
         if (result === null) {
-		  console.log("Fecha: " + this.usuario.fechaNacimiento);
           this.errorMessage = "";
           this.message = "Usuario creado correctamente"
         }

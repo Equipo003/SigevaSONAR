@@ -1,14 +1,14 @@
-export interface Usuario{
+export interface Usuario {
   rol: string;
   centroSalud: string;
   username: string;
   correo: string;
-  hashPassword:string;
-  dni:string;
-  nombre:string;
-  apellidos:string;
-  fechaNacimiento:string;
-  imagen:string;
+  hashPassword: string;
+  dni: string;
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  imagen: string;
 }
 
 export class Usuario {
@@ -16,16 +16,16 @@ export class Usuario {
   centroSalud: string;
   username: string;
   correo: string;
-  hashPassword:string;
-  dni:string;
-  nombre:string;
-  apellidos:string;
-  fechaNacimiento:string;
-  imagen:string;
+  hashPassword: string;
+  dni: string;
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  imagen: string;
   id: string | undefined;
 
-  constructor(rol: string, centroSalud: string, username: string, correo: string, hashPassword:string, dni:string,
-              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string, id?: string){
+  constructor(rol: string, centroSalud: string, username: string, correo: string, hashPassword: string, dni: string,
+              nombre: string, apellidos: string, fechaNacimiento: string, imagen: string, id?: string) {
 
     this.rol = rol;
     this.centroSalud = centroSalud;

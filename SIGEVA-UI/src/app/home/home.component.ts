@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TokenService} from "../Service/token.service";
 import {Router} from "@angular/router";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
@@ -21,20 +21,19 @@ export class HomeComponent implements OnInit {
   public usuario: UsuarioConObjetos;
 
   constructor(private tokenService: TokenService, private router: Router, private json: JsonService, public dialog: MatDialog) {
-    this.usuario =new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre", 1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "", "");
   }
 
   ngOnInit(): void {
     if (this.tokenService.getToken() == null) {
       this.router.navigate(['/login']);
-    }
-    else {
+    } else {
       this.getUsuario();
     }
   }
 
-  getUsuario(){
+  getUsuario() {
     let params = new HttpParams({
       fromObject: {
         idUsuario: String(this.tokenService.getIdUsuario())
@@ -49,8 +48,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  openDialogCerrarSesion(){
-    let self = this;
+  openDialogCerrarSesion() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
       data: {mensaje: '¿SEGURO QUE QUIERES CERRAR SESIÓN?', titulo: 'Cerrar Sesión'},
     });

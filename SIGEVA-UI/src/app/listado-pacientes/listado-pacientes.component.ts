@@ -1,5 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {Usuario} from "../Model/Usuario";
+import {Component, OnInit} from '@angular/core';
 import {Rol} from "../Model/rol";
 import {HttpParams} from "@angular/common/http";
 import {JsonService} from "../Service/json.service";
@@ -19,17 +18,17 @@ import {Router} from "@angular/router";
   styleUrls: ['./listado-pacientes.component.css']
 })
 export class ListadoPacientesComponent implements OnInit {
-  citaSeleccionada:CitaConObjetos;
-  citas : CitaConObjetos[];
-  pacienteSeleccionado:boolean;
-  today : FormControl;
-  dateSelectedIsToday : boolean;
+  citaSeleccionada: CitaConObjetos;
+  citas: CitaConObjetos[];
+  pacienteSeleccionado: boolean;
+  today: FormControl;
+  dateSelectedIsToday: boolean;
   centroSaludUsuario: CentroSalud;
 
-  constructor(private json:JsonService, private tokenService: TokenService, private router: Router) {
-    this.citaSeleccionada = new CitaConObjetos(new CupoCitas("",new CentroSalud("direccion", "nombre",0, new Vacuna("vacuna", 0, 0), ""), new Date() ), 0, new Paciente(new Rol("0", ""),new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 0, 0), ""), "", "", "", "",
+  constructor(private json: JsonService, private tokenService: TokenService, private router: Router) {
+    this.citaSeleccionada = new CitaConObjetos(new CupoCitas("", new CentroSalud("direccion", "nombre", 0, new Vacuna("vacuna", 0, 0), ""), new Date()), 0, new Paciente(new Rol("0", ""), new CentroSalud("direccion", "nombre", 1, new Vacuna("vacuna", 0, 0), ""), "", "", "", "",
       "", "", "", "", 0));
-    this.centroSaludUsuario = new CentroSalud("direccion", "nombre",0, new Vacuna("vacuna", 0, 0), "")
+    this.centroSaludUsuario = new CentroSalud("direccion", "nombre", 0, new Vacuna("vacuna", 0, 0), "")
     this.citas = [];
     this.today = new FormControl(new Date());
     this.pacienteSeleccionado = false;
@@ -39,14 +38,12 @@ export class ListadoPacientesComponent implements OnInit {
   ngOnInit(): void {
     if (this.tokenService.getToken() == null) {
       this.router.navigate(['/login']);
-    }
-    else {
+    } else {
       this.getCentroSaludUsuario(this.tokenService.getIdUsuario());
-     // this.citasHoy();
     }
   }
 
-  vacunar(cita : CitaConObjetos){
+  vacunar(cita: CitaConObjetos) {
     this.citaSeleccionada = cita;
     this.pacienteSeleccionado = true;
   }
@@ -54,15 +51,15 @@ export class ListadoPacientesComponent implements OnInit {
   dataChangeEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     let fecha = event.value;
     let hoy: Date = new Date();
-    this.dateSelectedIsToday = fecha?.getDate()==hoy.getDate() && fecha?.getMonth()==hoy.getMonth() && fecha?.getFullYear()==hoy.getFullYear();
+    this.dateSelectedIsToday = fecha?.getDate() == hoy.getDate() && fecha?.getMonth() == hoy.getMonth() && fecha?.getFullYear() == hoy.getFullYear();
     this.getPacientesFecha(event);
   }
 
-  getPacientesFecha(event : MatDatepickerInputEvent<Date>){
+  getPacientesFecha(event: MatDatepickerInputEvent<Date>) {
     let params = new HttpParams({
       fromObject: {
         'centroSaludDTO': JSON.stringify(this.centroSaludUsuario),
-        'fecha' : JSON.stringify(event.value),
+        'fecha': JSON.stringify(event.value),
       }
     });
     this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
@@ -74,10 +71,11 @@ export class ListadoPacientesComponent implements OnInit {
   }
 
   aplicarDosis() {
-    this.json.postJson('cita/vacunar',this.citaSeleccionada).subscribe((res: any) => {
+    this.json.postJson('cita/vacunar', this.citaSeleccionada).subscribe((res: any) => {
       this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
       this.pacienteSeleccionado = false;
-    },err=> {
+    }, err => {
+      console.log(err);
     });
 
   }
@@ -87,7 +85,7 @@ export class ListadoPacientesComponent implements OnInit {
     let params = new HttpParams({
       fromObject: {
         'centroSaludDTO': JSON.stringify(this.centroSaludUsuario),
-        'fecha' : JSON.stringify(new Date()),
+        'fecha': JSON.stringify(new Date()),
       }
     });
     this.json.getJsonP("cita/obtenerCitasFecha", params).subscribe(
@@ -99,7 +97,7 @@ export class ListadoPacientesComponent implements OnInit {
   }
 
   private getCentroSaludUsuario(idUsuario: string | null) {
-    if(idUsuario == null){
+    if (idUsuario == null) {
       idUsuario = "";
     }
 

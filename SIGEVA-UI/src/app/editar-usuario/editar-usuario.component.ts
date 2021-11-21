@@ -127,7 +127,7 @@ export class EditarUsuarioComponent implements OnInit {
       console.log(this.usuario.centroSalud.nombreCentro);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
-          result => {
+          res => {
             this.message = "Usuario editado correctamente";
             setTimeout(function () {
               self.router.navigate(['usuariosSistema']);

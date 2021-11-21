@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {JsonService} from "../Service/json.service";
 
 @Component({
@@ -21,7 +21,6 @@ export class MensajeConfiguracionComponent implements OnInit {
     this.json.getJson('user/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
-    // this.existeConfiguracion = false
   }
 
 }
