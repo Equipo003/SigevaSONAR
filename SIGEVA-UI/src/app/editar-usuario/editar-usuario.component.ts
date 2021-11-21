@@ -81,6 +81,7 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   onChangeCentro($event: any) {
+    console.log($event);
     this.usuario.centroSalud = $event;
   }
 
@@ -123,6 +124,7 @@ export class EditarUsuarioComponent implements OnInit {
       data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
     });
     dialogRef.afterClosed().subscribe(result => {
+      console.log(this.usuario.centroSalud.nombreCentro);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
           result => {
