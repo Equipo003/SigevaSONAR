@@ -1,6 +1,3 @@
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
 <body>
 <div id="contenedor">
   <div id="central">
@@ -10,16 +7,18 @@
       </div>
       <form id="loginform" #loginForm="ngForm" (ngSubmit)=login()>
 
-        <img src="assets/icons/usuario.png">
-        <input type="text" name="username" placeholder="Usuario" [(ngModel)]="loginUsuario.username" #username="ngModel" required>
+        <img src="assets/icons/usuario.png" alt="icono usuario">
+        <input type="text" name="username" placeholder="Usuario" [(ngModel)]="loginUsuario.username" #username="ngModel"
+               required>
         <div>
           <small *ngIf="!username.valid && username.touched" class="resaltadoNegativo">
             El campo no puede estar vacío
           </small>
         </div>
 
-        <img src="assets/icons/contrasena.png">
-        <input type="password" placeholder="Contraseña" name="password" [(ngModel)]="password" #contrasena="ngModel"required>
+        <img src="assets/icons/contrasena.png" alt="icono contrasena">
+        <input type="password" placeholder="Contraseña" name="password" [(ngModel)]="password" #contrasena="ngModel"
+               required>
         <div>
           <small *ngIf="!contrasena.valid && contrasena.touched" class="resaltadoNegativo">
             El campo no puede estar vacío

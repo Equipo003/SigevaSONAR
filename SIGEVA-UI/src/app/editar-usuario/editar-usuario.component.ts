@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {UsuarioConObjetos} from "../Model/Usuario-con-objetos";
@@ -26,9 +26,9 @@ export class EditarUsuarioComponent implements OnInit {
   public hide = false;
   public newCentro: CentroSalud;
 
-  constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router:Router) {
+  constructor(private json: JsonService, private rutaActiva: ActivatedRoute, public dialog: MatDialog, private router: Router) {
     this.centros = [];
-    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre",1, new Vacuna("vacuna", 3, 15), ""),
+    this.usuario = new UsuarioConObjetos(new Rol("", ""), new CentroSalud("direccion", "nombre", 1, new Vacuna("vacuna", 3, 15), ""),
       "", "", "", "", "", "", "", "");
     this.errorMessage = "";
     this.message = "";
@@ -53,9 +53,19 @@ export class EditarUsuarioComponent implements OnInit {
     this.json.getJson("user/getCentros").subscribe(
       result => {
         this.centros = JSON.parse(result);
+        this.ponerCentroUsuario();
       }, error => {
         console.log(error);
       });
+  }
+
+  ponerCentroUsuario() {
+    let self = this;
+    this.centros.forEach(function (centro) {
+      if (centro.id == self.usuario.centroSalud.id) {
+        self.newCentro = centro;
+      }
+    });
   }
 
   capturarFile(event: any) {
@@ -96,7 +106,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   openDialogCancelar() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición'},
+      data: {mensaje: 'Â¿SEGURO QUE QUIERES CANCELAR LA EDICIÃ“N?', titulo: 'Cancelar EdiciÃ³n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -105,8 +115,8 @@ export class EditarUsuarioComponent implements OnInit {
     });
   }
 
-  checkNewPassword(){
-    if (this.newPassword != ""){
+  checkNewPassword() {
+    if (this.newPassword != "") {
       this.usuario.hashPassword = SHA256(this.newPassword).toString(enc.Hex);
     }
   }
@@ -115,15 +125,17 @@ export class EditarUsuarioComponent implements OnInit {
     this.checkNewPassword();
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
+      data: {mensaje: 'Â¿SEGURO QUE QUIERES GUARDAR LA EDICIÃ“N?', titulo: 'Guardar EdiciÃ³n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(this.usuario.centroSalud);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
-          result => {
+          res => {
             this.message = "Usuario editado correctamente";
-            setTimeout(function(){ self.router.navigate(['usuariosSistema']); }, 3000);
+            setTimeout(function () {
+              self.router.navigate(['usuariosSistema']);
+            }, 3000);
             this.errorMessage = "";
           }, error => {
             this.errorMessage = "Error al editar el usuario";

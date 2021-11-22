@@ -6,7 +6,6 @@ import {FormularioCentroSaludComponent} from "./formulario-centro-salud/formular
 import {ConfiguracionCuposComponent} from "./configuracion-cupos/configuracion-cupos.component";
 import {CrearUsuariosComponent} from "./crear-usuarios/crear-usuarios.component";
 import {IndicarDosisVacunasComponent} from "./indicar-dosis-vacunas/indicar-dosis-vacunas.component"
-import {ContenedorFijarSanitariosComponent} from "./contenedor-fijar-sanitarios/contenedor-fijar-sanitarios.component";
 import {UsuariosSistemaComponent} from './usuarios-sistema/usuarios-sistema.component';
 import {SolicitarCitaComponent} from './solicitar-cita/solicitar-cita.component';
 import {CentrosSaludSistemaComponent} from './centros-salud-sistema/centros-salud-sistema.component';
@@ -41,10 +40,6 @@ const appRoutes: Routes = [
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
   {
-    path: 'fijarPersonal', component: ContenedorFijarSanitariosComponent,
-    canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
-  },
-  {
     path: 'usuariosSistema', component: UsuariosSistemaComponent,
     canActivate: [guard], data: {expectedRol: ['Administrador', 'SuperAdmin']}
   },
@@ -70,7 +65,8 @@ const appRoutes: Routes = [
   },
   {path: 'login', component: LoginComponent},
 
-  {path: 'misCitas', component: ContenedorCitasComponent,
+  {
+    path: 'misCitas', component: ContenedorCitasComponent,
     canActivate: [guard], data: {expectedRol: ['Paciente', 'SuperAdmin']}
   },
 

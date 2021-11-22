@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {CupoCitas} from "../Model/cupo-citas";
+import {Component, OnInit} from '@angular/core';
 import {JsonService} from "../Service/json.service";
-import {LoginUsuario} from "../Model/loginUsuario";
 import {TokenService} from "../Service/token.service";
 import {HttpParams} from "@angular/common/http";
-import {CentroSalud} from "../Model/centro-salud";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-contenedor-citas',
@@ -17,6 +13,7 @@ export class ContenedorCitasComponent implements OnInit {
 
   citas: CitaConObjetos[] = [];
   idUsuario: string;
+  msgNoCitas = "";
 
   constructor(private json: JsonService, private tokenService: TokenService) {
     this.idUsuario = String(tokenService.getIdUsuario());
@@ -26,7 +23,7 @@ export class ContenedorCitasComponent implements OnInit {
     this.getCitas();
   }
 
-  getCitas(){
+  getCitas() {
     let params = new HttpParams({
       fromObject: {
         idPaciente: "74467d37-9b85-49fc-b932-06125f80488e",
@@ -35,6 +32,9 @@ export class ContenedorCitasComponent implements OnInit {
     this.json.getJsonPJ('/cita/obtenerCitasFuturasDelPaciente', params).subscribe(
       data => {
         this.citas = data;
+        if (this.citas.length == 0) {
+          this.msgNoCitas = "No hay citas asignadas";
+        }
       }
     );
   }
