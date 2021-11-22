@@ -26,16 +26,16 @@ import com.equipo3.SIGEVA.exception.CitaException;
 @SpringBootTest
 class ModificarCitaTest {
 	@Autowired
-	static CitaController citaController = new CitaController();
+	CitaController citaController = new CitaController();
 
 	@Autowired
-	static AdministradorController administradorController = new AdministradorController();
+	AdministradorController administradorController = new AdministradorController();
 	
 	@Autowired
 	static CupoController cupoController = new CupoController();
 
-	private static CupoDTO cupoDTO;
-	private static CitaDTO citaDTO;
+	private static CupoDTO cupoDTO = new CupoDTO();
+	private static CitaDTO citaDTO = new CitaDTO();
 	private static PacienteDTO pacienteDTO = new PacienteDTO();
 	private static CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
 
@@ -64,7 +64,6 @@ class ModificarCitaTest {
 			cupoDTO.setTamanoActual(0);
 			cupoDTO.setFechaYHoraInicio(new Date());
 			
-			centroSaludDTO = new CentroSaludDTO();
 			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 			centroSaludDTO.setDireccion(UUID.randomUUID().toString());
 			centroSaludDTO.setNumVacunasDisponibles((int) (Math.random() * 1000));
@@ -83,7 +82,7 @@ class ModificarCitaTest {
 			citaController.modificarCita(citaDTO.getUuidCita(), cupoDTO.getUuidCupo());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"La cita que se intenta modificar no existe \"");
+			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"La cita que se intenta modificar no existe\"");
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}
