@@ -6,6 +6,7 @@ import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {Paciente} from "../Model/paciente";
 import {Rol} from "../Model/rol";
 import {Vacuna} from "../Model/vacuna";
+import {TokenService} from "../Service/token.service";
 
 @Component({
   selector: 'app-solicitar-cita',
@@ -20,7 +21,7 @@ export class SolicitarCitaComponent {
   citas: CitaConObjetos[];
   solicitada: boolean;
 
-  constructor(private json: JsonService) {
+  constructor(private json: JsonService, private token: TokenService) {
     this.paciente = new Paciente(new Rol("1", "Paciente"), new CentroSalud("direccion", "nombre", 1, new Vacuna("vacuna", 3, 15), ""), "vasilesan", "", "", "",
       "", "", "", "", 0);
     this.citas = [];
@@ -32,15 +33,15 @@ export class SolicitarCitaComponent {
   solicitarCita() {
     let params = new HttpParams({
       fromObject: {
-        uuidPaciente: "74467d37-9b85-49fc-b932-06125f80488e"
+        uuidPaciente: String(this.token.getIdUsuario())
       }
     });
-    this.json.getJsonP("cita/buscarYAsignarCitas", params).subscribe(
+    this.json.getJsonPJ("cita/buscarYAsignarCitas", params).subscribe(
       result => {
-        this.citas = JSON.parse(result);
+        this.citas = JSON.parse(JSON.stringify(result));
         this.solicitada = true;
       }, error => {
-        console.log(error);
+        this.mensajeError = error.error.message;
       });
   }
 }

@@ -106,7 +106,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   openDialogCancelar() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición'},
+      data: {mensaje: 'Â¿SEGURO QUE QUIERES CANCELAR LA EDICIÃ“N?', titulo: 'Cancelar EdiciÃ³n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -125,7 +125,7 @@ export class EditarUsuarioComponent implements OnInit {
     this.checkNewPassword();
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
+      data: {mensaje: 'Â¿SEGURO QUE QUIERES GUARDAR LA EDICIÃ“N?', titulo: 'Guardar EdiciÃ³n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(this.usuario.centroSalud);

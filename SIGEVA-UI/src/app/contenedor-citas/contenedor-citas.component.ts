@@ -13,6 +13,7 @@ export class ContenedorCitasComponent implements OnInit {
 
   citas: CitaConObjetos[] = [];
   idUsuario: string;
+  msgNoCitas = "";
 
   constructor(private json: JsonService, private tokenService: TokenService) {
     this.idUsuario = String(tokenService.getIdUsuario());
@@ -31,6 +32,9 @@ export class ContenedorCitasComponent implements OnInit {
     this.json.getJsonPJ('/cita/obtenerCitasFuturasDelPaciente', params).subscribe(
       data => {
         this.citas = data;
+        if (this.citas.length == 0) {
+          this.msgNoCitas = "No hay citas asignadas";
+        }
       }
     );
   }
