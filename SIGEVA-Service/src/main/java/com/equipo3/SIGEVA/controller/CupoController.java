@@ -46,10 +46,10 @@ public class CupoController {
 
 	@Autowired
 	CupoDao cupoDao;
-	
+
 	@Autowired
 	CentroSaludDao centroSaludDao;
-	
+
 	@Autowired
 	UsuarioDao usuarioDao;
 
@@ -130,15 +130,16 @@ public class CupoController {
 		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
 		SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
 
-		if (formateador.format(fecha).equals(formateador.format(new Date())) && Condicionamientos.buscarAPartirDeMañana()){
+		if (formateador.format(fecha).equals(formateador.format(new Date()))
+				&& Condicionamientos.buscarAPartirDeMañana()) {
 			fecha.setDate(fecha.getDate() + 1);
 			fecha.setHours(0);
 			fecha.setMinutes(0);
 			fecha.setSeconds(0);
 		}
 
-		List<Cupo> cupos = cupoDao.buscarCuposLibresAPartirDe(
-				centroSaludDTO.getId(), fecha, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+		List<Cupo> cupos = cupoDao.buscarCuposLibresAPartirDe(centroSaludDTO.getId(), fecha,
+				configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 		Collections.sort(cupos);
 		if (cupos.size() == 0) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -155,7 +156,8 @@ public class CupoController {
 
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
-	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam(name = "uuidPaciente") String uuidPaciente, @RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
+	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam(name = "uuidPaciente") String uuidPaciente,
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
 		// Este método se utiliza para buscar los cupos libres del día (para modificar).
 		// (La hora de la fecha no importa, solamente importa el día)
 
@@ -277,35 +279,45 @@ public class CupoController {
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@GetMapping("/freeDatesDay")
-	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha){
+	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha) {
 		CentroSalud cs = null;
 		Paciente pacienteUsu = null;
 		List<Cupo> clibday = new ArrayList<>();
 		try {
 			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
-			if(paciente.isPresent()) {
-			    pacienteUsu = (Paciente) paciente.get();
-			    System.out.println(pacienteUsu.getNumDosisAplicadas());
+			if (paciente.isPresent()) {
+				pacienteUsu = (Paciente) paciente.get();
+				System.out.println(pacienteUsu.getNumDosisAplicadas());
 			}
-			
-			if(centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
+
+			if (centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
 				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
 				System.out.println(cs.getNombreCentro());
 			}
 			Date fechaInicio = (Date) fecha.clone();
 			Date fechaFin = (Date) fecha.clone();
 			fechaFin.setHours(24);
-			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes());
-			for(int i = 0; i < clibday.size(); i++) {
-				System.out.println("identificador: "+clibday.get(i).getUuidCupo()+"Fecha "+clibday.get(i).getFechaYHoraInicio()+"Tmaño: "+clibday.get(i).getTamanoActual());
+			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin,
+					configuracionCuposDao.findAll().get(0).getNumeroPacientes());
+			for (int i = 0; i < clibday.size(); i++) {
+				System.out.println("identificador: " + clibday.get(i).getUuidCupo() + "Fecha "
+						+ clibday.get(i).getFechaYHoraInicio() + "Tmaño: " + clibday.get(i).getTamanoActual());
 			}
-			
+
 			return wrapperModelToDTO.allCupoToCupoDTO(clibday);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
+	}
+
+	public void crearCupo(CupoDTO cupo) {
+		try {
+			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupo));
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 }
