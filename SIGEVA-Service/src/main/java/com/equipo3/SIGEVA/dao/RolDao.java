@@ -10,6 +10,6 @@ import com.equipo3.SIGEVA.model.Rol;
 @Repository
 public interface RolDao extends MongoRepository <Rol, String> {
 	
-	Optional<Rol> findAllByNombre(String nombre);
-	
+	Optional<Rol> findByNombre(String nombre);
+
 }

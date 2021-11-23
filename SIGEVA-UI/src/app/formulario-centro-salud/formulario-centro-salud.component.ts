@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { JsonService } from '../Service/json.service';
-import { CentroSalud } from '../Model/centro-salud';
+import {Component, OnInit} from '@angular/core';
+import {JsonService} from '../Service/json.service';
+import {CentroSalud} from '../Model/centro-salud';
+import {Vacuna} from "../Model/vacuna";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-formulario-centro-salud',
@@ -10,36 +12,54 @@ import { CentroSalud } from '../Model/centro-salud';
 })
 export class FormularioCentroSaludComponent implements OnInit {
 
-  centroSalud : CentroSalud;
+  centroSalud: CentroSalud;
   public message: string;
   public errorMessage: string;
   public generandoCupos: string;
+  public existeConfiguracion = false;
 
   constructor(private json: JsonService) {
-    this.centroSalud = new CentroSalud("", "", 0);
+    this.centroSalud = new CentroSalud("", "", 0, new Vacuna("vacuna", 21, 15), "undefined");
     this.errorMessage = "";
     this.message = "";
     this.generandoCupos = "";
-	}
-
-  ngOnInit(): void {
-
   }
 
- enviarDatosBack() { //NO DEBE GUARDAR SI HAY UN CAMPO NULO y controlar número en backend
-	//var centroSalud: CentroSalud = new CentroSalud(this.direccion,this.nombreCentro,this.numVacunasDisponibles);
-   this.generandoCupos = "Generando cupos de citas...";
-	this.json.postJson("user/newCentroSalud",this.centroSalud).subscribe(
-    result => {
-      this.errorMessage = "";
-      this.generandoCupos = "";
-      this.message = "Centro creado correctamente";
-      setTimeout('document.location.reload()',2000);
-      }, err =>{
-      this.generandoCupos = "";
-      this.errorMessage = err.error.message;
+  ngOnInit(): void {
+    this.getConfiguracion();
+  }
+
+  getConfiguracion() {
+    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+      this.existeConfiguracion = JSON.parse(res);
     });
+  }
 
+  enviarDatosBack() {
+    this.json.postJsonCrearCentro("user/newCentroSalud", this.centroSalud).subscribe(
+      result => {
+        this.errorMessage = "";
+        this.generandoCupos = "";
+        this.message = "Centro creado correctamente";
+        this.generarCupos(result);
+      }, err => {
+        this.generandoCupos = "";
+        this.errorMessage = err.error.message;
+      });
+  }
 
+  generarCupos(idCentroSalud: string) {
+    console.log(idCentroSalud);
+    let params = new HttpParams({
+      fromObject: {
+        uuidCentroSalud: idCentroSalud
+      }
+    });
+    this.json.getJsonPJ("cupo/prepararCupos", params).subscribe(
+      result => {
+        this.message = "";
+      }, err => {
+        this.errorMessage = err.error.message;
+      });
   }
 }

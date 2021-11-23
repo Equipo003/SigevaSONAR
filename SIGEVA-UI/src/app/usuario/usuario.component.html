@@ -1,11 +1,36 @@
-<div class="usuario">
-  <div class="contenido-usuario centrar-texto">
+<div class="item usuario" *ngIf="!usuarioEliminado">
+  <div class="contenido-item centrar-texto">
 
     <div class="control-group">
       <img alt="imagen usuario" width="100" height="100" src={{usuario.imagen}}>
-      <h3 class="centrar-texto fontawesome-user">  {{usuario.nombre}} {{usuario.apellidos}}</h3>
-      <h3 class="centrar-texto fontawesome-passport">DNI: {{usuario.dni}}</h3>
-      <h3 class="centrar-texto fontawesome-user-plus">Rol: {{usuario.rol}}</h3>
-      <h3 class="centrar-texto fontawesome-hospital">  {{usuario.centroSalud}}</h3>
+      <div class="alineacion-izquierda">
+        <mat-icon>person</mat-icon>
+        <strong>{{usuario.nombre}} {{usuario.apellidos}}</strong>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>assignment</mat-icon>
+        <p>{{usuario.dni}}</p>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>verified_user</mat-icon>
+        <p>{{usuario.rol.nombre}}</p>
+      </div>
+
+      <div class="alineacion-izquierda">
+        <mat-icon>local_hospital</mat-icon>
+        <p>{{usuario.centroSalud.nombreCentro}}</p>
+      </div>
+
+      <div class="alineacion-botones">
+        <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)=openDialogEliminar()>Eliminar</button>
+        <button class="btn" [disabled]="!existeConfiguracion" [routerLink]="['/editarUsuario', usuario.idUsuario]">
+          Editar
+        </button>
+      </div>
+    </div>
+    <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+    <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
   </div>
 </div>

@@ -1,37 +1,45 @@
-<div class="register">
-  <div class="register-screen">
-    <div class="register-form">
-      <form #modificarDosisVacunas="ngForm" (ngSubmit)="putBackData()">
-        <H1>Modificar dosis vacunas</H1>
+<app-barra-navegacion></app-barra-navegacion>
 
-        <div class="control-group">
-          <p>Elige el hospital: </p>
-          <select name="menuCentro" id="menuCentro" [(ngModel)]='centroSeleccionado' (click)="centroSelect()">
-            <option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <p>Número de vacunas actual:</p>
-          <strong>{{nVacunasActual}}</strong>
-        </div>
+<div class="contenedor">
+  <app-mensaje-configuracion></app-mensaje-configuracion>
 
-        <div class="control-group">
-          <p>Número de vacunas que se van a añadir:</p>
-          <input type='number' name='masVacunas' #newVacunas="ngModel" placeholder='número de vacunas'  [(ngModel)]='vacunasAanadir' required>
-          <div>
-            <small *ngIf="!newVacunas.valid && newVacunas.touched" class="textoColorRojo">
-              El campo no puede estar vacío
-            </small>
+  <div class="register">
+    <div class="register-screen">
+      <div class="register-form">
+        <form #modificarDosisVacunas="ngForm" (ngSubmit)="putBackData()">
+          <H1>Modificar dosis vacunas</H1>
+
+          <div class="control-group">
+            <strong>Elige el hospital: </strong>
+            <select name="menuCentro" id="menuCentro" [(ngModel)]='centroSeleccionado' (click)="centroSelect()"
+                    [disabled]="!existeConfiguracion">
+              <option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
+            </select>
           </div>
-        </div>
+          <div class="control-group">
+            <strong>Número de vacunas actual:</strong>
+            <br>
+            <strong>{{nVacunasActual}}</strong>
+          </div>
 
-        <button class="btn" type="submit">Confirmar</button>
-      </form>
+          <div class="control-group">
+            <strong>Número de vacunas que se van a añadir:</strong>
+            <input type='number' name='masVacunas' #newVacunas="ngModel" placeholder='número de vacunas'
+                   [(ngModel)]='vacunasAanadir' required [disabled]="!existeConfiguracion">
+            <div>
+              <small *ngIf="!newVacunas.valid && newVacunas.touched" class="textoColorRojo">
+                El campo no puede estar vacío
+              </small>
+            </div>
+          </div>
 
-      <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
-      <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+          <button class="btn" type="submit" [disabled]="!existeConfiguracion">Confirmar</button>
+        </form>
 
+        <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>
+        <p class="resaltadoPositivo" *ngIf="message">{{message}}</p>
+
+      </div>
     </div>
   </div>
 </div>
-
