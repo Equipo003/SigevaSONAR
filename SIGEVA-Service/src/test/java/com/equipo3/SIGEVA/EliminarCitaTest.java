@@ -1,0 +1,143 @@
+package com.equipo3.SIGEVA;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.CitaController;
+import com.equipo3.SIGEVA.controller.CupoController;
+import com.equipo3.SIGEVA.dao.CitaDao;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.CitaDTO;
+import com.equipo3.SIGEVA.dto.CupoDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
+import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.model.Cita;
+
+@SpringBootTest
+class EliminarCitaTest {
+
+	public static CentroSaludDTO centroSaludDTO;
+	public static CupoDTO cupoDTO;
+	public static PacienteDTO pacienteDTO;
+	public static CitaDTO cita1DTO;
+	public static CitaDTO cita2DTO;
+
+	@Autowired
+	private AdministradorController administradorController;
+
+	@Autowired
+	private CupoController cupoController;
+
+	@Autowired
+	private CitaController citaController;
+
+	@Autowired
+	private CitaDao citaDao;
+
+	@BeforeAll
+	static void setUpCita() {
+		centroSaludDTO = new CentroSaludDTO();
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+
+		cupoDTO = new CupoDTO();
+		cupoDTO.setCentroSalud(centroSaludDTO);
+
+		pacienteDTO = new PacienteDTO();
+		pacienteDTO.setCentroSalud(centroSaludDTO);
+		pacienteDTO.setUsername(UUID.randomUUID().toString());
+
+		cita1DTO = new CitaDTO();
+		cita1DTO.setCupo(cupoDTO);
+		cita1DTO.setPaciente(pacienteDTO);
+		cita1DTO.setDosis(1);
+
+		cita2DTO = new CitaDTO();
+		cita2DTO.setCupo(cupoDTO);
+		cita2DTO.setPaciente(pacienteDTO);
+		cita2DTO.setDosis(2);
+	}
+
+	@SuppressWarnings("deprecation")
+	@BeforeEach
+	void antes() {
+		centroSaludDTO.setNumVacunasDisponibles(50);
+		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+		pacienteDTO.setNumDosisAplicadas(0);
+
+		Date manana = new Date();
+		manana.setDate(manana.getDate() + 1);
+		cupoDTO.setFechaYHoraInicio(manana);
+
+		administradorController.crearCentroSalud(centroSaludDTO);
+		administradorController.crearUsuarioPaciente(pacienteDTO);
+		cupoController.crearCupo(cupoDTO);
+		citaDao.save(WrapperDTOtoModel.citaDTOToCita(cita1DTO));
+		citaDao.save(WrapperDTOtoModel.citaDTOToCita(cita2DTO));
+	}
+
+	@AfterEach
+	void despues() {
+		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
+		administradorController.eliminarUsuario(pacienteDTO.getUsername());
+		cupoController.eliminarCupo(cupoDTO.getUuidCupo());
+		administradorController.eliminarCentro(centroSaludDTO.getId());
+	}
+
+	@Test
+	void eliminarTodasCitasDelPaciente() {
+		List<CitaDTO> listaFuturas1 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+		assertTrue(listaFuturas1.size() > 0);
+
+		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
+		List<CitaDTO> listaAntiguas2 = citaController.obtenerCitasAntiguasPaciente(pacienteDTO);
+		List<CitaDTO> listaFuturas2 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+		assertTrue(listaAntiguas2.size() == 0 && listaFuturas2.size() == 0);
+	}
+
+	@Test
+	void eliminarCitasFuturasDelPaciente() {
+		List<CitaDTO> listaFuturas1 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+		assertTrue(listaFuturas1.size() > 0);
+
+		try {
+			citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
+			List<CitaDTO> listaFuturas2 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+			assertTrue(listaFuturas2.size() == 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	void eliminarTodasCitasDelCupo() {
+		List<Cita> listaInicial = citaDao.findAllByUuidCupo(cupoDTO.getUuidCupo());
+		assertTrue(listaInicial.size() > 0);
+
+		citaController.eliminarTodasLasCitasDelCupo(cupoDTO.getUuidCupo());
+
+		List<Cita> listaFinal = citaDao.findAllByUuidCupo(cupoDTO.getUuidCupo());
+		assertTrue(listaFinal.size() == 0);
+	}
+
+	@Test
+	void eliminarCitaInexistente() {
+		try {
+			citaController.eliminarCita("No existo.");
+		} catch (Exception e) {
+			assertNotNull(e);
+		}
+	}
+
+}
