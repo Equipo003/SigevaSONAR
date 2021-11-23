@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,19 +9,13 @@ import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.*;
 
-import Auxiliar.Encriptador;
-import org.jasypt.util.text.AES256TextEncryptor;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.exception.CentroInvalidoException;
 import com.equipo3.SIGEVA.exception.ConfiguracionYaExistente;
-import com.equipo3.SIGEVA.exception.DeniedAccessException;
 import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 
 /**
