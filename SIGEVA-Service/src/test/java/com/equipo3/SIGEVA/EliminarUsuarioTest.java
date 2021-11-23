@@ -96,10 +96,7 @@ public class EliminarUsuarioTest {
             
         }
         catch (Exception e) {
-        	e.printStackTrace();
-            Assertions.assertNotNull(e);
-            administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+        
         }
     }
 
@@ -113,9 +110,6 @@ public class EliminarUsuarioTest {
             
             
             administradorController.deleteUsuarioById(administradorDTO.getIdUsuario());	
-
-            administradorController.eliminarUsuario(administradorDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
             
         }
         catch (Exception e) {
@@ -146,10 +140,7 @@ public class EliminarUsuarioTest {
             
         }
         catch (Exception e) {
-        	e.printStackTrace();
-            Assertions.assertNotNull(e);
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+
         }
     }
     
@@ -165,8 +156,7 @@ public class EliminarUsuarioTest {
                    
             administradorController.deleteUsuarioById(pacienteDTO.getIdUsuario()); 	
 
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+
             
         }
         catch (Exception e) {
@@ -201,11 +191,7 @@ public class EliminarUsuarioTest {
             
         }
         catch (Exception e) {
-            Assertions.assertNotNull(e);
-            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+           
         }
     }
     
