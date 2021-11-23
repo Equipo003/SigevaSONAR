@@ -532,7 +532,7 @@ public class CitaController {
 			if (citaDao.findById(idCita).isPresent()) {
 				cita = citaDao.findById(idCita).get();
 			} else {
-				throw new CitaException("La cita que se intenta modifcar no existe");
+				throw new CitaException("La cita que se intenta modificar no existe");
 			}
 
 			if (cupoDao.findById(cita.getUuidCupo()).isPresent()) {
@@ -556,8 +556,10 @@ public class CitaController {
 			cupoDao.save(cupo);
 			citaDao.save(cita);
 
-		} catch (CitaException e) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		} catch (CitaException a) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, a.getMessage());
+		} catch(CupoException b) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, b.getMessage());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
@@ -584,5 +586,13 @@ public class CitaController {
 		}
 
 	}
-
+	
+	public void crearCita(CitaDTO cita) {
+		try {
+			citaDao.save(wrapperDTOtoModel.citaDTOToCita(cita));
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
 }

@@ -142,6 +142,7 @@ public class AdministradorController {
     @PostMapping("/newCentroSalud")
     public String crearCentroSalud(@RequestBody CentroSaludDTO centroSaludDTO) {
         try {
+        	System.out.println("centro "+ centroSaludDTO.getNombreCentro());
             centroSaludDTO.setVacuna(getVacunaByNombre("Pfizer"));
             CentroSalud centroSalud = this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSaludDTO);
             Optional<CentroSalud> optCentroSalud = centroSaludDao.findByNombreCentro(centroSalud.getNombreCentro());
@@ -561,6 +562,7 @@ public class AdministradorController {
             Optional<Vacuna> optVacuna = vacunaDao.findByNombre(pfizer);
             if (optVacuna.isPresent()) {
                 return wrapperModelToDTO.vacunaToVacunaDTO(optVacuna.get());
+               
             }
             throw new IdentificadorException("Identificador Vacuna " + pfizer + " no encontrado");
         } catch (Exception e) {
