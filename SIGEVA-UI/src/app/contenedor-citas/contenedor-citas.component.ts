@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {CupoCitas} from "../Model/cupo-citas";
+import {Component, OnInit} from '@angular/core';
 import {JsonService} from "../Service/json.service";
-import {LoginUsuario} from "../Model/loginUsuario";
 import {TokenService} from "../Service/token.service";
 import {HttpParams} from "@angular/common/http";
-import {CentroSalud} from "../Model/centro-salud";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-contenedor-citas',
@@ -26,7 +22,7 @@ export class ContenedorCitasComponent implements OnInit {
     this.getCitas();
   }
 
-  getCitas(){
+  getCitas() {
     let params = new HttpParams({
       fromObject: {
         idPaciente: "74467d37-9b85-49fc-b932-06125f80488e",

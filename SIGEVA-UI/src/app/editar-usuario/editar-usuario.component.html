@@ -15,8 +15,8 @@
 
         <div class="control-group">
           <strong>Centro asignado:</strong>
-           <select [ngModel]="usuario.centroSalud" (ngModelChange)="onChangeCentro($event)" name="selCentro" id="selCentro">
-            <option *ngFor="let centro of centros" [ngValue]="centro">{{centro.nombreCentro}}</option>
+          <select [(ngModel)]="newCentro" (ngModelChange)="onChangeCentro($event)" name="selectCentro">
+            <option [ngValue]="centro" *ngFor="let centro of centros">{{centro.nombreCentro}}</option>
           </select>
         </div>
 
@@ -26,32 +26,35 @@
                  [(ngModel)]="usuario.username" required>
           <div>
             <small *ngIf="!username.valid && username.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>
 
         <div class="control-group">
           <strong>Correo del usuario:</strong>
-          <input type="email" placeholder="Correo electrónico" name="correo" #correo="ngModel"
+          <input type="email" placeholder="Correo electrÃ³nico" name="correo" #correo="ngModel"
                  [(ngModel)]="usuario.correo" required>
           <div>
             <small *ngIf="!correo.valid && correo.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>
 
         <div class="control-group">
-          <strong>Nueva contraseña:</strong>
-          <input class="pwd" [type]="hide ? 'password' : 'text'" placeholder="Password" name="password" #password="ngModel"
-                 [(ngModel)]="newPassword" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_].{7,}">
+          <strong>Nueva contraseÃ±a:</strong>
+          <input class="pwd" [type]="hide ? 'password' : 'text'" placeholder="Password" name="password"
+                 #password="ngModel"
+                 [(ngModel)]="newPassword"
+                 pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_].{7,}">
           <button mat-icon-button matSuffix (click)="hide = !hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           <div>
             <small *ngIf="!password.valid" class="textoColorRojo">
-              La contraseña debe ser de 8 caracteres y contener al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial
+              La contraseÃ±a debe ser de 8 caracteres y contener al menos: 1 mayÃºscula, 1 minÃºscula, 1 nÃºmero, 1 carÃ¡cter
+              especial
             </small>
           </div>
         </div>
@@ -61,7 +64,7 @@
           <input type="email" placeholder="DNI" name="dni" #dni="ngModel" [(ngModel)]="usuario.dni" required>
           <div>
             <small *ngIf="!dni.valid && dni.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>
@@ -71,7 +74,7 @@
                  required>
           <div>
             <small *ngIf="!nombre.valid && nombre.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>
@@ -82,7 +85,7 @@
                  [(ngModel)]="usuario.apellidos" required>
           <div>
             <small *ngIf="!apellidos.valid && apellidos.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>
@@ -93,7 +96,7 @@
                  [(ngModel)]="usuario.fechaNacimiento" required>
           <div>
             <small *ngIf="!fechaNacimiento.valid && fechaNacimiento.touched" class="textoColorRojo">
-              El campo no puede estar vacío
+              El campo no puede estar vacÃ­o
             </small>
           </div>
         </div>

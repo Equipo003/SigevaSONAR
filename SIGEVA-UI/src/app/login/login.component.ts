@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TokenService} from "../Service/token.service";
 import {Router} from "@angular/router";
 import {JsonService} from "../Service/json.service";
-import {Rol} from "../Model/rol";
 import {LoginUsuario} from "../Model/loginUsuario";
 import {Token} from "../Model/token";
 import {enc, SHA256} from "crypto-js";

@@ -1,5 +1,5 @@
 @import url(https://weloveiconfonts.com/api/?family=entypo);
-@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+@import url(https://weloveiconfonts.com/api/?family=fontawesome);
 
 [class*="fontawesome-"]:before {
   font-family: 'FontAwesome', sans-serif;
@@ -11,7 +11,7 @@
 [class*="entypo-"]:before {
   font-family: 'entypo', sans-serif;
   font-size: 20px;
-  color:black;
+  color: black;
 }
 
 p {
@@ -20,20 +20,32 @@ p {
 }
 
 p.entypo-calendar {
- float:right;
+  float: right;
 }
 
 @keyframes shake {
-  0% { transform: skewX(-15deg); }
-  5% { transform: skewX(15deg); }
-  10% { transform: skewX(-15deg); }
-  15% { transform: skewX(15deg); }
-  20% { transform: skewX(0deg); }
-  100% { transform: skewX(0deg); }
+  0% {
+    transform: skewX(-15deg);
+  }
+  5% {
+    transform: skewX(15deg);
+  }
+  10% {
+    transform: skewX(-15deg);
+  }
+  15% {
+    transform: skewX(15deg);
+  }
+  20% {
+    transform: skewX(0deg);
+  }
+  100% {
+    transform: skewX(0deg);
+  }
 }
 
 .mensajeError {
-  color:red;
+  color: red;
   animation: 5s shake 10s infinite alternate;
 }
 

@@ -25,7 +25,9 @@
 
       <div class="alineacion-botones">
         <button class="btn-cancel" [disabled]="!existeConfiguracion" (click)=openDialogEliminar()>Eliminar</button>
-        <button class="btn" [disabled]="!existeConfiguracion" [routerLink]="['/editarUsuario', usuario.idUsuario]">Editar</button>
+        <button class="btn" [disabled]="!existeConfiguracion" [routerLink]="['/editarUsuario', usuario.idUsuario]">
+          Editar
+        </button>
       </div>
     </div>
     <p class="resaltadoNegativo" *ngIf="errorMessage">{{errorMessage}}</p>

@@ -6,12 +6,12 @@ export interface UsuarioConObjetos {
   centroSalud: CentroSalud;
   username: string;
   correo: string;
-  hashPassword:string;
-  dni:string;
-  nombre:string;
-  apellidos:string;
-  fechaNacimiento:string;
-  imagen:string;
+  hashPassword: string;
+  dni: string;
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  imagen: string;
   idUsuario: string | undefined;
 }
 
@@ -20,16 +20,16 @@ export class UsuarioConObjetos {
   centroSalud: CentroSalud;
   username: string;
   correo: string;
-  hashPassword:string;
-  dni:string;
-  nombre:string;
-  apellidos:string;
-  fechaNacimiento:string;
-  imagen:string;
+  hashPassword: string;
+  dni: string;
+  nombre: string;
+  apellidos: string;
+  fechaNacimiento: string;
+  imagen: string;
   idUsuario: string | undefined;
 
-  constructor(rol: Rol, centroSalud: CentroSalud, username: string, correo: string, hashPassword:string, dni:string,
-              nombre:string, apellidos:string, fechaNacimiento:string, imagen:string, idUsuario?: string){
+  constructor(rol: Rol, centroSalud: CentroSalud, username: string, correo: string, hashPassword: string, dni: string,
+              nombre: string, apellidos: string, fechaNacimiento: string, imagen: string, idUsuario?: string) {
 
     this.rol = rol;
     this.centroSalud = centroSalud;
@@ -43,7 +43,6 @@ export class UsuarioConObjetos {
     this.imagen = imagen;
     this.idUsuario = String(idUsuario);
   }
-
 
 
 }
