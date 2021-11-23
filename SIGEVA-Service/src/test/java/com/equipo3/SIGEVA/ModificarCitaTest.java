@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
+import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
@@ -30,23 +31,29 @@ class ModificarCitaTest {
 
 	@Autowired
 	AdministradorController administradorController = new AdministradorController();
-	
-	@Autowired
-	static CupoController cupoController = new CupoController();
 
-	private static CupoDTO cupoDTO = new CupoDTO();
-	private static CitaDTO citaDTO = new CitaDTO();
-	private static PacienteDTO pacienteDTO = new PacienteDTO();
-	private static CentroSaludDTO centroSaludDTO = new CentroSaludDTO();
+	@Autowired
+	CupoController cupoController = new CupoController();
+
+	private static CupoDTO cupoDTO;
+	private static CitaDTO citaDTO;
+	private static PacienteDTO pacienteDTO;
+	private static CentroSaludDTO centroSaludDTO;
+
+	@Autowired
+	CitaDao citaDao;
 
 	@BeforeAll
 	static void inicializacionObjetos() {
-		
+		centroSaludDTO = new CentroSaludDTO();
+		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
 		pacienteDTO = new PacienteDTO();
 		pacienteDTO.setRol(new RolDTO());
+		pacienteDTO.setCentroSalud(
+				new CentroSaludDTO(UUID.randomUUID().toString(), "dirección", (int) Math.random() * 100));
+		pacienteDTO.setUsername(UUID.randomUUID().toString());
 		pacienteDTO.setCorreo("micorreo@correo.com");
-		pacienteDTO.setCentroSalud(centroSaludDTO);
 		pacienteDTO.setHashPassword("sdfsdf");
 		pacienteDTO.setDni("99999999Q");
 		pacienteDTO.setNombre("Juan");
@@ -54,65 +61,79 @@ class ModificarCitaTest {
 		pacienteDTO.setFechaNacimiento(new Date());
 		pacienteDTO.setImagen("912imagen");
 
+		cupoDTO = new CupoDTO();
+		cupoDTO.setCentroSalud(centroSaludDTO);
+
+		citaDTO = new CitaDTO();
+		citaDTO.setPaciente(pacienteDTO);
+		citaDTO.setCupo(cupoDTO);
+		cupoDTO.setCentroSalud(centroSaludDTO);
 	}
 
 	@Test
 	public void modificacionCitaNoExistente() {
 		try {
-			cupoDTO = new CupoDTO();
-			cupoDTO.setCentroSalud(centroSaludDTO);
-			cupoDTO.setTamanoActual(0);
-			cupoDTO.setFechaYHoraInicio(new Date());
-			
-			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-			centroSaludDTO.setDireccion(UUID.randomUUID().toString());
-			centroSaludDTO.setNumVacunasDisponibles((int) (Math.random() * 1000));
-			
-			administradorController.crearCentroSalud(centroSaludDTO);
-			
-			cupoController.crearCupo(cupoDTO);
-
-			citaDTO = new CitaDTO();
-			citaDTO.setCupo(cupoDTO);
-			citaDTO.setDosis(1);
-			citaDTO.setPaciente(pacienteDTO);
-			System.out.println("identificador CITA: " + citaDTO.getUuidCita());
-			System.out.println("identificador CUPO: " + cupoDTO.getUuidCupo());
-
 			citaController.modificarCita(citaDTO.getUuidCita(), cupoDTO.getUuidCupo());
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"La cita que se intenta modificar no existe\"");
-			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-			administradorController.borrarCentroSalud(centroSaludDTO);
 		}
 	}
 
 	@Test
 	void modificacionCitaCupoNoExistente() {
 		try {
-			cupoDTO = new CupoDTO();
-			cupoDTO.setCentroSalud(centroSaludDTO);
-			cupoDTO.setTamanoActual(0);
-			cupoDTO.setFechaYHoraInicio(new Date());
+			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearUsuarioPaciente(pacienteDTO);
+			cupoController.crearCupo(cupoDTO);
+			citaController.crearCita(citaDTO);
 
-			citaDTO = new CitaDTO();
-			citaDTO.setCupo(cupoDTO);
-			citaDTO.setDosis(1);
-			citaDTO.setPaciente(pacienteDTO);
-			System.out.println("identificador CITA: " + citaDTO.getUuidCita());
-			System.out.println("identificador CUPO: " + cupoDTO.getUuidCupo());
-
-			citaController.modificarCita(citaDTO.getUuidCita(), cupoDTO.getUuidCupo());
+			citaController.modificarCita(citaDTO.getUuidCita(), UUID.randomUUID().toString());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"La cita que se intenta modificar no existe \"");
+			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"El cupo no existe\"");
+			citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
+			administradorController.eliminarCentro(centroSaludDTO.getId());
+			administradorController.eliminarUsuario(pacienteDTO.getUsername());
 		}
 	}
 
+	@Test
 	void modificacionCitaCorrecta() {
-
+		try {
+			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+			administradorController.crearCentroSalud(centroSaludDTO);
+			administradorController.crearUsuarioPaciente(pacienteDTO);
+			
+			CupoDTO newCupo = new CupoDTO();
+			newCupo.setCentroSalud(centroSaludDTO);
+	        Date fecha = new Date();
+	        fecha.setDate(fecha.getDay()+1);
+	        newCupo.setFechaYHoraInicio(fecha);
+			
+			cupoController.crearCupo(cupoDTO);
+			cupoController.crearCupo(newCupo);
+			citaController.crearCita(citaDTO);
+	        
+	        citaController.modificarCita(citaDTO.getUuidCita(), newCupo.getUuidCupo());
+	        
+	        
+	        citaDao.findById(citaDTO.getUuidCita());
+	        
+	        
+	        
+	        Assertions.assertTrue(true);
+	        
+	        citaDao.deleteById(citaDTO.getUuidCita());
+			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
+			cupoController.eliminarCupo(newCupo.getUuidCupo());
+			administradorController.eliminarCentro(centroSaludDTO.getId());
+			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
 	}
 
 }

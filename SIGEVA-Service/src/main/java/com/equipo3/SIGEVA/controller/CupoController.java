@@ -315,9 +315,9 @@ public class CupoController {
 
 	public void crearCupo(CupoDTO cupo) {
 		try {
-			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupo));
+			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupo));
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("error crear cupo: "+e.getMessage());
 		}
 	}
 }
