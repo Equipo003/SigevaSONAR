@@ -3,6 +3,7 @@ package com.equipo3.SIGEVA;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +24,7 @@ import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
 import com.equipo3.SIGEVA.exception.CitaException;
+import com.equipo3.SIGEVA.model.Cita;
 
 @SpringBootTest
 class ModificarCitaTest {
@@ -119,11 +121,13 @@ class ModificarCitaTest {
 	        citaController.modificarCita(citaDTO.getUuidCita(), newCupo.getUuidCupo());
 	        
 	        
-	        citaDao.findById(citaDTO.getUuidCita());
+	        Optional<Cita> citaEncontrado = citaDao.findById(citaDTO.getUuidCita());
+	        Cita citaBbdd = null;
+	        if(citaEncontrado.isPresent()) {
+	        	citaBbdd = citaEncontrado.get();
+	        }
 	        
-	        
-	        
-	        Assertions.assertTrue(true);
+	        Assertions.assertEquals(citaBbdd.getUuidCupo(), newCupo.getUuidCupo());
 	        
 	        citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
