@@ -562,6 +562,10 @@ public class CitaController {
 	public void vacunarPaciente(@RequestBody CitaDTO cita) {
 		try {
 			cita.getPaciente().setNumDosisAplicadas(cita.getPaciente().getNumDosisAplicadas() + 1);
+
+			if(cita.getPaciente().getNumDosisAplicadas() > 2)
+				throw new VacunaException("El paciente no puede tener más de dos dosis aplicadas");
+
 			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
 			centroSalud.decrementarNumVacunasDisponibles();
 			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {

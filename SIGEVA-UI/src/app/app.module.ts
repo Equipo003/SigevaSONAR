@@ -38,6 +38,7 @@ import {CitaEditarComponent} from './cita-editar/cita-editar.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MensajeConfiguracionComponent} from './mensaje-configuracion/mensaje-configuracion.component';
+import { CitaPedirComponent } from './cita-pedir/cita-pedir.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import {MensajeConfiguracionComponent} from './mensaje-configuracion/mensaje-con
     ContenedorCitasComponent,
     CitaEditarComponent,
     MensajeConfiguracionComponent,
+    CitaPedirComponent,
   ],
   imports: [
     BrowserModule,
