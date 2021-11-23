@@ -696,6 +696,8 @@ public class AdministradorController {
                 } else {
                     citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
                 }
+            }else if(usuariodto.getRol().getNombre().equals("Administrador")) {
+            	throw new UsuarioInvalidoException("No puedes eliminar el usuario porque es administrador.");
             }
             administradorDao.deleteById(idUsuario);
         } catch (Exception e) {

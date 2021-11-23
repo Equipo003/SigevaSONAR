@@ -480,7 +480,12 @@ public class CitaController {
 	}
 
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) { // Terminado
-		eliminarCitas(wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario())));
+		try{
+			eliminarCitas(wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario())));
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+		
 	}
 
 	public void eliminarTodasLasCitasDelCupo(String uuidCupo) { // Terminado
