@@ -8,7 +8,7 @@ import {JsonService} from "../Service/json.service";
 })
 export class MensajeConfiguracionComponent implements OnInit {
 
-  public existeConfiguracion = false;
+  public existeConfiguracion = true;
 
   constructor(private json: JsonService) {
   }

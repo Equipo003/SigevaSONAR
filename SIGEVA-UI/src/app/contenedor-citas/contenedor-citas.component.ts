@@ -26,7 +26,7 @@ export class ContenedorCitasComponent implements OnInit {
   getCitas() {
     let params = new HttpParams({
       fromObject: {
-        idPaciente: "74467d37-9b85-49fc-b932-06125f80488e",
+        idPaciente: String(this.tokenService.getIdUsuario())
       }
     });
     this.json.getJsonPJ('/cita/obtenerCitasFuturasDelPaciente', params).subscribe(
