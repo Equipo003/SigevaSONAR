@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
@@ -21,7 +22,9 @@ class PrepararCuposTest {
 	public static CentroSaludDTO centroSaludDTO;
 
 	@Autowired
-	private AdministradorController administradorController;
+	private UsuarioController usuarioController;
+	@Autowired
+	private CentroController centroController;
 
 	@Autowired
 	private CupoController cupoController;
@@ -34,7 +37,7 @@ class PrepararCuposTest {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		centroSaludDTO.setNumVacunasDisponibles(50);
-		administradorController.crearCentroSalud(centroSaludDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
 
 		List<Cupo> listaInicial = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
 		assertEquals(0, listaInicial.size());
@@ -46,7 +49,7 @@ class PrepararCuposTest {
 
 		cupoController.calcularCupos(centroSaludDTO);
 		cupoController.borrarCuposDelCentro(centroSaludDTO);
-		administradorController.borrarCentroSalud(centroSaludDTO);
+		centroController.borrarCentroSalud(centroSaludDTO);
 	}
 
 }

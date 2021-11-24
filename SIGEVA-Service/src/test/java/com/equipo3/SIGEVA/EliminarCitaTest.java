@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
@@ -37,7 +39,10 @@ class EliminarCitaTest {
 	public static CitaDTO cita2DTO;
 
 	@Autowired
-	private AdministradorController administradorController;
+	private UsuarioController usuarioController;
+
+	@Autowired
+	private CentroController centroController;
 
 	@Autowired
 	private CupoController cupoController;
@@ -47,6 +52,9 @@ class EliminarCitaTest {
 
 	@Autowired
 	private CitaDao citaDao;
+
+	@Autowired
+	private Utilidades utilidades;
 
 	@BeforeAll
 	static void setUpCita() {
@@ -75,15 +83,15 @@ class EliminarCitaTest {
 	@BeforeEach
 	void antes() {
 		centroSaludDTO.setNumVacunasDisponibles(50);
-		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+		pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 		pacienteDTO.setNumDosisAplicadas(0);
 
 		Date manana = new Date();
 		manana.setDate(manana.getDate() + 1);
 		cupoDTO.setFechaYHoraInicio(manana);
 
-		administradorController.crearCentroSalud(centroSaludDTO);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		cupoController.crearCupo(cupoDTO);
 		citaDao.save(WrapperDTOtoModel.citaDTOToCita(cita1DTO));
 		citaDao.save(WrapperDTOtoModel.citaDTOToCita(cita2DTO));
@@ -92,9 +100,9 @@ class EliminarCitaTest {
 	@AfterEach
 	void despues() {
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-		administradorController.eliminarUsuario(pacienteDTO.getUsername());
+		utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-		administradorController.eliminarCentro(centroSaludDTO.getId());
+		utilidades.eliminarCentro(centroSaludDTO.getId());
 	}
 
 	@Test

@@ -106,7 +106,7 @@ export class ListadoPacientesComponent implements OnInit {
         'idUsuario': idUsuario,
       }
     });
-    this.json.getJsonP("user/getCentroSanitario", params).subscribe(
+    this.json.getJsonP("centro/getCentroSanitario", params).subscribe(
       result => {
         this.centroSaludUsuario = JSON.parse(result);
       }, error => {

@@ -1,11 +1,10 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,18 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
-import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
-import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
-import com.equipo3.SIGEVA.exception.CitaException;
 import com.equipo3.SIGEVA.model.Cita;
 
 @SpringBootTest
@@ -33,7 +29,10 @@ class ModificarCitaTest {
 	CitaController citaController = new CitaController();
 
 	@Autowired
-	AdministradorController administradorController = new AdministradorController();
+	UsuarioController usuarioController = new UsuarioController();
+
+	@Autowired
+	CentroController centroController;
 
 	@Autowired
 	CupoController cupoController = new CupoController();
@@ -90,8 +89,8 @@ class ModificarCitaTest {
 	void modificacionCitaCupoNoExistente() {
 		try {
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-			administradorController.crearCentroSalud(centroSaludDTO);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
+			centroController.crearCentroSalud(centroSaludDTO);
+			usuarioController.crearUsuarioPaciente(pacienteDTO);
 			cupoController.crearCupo(cupoDTO);
 			citaController.crearCita(citaDTO);
 
@@ -109,8 +108,8 @@ class ModificarCitaTest {
 	void modificacionCitaCorrecta() {
 		try {
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-			administradorController.crearCentroSalud(centroSaludDTO);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
+			centroController.crearCentroSalud(centroSaludDTO);
+			usuarioController.crearUsuarioPaciente(pacienteDTO);
 			
 			CupoDTO newCupo = new CupoDTO();
 			newCupo.setCentroSalud(centroSaludDTO);

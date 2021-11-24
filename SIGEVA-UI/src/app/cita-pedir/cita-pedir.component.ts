@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {CupoCitas} from "../Model/cupo-citas";
 import {CentroSalud} from "../Model/centro-salud";
@@ -11,7 +11,7 @@ import {Rol} from "../Model/rol";
   templateUrl: './cita-pedir.component.html',
   styleUrls: ['./cita-pedir.component.css']
 })
-export class CitaPedirComponent implements OnInit {
+export class CitaPedirComponent {
 
   @Input() cita: CitaConObjetos;
   constructor() {
@@ -21,8 +21,4 @@ export class CitaPedirComponent implements OnInit {
         new CentroSalud("", "", 0, new Vacuna("", 0, 0), ""),
         "", "", "", "", "", "", "", "", 0, ""), "");
   }
-
-  ngOnInit(): void {
-  }
-
 }

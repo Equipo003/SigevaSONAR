@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
@@ -26,7 +27,10 @@ public class EditarUsuarioTest {
     public static PacienteDTO pacienteDTO;
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
+
+    @Autowired
+    private CentroController centroController;
 
     @Autowired
     private Utilidades utilidades;
@@ -74,17 +78,17 @@ public class EditarUsuarioTest {
             pacienteDTO.setNumDosisAplicadas(0);
             cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearCentroSalud(newCentroSaludDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            centroController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             System.out.println(cupoDao.toString());
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(pacienteDTO);
+            usuarioController.editarUsuario(pacienteDTO);
 
-            Assertions.assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
+            Assertions.assertEquals(usuarioController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
@@ -104,14 +108,14 @@ public class EditarUsuarioTest {
             pacienteDTO.setNumDosisAplicadas(1);
             cupoDTO.setFechaYHoraInicio(new Date(121, 1, 23));
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearCentroSalud(newCentroSaludDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            centroController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(pacienteDTO);
+            usuarioController.editarUsuario(pacienteDTO);
         }
         catch (Exception e) {
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
@@ -34,13 +36,19 @@ class AsignarCitaTest {
 	public static PacienteDTO pacienteDTO;
 
 	@Autowired
-	private AdministradorController administradorController;
+	private UsuarioController usuarioController;
+
+	@Autowired
+	private CentroController centroController;
 
 	@Autowired
 	private CupoController cupoController;
 
 	@Autowired
 	private CitaController citaController;
+
+	@Autowired
+	private Utilidades utilidades;
 
 	@SuppressWarnings("deprecation")
 	@BeforeAll
@@ -74,8 +82,8 @@ class AsignarCitaTest {
 
 	@BeforeEach
 	void antes() {
-		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-		administradorController.crearCentroSalud(centroSaludDTO);
+		pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+		centroController.crearCentroSalud(centroSaludDTO);
 		cupoController.crearCupo(cupo1DTO);
 		cupoController.crearCupo(cupo2DTO);
 		cupoController.crearCupo(cupoAntiguoDTO);
@@ -84,17 +92,17 @@ class AsignarCitaTest {
 	@AfterEach
 	void despues() {
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-		administradorController.eliminarUsuario(pacienteDTO.getUsername());
+		utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		cupoController.eliminarCupo(cupo1DTO.getUuidCupo());
 		cupoController.eliminarCupo(cupo2DTO.getUuidCupo());
 		cupoController.eliminarCupo(cupoAntiguoDTO.getUuidCupo());
-		administradorController.eliminarCentro(centroSaludDTO.getId());
+		utilidades.eliminarCentro(centroSaludDTO.getId());
 	}
 
 	@Test
 	void asignarCitasPacienteCon0Dosis0CitasFuturas() {
 		pacienteDTO.setNumDosisAplicadas(0);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		List<CitaDTO> listaInicial = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
@@ -109,7 +117,7 @@ class AsignarCitaTest {
 	@Test
 	void asignarCitasPacienteCon0Dosis1CitaFutura() {
 		pacienteDTO.setNumDosisAplicadas(0);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		citaController.confirmarCita(cupo1DTO, pacienteDTO, 1);
@@ -127,7 +135,7 @@ class AsignarCitaTest {
 	@Test
 	void asignarCitasPacienteCon0Dosis2CitasFuturas() {
 		pacienteDTO.setNumDosisAplicadas(0);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		citaController.confirmarCita(cupo1DTO, pacienteDTO, 1);
@@ -149,7 +157,7 @@ class AsignarCitaTest {
 	@Test
 	void asignarCitasPacienteCon1Dosis1CitaAntigua0CitasFuturas() {
 		pacienteDTO.setNumDosisAplicadas(1);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		citaController.confirmarCita(cupoAntiguoDTO, pacienteDTO, 1);
@@ -165,7 +173,7 @@ class AsignarCitaTest {
 	@Test
 	void asignarCitasPacienteCon1Dosis1CitaAntigua1CitaFutura() {
 		pacienteDTO.setNumDosisAplicadas(1);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		citaController.confirmarCita(cupoAntiguoDTO, pacienteDTO, 1);
@@ -190,7 +198,7 @@ class AsignarCitaTest {
 	@Test
 	void asignarCitasPacienteCon2Dosis() {
 		pacienteDTO.setNumDosisAplicadas(2);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
 		citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
 
 		List<CitaDTO> listaInicial = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());

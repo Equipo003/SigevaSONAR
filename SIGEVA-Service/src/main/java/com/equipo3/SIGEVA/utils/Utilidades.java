@@ -4,21 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.dao.RolDao;
-import com.equipo3.SIGEVA.dao.VacunaDao;
+import com.equipo3.SIGEVA.dao.*;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Vacuna;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.Usuario;
 
@@ -32,18 +26,20 @@ public class Utilidades {
     private CentroSaludDao centroSaludDao;
     @Autowired
     private VacunaDao vacunaDao;
-	
-	 @Autowired
-	 private UsuarioDao administradorDao;
-	 @Autowired
-	 private WrapperModelToDTO wrapperModelToDTO;
-	
-	   /**
+    @Autowired
+    private ConfiguracionCuposDao configuracionCuposDao;
+
+    @Autowired
+    private UsuarioDao administradorDao;
+    @Autowired
+    private WrapperModelToDTO wrapperModelToDTO;
+
+    /**
      * Recurso web para la obtención de un usuario a partir de su identificador.
      *
      * @param idUsuario Identificador de usuario que se quiere obtener de la bbdd.s
      * @return UsuarioDTO Usuario obtenido de la bbdd a partir de su identificador.
-	 * @throws IdentificadorException 
+     * @throws IdentificadorException
      */
     @GetMapping("/getUsuarioById")
     public UsuarioDTO getUsuarioById(@RequestParam String idUsuario) throws IdentificadorException {
@@ -54,7 +50,7 @@ public class Utilidades {
             }
             return null;
         } catch (Exception e) {
-        	throw new IdentificadorException("Identificador Usuario " + idUsuario + " no encontrado");
+            throw new IdentificadorException("Identificador Usuario " + idUsuario + " no encontrado");
         }
     }
 
@@ -185,6 +181,19 @@ public class Utilidades {
     }
 
     /**
+     * Método para la creación de un rol.
+     *
+     * @param rolDTO Rol el cual se quiere crear en la bbdd.
+     */
+    public void crearRol(RolDTO rolDTO) {
+        try {
+            rolDao.save(WrapperDTOtoModel.rolDTOToRol(rolDTO));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    /**
      * Metodo para la eliminación de un rol.
      *
      * @param idRol Identificador del rol que se quiere eliminar.
@@ -194,6 +203,22 @@ public class Utilidades {
             rolDao.deleteById(idRol);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    /**
+     * Método para la eliminación de la configuración de cupos que tiene activada el
+     * sistema
+     */
+    public void eliminarConfiguracionCupos() {
+        try {
+            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+            configuracionCuposDao.delete(
+                    WrapperDTOtoModel.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTOList.get(0)));
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

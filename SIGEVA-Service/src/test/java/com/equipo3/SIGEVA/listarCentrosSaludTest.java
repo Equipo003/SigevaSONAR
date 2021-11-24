@@ -1,6 +1,6 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class listarCentrosSaludTest {
 
     @Autowired
-    private AdministradorController administradorController;
+    private CentroController centroController;
 
     @Test
     public void getTodosCentros(){
-        assertNotNull(administradorController.listarCentros());
+        assertNotNull(centroController.listarCentros());
     }
 }

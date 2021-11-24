@@ -34,13 +34,13 @@ export class IndicarDosisVacunasComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }
 
   listarCentros() {
-    this.json.getJson('user/getCentros').subscribe(
+    this.json.getJson('centro/getCentros').subscribe(
       (res: any) => {
         this.cs = JSON.parse(res);
         this.centroSeleccionado = this.cs[0].nombreCentro;
@@ -65,7 +65,7 @@ export class IndicarDosisVacunasComponent implements OnInit {
   putBackData() {
     let self = this;
     this.centroSelect();
-    this.json.putJsonVacunas("user/modificarDosisDisponibles", this.idCentro, this.vacunasAanadir).subscribe(
+    this.json.putJsonVacunas("centro/modificarDosisDisponibles", this.idCentro, this.vacunasAanadir).subscribe(
       result => {
         this.nVacunasActual = this.nVacunasActual + this.vacunasAanadir;
         self.vacunasAanadir = 0;

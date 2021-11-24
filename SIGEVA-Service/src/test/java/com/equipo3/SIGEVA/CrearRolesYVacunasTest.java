@@ -1,7 +1,6 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dto.AdministradorDTO;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.dto.VacunaDTO;
 import com.equipo3.SIGEVA.utils.Utilidades;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CrearRolesYVacunasTest {
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
 
     @Autowired
     private Utilidades utilidades;
@@ -64,9 +63,9 @@ public class CrearRolesYVacunasTest {
         rolDTOPaciente.setNombre("Paciente");
         rolDTOSanitario.setNombre("Sanitario");
 
-        administradorController.crearRol(rolDTOAdministrador);
-        administradorController.crearRol(rolDTOPaciente);
-        administradorController.crearRol(rolDTOSanitario);
+        utilidades.crearRol(rolDTOAdministrador);
+        utilidades.crearRol(rolDTOPaciente);
+        utilidades.crearRol(rolDTOSanitario);
 
         utilidades.eliminarRol(rolDTOAdministrador.getId());
         utilidades.eliminarRol(rolDTOPaciente.getId());

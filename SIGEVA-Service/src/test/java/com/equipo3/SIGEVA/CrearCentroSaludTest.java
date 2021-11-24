@@ -2,8 +2,7 @@ package com.equipo3.SIGEVA;
 
 import java.util.UUID;
 
-import com.equipo3.SIGEVA.dto.AdministradorDTO;
-import com.equipo3.SIGEVA.model.Vacuna;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,11 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dao.CentroSaludDao;
-import com.equipo3.SIGEVA.exception.CentroSinStock;
-import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
-import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CrearCentroSaludTest {
 
 	@Autowired
-	private AdministradorController administradorController;
+	private UsuarioController usuarioController;
+
+	@Autowired
+	private CentroController centroController;
 
 	@Autowired
 	private Utilidades utilidades;
@@ -42,8 +40,8 @@ class CrearCentroSaludTest {
     @Test
 	void testCrearCentroSaludBien() {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
-		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
+		centroController.crearCentroSalud(centroSaludDTO);
+		assertEquals(centroController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
 		utilidades.eliminarCentro(centroSaludDTO.getId());
 	}
     
@@ -52,8 +50,8 @@ class CrearCentroSaludTest {
        	try {
 			String uuid = UUID.randomUUID().toString();
 			centroSaludDTO.setNombreCentro(uuid);
-       		administradorController.crearCentroSalud(centroSaludDTO);
-			administradorController.crearCentroSalud(centroSaludDTO);
+			centroController.crearCentroSalud(centroSaludDTO);
+			centroController.crearCentroSalud(centroSaludDTO);
 		   } catch (Exception e) {
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 				Assertions.assertNotNull(e);
