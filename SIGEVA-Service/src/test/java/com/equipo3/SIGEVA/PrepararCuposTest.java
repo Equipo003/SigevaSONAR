@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +31,9 @@ class PrepararCuposTest {
 	private CupoController cupoController;
 
 	@Autowired
+	private Utilidades utilidades;
+
+	@Autowired
 	private CupoDao cupoDao;
 
 	@Test
@@ -49,7 +53,7 @@ class PrepararCuposTest {
 
 		cupoController.calcularCupos(centroSaludDTO);
 		cupoController.borrarCuposDelCentro(centroSaludDTO);
-		centroController.borrarCentroSalud(centroSaludDTO);
+		utilidades.eliminarCentro(centroSaludDTO.getId());
 	}
 
 }

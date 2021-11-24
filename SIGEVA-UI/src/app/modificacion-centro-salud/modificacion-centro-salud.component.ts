@@ -78,7 +78,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
       result => {
         this.message = "Centro modificado correctamente";
         setTimeout(function () {
-          self.router.navigate(['centrosSalud']);
+          self.router.navigate(['centrosSistema']);
         }, 3000);
         this.errorMessage = "";
       }, error => {
