@@ -35,13 +35,13 @@ export class UsuarioComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.usuarioEliminado = true;
         this.json.deleteJson("user/deleteUsuario", String(this.usuario.idUsuario)).subscribe(
           res => {
             this.message = "Usuario eliminado correctamente";
             this.errorMessage = "";
             this.usuarioEliminado = true;
           }, error => {
+            console.log(error);
             this.errorMessage = error.error.message;
             setTimeout(function () {
               self.errorMessage = ""
