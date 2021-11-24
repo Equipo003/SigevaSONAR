@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -46,13 +48,13 @@ public class listarUsuariosTest {
 
     @Test void getPacientes(){
     	PacienteDTO paciente = new PacienteDTO();
-    	paciente.setNombre("Test getPacientes");
+    	paciente.setNombre(UUID.randomUUID().toString());
     	paciente.setUsername("Test getPacientes");
     	paciente.setRol(utilidades.getRolByNombre("Paciente"));
     	
     	CentroSaludDTO csDto = new CentroSaludDTO();
 		csDto.setDireccion("test getPacientes direccion");
-		csDto.setNombreCentro("CentroTest getPaciente");
+		csDto.setNombreCentro(UUID.randomUUID().toString());
 		csDto.setNumVacunasDisponibles(80);
 
         centroController.crearCentroSalud(csDto);
@@ -64,6 +66,6 @@ public class listarUsuariosTest {
             assertNotNull(pacienteDTO);
             utilidades.eliminarUsuario(paciente.getUsername());
         }
-        centroController.borrarCentroSalud(csDto);
+        utilidades.eliminarCentro(csDto.getId());
     }
 }
