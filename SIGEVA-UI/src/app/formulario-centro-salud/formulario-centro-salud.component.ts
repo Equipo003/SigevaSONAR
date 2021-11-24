@@ -41,6 +41,7 @@ export class FormularioCentroSaludComponent implements OnInit {
         this.errorMessage = "";
         this.generandoCupos = "";
         this.message = "Centro creado correctamente";
+        setTimeout('document.location.reload()', 2000);
         this.generarCupos(result);
       }, err => {
         this.generandoCupos = "";

@@ -40,6 +40,10 @@ export class SolicitarCitaComponent {
       result => {
         this.citas = JSON.parse(JSON.stringify(result));
         this.solicitada = true;
+        this.mensajeError = "";
+        if (this.citas.length == 1 && this.citas[0].dosis == 1){
+          this.mensajeError = "No se puede asignar la segunda cita por superar el límite de fecha. Contacte con el administrador.";
+        }
       }, error => {
         this.mensajeError = error.error.message;
       });

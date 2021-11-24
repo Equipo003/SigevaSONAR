@@ -67,6 +67,8 @@
   top: 20px;
   margin: 0 auto;
 
+  cursor: pointer;
+
 }
 
 .campo-pacientes {
@@ -129,12 +131,15 @@ p {
   background-color: darkseagreen;
   align-items: center;
   justify-items: center;
+
 }
 
 .date-button {
   background-color: rgb(43, 89, 40);
   top: 0px;
   position: relative;
+
+  cursor: pointer;
 }
 
 .mensaje-guia {
