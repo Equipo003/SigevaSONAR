@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import Auxiliar.Encriptador;
+import com.equipo3.SIGEVA.utils.Encriptador;
 
 class encriptarTest {
 

@@ -16,7 +16,7 @@ import com.equipo3.SIGEVA.model.Rol;
 import com.equipo3.SIGEVA.model.Sanitario;
 import com.equipo3.SIGEVA.model.Vacuna;
 
-import Auxiliar.Encriptador;
+import com.equipo3.SIGEVA.utils.Encriptador;
 
 @Component
 public class WrapperDTOtoModel {
