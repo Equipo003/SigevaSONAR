@@ -66,7 +66,7 @@ public class CupoController {
 	WrapperDTOtoModel wrapperDTOtoModel;
 
 	@SuppressWarnings("deprecation")
-	private List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
+	public List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
 		// No requerirá tiempo de ejecución.
 
 		List<CupoDTO> momentos = new ArrayList<>();
