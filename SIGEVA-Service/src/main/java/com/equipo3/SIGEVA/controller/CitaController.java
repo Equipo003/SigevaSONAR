@@ -20,6 +20,7 @@ import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
+import com.equipo3.SIGEVA.dto.ConfiguracionCuposDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
@@ -105,7 +106,6 @@ public class CitaController {
 
 			citasFuturasDTO = obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 
-
 			int numCitasFuturasAsignadas = citasFuturasDTO.size();
 
 			if (numCitasFuturasAsignadas == 1) { // CASO 2.1. Segunda cita ya asignada.
@@ -137,8 +137,8 @@ public class CitaController {
 				}
 
 				// CASO 2.2.3.
-				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						fechaMinimaSegundoPinchazo));
+				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController
+						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaMinimaSegundoPinchazo));
 				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
 
 				// CASO 2.2.4.
@@ -184,8 +184,8 @@ public class CitaController {
 				}
 
 				// CASO 3.2.3.
-				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						fechaSegundaDosis));
+				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(
+						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaDosis));
 				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
 
 				// CASO 3.2.4.
@@ -207,8 +207,8 @@ public class CitaController {
 				// 3.3.2. Automático
 
 				// 3.3.3.
-				CupoDTO primerCupoLibreDTO = wrapperModelToDTO.cupoToCupoDTO(cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(),
-						new Date()));
+				CupoDTO primerCupoLibreDTO = wrapperModelToDTO.cupoToCupoDTO(
+						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), new Date()));
 				// 3.3.3.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
 
 				// 3.3.3.2.
@@ -226,8 +226,8 @@ public class CitaController {
 				}
 
 				// 3.3.5.
-				CupoDTO cupoLibreDTOSegundaCita = wrapperModelToDTO.cupoToCupoDTO(cupoController
-						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita));
+				CupoDTO cupoLibreDTOSegundaCita = wrapperModelToDTO.cupoToCupoDTO(
+						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita));
 				// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
 
 				// 3.3.5.2.
@@ -296,7 +296,7 @@ public class CitaController {
 				System.out.println("primera dosis");
 				Date hoy = new Date();
 				if (Condicionamientos.buscarAPartirDeMañana())
-						hoy.setDate(hoy.getDate() + 1);
+					hoy.setDate(hoy.getDate() + 1);
 				lista.add(hoy); // Desde hoy
 
 				// Si tiene segunda cita, es hasta el día anterior a la segunda;
@@ -320,7 +320,7 @@ public class CitaController {
 
 				CitaDTO citaPrimerPinchazo = null;
 
-				if (listaCitasFuturas.size() == 2){
+				if (listaCitasFuturas.size() == 2) {
 					citaPrimerPinchazo = listaCitasFuturas.get(0);
 				} else {
 					citaPrimerPinchazo = buscarUltimaCitaPinchazo(citaDTO.getPaciente(), PRIMERA_DOSIS);
@@ -480,12 +480,13 @@ public class CitaController {
 	}
 
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) { // Terminado
-		try{
-			eliminarCitas(wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario())));
-		}catch(Exception e) {
+		try {
+			eliminarCitas(
+					wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario())));
+		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
-		
+
 	}
 
 	public void eliminarTodasLasCitasDelCupo(String uuidCupo) { // Terminado
@@ -558,7 +559,7 @@ public class CitaController {
 
 		} catch (CitaException a) {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, a.getMessage());
-		} catch(CupoException b) {
+		} catch (CupoException b) {
 			throw new ResponseStatusException(HttpStatus.NO_CONTENT, b.getMessage());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -570,7 +571,7 @@ public class CitaController {
 		try {
 			cita.getPaciente().setNumDosisAplicadas(cita.getPaciente().getNumDosisAplicadas() + 1);
 
-			if(cita.getPaciente().getNumDosisAplicadas() > 2)
+			if (cita.getPaciente().getNumDosisAplicadas() > 2)
 				throw new VacunaException("El paciente no puede tener más de dos dosis aplicadas");
 
 			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
@@ -586,13 +587,13 @@ public class CitaController {
 		}
 
 	}
-	
+
 	public void crearCita(CitaDTO cita) {
 		try {
 			citaDao.save(wrapperDTOtoModel.citaDTOToCita(cita));
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 }

@@ -53,6 +53,11 @@ public class CitaDTO implements Comparable<CitaDTO> {
 	}
 
 	@Override
+	public String toString() {
+		return "CitaDTO [uuidCita=" + uuidCita + ", cupo=" + cupo + ", paciente=" + paciente + ", dosis=" + dosis + "]";
+	}
+
+	@Override
 	public int compareTo(CitaDTO o) {
 		return this.cupo.compareTo(o.getCupo());
 	}

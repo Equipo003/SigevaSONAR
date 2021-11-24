@@ -1,5 +1,6 @@
 package com.equipo3.SIGEVA;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,6 +24,7 @@ import com.equipo3.SIGEVA.dto.CitaDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
+import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.Cita;
 
 @SpringBootTest
@@ -113,11 +115,11 @@ class EliminarCitaTest {
 
 		try {
 			citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
-			List<CitaDTO> listaFuturas2 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
-			assertTrue(listaFuturas2.size() == 0);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (UsuarioInvalidoException e) {
+			// No saltará.
 		}
+		List<CitaDTO> listaFuturas2 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
+		assertEquals(0, listaFuturas2.size());
 	}
 
 	@Test
@@ -128,7 +130,7 @@ class EliminarCitaTest {
 		citaController.eliminarTodasLasCitasDelCupo(cupoDTO.getUuidCupo());
 
 		List<Cita> listaFinal = citaDao.findAllByUuidCupo(cupoDTO.getUuidCupo());
-		assertTrue(listaFinal.size() == 0);
+		assertEquals(0, listaFinal.size());
 	}
 
 	@Test
@@ -136,7 +138,7 @@ class EliminarCitaTest {
 		try {
 			citaController.eliminarCita("No existo.");
 		} catch (Exception e) {
-			assertNotNull(e);
+			assertNotNull(e); // Esperado.
 		}
 	}
 
