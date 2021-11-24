@@ -1,9 +1,9 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
-import com.equipo3.SIGEVA.dto.AdministradorDTO;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.dto.VacunaDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CrearRolesYVacunasTest {
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
+
+    @Autowired
+    private Utilidades utilidades;
 
     static VacunaDTO vacunaDTO;
     static RolDTO rolDTOAdministrador;
@@ -42,17 +45,17 @@ public class CrearRolesYVacunasTest {
 
     @Test
     public void addVacuna(){
-        administradorController.addVacuna(vacunaDTO);
-        administradorController.getVacunaById(vacunaDTO.getId());
-        assertEquals(vacunaDTO.toString(), administradorController.getVacunaById(vacunaDTO.getId()).toString());
-        administradorController.eliminarVacuna(vacunaDTO.getId());
+        utilidades.addVacuna(vacunaDTO);
+        utilidades.getVacunaById(vacunaDTO.getId());
+        assertEquals(vacunaDTO.toString(), utilidades.getVacunaById(vacunaDTO.getId()).toString());
+        utilidades.eliminarVacuna(vacunaDTO.getId());
     }
 
     @Test void getVacunaById(){
         vacunaDTO.setId(UUID.randomUUID().toString());
-        administradorController.addVacuna(vacunaDTO);
-        assertNotNull(administradorController.getVacunaById(vacunaDTO.getId()));
-        administradorController.eliminarVacuna(vacunaDTO.getId());
+        utilidades.addVacuna(vacunaDTO);
+        assertNotNull(utilidades.getVacunaById(vacunaDTO.getId()));
+        utilidades.eliminarVacuna(vacunaDTO.getId());
     }
 
     @Test void addRol(){
@@ -60,12 +63,12 @@ public class CrearRolesYVacunasTest {
         rolDTOPaciente.setNombre("Paciente");
         rolDTOSanitario.setNombre("Sanitario");
 
-        administradorController.crearRol(rolDTOAdministrador);
-        administradorController.crearRol(rolDTOPaciente);
-        administradorController.crearRol(rolDTOSanitario);
+        utilidades.crearRol(rolDTOAdministrador);
+        utilidades.crearRol(rolDTOPaciente);
+        utilidades.crearRol(rolDTOSanitario);
 
-        administradorController.eliminarRol(rolDTOAdministrador.getId());
-        administradorController.eliminarRol(rolDTOPaciente.getId());
-        administradorController.eliminarRol(rolDTOSanitario.getId());
+        utilidades.eliminarRol(rolDTOAdministrador.getId());
+        utilidades.eliminarRol(rolDTOPaciente.getId());
+        utilidades.eliminarRol(rolDTOSanitario.getId());
     }
 }

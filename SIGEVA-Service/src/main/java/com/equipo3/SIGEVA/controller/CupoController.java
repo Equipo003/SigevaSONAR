@@ -66,7 +66,7 @@ public class CupoController {
 	WrapperDTOtoModel wrapperDTOtoModel;
 
 	@SuppressWarnings("deprecation")
-	private List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
+	public List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
 		// No requerirá tiempo de ejecución.
 
 		List<CupoDTO> momentos = new ArrayList<>();
@@ -316,8 +316,8 @@ public class CupoController {
 	public void crearCupo(CupoDTO cupo) {
 		try {
 			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupo));
-		}catch(Exception e) {
-			System.out.println("error crear cupo: "+e.getMessage());
+		} catch (Exception e) {
+			System.out.println("error crear cupo: " + e.getMessage());
 		}
 	}
 }

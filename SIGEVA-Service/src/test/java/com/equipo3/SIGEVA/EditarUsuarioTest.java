@@ -1,11 +1,13 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,13 @@ public class EditarUsuarioTest {
     public static PacienteDTO pacienteDTO;
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
+
+    @Autowired
+    private CentroController centroController;
+
+    @Autowired
+    private Utilidades utilidades;
 
     @Autowired
     private CitaController citaController;
@@ -66,27 +74,27 @@ public class EditarUsuarioTest {
     @Test
     public void usuarioSinDosisPuestaEdicionCorrecta() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
             cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearCentroSalud(newCentroSaludDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            centroController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             System.out.println(cupoDao.toString());
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(pacienteDTO);
+            usuarioController.editarUsuario(pacienteDTO);
 
-            Assertions.assertEquals(administradorController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
+            Assertions.assertEquals(usuarioController.getPaciente(pacienteDTO.getIdUsuario()).toString(), pacienteDTO.toString());
 
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(newCentroSaludDTO.getId());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -96,25 +104,25 @@ public class EditarUsuarioTest {
     @Test
     public void usuarioConDosisPuestaEdicionIncorrecta() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(1);
             cupoDTO.setFechaYHoraInicio(new Date(121, 1, 23));
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearCentroSalud(newCentroSaludDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            centroController.crearCentroSalud(newCentroSaludDTO);
             pacienteDTO.setCentroSalud(newCentroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-            administradorController.editarUsuario(pacienteDTO);
+            usuarioController.editarUsuario(pacienteDTO);
         }
         catch (Exception e) {
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(newCentroSaludDTO.getId());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
             Assertions.assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No puedes modificar el centro de un usuario que ya ha aplicado una dosis\"");
         }
     }

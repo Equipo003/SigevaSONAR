@@ -50,7 +50,7 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   getCentros() {
-    this.json.getJson("user/getCentros").subscribe(
+    this.json.getJson("centro/getCentros").subscribe(
       result => {
         this.centros = JSON.parse(result);
         this.ponerCentroUsuario();

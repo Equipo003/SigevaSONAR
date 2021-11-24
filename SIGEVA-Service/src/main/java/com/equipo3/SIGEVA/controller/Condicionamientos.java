@@ -1,7 +1,11 @@
 package com.equipo3.SIGEVA.controller;
 
 import java.util.Date;
-
+/***
+ * Clase para la definición de constantes que se usan en el proyecto.
+ * @author Equipo3 
+ *
+ */
 public class Condicionamientos {
 
 	private static final boolean CONTROL = true;

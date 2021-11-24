@@ -3,11 +3,12 @@ package com.equipo3.SIGEVA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.ConfiguracionController;
+import com.equipo3.SIGEVA.dao.ConfiguracionCuposDao;
+import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,12 +16,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 
 import com.equipo3.SIGEVA.dto.ConfiguracionCuposDTO;
 
 @SpringBootTest
 class ConfiguracionCuposTest {
+
+    @Autowired
+    private ConfiguracionController configuracionController;
+
+    @Autowired
+    private Utilidades utilidades;
 
 
     static ConfiguracionCuposDTO configuracionCuposDTO;
@@ -35,24 +42,24 @@ class ConfiguracionCuposTest {
     }
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
 
     @Test
     void crearConfiguracionCupos(){
-        if(this.administradorController.existConfiguracionCupos()==false){
-            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
-            this.administradorController.eliminarConfiguracionCupos();
+        if(this.configuracionController.existConfiguracionCupos()==false){
+            this.configuracionController.crearConfiguracionCupos(configuracionCuposDTO);
+            assertEquals(this.configuracionController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
+            this.utilidades.eliminarConfiguracionCupos();
 
         } else {
-            existConfiguracionCuposDTO = administradorController.getConfiguracionCupos();
-            this.administradorController.eliminarConfiguracionCupos();
+            existConfiguracionCuposDTO = configuracionController.getConfiguracionCupos();
+            this.utilidades.eliminarConfiguracionCupos();
 
-            this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
-            assertEquals(this.administradorController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
+            this.configuracionController.crearConfiguracionCupos(configuracionCuposDTO);
+            assertEquals(this.configuracionController.getConfiguracionCupos().toString(), configuracionCuposDTO.toString());
 
-            this.administradorController.eliminarConfiguracionCupos();
-            this.administradorController.crearConfiguracionCupos(existConfiguracionCuposDTO);
+            this.utilidades.eliminarConfiguracionCupos();
+            this.configuracionController.crearConfiguracionCupos(existConfiguracionCuposDTO);
         }
     }
 
@@ -61,17 +68,17 @@ class ConfiguracionCuposTest {
         boolean configuracionExistente = true;
         try {
             configuracionCuposDTO.setId(UUID.randomUUID().toString());
-            if (this.administradorController.existConfiguracionCupos()==false) {
-                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+            if (this.configuracionController.existConfiguracionCupos()==false) {
+                this.configuracionController.crearConfiguracionCupos(configuracionCuposDTO);
                 configuracionExistente = false;
-                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+                this.configuracionController.crearConfiguracionCupos(configuracionCuposDTO);
             }
             else {
-                this.administradorController.crearConfiguracionCupos(configuracionCuposDTO);
+                this.configuracionController.crearConfiguracionCupos(configuracionCuposDTO);
             }
         } catch (Exception e) {
             if (configuracionExistente==false){
-                this.administradorController.eliminarConfiguracionCupos();
+                this.utilidades.eliminarConfiguracionCupos();
             }
             assertEquals(e.getMessage(), "208 ALREADY_REPORTED \"Ya existe una configuración de cupos\"");
 
@@ -80,12 +87,12 @@ class ConfiguracionCuposTest {
 
     @Test
     void getConfiguracionCupos(){
-        if(this.administradorController.existConfiguracionCupos()==false){
+        if(this.configuracionController.existConfiguracionCupos()==false){
             Assertions.assertThatExceptionOfType(ResponseStatusException.class).isThrownBy(()->{
-                this.administradorController.getConfiguracionCupos();
+                this.configuracionController.getConfiguracionCupos();
             });
         }else{
-            ConfiguracionCuposDTO configuracionCuposDTO = this.administradorController.getConfiguracionCupos();
+            ConfiguracionCuposDTO configuracionCuposDTO = this.configuracionController.getConfiguracionCupos();
             assertTrue(configuracionCuposDTO!=null);
         }
     }

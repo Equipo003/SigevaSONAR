@@ -33,7 +33,7 @@ export class CentroSaludComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
+        this.json.postJson("centro/deleteCentroSalud", this.cs).subscribe(
           res => {
             this.message = "Centro eliminado correctamente.";
             this.centroEliminado = true;

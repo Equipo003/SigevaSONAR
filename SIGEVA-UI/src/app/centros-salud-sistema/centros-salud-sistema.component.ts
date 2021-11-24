@@ -21,13 +21,13 @@ export class CentrosSaludSistemaComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }
 
   listarCentroSalud() {
-    this.json.getJson("user/getCentros").subscribe(
+    this.json.getJson("centro/getCentros").subscribe(
       (res: any) => {
         this.centrosSalud = JSON.parse(res);
       },

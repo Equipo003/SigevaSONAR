@@ -1,29 +1,26 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
-import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
-import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
-import com.equipo3.SIGEVA.exception.CitaException;
 import com.equipo3.SIGEVA.model.Cita;
 
 @SpringBootTest
@@ -32,10 +29,16 @@ class ModificarCitaTest {
 	CitaController citaController = new CitaController();
 
 	@Autowired
-	AdministradorController administradorController = new AdministradorController();
+	UsuarioController usuarioController = new UsuarioController();
+
+	@Autowired
+	CentroController centroController;
 
 	@Autowired
 	CupoController cupoController = new CupoController();
+
+	@Autowired
+	private Utilidades utilidades;
 
 	private static CupoDTO cupoDTO;
 	private static CitaDTO citaDTO;
@@ -85,9 +88,9 @@ class ModificarCitaTest {
 	@Test
 	void modificacionCitaCupoNoExistente() {
 		try {
-			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-			administradorController.crearCentroSalud(centroSaludDTO);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
+			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+			centroController.crearCentroSalud(centroSaludDTO);
+			usuarioController.crearUsuarioPaciente(pacienteDTO);
 			cupoController.crearCupo(cupoDTO);
 			citaController.crearCita(citaDTO);
 
@@ -96,17 +99,17 @@ class ModificarCitaTest {
 			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"El cupo no existe\"");
 			citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		}
 	}
 
 	@Test
 	void modificacionCitaCorrecta() {
 		try {
-			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
-			administradorController.crearCentroSalud(centroSaludDTO);
-			administradorController.crearUsuarioPaciente(pacienteDTO);
+			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+			centroController.crearCentroSalud(centroSaludDTO);
+			usuarioController.crearUsuarioPaciente(pacienteDTO);
 			
 			CupoDTO newCupo = new CupoDTO();
 			newCupo.setCentroSalud(centroSaludDTO);
@@ -132,12 +135,10 @@ class ModificarCitaTest {
 	        citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
 			cupoController.eliminarCupo(newCupo.getUuidCupo());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
 	}
-
 }

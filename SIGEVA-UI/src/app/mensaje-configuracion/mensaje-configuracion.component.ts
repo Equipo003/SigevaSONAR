@@ -8,7 +8,7 @@ import {JsonService} from "../Service/json.service";
 })
 export class MensajeConfiguracionComponent implements OnInit {
 
-  public existeConfiguracion = false;
+  public existeConfiguracion = true;
 
   constructor(private json: JsonService) {
   }
@@ -18,7 +18,7 @@ export class MensajeConfiguracionComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }

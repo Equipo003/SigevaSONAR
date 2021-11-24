@@ -1,12 +1,13 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.*;
-import com.equipo3.SIGEVA.utils.ParaTest;
+import com.equipo3.SIGEVA.utils.Utilidades;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +29,10 @@ public class EliminarUsuarioTest {
     public static AdministradorDTO administradorDTO;
 
     @Autowired
-    private AdministradorController administradorController;
+    private UsuarioController usuarioController;
+
+    @Autowired
+    private CentroController centroController;
 
     @Autowired
     private CitaController citaController;
@@ -37,7 +41,7 @@ public class EliminarUsuarioTest {
     private CupoController cupoController;
     
     @Autowired
-    private ParaTest paraTest;
+    private Utilidades utilidades;
 
     @Autowired
     CupoDao cupoDao;
@@ -81,18 +85,18 @@ public class EliminarUsuarioTest {
     @Test
     public void eliminarUsuarioSanitario() {
         try {
-            sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+            sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearUsuarioSanitario(sanitarioDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioSanitario(sanitarioDTO);
             
             
-            administradorController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
+            usuarioController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
         	
-        	Assertions.assertNull(paraTest.getUsuarioById(sanitarioDTO.getIdUsuario()));
-        	
-            administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+        	Assertions.assertNull(utilidades.getUsuarioById(sanitarioDTO.getIdUsuario()));
+
+            utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
             
         }
         catch (Exception e) {
@@ -103,40 +107,40 @@ public class EliminarUsuarioTest {
     @Test
     public void eliminarUsuarioAdministrador() {
         try {
-            administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));
+            administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
             administradorDTO.setCentroSalud(centroSaludDTO);
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearUsuarioAdministrador(administradorDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioAdministrador(administradorDTO);
             
             
-            administradorController.deleteUsuarioById(administradorDTO.getIdUsuario());	
+            usuarioController.deleteUsuarioById(administradorDTO.getIdUsuario());
             
         }
         catch (Exception e) {
             Assertions.assertNotNull(e);
 
-            administradorController.eliminarUsuario(administradorDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(administradorDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
         }
     }
     
     @Test
     public void eliminarUsuarioPacienteSinNada() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
             pacienteDTO.setCentroSalud(centroSaludDTO);
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             
             
-            administradorController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
         	
-        	Assertions.assertNull(paraTest.getUsuarioById(pacienteDTO.getIdUsuario()));
-        	
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+        	Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
             
         }
         catch (Exception e) {
@@ -147,14 +151,14 @@ public class EliminarUsuarioTest {
     @Test
     public void eliminarUsuarioPacienteConDosis() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(1);
             pacienteDTO.setCentroSalud(centroSaludDTO);
 
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
                    
-            administradorController.deleteUsuarioById(pacienteDTO.getIdUsuario()); 	
+            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
 
             
@@ -162,8 +166,8 @@ public class EliminarUsuarioTest {
         catch (Exception e) {
             Assertions.assertEquals(e.getMessage(),"401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
 
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
         }
     }
     
@@ -171,29 +175,27 @@ public class EliminarUsuarioTest {
     public void eliminarUsuarioPacienteConCitasFuturas() {
         try {
         	centroSaludDTO.setNumVacunasDisponibles(55);
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
             pacienteDTO.setCentroSalud(centroSaludDTO);
             cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
-            administradorController.crearCentroSalud(centroSaludDTO);
-            administradorController.crearUsuarioPaciente(pacienteDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
             cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
             citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
                    
-            administradorController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
             
-            Assertions.assertNull(paraTest.getUsuarioById(pacienteDTO.getIdUsuario()));
+            Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
         	
         	citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
             
         }
         catch (Exception e) {
            
         }
     }
-    
-
 }

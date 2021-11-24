@@ -3,14 +3,16 @@ package com.equipo3.SIGEVA;
 import java.util.Date;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.model.Cupo;
 
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.AdministradorController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.dao.CupoDao;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,11 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class EliminarCentroSaludTest {
 
 	@Autowired
-	private AdministradorController administradorController;
+	private UsuarioController usuarioController;
+
+	@Autowired
+	private CentroController centroController;
+
+	@Autowired
+	private Utilidades utilidades;
 
 	static CentroSaludDTO centroSaludDTO;
-	
-	static UsuarioDTO usuarioDTO;
 	
 	static AdministradorDTO administradorDTO;
 	
@@ -39,9 +45,9 @@ class EliminarCentroSaludTest {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 		String idCentro= centroSaludDTO.getId();
-		administradorController.crearCentroSalud(centroSaludDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
 		try {
-			administradorController.borrarCentroSalud(centroSaludDTO);
+			centroController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNull(e);
 		}
@@ -51,13 +57,13 @@ class EliminarCentroSaludTest {
 	void eliminacionCentroSaludDuplicadoTest() {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
 		try {
-			administradorController.borrarCentroSalud(centroSaludDTO);
-			administradorController.borrarCentroSalud(centroSaludDTO);
+			centroController.borrarCentroSalud(centroSaludDTO);
+			centroController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
 
@@ -65,34 +71,34 @@ class EliminarCentroSaludTest {
 	void eliminacionCentroSaludConPacienteTest() {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
 		
 		sanitarioDTO = new SanitarioDTO();
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		sanitarioDTO.setCentroSalud(centroSaludDTO);
-		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+		sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 		
 		pacienteDTO = new PacienteDTO();
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
 		pacienteDTO.setCentroSalud(centroSaludDTO);
-		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+		pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 		
 		administradorDTO = new AdministradorDTO();
 		administradorDTO.setUsername(UUID.randomUUID().toString());
 		administradorDTO.setCentroSalud(centroSaludDTO);
-		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));	
+		administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
 		
-		administradorController.crearUsuarioAdministrador(administradorDTO);
-		administradorController.crearUsuarioPaciente(pacienteDTO);
-		administradorController.crearUsuarioSanitario(sanitarioDTO);
+		usuarioController.crearUsuarioAdministrador(administradorDTO);
+		usuarioController.crearUsuarioPaciente(pacienteDTO);
+		usuarioController.crearUsuarioSanitario(sanitarioDTO);
 		try {
-			administradorController.borrarCentroSalud(centroSaludDTO);
+			centroController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
-			administradorController.eliminarUsuario(administradorDTO.getUsername());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarUsuario(administradorDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
 	
@@ -100,7 +106,7 @@ class EliminarCentroSaludTest {
 	void eliminacionCentroSaludConCitasTest() {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		administradorController.crearCentroSalud(centroSaludDTO);
+		centroController.crearCentroSalud(centroSaludDTO);
 		
 		Date fecha = new Date(120,0,1);
 		Cupo cupo = new Cupo();
@@ -110,11 +116,10 @@ class EliminarCentroSaludTest {
 		cupoDao.save(cupo);
 	
 		try {
-			administradorController.borrarCentroSalud(centroSaludDTO);
+			centroController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
-
 }

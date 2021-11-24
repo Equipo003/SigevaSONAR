@@ -30,17 +30,18 @@ export class FormularioCentroSaludComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }
 
   enviarDatosBack() {
-    this.json.postJsonCrearCentro("user/newCentroSalud", this.centroSalud).subscribe(
+    this.json.postJsonCrearCentro("centro/newCentroSalud", this.centroSalud).subscribe(
       result => {
         this.errorMessage = "";
         this.generandoCupos = "";
         this.message = "Centro creado correctamente";
+        setTimeout('document.location.reload()', 2000);
         this.generarCupos(result);
       }, err => {
         this.generandoCupos = "";

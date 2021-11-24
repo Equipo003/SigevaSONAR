@@ -41,7 +41,7 @@ export class ModificacionCentroSaludComponent implements OnInit {
         idCentroSalud: this.idCS
       }
     });
-    this.json.getJsonP("user/getCentroSaludById", params).subscribe(
+    this.json.getJsonP("centro/getCentroSaludById", params).subscribe(
       result => {
         this.cs = JSON.parse(result);
       }, error => {
@@ -74,11 +74,11 @@ export class ModificacionCentroSaludComponent implements OnInit {
   modificarCentroSalud() {
     let self = this;
 
-    this.json.postJson("user/updateCS", this.cs).subscribe(
+    this.json.postJson("centro/updateCS", this.cs).subscribe(
       result => {
         this.message = "Centro modificado correctamente";
         setTimeout(function () {
-          self.router.navigate(['centrosSalud']);
+          self.router.navigate(['centrosSistema']);
         }, 3000);
         this.errorMessage = "";
       }, error => {

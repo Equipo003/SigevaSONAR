@@ -48,7 +48,7 @@ export class ConfiguracionCuposComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.configuracionExistente = JSON.parse(res);
       if (this.configuracionExistente) {
         this.mostrarConfiguracion();
@@ -60,7 +60,7 @@ export class ConfiguracionCuposComponent implements OnInit {
   }
 
   mostrarConfiguracion() {
-    this.json.getJson('user/getConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/getConfCupos').subscribe((res: any) => {
       let configuracionCupos: ConfiguracionCupos;
       configuracionCupos = JSON.parse(res);
       this.fechaInicio = configuracionCupos.fechaInicio;
@@ -105,7 +105,7 @@ export class ConfiguracionCuposComponent implements OnInit {
     let confCupo: ConfiguracionCupos = new ConfiguracionCupos(this.duracionMinutos, this.numeroPacientes, this.duracionJornadaHoras,
       this.duracionJornadaMinutos, this.fechaInicio)
 
-    this.json.postJson('user/crearConfCupos', confCupo).subscribe((res: any) => {
+    this.json.postJson('cnfg/crearConfCupos', confCupo).subscribe((res: any) => {
       this.mensaje = 'Configuración guardada correctamente!'
       this.configuracionExistente = true;
     }, err => {

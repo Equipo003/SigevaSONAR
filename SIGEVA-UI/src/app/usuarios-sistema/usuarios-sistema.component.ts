@@ -25,7 +25,7 @@ export class UsuariosSistemaComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }

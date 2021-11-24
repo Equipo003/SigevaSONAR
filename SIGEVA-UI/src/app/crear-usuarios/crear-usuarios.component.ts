@@ -43,7 +43,7 @@ export class CrearUsuariosComponent implements OnInit {
   }
 
   getConfiguracion() {
-    this.json.getJson('user/existConfCupos').subscribe((res: any) => {
+    this.json.getJson('cnfg/existConfCupos').subscribe((res: any) => {
       this.existeConfiguracion = JSON.parse(res);
     });
   }
@@ -59,7 +59,7 @@ export class CrearUsuariosComponent implements OnInit {
   }
 
   getCentros() {
-    this.json.getJson("user/getCentros").subscribe(
+    this.json.getJson("centro/getCentros").subscribe(
       result => {
         this.centros = JSON.parse(result);
         this.usuario.centroSalud = this.centros[0];
