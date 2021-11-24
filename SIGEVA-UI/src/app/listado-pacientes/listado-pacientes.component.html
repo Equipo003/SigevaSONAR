@@ -24,6 +24,9 @@
                  height="30px" *ngIf="cita.paciente.numDosisAplicadas==2" alt="icono vacuna">
           </div>
         </div>
+        <div class="control-group" *ngIf="this.citasVacio">
+          <h1 class="resaltadoNegativo">No hay citas programadas</h1>
+        </div>
       </div>
     </div>
 
