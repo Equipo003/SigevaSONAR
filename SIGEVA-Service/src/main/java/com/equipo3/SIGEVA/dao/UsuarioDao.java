@@ -9,17 +9,24 @@ import org.springframework.stereotype.Repository;
 
 import com.equipo3.SIGEVA.model.Usuario;
 
+/***
+ * Interfaz que nos permite introducir, modificar, borrar... usuarios en la
+ * bbdd.
+ * 
+ * @author Equipo3
+ *
+ */
 @Repository
-public interface UsuarioDao extends MongoRepository <Usuario, String> {
+public interface UsuarioDao extends MongoRepository<Usuario, String> {
 
-    Optional<Usuario> findByUsername(String username);
+	Optional<Usuario> findByUsername(String username);
 
-    List<Usuario> findAllByRol(String id);
-    
-    List<Usuario> findAllByCentroSalud(String centroSalud);
-    
-    @Query("{ '_class' : ?0 }")
-    List<Usuario> findAllByClass(String className);
+	List<Usuario> findAllByRol(String id);
 
-    void deleteByUsername(String username);
+	List<Usuario> findAllByCentroSalud(String centroSalud);
+
+	@Query("{ '_class' : ?0 }")
+	List<Usuario> findAllByClass(String className);
+
+	void deleteByUsername(String username);
 }

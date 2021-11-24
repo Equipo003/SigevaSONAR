@@ -14,75 +14,82 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+/***
+ * Controlador (RestController) que cuenta con todos lo recursos web
+ * relacionados con la configuración de los cupos.
+ * 
+ * @author Equipo3
+ *
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("cnfg")
 public class ConfiguracionController {
 
-    @Autowired
-    private ConfiguracionCuposDao configuracionCuposDao;
-    @Autowired
-    private WrapperModelToDTO wrapperModelToDTO;
+	@Autowired
+	private ConfiguracionCuposDao configuracionCuposDao;
+	@Autowired
+	private WrapperModelToDTO wrapperModelToDTO;
 
-    /**
-     * Recurso web para la creción de la configuración de cupos que va a tener
-     * activa el sistema.
-     *
-     * @param configuracionCuposDTO Configuración de cupos que le llega desde el
-     *                              front end.
-     */
-    @PostMapping("/crearConfCupos")
-    public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
+	/**
+	 * Recurso web para la creción de la configuración de cupos que va a tener
+	 * activa el sistema.
+	 *
+	 * @param configuracionCuposDTO Configuración de cupos que le llega desde el
+	 *                              front end.
+	 */
+	@PostMapping("/crearConfCupos")
+	public void crearConfiguracionCupos(@RequestBody ConfiguracionCuposDTO configuracionCuposDTO) {
 
-        try {
-            ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
-                    .configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
+		try {
+			ConfiguracionCupos configuracionCupos = WrapperDTOtoModel
+					.configuracionCuposDTOtoConfiguracionCupos(configuracionCuposDTO);
 
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
-            if (configuracionCuposDTOList.isEmpty())
-                configuracionCuposDao.save(configuracionCupos);
-            else
-                throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
-        }
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = wrapperModelToDTO
+					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+			if (configuracionCuposDTOList.isEmpty())
+				configuracionCuposDao.save(configuracionCupos);
+			else
+				throw new ConfiguracionYaExistente("Ya existe una configuración de cupos");
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+		}
 
-    }
+	}
 
-    /**
-     * Método que comprueba si hay o no una configuración de cupos.
-     *
-     * @return boolean Si tiene el sistema una configuración activa o no.
-     */
-    @GetMapping("/existConfCupos")
-    public boolean existConfiguracionCupos() {
-        try {
-            List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
-            return !configuracionCuposList.isEmpty();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+	/**
+	 * Método que comprueba si hay o no una configuración de cupos.
+	 *
+	 * @return boolean Si tiene el sistema una configuración activa o no.
+	 */
+	@GetMapping("/existConfCupos")
+	public boolean existConfiguracionCupos() {
+		try {
+			List<ConfiguracionCupos> configuracionCuposList = configuracionCuposDao.findAll();
+			return !configuracionCuposList.isEmpty();
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 
-    }
+	}
 
-    /**
-     * Obtención de la cofiguración de cupos que tiene configurada el sistema.
-     *
-     * @return ConfiguracionCuposDTO Configuración que tiene activada el sistema.
-     */
-    @GetMapping("/getConfCupos")
-    public ConfiguracionCuposDTO getConfiguracionCupos() {
-        try {
-            List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
-                    .allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
+	/**
+	 * Obtención de la configuración de cupos que tiene configurada el sistema.
+	 *
+	 * @return ConfiguracionCuposDTO Configuración que tiene activada el sistema.
+	 */
+	@GetMapping("/getConfCupos")
+	public ConfiguracionCuposDTO getConfiguracionCupos() {
+		try {
+			List<ConfiguracionCuposDTO> configuracionCuposDTOList = this.wrapperModelToDTO
+					.allConfiguracionCuposToConfiguracionCuposDTO(configuracionCuposDao.findAll());
 
-            if (configuracionCuposDTOList.isEmpty())
-                throw new IdentificadorException("No existe una configuración de cupos");
+			if (configuracionCuposDTOList.isEmpty())
+				throw new IdentificadorException("No existe una configuración de cupos");
 
-            return configuracionCuposDTOList.get(0);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
+			return configuracionCuposDTOList.get(0);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		}
+	}
 }
