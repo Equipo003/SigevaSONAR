@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Entidad Cupo.
  * Clase que representará el cupo al que estarán asociados otras entidades para vacunar.
  * 
+ * 
  * @author Equipo3
  *
  */
