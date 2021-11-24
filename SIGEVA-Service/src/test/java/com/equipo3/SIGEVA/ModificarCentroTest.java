@@ -2,6 +2,7 @@ package com.equipo3.SIGEVA;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,9 @@ class ModificarCentroTest {
 	@Autowired
 	private AdministradorController administradorController = new AdministradorController();
 
+	@Autowired
+	private Utilidades utilidades;
+
 	private static CentroSaludDTO csDto;
 
 	@BeforeAll
@@ -62,11 +66,9 @@ class ModificarCentroTest {
 
 			assertEquals(administradorController.getCentroById(csDto.getId()).toString(), csDto.toString());
 
-			administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarCentro(csDto.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

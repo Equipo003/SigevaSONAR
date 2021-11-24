@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.equipo3.SIGEVA.dto.AdministradorDTO;
 import com.equipo3.SIGEVA.model.Vacuna;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class CrearCentroSaludTest {
 	@Autowired
 	private AdministradorController administradorController;
 
+	@Autowired
+	private Utilidades utilidades;
+
 	static CentroSaludDTO centroSaludDTO;
 
 	@BeforeAll
@@ -40,7 +44,7 @@ class CrearCentroSaludTest {
 		centroSaludDTO.setId(UUID.randomUUID().toString());
 		administradorController.crearCentroSalud(centroSaludDTO);
 		assertEquals(administradorController.getCentroById(centroSaludDTO.getId()).toString(), centroSaludDTO.toString());
-		administradorController.eliminarCentro(centroSaludDTO.getId());
+		utilidades.eliminarCentro(centroSaludDTO.getId());
 	}
     
     @Test
@@ -51,26 +55,8 @@ class CrearCentroSaludTest {
        		administradorController.crearCentroSalud(centroSaludDTO);
 			administradorController.crearCentroSalud(centroSaludDTO);
 		   } catch (Exception e) {
-				administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 				Assertions.assertNotNull(e);
 		   }
    	}
-    
-//    @Test
-//    void testnumeroVacunasDisponiblesNegativo() throws NumVacunasInvalido {
-//    	CentroSalud centroS = new CentroSalud();
-//    	try {
-//    		centroS.setNumVacunasDisponibles(-1);
-//    	} catch (Exception e){
-//            Assertions.assertNotNull(e);
-//        }
-//
-//	}
-//
-//    @Test
-//    void testModificarStockNumVacunas() {
-//    	CentroSalud centroS = new CentroSalud();
-//    	centroS.modificarStockVacunas(100);
-//    	Assertions.assertEquals(100, centroS.getNumVacunasDisponibles());
-//    }
 }

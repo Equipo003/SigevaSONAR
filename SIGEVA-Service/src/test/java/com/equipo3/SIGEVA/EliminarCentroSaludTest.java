@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.model.Cupo;
 
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,9 @@ class EliminarCentroSaludTest {
 
 	@Autowired
 	private AdministradorController administradorController;
+
+	@Autowired
+	private Utilidades utilidades;
 
 	static CentroSaludDTO centroSaludDTO;
 	
@@ -57,7 +61,7 @@ class EliminarCentroSaludTest {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
 
@@ -70,17 +74,17 @@ class EliminarCentroSaludTest {
 		sanitarioDTO = new SanitarioDTO();
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 		sanitarioDTO.setCentroSalud(centroSaludDTO);
-		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+		sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 		
 		pacienteDTO = new PacienteDTO();
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
 		pacienteDTO.setCentroSalud(centroSaludDTO);
-		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+		pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 		
 		administradorDTO = new AdministradorDTO();
 		administradorDTO.setUsername(UUID.randomUUID().toString());
 		administradorDTO.setCentroSalud(centroSaludDTO);
-		administradorDTO.setRol(administradorController.getRolByNombre("Administrador"));	
+		administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
 		
 		administradorController.crearUsuarioAdministrador(administradorDTO);
 		administradorController.crearUsuarioPaciente(pacienteDTO);
@@ -89,10 +93,10 @@ class EliminarCentroSaludTest {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
-			administradorController.eliminarUsuario(administradorDTO.getUsername());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarUsuario(administradorDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
 	
@@ -113,8 +117,7 @@ class EliminarCentroSaludTest {
 			administradorController.borrarCentroSalud(centroSaludDTO);
 		}catch(Exception e){
 			assertNotNull(e);
-			administradorController.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
-
 }

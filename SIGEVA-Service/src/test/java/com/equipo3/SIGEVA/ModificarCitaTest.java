@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class ModificarCitaTest {
 
 	@Autowired
 	CupoController cupoController = new CupoController();
+
+	@Autowired
+	private Utilidades utilidades;
 
 	private static CupoDTO cupoDTO;
 	private static CitaDTO citaDTO;
@@ -85,7 +89,7 @@ class ModificarCitaTest {
 	@Test
 	void modificacionCitaCupoNoExistente() {
 		try {
-			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			administradorController.crearCentroSalud(centroSaludDTO);
 			administradorController.crearUsuarioPaciente(pacienteDTO);
 			cupoController.crearCupo(cupoDTO);
@@ -96,15 +100,15 @@ class ModificarCitaTest {
 			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"El cupo no existe\"");
 			citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		}
 	}
 
 	@Test
 	void modificacionCitaCorrecta() {
 		try {
-			pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			administradorController.crearCentroSalud(centroSaludDTO);
 			administradorController.crearUsuarioPaciente(pacienteDTO);
 			
@@ -132,12 +136,10 @@ class ModificarCitaTest {
 	        citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
 			cupoController.eliminarCupo(newCupo.getUuidCupo());
-			administradorController.eliminarCentro(centroSaludDTO.getId());
-			administradorController.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(centroSaludDTO.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
 	}
-
 }

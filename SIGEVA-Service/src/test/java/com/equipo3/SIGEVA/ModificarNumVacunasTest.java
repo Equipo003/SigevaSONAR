@@ -2,6 +2,7 @@ package com.equipo3.SIGEVA;
 
 import com.equipo3.SIGEVA.controller.AdministradorController;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class ModificarNumVacunasTest {
 
     @Autowired
     private AdministradorController administradorController;
+
+    @Autowired
+    private Utilidades utilidades;
 
     static CentroSaludDTO centroSaludDTO;
 
@@ -39,6 +43,6 @@ public class ModificarNumVacunasTest {
 
         assertEquals(newNumVacunas, administradorController.getCentroById(centroSaludDTO.getId()).getNumVacunasDisponibles());
 
-        administradorController.eliminarCentro(centroSaludDTO.getId());
+        utilidades.eliminarCentro(centroSaludDTO.getId());
     }
 }

@@ -7,6 +7,7 @@ import java.util.WeakHashMap;
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
 import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.model.CentroSalud;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,16 +27,9 @@ import com.equipo3.SIGEVA.model.Usuario;
 class FijarUsuarioCentroSalud {
 	@Autowired
 	private AdministradorController administradorController;
+
 	@Autowired
-	private UsuarioDao usuarioDao;
-	@Autowired
-	private RolDao roldao;
-	@Autowired
-	private CentroSaludDao centroSaludDao;
-	@Autowired
-	private WrapperModelToDTO wrapperModelToDTO;
-	@Autowired
-	private WrapperDTOtoModel wrapperDTOtoModel;
+	private Utilidades utilidades;
 
 	static CentroSaludDTO centroSaludDTO;
 	static CentroSaludDTO newCentroSaludDTO;
@@ -73,7 +67,7 @@ class FijarUsuarioCentroSalud {
 		administradorController.crearCentroSalud(centroSaludDTO);
 		sanitarioDTO.setCentroSalud((centroSaludDTO));
 
-		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+		sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 
 		administradorController.crearUsuarioSanitario(sanitarioDTO);
 
@@ -85,7 +79,7 @@ class FijarUsuarioCentroSalud {
 
 		Assertions.assertEquals(newSanitarioDTO.getCentroSalud().getId(), newCentroSaludDTO.getId());
 
-		administradorController.eliminarCentro(centroSaludDTO.getId());
-		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
+		utilidades.eliminarCentro(centroSaludDTO.getId());
+		utilidades.eliminarUsuario(sanitarioDTO.getUsername());
 	}
 }

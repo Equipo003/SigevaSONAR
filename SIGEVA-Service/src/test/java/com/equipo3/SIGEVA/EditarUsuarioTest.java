@@ -6,6 +6,7 @@ import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ public class EditarUsuarioTest {
 
     @Autowired
     private AdministradorController administradorController;
+
+    @Autowired
+    private Utilidades utilidades;
 
     @Autowired
     private CitaController citaController;
@@ -66,7 +70,7 @@ public class EditarUsuarioTest {
     @Test
     public void usuarioSinDosisPuestaEdicionCorrecta() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
             cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
 
@@ -84,9 +88,9 @@ public class EditarUsuarioTest {
 
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(newCentroSaludDTO.getId());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -96,7 +100,7 @@ public class EditarUsuarioTest {
     @Test
     public void usuarioConDosisPuestaEdicionIncorrecta() {
         try {
-            pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(1);
             cupoDTO.setFechaYHoraInicio(new Date(121, 1, 23));
 
@@ -112,9 +116,9 @@ public class EditarUsuarioTest {
         catch (Exception e) {
             citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
             cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            administradorController.eliminarUsuario(pacienteDTO.getUsername());
-            administradorController.eliminarCentro(newCentroSaludDTO.getId());
-            administradorController.eliminarCentro(centroSaludDTO.getId());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(newCentroSaludDTO.getId());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
             Assertions.assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No puedes modificar el centro de un usuario que ya ha aplicado una dosis\"");
         }
     }

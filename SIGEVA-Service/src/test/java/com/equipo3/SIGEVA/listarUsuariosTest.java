@@ -7,6 +7,7 @@ import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.RolDTO;
 import com.equipo3.SIGEVA.dto.UsuarioDTO;
 import com.equipo3.SIGEVA.model.Rol;
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,23 +21,26 @@ public class listarUsuariosTest {
     @Autowired
     private AdministradorController administradorController;
 
+    @Autowired
+    private Utilidades utilidades;
+
     @Test
     public void getTodosUsuarios(){
         assertNotNull(administradorController.getUsuarioByRol("Todos"));
     }
 
     @Test void getUsuariosAdministradores(){
-        RolDTO rolDTO = administradorController.getRolByNombre("Administrador");
+        RolDTO rolDTO = utilidades.getRolByNombre("Administrador");
         assertNotNull(administradorController.getUsuarioByRol(rolDTO.getId()));
     }
 
     @Test void getUsuariosSanitarios(){
-        RolDTO rolDTO = administradorController.getRolByNombre("Sanitario");
+        RolDTO rolDTO = utilidades.getRolByNombre("Sanitario");
         assertNotNull(administradorController.getUsuarioByRol(rolDTO.getId()));
     }
 
     @Test void getUsuariosPacientes(){
-        RolDTO rolDTO = administradorController.getRolByNombre("Paciente");
+        RolDTO rolDTO = utilidades.getRolByNombre("Paciente");
         assertNotNull(administradorController.getUsuarioByRol(rolDTO.getId()));
     }
 
@@ -44,7 +48,7 @@ public class listarUsuariosTest {
     	PacienteDTO paciente = new PacienteDTO();
     	paciente.setNombre("Test getPacientes");
     	paciente.setUsername("Test getPacientes");
-    	paciente.setRol(administradorController.getRolByNombre("Paciente"));
+    	paciente.setRol(utilidades.getRolByNombre("Paciente"));
     	
     	CentroSaludDTO csDto = new CentroSaludDTO();
 		csDto.setDireccion("test getPacientes direccion");
@@ -56,12 +60,10 @@ public class listarUsuariosTest {
 		paciente.setCentroSalud(csDto);
 		
     	administradorController.crearUsuarioPaciente(paciente);
-        for (PacienteDTO pacienteDTO : administradorController.getPacientes()){
+        for (PacienteDTO pacienteDTO : utilidades.getPacientes()){
             assertNotNull(pacienteDTO);
-            administradorController.eliminarUsuario(paciente.getUsername());
+            utilidades.eliminarUsuario(paciente.getUsername());
         }
         administradorController.borrarCentroSalud(csDto);
-        
-
     }
 }

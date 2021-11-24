@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class LoginTest {
 	
     @Autowired
     private AdministradorController administradorController;
+
+	@Autowired
+	private Utilidades utilidades;
     
     @BeforeAll
 	static void creacionCentroSalud() {
@@ -85,18 +89,18 @@ class LoginTest {
     void loginAdminTest(){
     	try {
     		administradorController.crearCentroSalud(csDto);
-        	adminDTO.setRol(administradorController.getRolByNombre("Administrador"));
+        	adminDTO.setRol(utilidades.getRolByNombre("Administrador"));
         	administradorController.crearUsuarioAdministrador(adminDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(adminDTO.getUsername());
         	usuarioLogin.setHashPassword(adminDTO.getHashPassword());
         	assertNotNull(administradorController.login(usuarioLogin));
-        	administradorController.eliminarUsuario(adminDTO.getUsername());
-    		administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(adminDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}catch(Exception e){
     		assertNotNull(e);
-    		administradorController.eliminarUsuario(adminDTO.getUsername());
-    		administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(adminDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}
     
     	
@@ -106,18 +110,18 @@ class LoginTest {
     void loginPacienteTest(){
     	try {
     		administradorController.crearCentroSalud(csDto);
-    		pacienteDTO.setRol(administradorController.getRolByNombre("Paciente"));
+    		pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
         	administradorController.crearUsuarioPaciente(pacienteDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(pacienteDTO.getUsername());
         	usuarioLogin.setHashPassword(pacienteDTO.getHashPassword());
         	assertNotNull(administradorController.login(usuarioLogin));
-        	administradorController.eliminarUsuario(pacienteDTO.getUsername());
-    		administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}catch(Exception e) {
     		assertNotNull(e);
-    		administradorController.eliminarUsuario(pacienteDTO.getUsername());
-    		administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(pacienteDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}
     }
     
@@ -125,21 +129,19 @@ class LoginTest {
     void loginSanitarioTest(){
     	try {
     		administradorController.crearCentroSalud(csDto);
-    		sanitarioDTO.setRol(administradorController.getRolByNombre("Sanitario"));
+    		sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
     		sanitarioDTO.setCentroSalud(csDto);
         	administradorController.crearUsuarioSanitario(sanitarioDTO);
         	UsuarioLoginDTO usuarioLogin = new UsuarioLoginDTO();
         	usuarioLogin.setUsername(sanitarioDTO.getUsername());
         	usuarioLogin.setHashPassword(sanitarioDTO.getHashPassword());
         	assertNotNull(administradorController.login(usuarioLogin));
-        	administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-        	administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}catch(Exception e){
     		assertNotNull(e);
-    		administradorController.eliminarUsuario(sanitarioDTO.getUsername());
-        	administradorController.eliminarCentro(csDto.getId());
+			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+			utilidades.eliminarCentro(csDto.getId());
     	}
-    	
     }
-   
 }
