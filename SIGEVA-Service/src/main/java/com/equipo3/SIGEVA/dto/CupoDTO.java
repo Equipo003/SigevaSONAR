@@ -6,6 +6,15 @@ import java.util.UUID;
 
 import com.equipo3.SIGEVA.exception.CupoException;
 
+/***
+ * CupoDTO data object transfer, los data object transfer son los que se
+ * mandarán desde el front end al back end y viceversa.
+ * Clase que representará el cupo al que estarán asociados otras entidades para vacunar.
+ * 
+ * @author Equipo3
+ *
+ */
+
 public class CupoDTO implements Comparable<CupoDTO> {
 
 	private String uuidCupo;
