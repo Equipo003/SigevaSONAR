@@ -655,7 +655,7 @@ public class CitaController {
 			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
 			centroSalud.decrementarNumVacunasDisponibles();
 			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {
-				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOToPaciente(cita.getPaciente()));
+				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOtoPacienteNonStatic(cita.getPaciente()));
 				centroSaludDao.save(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSalud));
 			} else {
 				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");

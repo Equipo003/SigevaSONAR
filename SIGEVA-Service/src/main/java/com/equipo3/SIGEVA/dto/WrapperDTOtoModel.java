@@ -147,7 +147,7 @@ public class WrapperDTOtoModel {
 		return cita;
 	}
 
-	public Paciente pacienteDTOToPaciente(PacienteDTO pacienteDTO) {
+	public Paciente pacienteDTOtoPacienteNonStatic(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
 		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 		paciente.setNombre(pacienteDTO.getNombre());
