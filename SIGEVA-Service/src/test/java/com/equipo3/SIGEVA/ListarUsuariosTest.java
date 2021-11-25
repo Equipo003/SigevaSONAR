@@ -1,22 +1,22 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.UsuarioController;
-import com.equipo3.SIGEVA.controller.CentroController;
-import com.equipo3.SIGEVA.dto.CentroSaludDTO;
-import com.equipo3.SIGEVA.dto.PacienteDTO;
-import com.equipo3.SIGEVA.dto.RolDTO;
-import com.equipo3.SIGEVA.utils.Utilidades;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.dto.PacienteDTO;
+import com.equipo3.SIGEVA.dto.RolDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 
 @SpringBootTest
-public class listarUsuariosTest {
+class ListarUsuariosTest {
 
     @Autowired
     private UsuarioController usuarioController;
@@ -27,7 +27,7 @@ public class listarUsuariosTest {
     private Utilidades utilidades;
 
     @Test
-    public void getTodosUsuarios(){
+    void getTodosUsuarios(){
         assertNotNull(usuarioController.getUsuarioByRol("Todos"));
     }
 

@@ -1,16 +1,15 @@
 package com.equipo3.SIGEVA;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.equipo3.SIGEVA.controller.CentroController;
-import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 
 /**
  * Test usando la técnica TDD para la modificación de lo centros de salud
@@ -22,8 +21,6 @@ import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 
 @SpringBootTest
 class ModificarCentroTest {
-	@Autowired
-	private UsuarioController usuarioController = new UsuarioController();
 
 	@Autowired
 	private CentroController centroController;

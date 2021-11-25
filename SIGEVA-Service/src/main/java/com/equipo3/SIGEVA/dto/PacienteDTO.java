@@ -71,4 +71,24 @@ public class PacienteDTO extends UsuarioDTO {
 		return numDosisAplicadas == 2;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(numDosisAplicadas);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PacienteDTO other = (PacienteDTO) obj;
+		return numDosisAplicadas == other.numDosisAplicadas;
+	}
+
 }

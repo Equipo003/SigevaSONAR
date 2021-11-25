@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.equipo3.SIGEVA.utils.Encriptador;
 
-class encriptarTest {
+class EncriptarTest {
 
 	static Encriptador encriptador = new Encriptador();
 	static String cad = "Test encriptador";

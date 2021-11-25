@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,7 +9,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.equipo3.SIGEVA.dao.CentroSaludDao;
@@ -20,7 +28,6 @@ import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dao.UsuarioDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
-import com.equipo3.SIGEVA.dto.ConfiguracionCuposDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
@@ -28,12 +35,10 @@ import com.equipo3.SIGEVA.dto.WrapperModelToDTO;
 import com.equipo3.SIGEVA.exception.CitaException;
 import com.equipo3.SIGEVA.exception.CupoException;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.exception.VacunaException;
 import com.equipo3.SIGEVA.model.Cita;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
 import com.equipo3.SIGEVA.model.Usuario;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,6 +75,14 @@ public class CitaController {
 	private static final int PRIMERA_DOSIS = 1;
 	private static final int SEGUNDA_DOSIS = 2;
 
+	/**
+	 * Método encargado de buscar y asignar citas. En función de las dosis aplicadas
+	 * y citas futuras del paciente, procurará asignar más o menos cantidad de
+	 * citas.
+	 * 
+	 * @param uuidPaciente
+	 * @return List<CitaDTO>
+	 */
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarYAsignarCitas")
 	public List<CitaDTO> buscarYAsignarCitas(@RequestParam String uuidPaciente) {
@@ -84,8 +97,6 @@ public class CitaController {
 			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no contemplado en BBDD.");
 		}
-
-//		pacienteDTO.setNumDosisAplicadas(1);
 
 		if (new Date().after(Condicionamientos.fechaFin())) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -242,6 +253,15 @@ public class CitaController {
 		// Revisar con respecto al código de confirmación del primer sprint.
 	}
 
+	/**
+	 * Método que sirve para confirmar una cita, es decir, programar una cita de un
+	 * paciente concreto en un cupo concreto.
+	 * 
+	 * @param cupoDTO
+	 * @param pacienteDTO
+	 * @param dosis
+	 * @return
+	 */
 	@SuppressWarnings("static-access")
 	public CitaDTO confirmarCita(CupoDTO cupoDTO, PacienteDTO pacienteDTO, int dosis) {
 
@@ -263,6 +283,16 @@ public class CitaController {
 		return citaDTO;
 	}
 
+	/**
+	 * Dado que un paciente que sí tenga dosis aplicadas deberá tener al menos una
+	 * cita antigua con respecto a la dosis aplicada; para asignar la cita de la
+	 * segunda dosis, en caso de ya estar aplicada la primera, se busca cuál fue la
+	 * primera cita para empezar a buscar a partir de 21 días.
+	 * 
+	 * @param pacienteDTO
+	 * @param dosis
+	 * @return
+	 */
 	public CitaDTO buscarUltimaCitaPinchazo(PacienteDTO pacienteDTO, int dosis) {
 		List<CitaDTO> citasAntiguasDTO = obtenerCitasAntiguasPaciente(pacienteDTO);
 		/*
@@ -274,19 +304,26 @@ public class CitaController {
 		for (int i = citasAntiguasDTO.size() - 1; i >= 0 && citaPinchazo == null; i--) {
 			// Empezando desde el final.
 			CitaDTO cita = citasAntiguasDTO.get(i);
-			if (cita.getDosis() == PRIMERA_DOSIS) {
+			if (cita.getDosis() == dosis) {
 				citaPinchazo = cita;
 			}
 		}
 		return citaPinchazo;
 	}
 
+	/**
+	 * Una cita, solamente se puede modificar en un rango de días concreto, para
+	 * poder respetar los 21 días.
+	 * 
+	 * @param uuidCita
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarDiasModificacionCita")
 	public List<Date> buscarDiasModificacionCita(@RequestParam String uuidCita) {
 		if (uuidCita != null) {
 			List<Date> lista = new ArrayList<>();
-			CitaDTO citaDTO = null;
+			CitaDTO citaDTO = new CitaDTO();
 			try {
 				citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
 			} catch (IdentificadorException e) {
@@ -295,12 +332,14 @@ public class CitaController {
 			if (citaDTO.getDosis() == PRIMERA_DOSIS) { // En caso de ser la primera, da igual.
 				System.out.println("primera dosis");
 				Date hoy = new Date();
-				if (Condicionamientos.buscarAPartirDeMañana())
+				if (Condicionamientos.buscarAPartirDeManana())
 					hoy.setDate(hoy.getDate() + 1);
 				lista.add(hoy); // Desde hoy
 
-				// Si tiene segunda cita, es hasta el día anterior a la segunda;
-				// y si no, fecha fin:
+				/*
+				 * Si tiene segunda cita, es hasta el día anterior a la segunda; y si no, fecha
+				 * fin:
+				 */
 				List<CitaDTO> citasDTO = null;
 
 				citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
@@ -340,15 +379,22 @@ public class CitaController {
 		}
 	}
 
+	/**
+	 * Este método devuelve las citas de exactamente una fecha (día) en concreto, de
+	 * un centro. Servirá para saber qué citas se vacunan.
+	 * 
+	 * @param centroSaludDTOJson
+	 * @param fechaJson
+	 * @return
+	 */
 	@GetMapping(value = "/obtenerCitasFecha")
 	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson,
-			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
 		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			CentroSaludDTO centroSaludDTO = null;
 			Date fecha = null;
 
-			SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 			try {
 				centroSaludDTO = mapper.readValue(centroSaludDTOJson, CentroSaludDTO.class);
 				fecha = mapper.readValue(fechaJson, Date.class);
@@ -380,8 +426,15 @@ public class CitaController {
 		}
 	}
 
+	/**
+	 * Este método devuelve las citas futuras de un paciente en concreto. Servirá
+	 * para poder consultar sus citas.
+	 * 
+	 * @param idPaciente
+	 * @return
+	 */
 	@GetMapping("/obtenerCitasFuturasDelPaciente")
-	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente) { // Terminado.
+	public List<CitaDTO> obtenerCitasFuturasDelPaciente(@RequestParam String idPaciente) {
 		if (idPaciente == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El parámetro de entrada no se contemplaba");
 		}
@@ -392,6 +445,14 @@ public class CitaController {
 				if (citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) { // ¿Es antigua?
 					citasDTO.remove(i--);
 				}
+				else {
+					if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 1 && citasDTO.get(i).getDosis() ==1){
+						citasDTO.remove(i--);
+					}
+					else if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 2 && citasDTO.get(i).getDosis() ==2){
+						citasDTO.remove(i--);
+					}
+				}
 			}
 			Collections.sort(citasDTO);
 			return citasDTO;
@@ -400,6 +461,14 @@ public class CitaController {
 		}
 	}
 
+	/**
+	 * Este método devuelve las citas antiguas (ya celebradas) de un paciente en
+	 * concreto. Servirá para poder consultar sus citas antiguas ante ciertas
+	 * necesidades.
+	 * 
+	 * @param pacienteDTO
+	 * @return
+	 */
 	public List<CitaDTO> obtenerCitasAntiguasPaciente(PacienteDTO pacienteDTO) {
 		List<CitaDTO> citasDTO = wrapperModelToDTO
 				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
@@ -412,24 +481,14 @@ public class CitaController {
 		return citasDTO;
 	}
 
-	@SuppressWarnings("static-access")
-	private CitaDTO citaSimulacion(PacienteDTO paciente, int dosis) {
-		CitaDTO cita = new CitaDTO();
-		cita.setPaciente(paciente);
-		CupoDTO cupoDTO = new CupoDTO();
-		Cupo cupo = this.cupoDao.findAll().get(0);
-		cupoDTO.setCentroSalud(this.wrapperModelToDTO
-				.centroSaludToCentroSaludDTO(this.centroSaludDao.findByNombreCentro("Julio Prueba").get()));
-		cupoDTO.setFechaYHoraInicio(new Date());
-		cita.setCupo(cupoDTO);
-		cita.getPaciente().setNumDosisAplicadas(1);
-		cita.setDosis(dosis);
-		return cita;
-	}
-
+	/**
+	 * Este método ayuda a eliminar una cita en concreto dadas unas condiciones.
+	 * 
+	 * @param uuidCita
+	 */
 	@SuppressWarnings("static-access")
 	@DeleteMapping("/eliminarCita/{uuidCita}")
-	public void eliminarCita(@PathVariable String uuidCita) { // Terminado
+	public void eliminarCita(@PathVariable String uuidCita) {
 		CitaDTO citaDTO = null;
 		try {
 			citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
@@ -468,18 +527,35 @@ public class CitaController {
 
 	}
 
-	public void eliminarCitas(List<CitaDTO> citasDTO) { // Terminado
+	/**
+	 * El método ayudará a eliminar todas las citas incluidas en la lista del
+	 * parámetro.
+	 * 
+	 * @param citasDTO
+	 */
+	public void eliminarCitas(List<CitaDTO> citasDTO) {
 		for (int i = 0; i < citasDTO.size(); i++) {
 			eliminarCita(citasDTO.get(i).getUuidCita());
 		}
 	}
 
+	/**
+	 * El método ayudará a eliminar (desprogramar) todas las citas futuras de un
+	 * paciente, dejando evidentemente sucesivos huecos.
+	 * 
+	 * @param paciente
+	 */
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
-	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) throws UsuarioInvalidoException { // Terminado
+	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) {
 		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente.getIdUsuario()));
 	}
 
-	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) { // Terminado
+	/**
+	 * El método ayudará a eliminar todas las citas (todas) de un paciente.
+	 * 
+	 * @param pacienteDTO
+	 */
+	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) {
 		try {
 			eliminarCitas(
 					wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario())));
@@ -489,25 +565,26 @@ public class CitaController {
 
 	}
 
-	public void eliminarTodasLasCitasDelCupo(String uuidCupo) { // Terminado
+	/**
+	 * El método ayudará a eliminar todas las citas del cupo introducido por
+	 * parámetro.
+	 * 
+	 * @param uuidCupo
+	 */
+	public void eliminarTodasLasCitasDelCupo(String uuidCupo) {
 		citaDao.deleteAllByUuidCupo(uuidCupo);
 		try {
 			cupoController.anularTamanoActual(uuidCupo);
 		} catch (CupoException e) {
+			e.printStackTrace();
 		}
 	}
 
-	@GetMapping("/getPacientePrueba")
-	public PacienteDTO getPacientePrueba() {
-		Optional<Usuario> opt = this.usuarioDao.findByUsername("No borrar prueba citas");
-		if (opt.isPresent()) {
-			Usuario paciente = opt.get();
-			Paciente p = (Paciente) paciente;
-		}
-		return wrapperModelToDTO.pacienteToPacienteDTO(this.usuarioDao.findByUsername("No borrar prueba citas").get());
-
-	}
-
+	/**
+	 * El método eliminará las citas de un paciente.
+	 * 
+	 * @param pacienteDTO
+	 */
 	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
 		List<CitaDTO> citasDTO = wrapperModelToDTO
 				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
@@ -530,14 +607,16 @@ public class CitaController {
 			Cita cita = null;
 			Cupo cupo = null;
 
-			if (citaDao.findById(idCita).isPresent()) {
-				cita = citaDao.findById(idCita).get();
+			Optional<Cita> optCita = citaDao.findById(idCita);
+			if (optCita.isPresent()) {
+				cita = optCita.get();
 			} else {
 				throw new CitaException("La cita que se intenta modificar no existe");
 			}
 
-			if (cupoDao.findById(cita.getUuidCupo()).isPresent()) {
-				cupo = cupoDao.findById(cita.getUuidCupo()).get();
+			Optional<Cupo> optCupo1 = cupoDao.findById(cita.getUuidCupo());
+			if (optCupo1.isPresent()) {
+				cupo = optCupo1.get();
 			} else {
 				throw new CupoException("El cupo que tiene asociado la cita no existe");
 			}
@@ -545,8 +624,9 @@ public class CitaController {
 			cupo.setTamanoActual(cupo.getTamanoActual() - 1);
 			cupoDao.save(cupo);
 
-			if (cupoDao.findById(cupoNuevo).isPresent()) {
-				cupo = cupoDao.findById(cupoNuevo).get();
+			Optional<Cupo> optCupo2 = cupoDao.findById(cupoNuevo);
+			if (optCupo2.isPresent()) {
+				cupo = optCupo2.get();
 			} else {
 				throw new CupoException("El cupo no existe");
 			}
@@ -566,6 +646,12 @@ public class CitaController {
 		}
 	}
 
+	/**
+	 * Este método ejecutará la vacunación de una cierta dosis de un paciente en
+	 * concreto, dada la cita de vacunación.
+	 * 
+	 * @param cita
+	 */
 	@PostMapping("/vacunar")
 	public void vacunarPaciente(@RequestBody CitaDTO cita) {
 		try {
@@ -577,7 +663,7 @@ public class CitaController {
 			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
 			centroSalud.decrementarNumVacunasDisponibles();
 			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {
-				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOToPaciente(cita.getPaciente()));
+				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOtoPacienteNonStatic(cita.getPaciente()));
 				centroSaludDao.save(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSalud));
 			} else {
 				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");
@@ -588,6 +674,13 @@ public class CitaController {
 
 	}
 
+	/**
+	 * El método ayudará a crear una nueva cita en la base de datos, pudiendo
+	 * existir otras alternativas más o menos directas.
+	 * 
+	 * @param cita
+	 */
+	@SuppressWarnings("static-access")
 	public void crearCita(CitaDTO cita) {
 		try {
 			citaDao.save(wrapperDTOtoModel.citaDTOToCita(cita));

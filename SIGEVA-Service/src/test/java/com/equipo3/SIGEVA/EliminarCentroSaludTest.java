@@ -44,7 +44,6 @@ class EliminarCentroSaludTest {
 	void eliminacionCorrectaTest() {
 		centroSaludDTO = new CentroSaludDTO();
 		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
-		String idCentro= centroSaludDTO.getId();
 		centroController.crearCentroSalud(centroSaludDTO);
 		try {
 			centroController.borrarCentroSalud(centroSaludDTO);
@@ -102,6 +101,7 @@ class EliminarCentroSaludTest {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	void eliminacionCentroSaludConCitasTest() {
 		centroSaludDTO = new CentroSaludDTO();

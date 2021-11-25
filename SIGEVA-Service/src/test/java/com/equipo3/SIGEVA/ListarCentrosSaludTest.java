@@ -8,13 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class listarCentrosSaludTest {
+class ListarCentrosSaludTest {
 
     @Autowired
     private CentroController centroController;
 
     @Test
-    public void getTodosCentros(){
+    void getTodosCentros(){
         assertNotNull(centroController.listarCentros());
     }
 }

@@ -7,14 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +33,8 @@ import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -65,8 +62,15 @@ public class CupoController {
 	@Autowired
 	WrapperDTOtoModel wrapperDTOtoModel;
 
+	/**
+	 * El método ayudará a calcular cuáles son exactamente los cupos de un centro en
+	 * concreto, dada la configuración establecida de horarios.
+	 * 
+	 * @param centroSaludDTO
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
-	public List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) { // Terminado.
+	public List<CupoDTO> calcularCupos(CentroSaludDTO centroSaludDTO) {
 		// No requerirá tiempo de ejecución.
 
 		List<CupoDTO> momentos = new ArrayList<>();
@@ -103,6 +107,13 @@ public class CupoController {
 		return momentos;
 	}
 
+	/**
+	 * Basándose en el método de calcular los cupos, este método guardará
+	 * (inicializará) dichos cupos en la base de datos. Tardará en ejecutarse.
+	 * 
+	 * @param uuidCentroSalud
+	 * @return
+	 */
 	@SuppressWarnings("static-access")
 	@GetMapping("/prepararCupos")
 	public List<CupoDTO> prepararCupos(@RequestParam String uuidCentroSalud) {
@@ -117,7 +128,6 @@ public class CupoController {
 			System.out.println("CentroSaludDTO: " + centroSaludDTO.getId());
 			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
 			for (int i = 0; i < cupos.size(); i++) {
-//				System.out.println("Cupo: " + cupos.get(i).toString());
 				cupoDao.save(cupos.get(i));
 			}
 			return cuposDTO;
@@ -126,12 +136,22 @@ public class CupoController {
 		}
 	}
 
-	public List<Cupo> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
+	/**
+	 * Este método buscará cuáles son todos los cupos libres a partir de una fecha
+	 * en concreto (día inclusive, desde la hora especificada) situados en un
+	 * centro, por los cuales, se podrán programar nuevas citas.
+	 * 
+	 * @param centroSaludDTO
+	 * @param fecha
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public List<Cupo> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) {
 		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
 		SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
 
 		if (formateador.format(fecha).equals(formateador.format(new Date()))
-				&& Condicionamientos.buscarAPartirDeMañana()) {
+				&& Condicionamientos.buscarAPartirDeManana()) {
 			fecha.setDate(fecha.getDate() + 1);
 			fecha.setHours(0);
 			fecha.setMinutes(0);
@@ -141,30 +161,44 @@ public class CupoController {
 		List<Cupo> cupos = cupoDao.buscarCuposLibresAPartirDe(centroSaludDTO.getId(), fecha,
 				configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 		Collections.sort(cupos);
-		if (cupos.size() == 0) {
+		if (cupos.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"¡No hay hueco disponible a partir de " + fecha + "!");
 		}
 		return cupos;
 	}
 
+	/**
+	 * Este método devolverá cuál es el primer cupo (hueco) libre a partir de una
+	 * determinada fecha (día y hora) en un centro en concreto. Este método se
+	 * utiliza para buscar el próximo cupo libre (para asignar una nueva cita).
+	 * 
+	 * @param centroSaludDTO
+	 * @param aPartirDeLaFecha
+	 * @return
+	 */
 	public Cupo buscarPrimerCupoLibreAPartirDe(CentroSaludDTO centroSaludDTO, Date aPartirDeLaFecha) {
-		// Este método se utiliza para buscar el próximo cupo libre (para asignar).
 		return buscarCuposLibresAPartirDeLaFecha(centroSaludDTO, aPartirDeLaFecha).get(0);
 		// Lanzará exception en caso de no haber hueco.
 	}
 
+	/**
+	 * El método ayudará a buscar los cupos libres de exactamente una fecha en
+	 * concreto. Se utilizará para buscar los cupos libres del día (para modificar).
+	 * La hora de la fecha no importa, sino solamente el día.
+	 * 
+	 * @param uuidPaciente
+	 * @param fechaJson
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	@GetMapping("/buscarCuposLibresFecha")
 	public List<CupoDTO> buscarCuposLibresFechaSJR(@RequestParam(name = "uuidPaciente") String uuidPaciente,
-			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) { // Terminado.
-		// Este método se utiliza para buscar los cupos libres del día (para modificar).
-		// (La hora de la fecha no importa, solamente importa el día)
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
 
 		ObjectMapper mapper = new ObjectMapper();
 		Date fecha = null;
 
-		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		try {
 			fecha = mapper.readValue(fechaJson, Date.class);
 		} catch (JsonProcessingException j) {
@@ -188,7 +222,7 @@ public class CupoController {
 					.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(pacienteDTO.getCentroSalud().getId(),
 							fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
 			Collections.sort(cuposDTO);
-			if (cuposDTO.size() == 0) {
+			if (cuposDTO.isEmpty()) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT,
 						"¡No hay hueco disponible en este día (" + fecha + ")!");
 			}
@@ -200,16 +234,14 @@ public class CupoController {
 
 	/**
 	 * Método usado para obtener TODOS los cupos de ese centro de exactamente ese
-	 * día.
+	 * día. El método ayuda al método de buscar las citas del día (para vacunar).
 	 * 
 	 * @param centroSaludDTO
 	 * @param fecha
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	public List<CupoDTO> buscarTodosCuposFecha(CentroSaludDTO centroSaludDTO, Date fecha) { // Terminado.
-		// Este método se utiliza para buscar las citas del día (para vacunar).
-		// (La hora de la fecha no importa, solamente importa el día)
+	public List<CupoDTO> buscarTodosCuposFecha(CentroSaludDTO centroSaludDTO, Date fecha) {
 		Date fechaInicio = CupoController.copia(fecha);
 		fechaInicio.setHours(0);
 		fechaInicio.setMinutes(0);
@@ -221,8 +253,15 @@ public class CupoController {
 		return cuposDTO;
 	}
 
+	/**
+	 * Este método ayuda a incrementar el tamaño actual de un cupo en concreto, para
+	 * contabilizar hasta el máximo establecido en la configuración.
+	 * 
+	 * @param uuidCupo
+	 * @throws CupoException
+	 */
 	@SuppressWarnings("static-access")
-	public void incrementarTamanoActual(String uuidCupo) throws CupoException { // Terminado.
+	public void incrementarTamanoActual(String uuidCupo) throws CupoException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
 		if (optCupo.isPresent()) {
 			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
@@ -231,12 +270,19 @@ public class CupoController {
 			cupoDTO.incrementarTamanoActual(configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
 		} else {
-			throw new CupoException("Cupo no identificado en la base de datos.");
+			throw new CupoException("Cupo no identificado en la base de datos");
 		}
 	}
 
+	/**
+	 * Este método ayuda a decrementar el tamaño actual de un cupo en concreto, para
+	 * contabilizar hasta el máximo establecido en la configuración.
+	 * 
+	 * @param uuidCupo
+	 * @throws CupoException
+	 */
 	@SuppressWarnings("static-access")
-	public void decrementarTamanoActualCupo(String uuidCupo) throws CupoException { // Terminado.
+	public void decrementarTamanoActualCupo(String uuidCupo) throws CupoException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
 		if (optCupo.isPresent()) {
 			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
@@ -249,8 +295,15 @@ public class CupoController {
 		}
 	}
 
+	/**
+	 * Este método ayuda a anular (equivaler a 0) el tamaño actual de un cupo en
+	 * concreto. Se invocará al método cuando se vaya a querer borrar el cupo.
+	 * 
+	 * @param uuidCupo
+	 * @throws CupoException
+	 */
 	@SuppressWarnings("static-access")
-	public void anularTamanoActual(String uuidCupo) throws CupoException { // Terminado.
+	public void anularTamanoActual(String uuidCupo) throws CupoException {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
 		if (optCupo.isPresent()) {
 			CupoDTO cupoDTO = wrapperModelToDTO.cupoToCupoDTO(optCupo.get());
@@ -261,11 +314,29 @@ public class CupoController {
 		}
 	}
 
-	public void eliminarCupo(String uuidCupo) { // Terminado.
+	/**
+	 * El método ayuda a eliminar un cupo en concreto de la base de datos.
+	 * 
+	 * @param uuidCupo
+	 */
+	public void eliminarCupo(String uuidCupo) {
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
+		/*
+		 * El orden de estas líneas es necesario que sea así, porque cuando se elimina
+		 * una cita se decrementa el tamaño del cupo, y si no existe provocaría
+		 * NullPointers que no tienen por qué ser necesarias corregir si esto se ordena
+		 * correctamente.
+		 */
+
 	}
 
+	/**
+	 * El método ayuda a eliminar todos los cupos de un centro. Tardará en
+	 * ejecutarse.
+	 * 
+	 * @param centroSaludDTO
+	 */
 	@PutMapping("/borrarCuposDelCentro")
 	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
 		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
@@ -274,45 +345,25 @@ public class CupoController {
 		}
 	}
 
+	/**
+	 * El método ayuda a crear una instancia gemela de una fecha en concreto. Ayuda
+	 * a desacoplar el paso por referencia de la primera fecha.
+	 * 
+	 * @param fecha
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
-	public static Date copia(Date fecha) { // Desacoplaje del Paso por Referencia. // Terminado.
+	public static Date copia(Date fecha) { // Desacoplaje del Paso por Referencia. .
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
 	}
 
-	@SuppressWarnings("deprecation")
-	@GetMapping("/freeDatesDay")
-	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha) {
-		CentroSalud cs = null;
-		Paciente pacienteUsu = null;
-		List<Cupo> clibday = new ArrayList<>();
-		try {
-			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
-			if (paciente.isPresent()) {
-				pacienteUsu = (Paciente) paciente.get();
-				System.out.println(pacienteUsu.getNumDosisAplicadas());
-			}
-
-			if (centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
-				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
-				System.out.println(cs.getNombreCentro());
-			}
-			Date fechaInicio = (Date) fecha.clone();
-			Date fechaFin = (Date) fecha.clone();
-			fechaFin.setHours(24);
-			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin,
-					configuracionCuposDao.findAll().get(0).getNumeroPacientes());
-			for (int i = 0; i < clibday.size(); i++) {
-				System.out.println("identificador: " + clibday.get(i).getUuidCupo() + "Fecha "
-						+ clibday.get(i).getFechaYHoraInicio() + "Tmaño: " + clibday.get(i).getTamanoActual());
-			}
-
-			return wrapperModelToDTO.allCupoToCupoDTO(clibday);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
-	}
-
+	/**
+	 * Este método ayuda a crear un nuevo cupo sobre la base de datos, especificado
+	 * por parámetro.
+	 * 
+	 * @param cupo
+	 */
 	public void crearCupo(CupoDTO cupo) {
 		try {
 			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupo));

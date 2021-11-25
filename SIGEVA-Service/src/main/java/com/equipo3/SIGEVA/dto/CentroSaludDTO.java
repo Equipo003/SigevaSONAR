@@ -178,4 +178,24 @@ public class CentroSaludDTO {
 				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", direccion='" + direccion + '\'' + ", vacuna="
 				+ vacuna.toString() + '}';
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles, vacuna);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CentroSaludDTO other = (CentroSaludDTO) obj;
+		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
+				&& Objects.equals(nombreCentro, other.nombreCentro)
+				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
+	}
+
 }

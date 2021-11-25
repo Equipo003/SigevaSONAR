@@ -173,6 +173,11 @@ public class CentroSalud {
 				+ vacuna + '}';
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles, vacuna);
+	}
+
 	/***
 	 * Comparador para los centros de salud
 	 */
@@ -187,7 +192,7 @@ public class CentroSalud {
 		CentroSalud other = (CentroSalud) obj;
 		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
 				&& Objects.equals(nombreCentro, other.nombreCentro)
-				&& numVacunasDisponibles == other.numVacunasDisponibles;
+				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
 	}
 
 }

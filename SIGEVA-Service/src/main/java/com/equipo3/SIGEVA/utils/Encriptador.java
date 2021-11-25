@@ -12,22 +12,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Encriptador {
-	private final String key = "2189474sdGHSGDA223hdf";
-	AES256TextEncryptor encriptador;
+	private static final String KEY = "2189474sdGHSGDA223hdf";
+	AES256TextEncryptor encrypter;
 
 	
 	public Encriptador() {
-		encriptador = new AES256TextEncryptor();
-		encriptador.setPassword(key);
+		encrypter = new AES256TextEncryptor();
+		encrypter.setPassword(KEY);
 	}
 
 	public String encriptar(String cadena) {
-		return encriptador.encrypt(cadena);
+		return encrypter.encrypt(cadena);
 	}
 
 	public String desencriptar(String cadena) {
 		try {
-			return encriptador.decrypt(cadena);
+			return encrypter.decrypt(cadena);
 		} catch (Exception e) {
 			return null;
 		}
@@ -35,7 +35,7 @@ public class Encriptador {
 	}
 
 	public String getClave() {
-		return key;
+		return KEY;
 	}
 
 }

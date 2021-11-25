@@ -8,12 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static com.mongodb.assertions.Assertions.assertNotNull;
 
 @SpringBootTest
-public class listarRolesTest {
+class ListarRolesTest {
     @Autowired
     private UsuarioController usuarioController;
 
     @Test
-    public void getTodosUsuarios(){
+    void getTodosUsuarios(){
         assertNotNull(usuarioController.listarRoles());
     }
 }
