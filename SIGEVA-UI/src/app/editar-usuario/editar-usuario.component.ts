@@ -138,7 +138,7 @@ export class EditarUsuarioComponent implements OnInit {
             }, 3000);
             this.errorMessage = "";
           }, error => {
-            this.errorMessage = "Error al editar el usuario";
+            this.errorMessage = error.error.message;
             this.message = "";
           });
       }
