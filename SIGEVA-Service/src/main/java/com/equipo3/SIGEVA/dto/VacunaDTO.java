@@ -122,12 +122,22 @@ public class VacunaDTO {
                 ", numDosis=" + numDosis +
                 '}';
     }
-
+    
+    /***
+	 * Método que cifra la información mediante el algoritmo de hash.
+	 */
+    
 	@Override
 	public int hashCode() {
 		return Objects.hash(diasEntreDosis, id, nombre, numDosis);
 	}
 
+	/***
+   	 * Método para la comparación de objetos.
+   	 * 
+   	 * @param obj; objeto a comparar.
+   	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
