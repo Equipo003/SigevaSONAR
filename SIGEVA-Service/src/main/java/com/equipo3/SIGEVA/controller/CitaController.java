@@ -79,7 +79,7 @@ public class CitaController {
 	 * Método encargado de buscar y asignar citas. En función de las dosis aplicadas
 	 * y citas futuras del paciente, procurará asignar más o menos cantidad de
 	 * citas.
-	 * 
+	 *
 	 * @param uuidPaciente
 	 * @return List<CitaDTO>
 	 */
@@ -256,7 +256,7 @@ public class CitaController {
 	/**
 	 * Método que sirve para confirmar una cita, es decir, programar una cita de un
 	 * paciente concreto en un cupo concreto.
-	 * 
+	 *
 	 * @param cupoDTO
 	 * @param pacienteDTO
 	 * @param dosis
@@ -288,7 +288,7 @@ public class CitaController {
 	 * cita antigua con respecto a la dosis aplicada; para asignar la cita de la
 	 * segunda dosis, en caso de ya estar aplicada la primera, se busca cuál fue la
 	 * primera cita para empezar a buscar a partir de 21 días.
-	 * 
+	 *
 	 * @param pacienteDTO
 	 * @param dosis
 	 * @return
@@ -314,7 +314,7 @@ public class CitaController {
 	/**
 	 * Una cita, solamente se puede modificar en un rango de días concreto, para
 	 * poder respetar los 21 días.
-	 * 
+	 *
 	 * @param uuidCita
 	 * @return
 	 */
@@ -382,14 +382,14 @@ public class CitaController {
 	/**
 	 * Este método devuelve las citas de exactamente una fecha (día) en concreto, de
 	 * un centro. Servirá para saber qué citas se vacunan.
-	 * 
+	 *
 	 * @param centroSaludDTOJson
 	 * @param fechaJson
 	 * @return
 	 */
 	@GetMapping(value = "/obtenerCitasFecha")
 	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson,
-			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
+										   @RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
 		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			CentroSaludDTO centroSaludDTO = null;
@@ -429,7 +429,7 @@ public class CitaController {
 	/**
 	 * Este método devuelve las citas futuras de un paciente en concreto. Servirá
 	 * para poder consultar sus citas.
-	 * 
+	 *
 	 * @param idPaciente
 	 * @return
 	 */
@@ -465,7 +465,7 @@ public class CitaController {
 	 * Este método devuelve las citas antiguas (ya celebradas) de un paciente en
 	 * concreto. Servirá para poder consultar sus citas antiguas ante ciertas
 	 * necesidades.
-	 * 
+	 *
 	 * @param pacienteDTO
 	 * @return
 	 */
@@ -483,7 +483,7 @@ public class CitaController {
 
 	/**
 	 * Este método ayuda a eliminar una cita en concreto dadas unas condiciones.
-	 * 
+	 *
 	 * @param uuidCita
 	 */
 	@SuppressWarnings("static-access")
@@ -530,7 +530,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar todas las citas incluidas en la lista del
 	 * parámetro.
-	 * 
+	 *
 	 * @param citasDTO
 	 */
 	public void eliminarCitas(List<CitaDTO> citasDTO) {
@@ -542,7 +542,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar (desprogramar) todas las citas futuras de un
 	 * paciente, dejando evidentemente sucesivos huecos.
-	 * 
+	 *
 	 * @param paciente
 	 */
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
@@ -552,7 +552,7 @@ public class CitaController {
 
 	/**
 	 * El método ayudará a eliminar todas las citas (todas) de un paciente.
-	 * 
+	 *
 	 * @param pacienteDTO
 	 */
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) {
@@ -568,7 +568,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar todas las citas del cupo introducido por
 	 * parámetro.
-	 * 
+	 *
 	 * @param uuidCupo
 	 */
 	public void eliminarTodasLasCitasDelCupo(String uuidCupo) {
@@ -582,7 +582,7 @@ public class CitaController {
 
 	/**
 	 * El método eliminará las citas de un paciente.
-	 * 
+	 *
 	 * @param pacienteDTO
 	 */
 	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
@@ -595,7 +595,7 @@ public class CitaController {
 
 	/**
 	 * Recurso web para la modficación de la cita de un paciente
-	 * 
+	 *
 	 * @param idCita    Identificador de la cita que se va a modificar
 	 * @param cupoNuevo Identificador del nuevo cupo al que va a pertenecer la cita
 	 *                  del paciente y el cual contiene la fecha y hora de la
@@ -649,7 +649,7 @@ public class CitaController {
 	/**
 	 * Este método ejecutará la vacunación de una cierta dosis de un paciente en
 	 * concreto, dada la cita de vacunación.
-	 * 
+	 *
 	 * @param cita
 	 */
 	@PostMapping("/vacunar")
@@ -677,7 +677,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a crear una nueva cita en la base de datos, pudiendo
 	 * existir otras alternativas más o menos directas.
-	 * 
+	 *
 	 * @param cita
 	 */
 	@SuppressWarnings("static-access")
