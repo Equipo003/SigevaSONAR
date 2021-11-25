@@ -28,12 +28,13 @@ import com.equipo3.SIGEVA.model.Vacuna;
 
 import com.equipo3.SIGEVA.utils.Encriptador;
 
-
 @Component
 public class WrapperModelToDTO {
-	private static  Encriptador var = new Encriptador();
+	private static Encriptador encrypter = new Encriptador();
 	@Autowired
 	ConfiguracionCuposDao configuracionCuposDao;
+	
+	private static final String NO_ENCONTRADO = " no encontrado.";
 
 	public ConfiguracionCuposDTO getConfiguracionCuposDTOfromUuid(String uuidConfiguracionCupos)
 			throws IdentificadorException {
@@ -43,7 +44,7 @@ public class WrapperModelToDTO {
 			return configuracionCuposToConfiguracionCuposDTO(optConfiguracionCupos.get());
 		} else {
 			throw new IdentificadorException(
-					"Identificador ConfiguracionCupos " + uuidConfiguracionCupos + " no encontrado.");
+					"Identificador ConfiguracionCupos " + uuidConfiguracionCupos + NO_ENCONTRADO);
 		}
 	}
 
@@ -79,7 +80,7 @@ public class WrapperModelToDTO {
 		if (optRol.isPresent()) {
 			return rolToRolDTO(optRol.get());
 		} else {
-			throw new IdentificadorException("Identificador Rol " + uuidRol + " no encontrado.");
+			throw new IdentificadorException("Identificador Rol " + uuidRol + NO_ENCONTRADO);
 		}
 	}
 
@@ -111,7 +112,7 @@ public class WrapperModelToDTO {
 		if (optVacuna.isPresent()) {
 			return vacunaToVacunaDTO(optVacuna.get());
 		} else {
-			throw new IdentificadorException("Identificador Vacuna " + uuidVacuna + " no encontrado.");
+			throw new IdentificadorException("Identificador Vacuna " + uuidVacuna + NO_ENCONTRADO);
 		}
 	}
 
@@ -156,7 +157,7 @@ public class WrapperModelToDTO {
 			return centroSaludDTO;
 
 		} else {
-			throw new IdentificadorException("Identificador Centro Salud " + uuidCentroSalud + " no encontrado.");
+			throw new IdentificadorException("Identificador Centro Salud " + uuidCentroSalud + NO_ENCONTRADO);
 		}
 	}
 
@@ -186,7 +187,7 @@ public class WrapperModelToDTO {
 		Optional<Cupo> optCupo = cupoDao.findById(uuidCupo);
 		if (optCupo.isPresent()) {
 			Cupo cupo = optCupo.get();
-			
+
 			CupoDTO cupoDTO = new CupoDTO();
 
 			cupoDTO.setUuidCupo(cupo.getUuidCupo());
@@ -197,7 +198,7 @@ public class WrapperModelToDTO {
 			return cupoDTO;
 
 		} else {
-			throw new IdentificadorException("Identificador Cupo " + uuidCupo + " no encontrado.");
+			throw new IdentificadorException("Identificador Cupo " + uuidCupo + NO_ENCONTRADO);
 		}
 
 	}
@@ -289,15 +290,19 @@ public class WrapperModelToDTO {
 				pacienteDTO.setApellidos(paciente.getApellidos());
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
-				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
-				
+				pacienteDTO.setNumDosisAplicadas(
+						Integer.parseInt((encrypter.desencriptar(paciente.getNumDosisAplicadas()))));
+
 				return pacienteDTO;
+
+			default:
+				break;
 			}
 
 			return null;
 
 		} else {
-			throw new IdentificadorException("Identificador Usuario " + uuidUsuario + " no encontrado.");
+			throw new IdentificadorException("Identificador Usuario " + uuidUsuario + NO_ENCONTRADO);
 		}
 	}
 
@@ -344,7 +349,8 @@ public class WrapperModelToDTO {
 				pacienteDTO.setFechaNacimiento(paciente.getFechaNacimiento());
 				pacienteDTO.setImagen(paciente.getImagen());
 
-				pacienteDTO.setNumDosisAplicadas(Integer.parseInt((var.desencriptar(paciente.getNumDosisAplicadas()))));
+				pacienteDTO.setNumDosisAplicadas(
+						Integer.parseInt((encrypter.desencriptar(paciente.getNumDosisAplicadas()))));
 
 				return pacienteDTO;
 
@@ -353,7 +359,7 @@ public class WrapperModelToDTO {
 						"El Usuario del UUID " + uuidPaciente + " no es Paciente, sino " + rol.getNombre() + ".");
 			}
 		} else {
-			throw new IdentificadorException("Identificador Paciente " + uuidPaciente + " no encontrado.");
+			throw new IdentificadorException("Identificador Paciente " + uuidPaciente + NO_ENCONTRADO);
 		}
 	}
 
@@ -395,7 +401,7 @@ public class WrapperModelToDTO {
 			return citaDTO;
 
 		} else {
-			throw new IdentificadorException("Identificador Cita " + uuidCita + " no encontrado.");
+			throw new IdentificadorException("Identificador Cita " + uuidCita + NO_ENCONTRADO);
 		}
 	}
 

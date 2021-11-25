@@ -7,14 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +33,8 @@ import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.model.CentroSalud;
 import com.equipo3.SIGEVA.model.ConfiguracionCupos;
 import com.equipo3.SIGEVA.model.Cupo;
-import com.equipo3.SIGEVA.model.Paciente;
-import com.equipo3.SIGEVA.model.Usuario;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -117,7 +114,6 @@ public class CupoController {
 			System.out.println("CentroSaludDTO: " + centroSaludDTO.getId());
 			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
 			for (int i = 0; i < cupos.size(); i++) {
-//				System.out.println("Cupo: " + cupos.get(i).toString());
 				cupoDao.save(cupos.get(i));
 			}
 			return cuposDTO;
@@ -126,12 +122,13 @@ public class CupoController {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<Cupo> buscarCuposLibresAPartirDeLaFecha(CentroSaludDTO centroSaludDTO, @RequestBody Date fecha) { // Terminado.
 		// Este método se utiliza para buscar los próximos cupos libres (para asignar).
 		SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
 
 		if (formateador.format(fecha).equals(formateador.format(new Date()))
-				&& Condicionamientos.buscarAPartirDeMañana()) {
+				&& Condicionamientos.buscarAPartirDeManana()) {
 			fecha.setDate(fecha.getDate() + 1);
 			fecha.setHours(0);
 			fecha.setMinutes(0);
@@ -141,7 +138,7 @@ public class CupoController {
 		List<Cupo> cupos = cupoDao.buscarCuposLibresAPartirDe(centroSaludDTO.getId(), fecha,
 				configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 		Collections.sort(cupos);
-		if (cupos.size() == 0) {
+		if (cupos.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"¡No hay hueco disponible a partir de " + fecha + "!");
 		}
@@ -164,7 +161,6 @@ public class CupoController {
 		ObjectMapper mapper = new ObjectMapper();
 		Date fecha = null;
 
-		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		try {
 			fecha = mapper.readValue(fechaJson, Date.class);
 		} catch (JsonProcessingException j) {
@@ -188,7 +184,7 @@ public class CupoController {
 					.allCupoToCupoDTO(cupoDao.buscarCuposLibresDelTramo(pacienteDTO.getCentroSalud().getId(),
 							fechaInicio, fechaFin, configuracionCuposDao.findAll().get(0).getNumeroPacientes()));
 			Collections.sort(cuposDTO);
-			if (cuposDTO.size() == 0) {
+			if (cuposDTO.isEmpty()) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT,
 						"¡No hay hueco disponible en este día (" + fecha + ")!");
 			}
@@ -231,7 +227,7 @@ public class CupoController {
 			cupoDTO.incrementarTamanoActual(configuracionCuposDao.findAll().get(0).getNumeroPacientes());
 			cupoDao.save(wrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
 		} else {
-			throw new CupoException("Cupo no identificado en la base de datos.");
+			throw new CupoException("Cupo no identificado en la base de datos");
 		}
 	}
 
@@ -278,39 +274,6 @@ public class CupoController {
 	public static Date copia(Date fecha) { // Desacoplaje del Paso por Referencia. // Terminado.
 		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDate(), fecha.getHours(), fecha.getMinutes(),
 				fecha.getSeconds());
-	}
-
-	@SuppressWarnings("deprecation")
-	@GetMapping("/freeDatesDay")
-	public List<CupoDTO> buscarCuposLibresFechaJMD(@RequestParam String idUsuario, @RequestParam Date fecha) {
-		CentroSalud cs = null;
-		Paciente pacienteUsu = null;
-		List<Cupo> clibday = new ArrayList<>();
-		try {
-			Optional<Usuario> paciente = usuarioDao.findById(idUsuario);
-			if (paciente.isPresent()) {
-				pacienteUsu = (Paciente) paciente.get();
-				System.out.println(pacienteUsu.getNumDosisAplicadas());
-			}
-
-			if (centroSaludDao.findById(pacienteUsu.getCentroSalud()).isPresent()) {
-				cs = centroSaludDao.findById(pacienteUsu.getCentroSalud()).get();
-				System.out.println(cs.getNombreCentro());
-			}
-			Date fechaInicio = (Date) fecha.clone();
-			Date fechaFin = (Date) fecha.clone();
-			fechaFin.setHours(24);
-			clibday = cupoDao.buscarCuposLibresDelTramo(cs.getId(), fechaInicio, fechaFin,
-					configuracionCuposDao.findAll().get(0).getNumeroPacientes());
-			for (int i = 0; i < clibday.size(); i++) {
-				System.out.println("identificador: " + clibday.get(i).getUuidCupo() + "Fecha "
-						+ clibday.get(i).getFechaYHoraInicio() + "Tmaño: " + clibday.get(i).getTamanoActual());
-			}
-
-			return wrapperModelToDTO.allCupoToCupoDTO(clibday);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-		}
 	}
 
 	public void crearCupo(CupoDTO cupo) {

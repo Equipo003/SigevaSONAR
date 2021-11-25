@@ -20,11 +20,13 @@ import com.equipo3.SIGEVA.utils.Encriptador;
 
 @Component
 public class WrapperDTOtoModel {
-	private static Encriptador var = new Encriptador();
+	private static Encriptador encrypter = new Encriptador();
 
+	private static final String UNDEFINED = "undefined";
+	
 	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
-		if (!administradorDTO.getIdUsuario().equals("undefined"))
+		if (!administradorDTO.getIdUsuario().equals(UNDEFINED))
 			administrador.setIdUsuario(administradorDTO.getIdUsuario());
 
 		administrador.setRol(administradorDTO.getRol().getId());
@@ -42,7 +44,7 @@ public class WrapperDTOtoModel {
 
 	public static Sanitario sanitarioDTOtoSanitario(SanitarioDTO sanitarioDTO) {
 		Sanitario sanitario = new Sanitario();
-		if (!sanitarioDTO.getIdUsuario().equals("undefined"))
+		if (!sanitarioDTO.getIdUsuario().equals(UNDEFINED))
 			sanitario.setIdUsuario(sanitarioDTO.getIdUsuario());
 
 		sanitario.setRol(sanitarioDTO.getRol().getId());
@@ -60,7 +62,7 @@ public class WrapperDTOtoModel {
 
 	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
-		if (!pacienteDTO.getIdUsuario().equals("undefined"))
+		if (!pacienteDTO.getIdUsuario().equals(UNDEFINED))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());
 
 		paciente.setRol(pacienteDTO.getRol().getId());
@@ -73,13 +75,13 @@ public class WrapperDTOtoModel {
 		paciente.setApellidos(pacienteDTO.getApellidos());
 		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
 		paciente.setImagen(pacienteDTO.getImagen());
-		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
+		paciente.setNumDosisAplicadas(encrypter.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 		return paciente;
 	}
 
 	public CentroSalud centroSaludDTOtoCentroSalud(CentroSaludDTO centroSaludDTO) throws NumVacunasInvalido {
 		CentroSalud centroSalud = new CentroSalud();
-		if (!centroSaludDTO.getId().equals("undefined"))
+		if (!centroSaludDTO.getId().equals(UNDEFINED))
 			centroSalud.setId(centroSaludDTO.getId());
 		centroSalud.setNombreCentro(centroSaludDTO.getNombreCentro());
 		centroSalud.setDireccion(centroSaludDTO.getDireccion());
@@ -159,7 +161,7 @@ public class WrapperDTOtoModel {
 		paciente.setHashPassword(pacienteDTO.getHashPassword());
 		paciente.setRol(pacienteDTO.getRol().getId());
 
-		paciente.setNumDosisAplicadas(var.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
+		paciente.setNumDosisAplicadas(encrypter.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
 
 		return paciente;
 	}

@@ -1,9 +1,11 @@
 package com.equipo3.SIGEVA.controller;
 
 import java.util.Date;
+
 /***
  * Clase para la definición de constantes que se usan en el proyecto.
- * @author Equipo3 
+ * 
+ * @author Equipo3
  *
  */
 public class Condicionamientos {
@@ -16,7 +18,7 @@ public class Condicionamientos {
 
 	private static final int TIEMPO_ENTRE_DOSIS = 21; // dias
 
-	private static final boolean BUSCAR_A_PARTIR_DE_MAÑANA = true;
+	private static final boolean BUSCAR_A_PARTIR_DE_MANANA = true;
 
 	private Condicionamientos() {
 	}
@@ -46,7 +48,7 @@ public class Condicionamientos {
 		return TIEMPO_ENTRE_DOSIS;
 	}
 
-    public static boolean buscarAPartirDeMañana() {
-		return BUSCAR_A_PARTIR_DE_MAÑANA;
-    }
+	public static boolean buscarAPartirDeManana() {
+		return BUSCAR_A_PARTIR_DE_MANANA;
+	}
 }

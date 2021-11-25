@@ -1,23 +1,20 @@
 package com.equipo3.SIGEVA;
 
-import com.equipo3.SIGEVA.controller.UsuarioController;
-import com.equipo3.SIGEVA.controller.CentroController;
-import com.equipo3.SIGEVA.dto.CentroSaludDTO;
-import com.equipo3.SIGEVA.utils.Utilidades;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.equipo3.SIGEVA.controller.CentroController;
+import com.equipo3.SIGEVA.dto.CentroSaludDTO;
+import com.equipo3.SIGEVA.utils.Utilidades;
 
 @SpringBootTest
-public class ModificarNumVacunasTest {
-
-    @Autowired
-    private UsuarioController usuarioController;
+class ModificarNumVacunasTest {
 
     @Autowired
     private CentroController centroController;
@@ -36,7 +33,7 @@ public class ModificarNumVacunasTest {
     }
 
     @Test
-    public void modificarNumeroVacunas() {
+    void modificarNumeroVacunas() {
         centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
         centroController.crearCentroSalud(centroSaludDTO);
 

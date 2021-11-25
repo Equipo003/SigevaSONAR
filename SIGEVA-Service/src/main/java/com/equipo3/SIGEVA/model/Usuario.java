@@ -3,13 +3,13 @@ package com.equipo3.SIGEVA.model;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 /***
- * Entidad Usuario.
- * Clase que representará al usuario de la aplicación que va a usar el sistema.
+ * Entidad Usuario. Clase que representará al usuario de la aplicación que va a
+ * usar el sistema.
  * 
  * @author Equipo3
  *
@@ -41,20 +41,20 @@ public class Usuario {
 	private String imagen;
 
 	/***
-	 * Constructor para la creación de usuarios sin pasar valores del usuario.
-	 * Se crea un identificador aleatorio.
+	 * Constructor para la creación de usuarios sin pasar valores del usuario. Se
+	 * crea un identificador aleatorio.
 	 */
-	
+
 	public Usuario() {
 		this.idUsuario = UUID.randomUUID().toString();
 	}
-	
+
 	/***
 	 * Método para la devolución del identificador del usuario.
 	 * 
 	 * @return idUsuario identificador.
 	 */
-	
+
 	public String getIdUsuario() {
 		return idUsuario;
 	}
@@ -64,7 +64,7 @@ public class Usuario {
 	 * 
 	 * @param idUsuario Identificador nuevo.
 	 */
-	
+
 	public void setIdUsuario(String idUsuario) {
 		this.idUsuario = idUsuario;
 	}
@@ -74,17 +74,17 @@ public class Usuario {
 	 * 
 	 * @return rolDTO; rol data object del usuario.
 	 */
-	
+
 	public String getRol() {
 		return rol;
 	}
 
 	/***
-   	 * Método para la actualización del rol del usuario.
-   	 * 
-   	 * @param rolDTO Rol data object nuevo del usuario.
-   	 */
-	
+	 * Método para la actualización del rol del usuario.
+	 * 
+	 * @param rolDTO Rol data object nuevo del usuario.
+	 */
+
 	public void setRol(String rol) {
 		this.rol = rol;
 	}
@@ -94,37 +94,37 @@ public class Usuario {
 	 * 
 	 * @return centroSaludDTO; centro de Salud data object del usuario.
 	 */
-	
+
 	public String getCentroSalud() {
 		return centroSalud;
 	}
 
 	/***
-   	 * Método para la actualización del centro de salud del usuario.
-   	 * 
-   	 * @param centroSaludDTO centro de salud data object nuevo del usuario.
-   	 */
-	
+	 * Método para la actualización del centro de salud del usuario.
+	 * 
+	 * @param centroSaludDTO centro de salud data object nuevo del usuario.
+	 */
+
 	public void setCentroSalud(String centroSalud) {
 		this.centroSalud = centroSalud;
 	}
-	
+
 	/***
 	 * Método para la devolución del nombre de usuario.
 	 * 
 	 * @return username; nombre de usuario.
 	 */
-	
+
 	public String getUsername() {
 		return username;
 	}
 
 	/***
-   	 * Método para la actualización del nombre de usuario.
-   	 * 
-   	 * @param username; nombre de usuario nuevo.
-   	 */
-	
+	 * Método para la actualización del nombre de usuario.
+	 * 
+	 * @param username; nombre de usuario nuevo.
+	 */
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -134,17 +134,17 @@ public class Usuario {
 	 * 
 	 * @return correo; correo electrónico de usuario.
 	 */
-	
+
 	public String getCorreo() {
 		return correo;
 	}
 
 	/***
-   	 * Método para la actualización del correo electrónico de usuario.
-   	 * 
-   	 * @param correo; correo electrónico de usuario nuevo.
-   	 */
-	
+	 * Método para la actualización del correo electrónico de usuario.
+	 * 
+	 * @param correo; correo electrónico de usuario nuevo.
+	 */
+
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
@@ -154,17 +154,17 @@ public class Usuario {
 	 * 
 	 * @return hashPassword; hash de la contraseña del usuario.
 	 */
-	
+
 	public String getHashPassword() {
 		return hashPassword;
 	}
 
 	/***
-   	 * Método para la actualización del hash de la contraseña del  usuario.
-   	 * 
-   	 * @param hashPassword; hash de la contraseña del usuario nuevo.
-   	 */
-	
+	 * Método para la actualización del hash de la contraseña del usuario.
+	 * 
+	 * @param hashPassword; hash de la contraseña del usuario nuevo.
+	 */
+
 	public void setHashPassword(String hashPassword) {
 		this.hashPassword = hashPassword;
 	}
@@ -174,17 +174,17 @@ public class Usuario {
 	 * 
 	 * @return dni; dni de usuario.
 	 */
-	
+
 	public String getDni() {
 		return dni;
 	}
 
 	/***
-   	 * Método para la actualización del dni de usuario.
-   	 * 
-   	 * @param dni; dni de usuario nuevo.
-   	 */
-	
+	 * Método para la actualización del dni de usuario.
+	 * 
+	 * @param dni; dni de usuario nuevo.
+	 */
+
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
@@ -194,17 +194,17 @@ public class Usuario {
 	 * 
 	 * @return nombre; nombre de usuario.
 	 */
-	
+
 	public String getNombre() {
 		return nombre;
 	}
 
 	/***
-   	 * Método para la actualización del nombre de usuario.
-   	 * 
-   	 * @param nombre; nombre de usuario nuevo.
-   	 */
-	
+	 * Método para la actualización del nombre de usuario.
+	 * 
+	 * @param nombre; nombre de usuario nuevo.
+	 */
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -214,17 +214,17 @@ public class Usuario {
 	 * 
 	 * @return apellidos; apellidos del usuario.
 	 */
-	
+
 	public String getApellidos() {
 		return apellidos;
 	}
 
 	/***
-   	 * Método para la actualización los apellidos del usuario.
-   	 * 
-   	 * @param apellidos; los apellidos del usuario nuevo.
-   	 */
-	
+	 * Método para la actualización los apellidos del usuario.
+	 * 
+	 * @param apellidos; los apellidos del usuario nuevo.
+	 */
+
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
@@ -234,17 +234,17 @@ public class Usuario {
 	 * 
 	 * @return fechaNacimiento; fecha de nacimiento del usuario.
 	 */
-	
+
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
 	/***
-   	 * Método para la actualización la fecha de nacimiento del usuario.
-   	 * 
-   	 * @param fechaNacimiento; fecha de nacimiento del usuario nuevo.
-   	 */
-	
+	 * Método para la actualización la fecha de nacimiento del usuario.
+	 * 
+	 * @param fechaNacimiento; fecha de nacimiento del usuario nuevo.
+	 */
+
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
@@ -254,17 +254,17 @@ public class Usuario {
 	 * 
 	 * @return imagen; foto del usuario.
 	 */
-	
+
 	public String getImagen() {
 		return imagen;
 	}
 
 	/***
-   	 * Método para la actualización la foto del usuario.
-   	 * 
-   	 * @param imagen; foto del usuario nuevo.
-   	 */
-	
+	 * Método para la actualización la foto del usuario.
+	 * 
+	 * @param imagen; foto del usuario nuevo.
+	 */
+
 	public void setImagen(String imagen) {
 		this.imagen = imagen;
 	}

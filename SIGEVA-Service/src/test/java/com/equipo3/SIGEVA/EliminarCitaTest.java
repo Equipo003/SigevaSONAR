@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.equipo3.SIGEVA.controller.CentroController;
-import com.equipo3.SIGEVA.utils.Utilidades;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,17 +15,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.equipo3.SIGEVA.controller.UsuarioController;
+import com.equipo3.SIGEVA.controller.CentroController;
 import com.equipo3.SIGEVA.controller.CitaController;
 import com.equipo3.SIGEVA.controller.CupoController;
+import com.equipo3.SIGEVA.controller.UsuarioController;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dto.CentroSaludDTO;
 import com.equipo3.SIGEVA.dto.CitaDTO;
 import com.equipo3.SIGEVA.dto.CupoDTO;
 import com.equipo3.SIGEVA.dto.PacienteDTO;
 import com.equipo3.SIGEVA.dto.WrapperDTOtoModel;
-import com.equipo3.SIGEVA.exception.UsuarioInvalidoException;
 import com.equipo3.SIGEVA.model.Cita;
+import com.equipo3.SIGEVA.utils.Utilidades;
 
 @SpringBootTest
 class EliminarCitaTest {
@@ -121,11 +120,8 @@ class EliminarCitaTest {
 		List<CitaDTO> listaFuturas1 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 		assertTrue(listaFuturas1.size() > 0);
 
-		try {
-			citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
-		} catch (UsuarioInvalidoException e) {
-			// No saltará.
-		}
+		citaController.eliminarCitasFuturasDelPaciente(pacienteDTO);
+
 		List<CitaDTO> listaFuturas2 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 		assertEquals(0, listaFuturas2.size());
 	}

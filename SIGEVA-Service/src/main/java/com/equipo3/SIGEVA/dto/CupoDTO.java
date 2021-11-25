@@ -8,8 +8,8 @@ import com.equipo3.SIGEVA.exception.CupoException;
 
 /***
  * CupoDTO data object transfer, los data object transfer son los que se
- * mandarán desde el front end al back end y viceversa.
- * Clase que representará el cupo al que estarán asociados otras entidades para vacunar.
+ * mandarán desde el front end al back end y viceversa. Clase que representará
+ * el cupo al que estarán asociados otras entidades para vacunar.
  * 
  * @author Equipo3
  *
@@ -101,6 +101,25 @@ public class CupoDTO implements Comparable<CupoDTO> {
 		} else {
 			tamanoActual--;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(centroSalud, fechaYHoraInicio, tamanoActual, uuidCupo);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CupoDTO other = (CupoDTO) obj;
+		return Objects.equals(centroSalud, other.centroSalud)
+				&& Objects.equals(fechaYHoraInicio, other.fechaYHoraInicio) && tamanoActual == other.tamanoActual
+				&& Objects.equals(uuidCupo, other.uuidCupo);
 	}
 
 }

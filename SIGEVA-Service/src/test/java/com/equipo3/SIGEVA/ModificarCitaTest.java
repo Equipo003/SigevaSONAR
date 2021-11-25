@@ -76,12 +76,12 @@ class ModificarCitaTest {
 	}
 
 	@Test
-	public void modificacionCitaNoExistente() {
+	void modificacionCitaNoExistente() {
 		try {
 			citaController.modificarCita(citaDTO.getUuidCita(), cupoDTO.getUuidCupo());
 
 		} catch (Exception e) {
-			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"La cita que se intenta modificar no existe\"");
+			Assertions.assertEquals("204 NO_CONTENT \"La cita que se intenta modificar no existe\"", e.getMessage());
 		}
 	}
 
@@ -96,7 +96,7 @@ class ModificarCitaTest {
 
 			citaController.modificarCita(citaDTO.getUuidCita(), UUID.randomUUID().toString());
 		} catch (Exception e) {
-			Assertions.assertEquals(e.getMessage(), "204 NO_CONTENT \"El cupo no existe\"");
+			Assertions.assertEquals("204 NO_CONTENT \"El cupo no existe\"", e.getMessage());
 			citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
@@ -104,40 +104,40 @@ class ModificarCitaTest {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	void modificacionCitaCorrecta() {
 		try {
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			centroController.crearCentroSalud(centroSaludDTO);
 			usuarioController.crearUsuarioPaciente(pacienteDTO);
-			
+
 			CupoDTO newCupo = new CupoDTO();
 			newCupo.setCentroSalud(centroSaludDTO);
-	        Date fecha = new Date();
-	        fecha.setDate(fecha.getDay()+1);
-	        newCupo.setFechaYHoraInicio(fecha);
-			
+			Date fecha = new Date();
+			fecha.setDate(fecha.getDate() + 1);
+			newCupo.setFechaYHoraInicio(fecha);
+
 			cupoController.crearCupo(cupoDTO);
 			cupoController.crearCupo(newCupo);
 			citaController.crearCita(citaDTO);
-	        
-	        citaController.modificarCita(citaDTO.getUuidCita(), newCupo.getUuidCupo());
-	        
-	        
-	        Optional<Cita> citaEncontrado = citaDao.findById(citaDTO.getUuidCita());
-	        Cita citaBbdd = null;
-	        if(citaEncontrado.isPresent()) {
-	        	citaBbdd = citaEncontrado.get();
-	        }
-	        
-	        Assertions.assertEquals(citaBbdd.getUuidCupo(), newCupo.getUuidCupo());
-	        
-	        citaDao.deleteById(citaDTO.getUuidCita());
+
+			citaController.modificarCita(citaDTO.getUuidCita(), newCupo.getUuidCupo());
+
+			Optional<Cita> citaEncontrado = citaDao.findById(citaDTO.getUuidCita());
+			Cita citaBbdd = null;
+			if (citaEncontrado.isPresent()) {
+				citaBbdd = citaEncontrado.get();
+			}
+
+			Assertions.assertEquals(citaBbdd.getUuidCupo(), newCupo.getUuidCupo());
+
+			citaDao.deleteById(citaDTO.getUuidCita());
 			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
 			cupoController.eliminarCupo(newCupo.getUuidCupo());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 			utilidades.eliminarUsuario(pacienteDTO.getUsername());
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}

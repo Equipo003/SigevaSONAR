@@ -1,6 +1,7 @@
 package com.equipo3.SIGEVA.model;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -8,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /***
- * Entidad Cupo.
- * Clase que representará el cupo al que estarán asociados otras entidades para vacunar.
+ * Entidad Cupo. Clase que representará el cupo al que estarán asociados otras
+ * entidades para vacunar.
  * 
  * 
  * @author Equipo3
@@ -91,4 +92,23 @@ public class Cupo implements Comparable<Cupo> {
 	public int compareTo(Cupo o) {
 		return fechaYHoraInicio.compareTo(o.getFechaYHoraInicio());
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fechaYHoraInicio, tamanoActual, uuidCentroSalud, uuidCupo);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cupo other = (Cupo) obj;
+		return Objects.equals(fechaYHoraInicio, other.fechaYHoraInicio) && tamanoActual == other.tamanoActual
+				&& Objects.equals(uuidCentroSalud, other.uuidCentroSalud) && Objects.equals(uuidCupo, other.uuidCupo);
+	}
+
 }

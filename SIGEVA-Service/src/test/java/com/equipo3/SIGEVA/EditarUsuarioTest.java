@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @SpringBootTest
-public class EditarUsuarioTest {
+class EditarUsuarioTest {
 
     public static CentroSaludDTO centroSaludDTO;
     public static CentroSaludDTO newCentroSaludDTO;
@@ -71,8 +71,9 @@ public class EditarUsuarioTest {
         pacienteDTO.setUsername(UUID.randomUUID().toString());
     }
 
-    @Test
-    public void usuarioSinDosisPuestaEdicionCorrecta() {
+    @SuppressWarnings("deprecation")
+	@Test
+    void usuarioSinDosisPuestaEdicionCorrecta() {
         try {
             pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(0);
@@ -101,8 +102,9 @@ public class EditarUsuarioTest {
         }
     }
 
-    @Test
-    public void usuarioConDosisPuestaEdicionIncorrecta() {
+    @SuppressWarnings("deprecation")
+	@Test
+    void usuarioConDosisPuestaEdicionIncorrecta() {
         try {
             pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
             pacienteDTO.setNumDosisAplicadas(1);
@@ -123,7 +125,7 @@ public class EditarUsuarioTest {
             utilidades.eliminarUsuario(pacienteDTO.getUsername());
             utilidades.eliminarCentro(newCentroSaludDTO.getId());
             utilidades.eliminarCentro(centroSaludDTO.getId());
-            Assertions.assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No puedes modificar el centro de un usuario que ya ha aplicado una dosis\"");
+            Assertions.assertEquals("401 UNAUTHORIZED \"No puedes modificar el centro de un usuario que ya ha aplicado una dosis\"", e.getMessage());
         }
     }
 }
