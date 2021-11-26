@@ -151,14 +151,19 @@ public class EliminarUsuarioTest {
 	@Test
 	public void eliminarUsuarioPacienteConDosis() {
 		try {
+			pacienteDTO.setUsername(UUID.randomUUID().toString());
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			pacienteDTO.setNumDosisAplicadas(1);
 			pacienteDTO.setCentroSalud(centroSaludDTO);
+
+
+			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
 			centroController.crearCentroSalud(centroSaludDTO);
 			usuarioController.crearUsuarioPaciente(pacienteDTO);
 
 			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+
 
 
 
