@@ -10,20 +10,20 @@
           <H1>Modificar dosis vacunas</H1>
 
           <div class="control-group">
-            <b>Elige el hospital: </b>
+            <strong>Elige el hospital: </strong>
             <select name="menuCentro" id="menuCentro" [(ngModel)]='centroSeleccionado' (click)="centroSelect()"
                     [disabled]="!existeConfiguracion">
               <option *ngFor="let centro of cs ">{{centro.nombreCentro}}</option>
             </select>
           </div>
           <div class="control-group">
-            <b>Número de vacunas actual:</b>
+            <strong>Número de vacunas actual:</strong>
             <br>
             <strong>{{nVacunasActual}}</strong>
           </div>
 
           <div class="control-group">
-            <b>Número de vacunas que se van a añadir:</b>
+            <strong>Número de vacunas que se van a añadir:</strong>
             <input type='number' name='masVacunas' #newVacunas="ngModel" placeholder='número de vacunas'
                    [(ngModel)]='vacunasAanadir' required [disabled]="!existeConfiguracion">
             <div>

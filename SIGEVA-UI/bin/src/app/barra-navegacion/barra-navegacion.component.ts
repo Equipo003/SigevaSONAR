@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {TokenService} from "../Service/token.service";
-import {JsonService} from "../Service/json.service";
 import {MatDialog} from "@angular/material/dialog";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
 import {Router} from "@angular/router";
@@ -35,7 +34,6 @@ export class BarraNavegacionComponent implements OnInit {
   }
 
   openDialogCerrarSesion(){
-    let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
       data: {mensaje: '¿SEGURO QUE QUIERES CERRAR SESIÓN?', titulo: 'Cerrar Sesión'},
     });

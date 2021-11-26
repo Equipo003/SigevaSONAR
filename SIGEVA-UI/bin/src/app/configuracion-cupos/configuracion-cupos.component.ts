@@ -50,7 +50,7 @@ export class ConfiguracionCuposComponent implements OnInit {
   ngOnInit(): void {
       this.json.getJson('user/existConfCupos').subscribe((res: any) => {
                this.configuracionExistente = JSON.parse(res);
-               if(this.configuracionExistente == true){
+               if(this.configuracionExistente){
                   this.mostrarConfiguracion();
                }
           },err=> {

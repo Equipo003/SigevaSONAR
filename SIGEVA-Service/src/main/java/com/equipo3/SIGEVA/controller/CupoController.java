@@ -124,8 +124,6 @@ public class CupoController {
 		}
 		if (centroSaludDTO != null) {
 			List<CupoDTO> cuposDTO = calcularCupos(centroSaludDTO);
-			System.out.println("Cupos preparados: " + cuposDTO.size());
-			System.out.println("CentroSaludDTO: " + centroSaludDTO.getId());
 			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
 			for (int i = 0; i < cupos.size(); i++) {
 				cupoDao.save(cupos.get(i));
@@ -365,10 +363,6 @@ public class CupoController {
 	 * @param cupo
 	 */
 	public void crearCupo(CupoDTO cupo) {
-		try {
 			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupo));
-		} catch (Exception e) {
-			System.out.println("error crear cupo: " + e.getMessage());
-		}
 	}
 }

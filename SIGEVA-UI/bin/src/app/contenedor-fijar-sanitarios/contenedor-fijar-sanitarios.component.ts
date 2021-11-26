@@ -24,7 +24,6 @@ export class ContenedorFijarSanitariosComponent implements OnInit {
 	}
 
 	getRoles() {
-		let self = this;
 		this.json.getJson("user/getRoles").subscribe(
 			result => {
 				this.roles = JSON.parse(result);

@@ -1,5 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {Usuario} from "../Model/Usuario";
+import {Component, OnInit} from '@angular/core';
 import {Rol} from "../Model/rol";
 import {HttpParams} from "@angular/common/http";
 import {JsonService} from "../Service/json.service";
@@ -42,7 +41,6 @@ export class ListadoPacientesComponent implements OnInit {
     }
     else {
       this.getCentroSaludUsuario(this.tokenService.getIdUsuario());
-     // this.citasHoy();
     }
   }
 
@@ -78,6 +76,7 @@ export class ListadoPacientesComponent implements OnInit {
       this.citaSeleccionada.paciente.numDosisAplicadas = this.citaSeleccionada.paciente.numDosisAplicadas + 1;
       this.pacienteSeleccionado = false;
     },err=> {
+      console.log(err);
     });
 
   }

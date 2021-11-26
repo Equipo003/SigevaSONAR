@@ -27,7 +27,6 @@ export class CentrosSaludSistemaComponent implements OnInit {
   }
 
   listarCentroSalud() {
-    let self = this;
     this.json.getJson("user/getCentros").subscribe(
       (res: any) => {
         this.centrosSalud = JSON.parse(res);

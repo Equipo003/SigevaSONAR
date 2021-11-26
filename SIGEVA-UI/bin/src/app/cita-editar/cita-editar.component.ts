@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {CupoCitas} from "../Model/cupo-citas";
@@ -6,11 +6,8 @@ import {Paciente} from "../Model/paciente";
 import {Rol} from "../Model/rol";
 import {CentroSalud} from "../Model/centro-salud";
 import {Vacuna} from "../Model/vacuna";
-import {FormControl} from "@angular/forms";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
-import {enc, SHA256} from "crypto-js";
 import {JsonService} from "../Service/json.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpParams} from "@angular/common/http";
 
@@ -19,10 +16,9 @@ import {HttpParams} from "@angular/common/http";
   templateUrl: './cita-editar.component.html',
   styleUrls: ['./cita-editar.component.css']
 })
-export class CitaEditarComponent implements OnInit {
+export class CitaEditarComponent{
 
   @Input() cita: CitaConObjetos;
-  fechaCita: string = "";
   minDate: Date;
   maxDate: Date;
   editMode: boolean = false;
@@ -46,13 +42,8 @@ export class CitaEditarComponent implements OnInit {
     this.cupoSeleccionado = new CupoCitas("", new CentroSalud("", "", 0, new Vacuna("", 0, 0, ""), ""), new Date());
   }
 
-  ngOnInit(): void {
-  }
-
   addEvent(event: MatDatepickerInputEvent<Date>) {
     this.daySelected = true;
-    const fecha = new Date(Number(event.value?.getFullYear()), Number(event.value?.getMonth()), Number(event.value?.getDay()));
-    const fechaString = fecha.toLocaleDateString();
 
     let params = new HttpParams({
       fromObject: {
@@ -86,8 +77,7 @@ export class CitaEditarComponent implements OnInit {
           }
         });
         this.json.getJsonPJ("cita/modificarCita", params).subscribe(
-          result => {
-            console.log(result);
+          res => {
             self.editMode = false;
             this.message = "Cita editada correctamente";
             setTimeout(function(){ location.reload() }, 2000);
@@ -98,8 +88,6 @@ export class CitaEditarComponent implements OnInit {
   }
 
   onChangeHora($event: any){
-    console.log($event);
-    // this.cupoSeleccionado = $event;
     this.cita.cupo.uuid = $event.uuidCupo;
   }
 
@@ -136,7 +124,7 @@ export class CitaEditarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.json.deleteJson("cita/eliminarCita", String(this.cita.uuidCita)).subscribe(
-          result => {
+          res => {
             this.message = "Cita eliminada correctamente";
             setTimeout(function(){ window.location.reload() }, 2000);
             this.errorMessage = "";

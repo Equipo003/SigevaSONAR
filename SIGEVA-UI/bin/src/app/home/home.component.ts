@@ -50,7 +50,6 @@ export class HomeComponent implements OnInit {
   }
 
   openDialogCerrarSesion(){
-    let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
       data: {mensaje: '¿SEGURO QUE QUIERES CERRAR SESIÓN?', titulo: 'Cerrar Sesión'},
     });

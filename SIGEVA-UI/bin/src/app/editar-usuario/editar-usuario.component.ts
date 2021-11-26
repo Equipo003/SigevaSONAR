@@ -96,7 +96,7 @@ export class EditarUsuarioComponent implements OnInit {
 
   openDialogCancelar() {
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES CANCELAR LA EDICIÓN?', titulo: 'Cancelar Edición'},
+      data: {mensaje: 'ï¿½SEGURO QUE QUIERES CANCELAR LA EDICIï¿½N?', titulo: 'Cancelar Ediciï¿½n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -115,13 +115,13 @@ export class EditarUsuarioComponent implements OnInit {
     this.checkNewPassword();
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
-      data: {mensaje: '¿SEGURO QUE QUIERES GUARDAR LA EDICIÓN?', titulo: 'Guardar Edición'},
+      data: {mensaje: 'ï¿½SEGURO QUE QUIERES GUARDAR LA EDICIï¿½N?', titulo: 'Guardar Ediciï¿½n'},
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(this.usuario.centroSalud);
       if (result) {
         this.json.postJson("user/updateUsuario", this.usuario).subscribe(
-          result => {
+          res => {
             this.message = "Usuario editado correctamente";
             setTimeout(function(){ self.router.navigate(['usuariosSistema']); }, 3000);
             this.errorMessage = "";
