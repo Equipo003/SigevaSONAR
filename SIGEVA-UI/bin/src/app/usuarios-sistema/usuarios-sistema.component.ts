@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../Model/Usuario';
 import { JsonService } from '../Service/json.service';
 import { HttpParams } from "@angular/common/http";
-import { CentroSalud } from '../Model/centro-salud';
 import { Rol } from '../Model/rol';
 import { UsuarioConObjetos } from "../Model/Usuario-con-objetos";
 

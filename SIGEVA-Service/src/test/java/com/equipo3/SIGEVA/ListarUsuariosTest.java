@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -31,18 +33,10 @@ class ListarUsuariosTest {
         assertNotNull(usuarioController.getUsuarioByRol("Todos"));
     }
 
-    @Test void getUsuariosAdministradores(){
-        RolDTO rolDTO = utilidades.getRolByNombre("Administrador");
-        assertNotNull(usuarioController.getUsuarioByRol(rolDTO.getId()));
-    }
-
-    @Test void getUsuariosSanitarios(){
-        RolDTO rolDTO = utilidades.getRolByNombre("Sanitario");
-        assertNotNull(usuarioController.getUsuarioByRol(rolDTO.getId()));
-    }
-
-    @Test void getUsuariosPacientes(){
-        RolDTO rolDTO = utilidades.getRolByNombre("Paciente");
+    @ParameterizedTest
+    @ValueSource(strings = {"Administrador", "Sanitario"})
+    void getUsuariosSanitarios(String rol){
+        RolDTO rolDTO = utilidades.getRolByNombre(rol);
         assertNotNull(usuarioController.getUsuarioByRol(rolDTO.getId()));
     }
 

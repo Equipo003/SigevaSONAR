@@ -375,6 +375,7 @@ public class CitaController {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private List<Date> priemeraDosis(List<Date> lista, CitaDTO citaDTO){
 		Date hoy = new Date();
 		if (Condicionamientos.buscarAPartirDeManana())
@@ -463,18 +464,11 @@ public class CitaController {
 		Optional<Usuario> optUsuario = usuarioDao.findById(idPaciente);
 		if (optUsuario.isPresent()) {
 			List<CitaDTO> citasDTO = wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(idPaciente));
-			List<CitaDTO> citasSeleccionadas  = new ArrayList<CitaDTO>();
+			List<CitaDTO> citasSeleccionadas = new ArrayList<>();
 			for (int i = 0; i < citasDTO.size(); i++) {
-				if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) { // ¿Es antigua?
+				if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date()) &&
+						citasDTO.get(i).getPaciente().getNumDosisAplicadas() != citasDTO.get(i).getDosis()) { // ¿Es antigua?
 					citasSeleccionadas.add(citasDTO.get(i));
-				}
-				else {
-					if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 1 && citasDTO.get(i).getDosis() ==1){
-						citasDTO.remove(i--);
-					}
-					else if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 2 && citasDTO.get(i).getDosis() ==2){
-						citasDTO.remove(i--);
-					}
 				}
 			}
 			Collections.sort(citasSeleccionadas);
@@ -492,10 +486,11 @@ public class CitaController {
 	 * @param pacienteDTO
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public List<CitaDTO> obtenerCitasAntiguasPaciente(PacienteDTO pacienteDTO) {
 		List<CitaDTO> citasDTO = wrapperModelToDTO
 				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
-		List<CitaDTO> citasSeleccionadas  = new ArrayList<CitaDTO>();
+		List<CitaDTO> citasSeleccionadas  = new ArrayList<>();
 		for (int i = 0; i < citasDTO.size(); i++) {
 			if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().after(new Date())) { // ¿Es antigua?
 				citasSeleccionadas.add(citasDTO.get(i));
