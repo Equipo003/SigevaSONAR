@@ -144,7 +144,7 @@ public class ConfiguracionCuposDTO {
     /***
 	* Método para la actualización de la duración en minutos de la jornada del cupo.
 	* 
-	* @param duracionJornadaHoras; Duración en minutos de la jornada del cupo.
+	* @param duracionJornadaMinutos; Duración en minutos de la jornada del cupo.
 	*/
     
     public void setDuracionJornadaMinutos(int duracionJornadaMinutos) {

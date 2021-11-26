@@ -34,7 +34,7 @@ public class RolDTO {
 	/***
 	 * Método para la actualización del identificador.
 	 * 
-	 * @param Id Identificador nuevo.
+	 * @param id Identificador nuevo.
 	 */
 	public void setId(String id) {
 		this.id = id;
