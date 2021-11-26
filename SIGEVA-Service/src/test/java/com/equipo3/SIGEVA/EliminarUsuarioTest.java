@@ -7,6 +7,7 @@ import com.equipo3.SIGEVA.controller.CupoController;
 import com.equipo3.SIGEVA.dao.CitaDao;
 import com.equipo3.SIGEVA.dao.CupoDao;
 import com.equipo3.SIGEVA.dto.*;
+import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.utils.Utilidades;
 
 import org.junit.jupiter.api.Assertions;
@@ -21,186 +22,178 @@ import java.util.UUID;
 @SpringBootTest
 public class EliminarUsuarioTest {
 
-	public static CentroSaludDTO centroSaludDTO;
-	public static CitaDTO citaDTO;
-	public static CupoDTO cupoDTO;
-	public static PacienteDTO pacienteDTO;
-	public static SanitarioDTO sanitarioDTO;
-	public static AdministradorDTO administradorDTO;
+    public static CentroSaludDTO centroSaludDTO;
+    public static CitaDTO citaDTO;
+    public static CupoDTO cupoDTO;
+    public static PacienteDTO pacienteDTO;
+    public static SanitarioDTO sanitarioDTO;
+    public static AdministradorDTO administradorDTO;
 
-	@Autowired
-	private UsuarioController usuarioController;
+    @Autowired
+    private UsuarioController usuarioController;
 
-	@Autowired
-	private CentroController centroController;
+    @Autowired
+    private CentroController centroController;
 
-	@Autowired
-	private CitaController citaController;
+    @Autowired
+    private CitaController citaController;
 
-	@Autowired
-	private CupoController cupoController;
+    @Autowired
+    private CupoController cupoController;
 
-	@Autowired
-	private Utilidades utilidades;
+    @Autowired
+    private Utilidades utilidades;
 
-	@Autowired
-	CupoDao cupoDao;
+    @Autowired
+    CupoDao cupoDao;
 
-	@Autowired
-	CitaDao citaDao;
+    @Autowired
+    CitaDao citaDao;
 
-	@BeforeAll
-	static void setUpCita() {
-		centroSaludDTO = new CentroSaludDTO();
-		centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+    @BeforeAll
+    static void setUpCita() {
+        centroSaludDTO = new CentroSaludDTO();
+        centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
-		cupoDTO = new CupoDTO();
-		cupoDTO.setCentroSalud(centroSaludDTO);
+        cupoDTO = new CupoDTO();
+        cupoDTO.setCentroSalud(centroSaludDTO);
 
-		citaDTO = new CitaDTO();
-		citaDTO.setCupo(cupoDTO);
-		citaDTO.setPaciente(pacienteDTO);
-		cupoDTO.setCentroSalud(centroSaludDTO);
-	}
+        citaDTO = new CitaDTO();
+        citaDTO.setCupo(cupoDTO);
+        citaDTO.setPaciente(pacienteDTO);
+        cupoDTO.setCentroSalud(centroSaludDTO);
+    }
 
-	@BeforeAll
-	static void setUpPaciente(){
-		pacienteDTO = new PacienteDTO();
-		pacienteDTO.setCentroSalud(centroSaludDTO);
-		pacienteDTO.setUsername(UUID.randomUUID().toString());
-	}
-	@BeforeAll
-	static void setUpSanitario(){
-		sanitarioDTO = new SanitarioDTO();
-		sanitarioDTO.setCentroSalud(centroSaludDTO);
-		sanitarioDTO.setUsername(UUID.randomUUID().toString());
-	}
-	@BeforeAll
-	static void setUpAdministrador(){
-		administradorDTO = new AdministradorDTO();
-		administradorDTO.setCentroSalud(centroSaludDTO);
-		administradorDTO.setUsername(UUID.randomUUID().toString());
-	}
+    @BeforeAll
+    static void setUpPaciente() {
+        pacienteDTO = new PacienteDTO();
+        pacienteDTO.setCentroSalud(centroSaludDTO);
+        pacienteDTO.setUsername(UUID.randomUUID().toString());
+    }
 
-	@Test
-	public void eliminarUsuarioSanitario() {
-		try {
-			sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
+    @BeforeAll
+    static void setUpSanitario() {
+        sanitarioDTO = new SanitarioDTO();
+        sanitarioDTO.setCentroSalud(centroSaludDTO);
+        sanitarioDTO.setUsername(UUID.randomUUID().toString());
+    }
 
-			centroController.crearCentroSalud(centroSaludDTO);
-			usuarioController.crearUsuarioSanitario(sanitarioDTO);
+    @BeforeAll
+    static void setUpAdministrador() {
+        administradorDTO = new AdministradorDTO();
+        administradorDTO.setCentroSalud(centroSaludDTO);
+        administradorDTO.setUsername(UUID.randomUUID().toString());
+    }
 
+    @Test
+    void eliminarUsuarioSanitario() {
+        try {
+            sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 
-			usuarioController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
-
-			Assertions.assertNull(utilidades.getUsuarioById(sanitarioDTO.getIdUsuario()));
-
-			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
-			utilidades.eliminarCentro(centroSaludDTO.getId());
-
-		}
-		catch (Exception e) {
-
-		}
-	}
-
-	@Test
-	public void eliminarUsuarioAdministrador() {
-		try {
-			administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
-			administradorDTO.setCentroSalud(centroSaludDTO);
-			centroController.crearCentroSalud(centroSaludDTO);
-			usuarioController.crearUsuarioAdministrador(administradorDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioSanitario(sanitarioDTO);
 
 
-			usuarioController.deleteUsuarioById(administradorDTO.getIdUsuario());
+            usuarioController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
 
-		}
-		catch (Exception e) {
-			Assertions.assertNotNull(e);
+            Assertions.assertNull(utilidades.getUsuarioById(sanitarioDTO.getIdUsuario()));
 
-			utilidades.eliminarUsuario(administradorDTO.getUsername());
-			utilidades.eliminarCentro(centroSaludDTO.getId());
-		}
-	}
+            utilidades.eliminarUsuario(sanitarioDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
 
-	@Test
-	public void eliminarUsuarioPacienteSinNada() {
-		try {
-			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-			pacienteDTO.setNumDosisAplicadas(0);
-			pacienteDTO.setCentroSalud(centroSaludDTO);
+        } catch (Exception e) {
 
-			centroController.crearCentroSalud(centroSaludDTO);
-			usuarioController.crearUsuarioPaciente(pacienteDTO);
+        }
+    }
 
-
-			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
-
-			Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
-
-			utilidades.eliminarUsuario(pacienteDTO.getUsername());
-			utilidades.eliminarCentro(centroSaludDTO.getId());
-
-		}
-		catch (Exception e) {
-
-		}
-	}
-
-	@Test
-	public void eliminarUsuarioPacienteConDosis() {
-		try {
-			pacienteDTO.setUsername(UUID.randomUUID().toString());
-			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-			pacienteDTO.setNumDosisAplicadas(1);
-			pacienteDTO.setCentroSalud(centroSaludDTO);
+    @Test
+    void eliminarUsuarioAdministrador() {
+        try {
+            administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
+            administradorDTO.setCentroSalud(centroSaludDTO);
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioAdministrador(administradorDTO);
 
 
-			centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
+            usuarioController.deleteUsuarioById(administradorDTO.getIdUsuario());
 
-			centroController.crearCentroSalud(centroSaludDTO);
-			usuarioController.crearUsuarioPaciente(pacienteDTO);
+        } catch (Exception e) {
+            Assertions.assertNotNull(e);
 
-			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+            utilidades.eliminarUsuario(administradorDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
+        }
+    }
+
+    @Test
+    void eliminarUsuarioPacienteSinNada() throws IdentificadorException {
+        pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+        pacienteDTO.setNumDosisAplicadas(0);
+        pacienteDTO.setCentroSalud(centroSaludDTO);
+
+        centroController.crearCentroSalud(centroSaludDTO);
+        usuarioController.crearUsuarioPaciente(pacienteDTO);
 
 
+        usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+
+        Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+
+        utilidades.eliminarUsuario(pacienteDTO.getUsername());
+        utilidades.eliminarCentro(centroSaludDTO.getId());
 
 
-		}
-		catch (Exception e) {
-			Assertions.assertEquals(e.getMessage(),"401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
+    }
 
-			utilidades.eliminarUsuario(pacienteDTO.getUsername());
-			utilidades.eliminarCentro(centroSaludDTO.getId());
-		}
-	}
+    @Test
+    void eliminarUsuarioPacienteConDosis() {
+        try {
+            pacienteDTO.setUsername(UUID.randomUUID().toString());
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+            pacienteDTO.setNumDosisAplicadas(1);
+            pacienteDTO.setCentroSalud(centroSaludDTO);
 
-	@Test
-	public void eliminarUsuarioPacienteConCitasFuturas() {
-		try {
-			centroSaludDTO.setNumVacunasDisponibles(55);
-			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-			pacienteDTO.setNumDosisAplicadas(0);
-			pacienteDTO.setCentroSalud(centroSaludDTO);
-			cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
-			centroController.crearCentroSalud(centroSaludDTO);
-			usuarioController.crearUsuarioPaciente(pacienteDTO);
-			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
-			citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
 
-			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+            centroSaludDTO.setNombreCentro(UUID.randomUUID().toString());
 
-			Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
 
-			citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-			cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-			utilidades.eliminarUsuario(pacienteDTO.getUsername());
-			utilidades.eliminarCentro(centroSaludDTO.getId());
+            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
-		}
-		catch (Exception e) {
 
-		}
-	}
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
+
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
+        }
+    }
+
+    @Test
+    void eliminarUsuarioPacienteConCitasFuturas() {
+        try {
+            centroSaludDTO.setNumVacunasDisponibles(55);
+            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+            pacienteDTO.setNumDosisAplicadas(0);
+            pacienteDTO.setCentroSalud(centroSaludDTO);
+            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
+            centroController.crearCentroSalud(centroSaludDTO);
+            usuarioController.crearUsuarioPaciente(pacienteDTO);
+            cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
+            citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
+
+            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+
+            Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+
+            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
+            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
+            utilidades.eliminarUsuario(pacienteDTO.getUsername());
+            utilidades.eliminarCentro(centroSaludDTO.getId());
+
+        } catch (Exception e) {
+
+        }
+    }
 }
