@@ -468,6 +468,14 @@ public class CitaController {
 				if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) { // ¿Es antigua?
 					citasSeleccionadas.add(citasDTO.get(i));
 				}
+				else {
+					if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 1 && citasDTO.get(i).getDosis() ==1){
+						citasDTO.remove(i--);
+					}
+					else if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 2 && citasDTO.get(i).getDosis() ==2){
+						citasDTO.remove(i--);
+					}
+				}
 			}
 			Collections.sort(citasSeleccionadas);
 			return citasSeleccionadas;
