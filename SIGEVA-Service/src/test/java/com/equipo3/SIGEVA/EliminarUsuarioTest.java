@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @SpringBootTest
-class EliminarUsuarioTest {
+public class EliminarUsuarioTest {
 
 	public static CentroSaludDTO centroSaludDTO;
 	public static CitaDTO citaDTO;
@@ -64,33 +64,32 @@ class EliminarUsuarioTest {
 	}
 
 	@BeforeAll
-	static void setUpPaciente() {
+	static void setUpPaciente(){
 		pacienteDTO = new PacienteDTO();
 		pacienteDTO.setCentroSalud(centroSaludDTO);
 		pacienteDTO.setUsername(UUID.randomUUID().toString());
 	}
-
 	@BeforeAll
-	static void setUpSanitario() {
+	static void setUpSanitario(){
 		sanitarioDTO = new SanitarioDTO();
 		sanitarioDTO.setCentroSalud(centroSaludDTO);
 		sanitarioDTO.setUsername(UUID.randomUUID().toString());
 	}
-
 	@BeforeAll
-	static void setUpAdministrador() {
+	static void setUpAdministrador(){
 		administradorDTO = new AdministradorDTO();
 		administradorDTO.setCentroSalud(centroSaludDTO);
 		administradorDTO.setUsername(UUID.randomUUID().toString());
 	}
 
 	@Test
-	void eliminarUsuarioSanitario() {
+	public void eliminarUsuarioSanitario() {
 		try {
 			sanitarioDTO.setRol(utilidades.getRolByNombre("Sanitario"));
 
 			centroController.crearCentroSalud(centroSaludDTO);
 			usuarioController.crearUsuarioSanitario(sanitarioDTO);
+
 
 			usuarioController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
 
@@ -99,22 +98,25 @@ class EliminarUsuarioTest {
 			utilidades.eliminarUsuario(sanitarioDTO.getUsername());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 
 		}
 	}
 
 	@Test
-	void eliminarUsuarioAdministrador() {
+	public void eliminarUsuarioAdministrador() {
 		try {
 			administradorDTO.setRol(utilidades.getRolByNombre("Administrador"));
 			administradorDTO.setCentroSalud(centroSaludDTO);
 			centroController.crearCentroSalud(centroSaludDTO);
 			usuarioController.crearUsuarioAdministrador(administradorDTO);
 
+
 			usuarioController.deleteUsuarioById(administradorDTO.getIdUsuario());
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Assertions.assertNotNull(e);
 
 			utilidades.eliminarUsuario(administradorDTO.getUsername());
@@ -123,7 +125,7 @@ class EliminarUsuarioTest {
 	}
 
 	@Test
-	void eliminarUsuarioPacienteSinNada() {
+	public void eliminarUsuarioPacienteSinNada() {
 		try {
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			pacienteDTO.setNumDosisAplicadas(0);
@@ -132,6 +134,7 @@ class EliminarUsuarioTest {
 			centroController.crearCentroSalud(centroSaludDTO);
 			usuarioController.crearUsuarioPaciente(pacienteDTO);
 
+
 			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
 			Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
@@ -139,13 +142,14 @@ class EliminarUsuarioTest {
 			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 
 		}
 	}
 
 	@Test
-	void eliminarUsuarioPacienteConDosis() {
+	public void eliminarUsuarioPacienteConDosis() {
 		try {
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
 			pacienteDTO.setNumDosisAplicadas(1);
@@ -156,19 +160,19 @@ class EliminarUsuarioTest {
 
 			usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
-		} catch (Exception e) {
-			Assertions.assertEquals(
-					"401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"",
-					e.getMessage());
+
+
+		}
+		catch (Exception e) {
+			Assertions.assertEquals(e.getMessage(),"401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
 
 			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
-	void eliminarUsuarioPacienteConCitasFuturas() {
+	public void eliminarUsuarioPacienteConCitasFuturas() {
 		try {
 			centroSaludDTO.setNumVacunasDisponibles(55);
 			pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
@@ -189,7 +193,8 @@ class EliminarUsuarioTest {
 			utilidades.eliminarUsuario(pacienteDTO.getUsername());
 			utilidades.eliminarCentro(centroSaludDTO.getId());
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 
 		}
 	}
