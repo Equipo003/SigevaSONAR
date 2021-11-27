@@ -1,10 +1,8 @@
 package com.equipo3.SIGEVA.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +41,8 @@ import com.equipo3.SIGEVA.model.Usuario;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static java.util.logging.Logger.getLogger;
+
 @CrossOrigin
 @RestController
 @RequestMapping("cita")
@@ -72,6 +72,8 @@ public class CitaController {
 	@Autowired
 	CentroSaludDao centroSaludDao;
 
+	final Logger LOG = getLogger(com.equipo3.SIGEVA.controller.CitaController.class.toString()) ;
+
 	private static final int PRIMERA_DOSIS = 1;
 	private static final int SEGUNDA_DOSIS = 2;
 
@@ -79,7 +81,7 @@ public class CitaController {
 	 * Método encargado de buscar y asignar citas. En función de las dosis aplicadas
 	 * y citas futuras del paciente, procurará asignar más o menos cantidad de
 	 * citas.
-	 *
+	 * 
 	 * @param uuidPaciente
 	 * @return List<CitaDTO>
 	 */
@@ -125,39 +127,8 @@ public class CitaController {
 								+ citasFuturasDTO.get(0).getCupo().getFechaYHoraInicio() + ".");
 
 			} else { // CASO 2.2. numCitasFuturasAsignadas = 0
-				// Objetivo: Asignar la segunda 21 días después de la primera.
 
-				// CASO 2.2.1.
-				if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 1) {
-					throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud no tiene stock (1).");
-				}
-
-				CitaDTO citaPrimerPinchazo = buscarUltimaCitaPinchazo(pacienteDTO, PRIMERA_DOSIS);
-
-				Date fechaPrimerPinchazo = citaPrimerPinchazo.getCupo().getFechaYHoraInicio();
-				Date fechaMinimaSegundoPinchazo = (Date) fechaPrimerPinchazo.clone();
-				fechaMinimaSegundoPinchazo
-						.setDate(fechaMinimaSegundoPinchazo.getDate() + Condicionamientos.tiempoEntreDosis());
-
-				// CASO 2.2.2.
-				if (fechaMinimaSegundoPinchazo.after(Condicionamientos.fechaFin())) {
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"Respetando los " + Condicionamientos.tiempoEntreDosis() + " días desde la primera dosis ("
-									+ citaPrimerPinchazo.getCupo().getFechaYHoraInicio() + "), a partir del "
-									+ Condicionamientos.fechaFin() + " no habrán vacunaciones.");
-				}
-
-				// CASO 2.2.3.
-				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController
-						.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaMinimaSegundoPinchazo));
-				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
-
-				// CASO 2.2.4.
-				CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
-				List<CitaDTO> lista = new ArrayList<>();
-				lista.add(citaProgramadaSegundaDosis);
-				// El paciente ya tenía aplicada la primera dosis.
-				return lista;
+				return caso22(pacienteDTO);
 
 			}
 		} else { // CASO 3. dosisAplicadas == 0
@@ -176,75 +147,11 @@ public class CitaController {
 
 			} else if (numCitasFuturasAsignadas == 1) { // CASO 3.2.
 
-				// CASO 3.2.1.
-				if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 1) {
-					throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud no tiene stock (1).");
-				}
-
-				Date fechaPrimeraDosis = citasFuturasDTO.get(0).getCupo().getFechaYHoraInicio();
-				Date fechaSegundaDosis = (Date) fechaPrimeraDosis.clone();
-
-				fechaSegundaDosis.setDate(fechaSegundaDosis.getDate() + Condicionamientos.tiempoEntreDosis());
-
-				// CASO 3.2.2.
-				if (fechaSegundaDosis.after(Condicionamientos.fechaFin())) {
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"Respetando los " + Condicionamientos.tiempoEntreDosis() + " días desde la primera dosis ("
-									+ fechaPrimeraDosis + "), a partir del " + Condicionamientos.fechaFin()
-									+ " no habrán vacunaciones.");
-				}
-
-				// CASO 3.2.3.
-				CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(
-						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaDosis));
-				// ¡Lanzará exception avisando de que no hay hueco en ese caso!
-
-				// CASO 3.2.4.
-				CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
-				List<CitaDTO> lista = new ArrayList<>();
-				lista.add(citaProgramadaSegundaDosis);
-				// El paciente no tiene dosis aplicadas, pero ya tenía programada la cita futura
-				// para su primera dosis.
-				return lista;
+				return caso32(pacienteDTO, citasFuturasDTO);
 
 			} else { // CASO 3.3. numCitasFuturasAsignadas == 0.
 
-				// CASO 3.3.1.
-				if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 2) {
-					throw new ResponseStatusException(HttpStatus.CONFLICT,
-							"El centro de salud no tiene suficiente stock (2).");
-				}
-
-				// 3.3.2. Automático
-
-				// 3.3.3.
-				CupoDTO primerCupoLibreDTO = wrapperModelToDTO.cupoToCupoDTO(
-						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), new Date()));
-				// 3.3.3.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
-
-				// 3.3.3.2.
-				CitaDTO primeraCitaDTO = confirmarCita(primerCupoLibreDTO, pacienteDTO, 1);
-				List<CitaDTO> lista = new ArrayList<>();
-				lista.add(primeraCitaDTO);
-
-				// 3.3.4.
-				Date fechaPrimeraCita = primeraCitaDTO.getCupo().getFechaYHoraInicio();
-				Date fechaSegundaCita = (Date) fechaPrimeraCita.clone();
-				fechaSegundaCita.setDate(fechaSegundaCita.getDate() + Condicionamientos.tiempoEntreDosis());
-				if (fechaSegundaCita.after(Condicionamientos.fechaFin())) {
-					// La fecha de la segunda cita supera la fecha máxima.
-					return lista; // Con solo la primera dosis.
-				}
-
-				// 3.3.5.
-				CupoDTO cupoLibreDTOSegundaCita = wrapperModelToDTO.cupoToCupoDTO(
-						cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita));
-				// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
-
-				// 3.3.5.2.
-				CitaDTO segundaCitaDTO = confirmarCita(cupoLibreDTOSegundaCita, pacienteDTO, 2);
-				lista.add(segundaCitaDTO);
-				return lista; // Con las dos citas.
+				return caso33(pacienteDTO); // Con las dos citas.
 
 			}
 
@@ -253,10 +160,124 @@ public class CitaController {
 		// Revisar con respecto al código de confirmación del primer sprint.
 	}
 
+	@SuppressWarnings("deprecation")
+	private List<CitaDTO> caso32(PacienteDTO pacienteDTO, List<CitaDTO> citasFuturasDTO){
+		// CASO 3.2.1.
+		if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 1) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud no tiene stock (1).");
+		}
+
+		Date fechaPrimeraDosis = citasFuturasDTO.get(0).getCupo().getFechaYHoraInicio();
+		Date fechaSegundaDosis = (Date) fechaPrimeraDosis.clone();
+
+		fechaSegundaDosis.setDate(fechaSegundaDosis.getDate() + Condicionamientos.tiempoEntreDosis());
+
+		// CASO 3.2.2.
+		if (fechaSegundaDosis.after(Condicionamientos.fechaFin())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"Respetando los " + Condicionamientos.tiempoEntreDosis() + " días desde la primera dosis ("
+							+ fechaPrimeraDosis + "), a partir del " + Condicionamientos.fechaFin()
+							+ " no habrán vacunaciones.");
+		}
+
+		// CASO 3.2.3.
+		CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(
+				cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaDosis));
+		// ¡Lanzará exception avisando de que no hay hueco en ese caso!
+
+		// CASO 3.2.4.
+		CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
+		List<CitaDTO> lista = new ArrayList<>();
+		lista.add(citaProgramadaSegundaDosis);
+		// El paciente no tiene dosis aplicadas, pero ya tenía programada la cita futura
+		// para su primera dosis.
+
+		return lista;
+	}
+
+	@SuppressWarnings("deprecation")
+	private List<CitaDTO> caso33(PacienteDTO pacienteDTO){
+		// CASO 3.3.1.
+		if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 2) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"El centro de salud no tiene suficiente stock (2).");
+		}
+
+		// 3.3.2. Automático
+
+		// 3.3.3.
+		CupoDTO primerCupoLibreDTO = wrapperModelToDTO.cupoToCupoDTO(
+				cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), new Date()));
+		// 3.3.3.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
+
+		// 3.3.3.2.
+		CitaDTO primeraCitaDTO = confirmarCita(primerCupoLibreDTO, pacienteDTO, 1);
+		List<CitaDTO> lista = new ArrayList<>();
+		lista.add(primeraCitaDTO);
+
+		// 3.3.4.
+		Date fechaPrimeraCita = primeraCitaDTO.getCupo().getFechaYHoraInicio();
+		Date fechaSegundaCita = (Date) fechaPrimeraCita.clone();
+		fechaSegundaCita.setDate(fechaSegundaCita.getDate() + Condicionamientos.tiempoEntreDosis());
+		if (fechaSegundaCita.after(Condicionamientos.fechaFin())) {
+			// La fecha de la segunda cita supera la fecha máxima.
+			return lista; // Con solo la primera dosis.
+		}
+
+		// 3.3.5.
+		CupoDTO cupoLibreDTOSegundaCita = wrapperModelToDTO.cupoToCupoDTO(
+				cupoController.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaSegundaCita));
+		// 3.3.5.1. Si no se encuentra hueco, ya lanza ResponseStatusException.
+
+		// 3.3.5.2.
+		CitaDTO segundaCitaDTO = confirmarCita(cupoLibreDTOSegundaCita, pacienteDTO, 2);
+		lista.add(segundaCitaDTO);
+
+		return lista;
+	}
+
+	@SuppressWarnings("deprecation")
+	public List<CitaDTO> caso22(PacienteDTO pacienteDTO){
+		// Objetivo: Asignar la segunda 21 días después de la primera.
+
+		// CASO 2.2.1.
+		if (pacienteDTO.getCentroSalud().getNumVacunasDisponibles() < 1) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "El centro de salud no tiene stock (1).");
+		}
+
+		CitaDTO citaPrimerPinchazo = buscarUltimaCitaPinchazo(pacienteDTO, PRIMERA_DOSIS);
+
+		Date fechaPrimerPinchazo = citaPrimerPinchazo.getCupo().getFechaYHoraInicio();
+		Date fechaMinimaSegundoPinchazo = (Date) fechaPrimerPinchazo.clone();
+		fechaMinimaSegundoPinchazo
+				.setDate(fechaMinimaSegundoPinchazo.getDate() + Condicionamientos.tiempoEntreDosis());
+
+		// CASO 2.2.2.
+		if (fechaMinimaSegundoPinchazo.after(Condicionamientos.fechaFin())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"Respetando los " + Condicionamientos.tiempoEntreDosis() + " días desde la primera dosis ("
+							+ citaPrimerPinchazo.getCupo().getFechaYHoraInicio() + "), a partir del "
+							+ Condicionamientos.fechaFin() + " no habrán vacunaciones.");
+		}
+
+		// CASO 2.2.3.
+		CupoDTO cupoLibre = wrapperModelToDTO.cupoToCupoDTO(cupoController
+				.buscarPrimerCupoLibreAPartirDe(pacienteDTO.getCentroSalud(), fechaMinimaSegundoPinchazo));
+		// ¡Lanzará exception avisando de que no hay hueco en ese caso!
+
+		// CASO 2.2.4.
+		CitaDTO citaProgramadaSegundaDosis = confirmarCita(cupoLibre, pacienteDTO, SEGUNDA_DOSIS);
+		List<CitaDTO> lista = new ArrayList<>();
+		lista.add(citaProgramadaSegundaDosis);
+		// El paciente ya tenía aplicada la primera dosis.
+
+		return lista;
+	}
+
 	/**
 	 * Método que sirve para confirmar una cita, es decir, programar una cita de un
 	 * paciente concreto en un cupo concreto.
-	 *
+	 * 
 	 * @param cupoDTO
 	 * @param pacienteDTO
 	 * @param dosis
@@ -271,7 +292,7 @@ public class CitaController {
 		try {
 			cupoDTO.incrementarTamanoActual(configuracionCupos.getNumeroPacientes());
 		} catch (CupoException e) {
-			e.printStackTrace();
+			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error del servidor. " + e);
 			// No debería saltar la excepción, salvo por cuestiones de concurrencia, porque
 			// solamente traemos cupos libres.
@@ -288,7 +309,7 @@ public class CitaController {
 	 * cita antigua con respecto a la dosis aplicada; para asignar la cita de la
 	 * segunda dosis, en caso de ya estar aplicada la primera, se busca cuál fue la
 	 * primera cita para empezar a buscar a partir de 21 días.
-	 *
+	 * 
 	 * @param pacienteDTO
 	 * @param dosis
 	 * @return
@@ -314,7 +335,7 @@ public class CitaController {
 	/**
 	 * Una cita, solamente se puede modificar en un rango de días concreto, para
 	 * poder respetar los 21 días.
-	 *
+	 * 
 	 * @param uuidCita
 	 * @return
 	 */
@@ -326,70 +347,78 @@ public class CitaController {
 			CitaDTO citaDTO = new CitaDTO();
 			try {
 				citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
+
+				if (citaDTO.getDosis() == PRIMERA_DOSIS) { // En caso de ser la primera, da igual.
+					lista = priemeraDosis(lista, citaDTO);
+
+				} else { // SEGUNDA_DOSIS // En el caso de ser la segunda, +21 días.
+
+					List<CitaDTO> listaCitasFuturas = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
+
+					CitaDTO citaPrimerPinchazo = null;
+
+					if (listaCitasFuturas.size() == 2) {
+						citaPrimerPinchazo = listaCitasFuturas.get(0);
+					} else {
+						citaPrimerPinchazo = buscarUltimaCitaPinchazo(citaDTO.getPaciente(), PRIMERA_DOSIS);
+					}
+
+					Date fechaPrimerPinchazo = citaPrimerPinchazo.getCupo().getFechaYHoraInicio();
+					Date fechaMinimaSegundoPinchazo = (Date) fechaPrimerPinchazo.clone();
+					fechaMinimaSegundoPinchazo
+							.setDate(fechaMinimaSegundoPinchazo.getDate() + Condicionamientos.tiempoEntreDosis());
+					lista.add(fechaMinimaSegundoPinchazo);
+					lista.add(Condicionamientos.fechaFin());
+
+				}
+				return lista;
 			} catch (IdentificadorException e) {
-				e.printStackTrace();
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DTO to Model parsing error");
 			}
-			if (citaDTO.getDosis() == PRIMERA_DOSIS) { // En caso de ser la primera, da igual.
-				System.out.println("primera dosis");
-				Date hoy = new Date();
-				if (Condicionamientos.buscarAPartirDeManana())
-					hoy.setDate(hoy.getDate() + 1);
-				lista.add(hoy); // Desde hoy
 
-				/*
-				 * Si tiene segunda cita, es hasta el día anterior a la segunda; y si no, fecha
-				 * fin:
-				 */
-				List<CitaDTO> citasDTO = null;
-
-				citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
-
-				if (citasDTO.size() == 2) {
-					Date fechaSegundaCita = citasDTO.get(1).getCupo().getFechaYHoraInicio();
-					Date fechaMaxima = (Date) fechaSegundaCita.clone();
-					fechaMaxima.setDate(fechaMaxima.getDate() - 1);
-					lista.add(fechaMaxima); // Hasta el día antes de la segunda cita
-				} else {
-					lista.add(Condicionamientos.fechaFin()); // Hasta el día tope
-				}
-
-			} else { // SEGUNDA_DOSIS // En el caso de ser la segunda, +21 días.
-
-				List<CitaDTO> listaCitasFuturas = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
-
-				CitaDTO citaPrimerPinchazo = null;
-
-				if (listaCitasFuturas.size() == 2) {
-					citaPrimerPinchazo = listaCitasFuturas.get(0);
-				} else {
-					citaPrimerPinchazo = buscarUltimaCitaPinchazo(citaDTO.getPaciente(), PRIMERA_DOSIS);
-				}
-
-				Date fechaPrimerPinchazo = citaPrimerPinchazo.getCupo().getFechaYHoraInicio();
-				Date fechaMinimaSegundoPinchazo = (Date) fechaPrimerPinchazo.clone();
-				fechaMinimaSegundoPinchazo
-						.setDate(fechaMinimaSegundoPinchazo.getDate() + Condicionamientos.tiempoEntreDosis());
-				lista.add(fechaMinimaSegundoPinchazo);
-				lista.add(Condicionamientos.fechaFin());
-
-			}
-			return lista;
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "UUID no contemplado.");
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	private List<Date> priemeraDosis(List<Date> lista, CitaDTO citaDTO){
+		Date hoy = new Date();
+		if (Condicionamientos.buscarAPartirDeManana())
+			hoy.setDate(hoy.getDate() + 1);
+		lista.add(hoy); // Desde hoy
+
+		/*
+		 * Si tiene segunda cita, es hasta el día anterior a la segunda; y si no, fecha
+		 * fin:
+		 */
+		List<CitaDTO> citasDTO = null;
+
+		citasDTO = obtenerCitasFuturasDelPaciente(citaDTO.getPaciente().getIdUsuario());
+
+		if (citasDTO.size() == 2) {
+			Date fechaSegundaCita = citasDTO.get(1).getCupo().getFechaYHoraInicio();
+			Date fechaMaxima = (Date) fechaSegundaCita.clone();
+			fechaMaxima.setDate(fechaMaxima.getDate() - 1);
+			lista.add(fechaMaxima); // Hasta el día antes de la segunda cita
+		} else {
+			lista.add(Condicionamientos.fechaFin()); // Hasta el día tope
+		}
+
+		return lista;
+	}
+
 	/**
 	 * Este método devuelve las citas de exactamente una fecha (día) en concreto, de
 	 * un centro. Servirá para saber qué citas se vacunan.
-	 *
+	 * 
 	 * @param centroSaludDTOJson
 	 * @param fechaJson
 	 * @return
 	 */
 	@GetMapping(value = "/obtenerCitasFecha")
 	public List<CitaDTO> obtenerCitasFecha(@RequestParam(name = "centroSaludDTO") String centroSaludDTOJson,
-										   @RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
+			@RequestParam(name = "fecha") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String fechaJson) {
 		if (!centroSaludDTOJson.isEmpty() && !fechaJson.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			CentroSaludDTO centroSaludDTO = null;
@@ -429,7 +458,7 @@ public class CitaController {
 	/**
 	 * Este método devuelve las citas futuras de un paciente en concreto. Servirá
 	 * para poder consultar sus citas.
-	 *
+	 * 
 	 * @param idPaciente
 	 * @return
 	 */
@@ -441,21 +470,15 @@ public class CitaController {
 		Optional<Usuario> optUsuario = usuarioDao.findById(idPaciente);
 		if (optUsuario.isPresent()) {
 			List<CitaDTO> citasDTO = wrapperModelToDTO.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(idPaciente));
+			List<CitaDTO> citasSeleccionadas = new ArrayList<>();
 			for (int i = 0; i < citasDTO.size(); i++) {
-				if (citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date())) { // ¿Es antigua?
-					citasDTO.remove(i--);
-				}
-				else {
-					if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 1 && citasDTO.get(i).getDosis() ==1){
-						citasDTO.remove(i--);
-					}
-					else if (citasDTO.get(i).getPaciente().getNumDosisAplicadas() == 2 && citasDTO.get(i).getDosis() ==2){
-						citasDTO.remove(i--);
-					}
+				if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().before(new Date()) &&
+						citasDTO.get(i).getPaciente().getNumDosisAplicadas() != citasDTO.get(i).getDosis()) { // ¿Es antigua?
+					citasSeleccionadas.add(citasDTO.get(i));
 				}
 			}
-			Collections.sort(citasDTO);
-			return citasDTO;
+			Collections.sort(citasSeleccionadas);
+			return citasSeleccionadas;
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en la bbdd");
 		}
@@ -465,25 +488,28 @@ public class CitaController {
 	 * Este método devuelve las citas antiguas (ya celebradas) de un paciente en
 	 * concreto. Servirá para poder consultar sus citas antiguas ante ciertas
 	 * necesidades.
-	 *
+	 * 
 	 * @param pacienteDTO
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public List<CitaDTO> obtenerCitasAntiguasPaciente(PacienteDTO pacienteDTO) {
 		List<CitaDTO> citasDTO = wrapperModelToDTO
 				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
+		List<CitaDTO> citasSeleccionadas  = new ArrayList<>();
 		for (int i = 0; i < citasDTO.size(); i++) {
-			if (citasDTO.get(i).getCupo().getFechaYHoraInicio().after(new Date())) { // ¿Es futura?
-				citasDTO.remove(i--);
+			if (!citasDTO.get(i).getCupo().getFechaYHoraInicio().after(new Date())) { // ¿Es antigua?
+				citasSeleccionadas.add(citasDTO.get(i));
 			}
 		}
-		Collections.sort(citasDTO);
-		return citasDTO;
+
+		Collections.sort(citasSeleccionadas);
+		return citasSeleccionadas;
 	}
 
 	/**
 	 * Este método ayuda a eliminar una cita en concreto dadas unas condiciones.
-	 *
+	 * 
 	 * @param uuidCita
 	 */
 	@SuppressWarnings("static-access")
@@ -504,7 +530,7 @@ public class CitaController {
 			cupoController.decrementarTamanoActualCupo(citaDTO.getCupo().getUuidCupo());
 		} catch (CupoException e) {
 			// Cupo no existente en la BD.
-			e.printStackTrace();
+			LOG.log(Level.INFO, e.getMessage());
 		}
 
 		// Si se elimina la primera dosis, la segunda pasa a la primera.
@@ -530,7 +556,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar todas las citas incluidas en la lista del
 	 * parámetro.
-	 *
+	 * 
 	 * @param citasDTO
 	 */
 	public void eliminarCitas(List<CitaDTO> citasDTO) {
@@ -542,7 +568,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar (desprogramar) todas las citas futuras de un
 	 * paciente, dejando evidentemente sucesivos huecos.
-	 *
+	 * 
 	 * @param paciente
 	 */
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
@@ -552,7 +578,7 @@ public class CitaController {
 
 	/**
 	 * El método ayudará a eliminar todas las citas (todas) de un paciente.
-	 *
+	 * 
 	 * @param pacienteDTO
 	 */
 	public void eliminarTodasLasCitasDelPaciente(PacienteDTO pacienteDTO) {
@@ -568,7 +594,7 @@ public class CitaController {
 	/**
 	 * El método ayudará a eliminar todas las citas del cupo introducido por
 	 * parámetro.
-	 *
+	 * 
 	 * @param uuidCupo
 	 */
 	public void eliminarTodasLasCitasDelCupo(String uuidCupo) {
@@ -576,26 +602,13 @@ public class CitaController {
 		try {
 			cupoController.anularTamanoActual(uuidCupo);
 		} catch (CupoException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * El método eliminará las citas de un paciente.
-	 *
-	 * @param pacienteDTO
-	 */
-	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
-		List<CitaDTO> citasDTO = wrapperModelToDTO
-				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
-		for (int i = 0; i < citasDTO.size(); i++) {
-			citaDao.deleteById(citasDTO.get(i).getUuidCita());
+			LOG.log(Level.INFO, e.getMessage());
 		}
 	}
 
 	/**
 	 * Recurso web para la modficación de la cita de un paciente
-	 *
+	 * 
 	 * @param idCita    Identificador de la cita que se va a modificar
 	 * @param cupoNuevo Identificador del nuevo cupo al que va a pertenecer la cita
 	 *                  del paciente y el cual contiene la fecha y hora de la
@@ -649,7 +662,7 @@ public class CitaController {
 	/**
 	 * Este método ejecutará la vacunación de una cierta dosis de un paciente en
 	 * concreto, dada la cita de vacunación.
-	 *
+	 * 
 	 * @param cita
 	 */
 	@PostMapping("/vacunar")
@@ -663,12 +676,13 @@ public class CitaController {
 			CentroSaludDTO centroSalud = cita.getCupo().getCentroSalud();
 			centroSalud.decrementarNumVacunasDisponibles();
 			if (cita.getDosis() == cita.getPaciente().getNumDosisAplicadas()) {
-				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOtoPacienteNonStatic(cita.getPaciente()));
+				this.usuarioDao.save(this.wrapperDTOtoModel.pacienteDTOtoPaciente(cita.getPaciente()));
 				centroSaludDao.save(this.wrapperDTOtoModel.centroSaludDTOtoCentroSalud(centroSalud));
 			} else {
 				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");
 			}
 		} catch (Exception e) {
+			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 
@@ -677,16 +691,12 @@ public class CitaController {
 	/**
 	 * El método ayudará a crear una nueva cita en la base de datos, pudiendo
 	 * existir otras alternativas más o menos directas.
-	 *
+	 * 
 	 * @param cita
 	 */
 	@SuppressWarnings("static-access")
 	public void crearCita(CitaDTO cita) {
-		try {
-			citaDao.save(wrapperDTOtoModel.citaDTOToCita(cita));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		citaDao.save(wrapperDTOtoModel.citaDTOToCita(cita));
 	}
 
 }
