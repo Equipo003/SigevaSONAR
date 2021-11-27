@@ -146,23 +146,4 @@ public class WrapperDTOtoModel {
 		cita.setDosis(citaDTO.getDosis());
 		return cita;
 	}
-
-	public Paciente pacienteDTOtoPacienteNonStatic(PacienteDTO pacienteDTO) {
-		Paciente paciente = new Paciente();
-		paciente.setIdUsuario(pacienteDTO.getIdUsuario());
-		paciente.setNombre(pacienteDTO.getNombre());
-		paciente.setApellidos(pacienteDTO.getApellidos());
-		paciente.setUsername(pacienteDTO.getUsername());
-		paciente.setCorreo(pacienteDTO.getCorreo());
-		paciente.setDni(pacienteDTO.getDni());
-		paciente.setCentroSalud(pacienteDTO.getCentroSalud().getId());
-		paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
-		paciente.setImagen(pacienteDTO.getImagen());
-		paciente.setHashPassword(pacienteDTO.getHashPassword());
-		paciente.setRol(pacienteDTO.getRol().getId());
-
-		paciente.setNumDosisAplicadas(encrypter.encriptar(String.valueOf(pacienteDTO.getNumDosisAplicadas())));
-
-		return paciente;
-	}
 }

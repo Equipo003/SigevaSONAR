@@ -6,9 +6,6 @@ public class CentroInvalidoException extends Exception{
      */
     private static final long serialVersionUID = -7940812683334331639L;
 
-    public CentroInvalidoException() {
-    }
-
     public CentroInvalidoException(String mensaje) {
         super(mensaje);
     }

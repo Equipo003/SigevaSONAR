@@ -33,9 +33,4 @@ public class Encriptador {
 		}
 
 	}
-
-	public String getClave() {
-		return KEY;
-	}
-
 }

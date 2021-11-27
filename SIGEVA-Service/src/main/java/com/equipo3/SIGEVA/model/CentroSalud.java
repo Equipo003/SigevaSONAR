@@ -38,21 +38,6 @@ public class CentroSalud {
 	}
 
 	/***
-	 * Constructor del objeto con sus respectivos atributos
-	 * 
-	 * @param nombreCentro          Nombre que tendra el centro de salud.
-	 * @param direccion             Dirección que tendrá el centro de salud.
-	 * @param numVacunasDisponibles Número de vacunas disponibles que tiene el
-	 *                              centro de salud.
-	 */
-	public CentroSalud(String nombreCentro, String direccion, int numVacunasDisponibles) {
-		this.id = UUID.randomUUID().toString();
-		this.nombreCentro = nombreCentro;
-		this.numVacunasDisponibles = numVacunasDisponibles;
-		this.direccion = direccion;
-	}
-
-	/***
 	 * Método para la devolución del identificador.
 	 * 
 	 * @return Id identificador.
@@ -64,7 +49,7 @@ public class CentroSalud {
 	/***
 	 * Método para la actualización del identificador.
 	 * 
-	 * @param Id Identificador nuevo.
+	 * @param id Identificador nuevo.
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -141,58 +126,9 @@ public class CentroSalud {
 	/***
 	 * Método para la actualización del objeto vacuna en el centro de salud.
 	 * 
-	 * @param vacunaDTO Vacuna nueva que va tener el centro de salud.
+	 * @param vacuna Vacuna nueva que va tener el centro de salud.
 	 */
 	public void setVacuna(String vacuna) {
 		this.vacuna = vacuna;
 	}
-
-	/***
-	 * Incrementación del número de dosis de vacunas disponibles que tiene el centro
-	 * de salud.
-	 * 
-	 * @throws CentroSinStock Excepción que salta si el centro de salud no tiene
-	 *                        dosis disponibles de vacunas.
-	 */
-	public void decrementarNumVacunasDisponibles() throws CentroSinStock {
-		// No se restará stock hasta que no se confirme como vacunado por un sanitario.
-		try {
-			this.setNumVacunasDisponibles(numVacunasDisponibles - 1);
-		} catch (NumVacunasInvalido e) {
-			throw new CentroSinStock("El centro no dispone de stock.");
-		}
-	}
-
-	/***
-	 * Método que nos da todo la información del centro de salud
-	 */
-	@Override
-	public String toString() {
-		return "CentroSaludDTO{" + "id='" + id + '\'' + ", nombreCentro='" + nombreCentro + '\''
-				+ ", numVacunasDisponibles=" + numVacunasDisponibles + ", direccion='" + direccion + '\'' + ", vacuna="
-				+ vacuna + '}';
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(direccion, id, nombreCentro, numVacunasDisponibles, vacuna);
-	}
-
-	/***
-	 * Comparador para los centros de salud
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CentroSalud other = (CentroSalud) obj;
-		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
-				&& Objects.equals(nombreCentro, other.nombreCentro)
-				&& numVacunasDisponibles == other.numVacunasDisponibles && Objects.equals(vacuna, other.vacuna);
-	}
-
 }

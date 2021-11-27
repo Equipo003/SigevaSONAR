@@ -5,7 +5,6 @@ import {Rol} from "../Model/rol";
 import {VentanaEmergenteComponent} from "../ventana-emergente/ventana-emergente.component";
 import {MatDialog} from "@angular/material/dialog";
 import {JsonService} from "../Service/json.service";
-import {Usuario} from "../Model/Usuario";
 import {Vacuna} from "../Model/vacuna";
 
 @Component({
@@ -34,7 +33,7 @@ export class UsuarioComponent {
       if (result) {
         this.usuarioEliminado = true;
         this.json.deleteJson("user/deleteUsuario", String(this.usuario.idUsuario)).subscribe(
-          result => {
+          res => {
             this.message = "Usuario eliminado correctamente";
             this.errorMessage = "";
             this.usuarioEliminado = true;

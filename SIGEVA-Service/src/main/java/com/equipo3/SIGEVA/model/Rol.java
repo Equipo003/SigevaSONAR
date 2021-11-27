@@ -39,7 +39,7 @@ public class Rol {
 	/***
 	 * Método para la actualización del identificador.
 	 * 
-	 * @param Id Identificador nuevo.
+	 * @param id Identificador nuevo.
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -61,13 +61,5 @@ public class Rol {
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	/***
-	 * Método para la obtención de toda la información del rol.
-	 */
-	@Override
-	public String toString() {
-		return "Rol{" + "id='" + id + '\'' + ", nombre='" + nombre + '\'' + '}';
 	}
 }

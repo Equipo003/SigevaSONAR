@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /***
@@ -122,34 +121,4 @@ public class VacunaDTO {
                 ", numDosis=" + numDosis +
                 '}';
     }
-    
-    /***
-	 * Método que cifra la información mediante el algoritmo de hash.
-	 */
-    
-	@Override
-	public int hashCode() {
-		return Objects.hash(diasEntreDosis, id, nombre, numDosis);
-	}
-
-	/***
-   	 * Método para la comparación de objetos.
-   	 * 
-   	 * @param obj; objeto a comparar.
-   	 */
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		VacunaDTO other = (VacunaDTO) obj;
-		return diasEntreDosis == other.diasEntreDosis && Objects.equals(id, other.id)
-				&& Objects.equals(nombre, other.nombre) && numDosis == other.numDosis;
-	}
-    
-    
 }

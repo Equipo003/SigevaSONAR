@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {CupoCitas} from "../Model/cupo-citas";
 import {JsonService} from "../Service/json.service";
-import {LoginUsuario} from "../Model/loginUsuario";
 import {TokenService} from "../Service/token.service";
 import {HttpParams} from "@angular/common/http";
-import {CentroSalud} from "../Model/centro-salud";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-contenedor-citas',

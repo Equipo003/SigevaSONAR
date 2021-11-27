@@ -42,39 +42,6 @@ public class Cupo implements Comparable<Cupo> {
 	}
 
 	/***
-	 * Constructor para la creación de objetos cuposDTO pasando los diferentes valores del
-	 * objeto.
-	 * 
-	 * @param centroSalud           Centro de salud DTO al que va a estar asociado un cupo.
-	 * @param fechaYHoraInicio      Fecha y hora en la que se va a iniciar el cupo.
-	 * @param tamanoActual 			Tamaño que tendrá el cupo para gestionar citas de vacunas.
-	 */
-	
-	public Cupo(String uuidCentroSalud, Date fechaYHoraInicio, int tamanoActual) {
-		this.uuidCupo = UUID.randomUUID().toString();
-		this.uuidCentroSalud = uuidCentroSalud;
-		this.fechaYHoraInicio = fechaYHoraInicio;
-		this.tamanoActual = tamanoActual;
-	}
-
-	/***
-	 * Constructor para la creación de objetos cuposDTO pasando los diferentes valores del
-	 * objeto.
-	 * 
-	 * @param uuidCupo           	Id del cupo.
-	 * @param centroSalud           Centro de salud DTO al que va a estar asociado un cupo.
-	 * @param fechaYHoraInicio      Fecha y hora en la que se va a iniciar el cupo.
-	 * @param tamanoActual 			Tamaño que tendrá el cupo para gestionar citas de vacunas.
-	 */
-	
-	public Cupo(String uuidCupo, String uuidCentroSalud, Date fechaYHoraInicio, int tamanoActual) {
-		this.uuidCupo = uuidCupo;
-		this.uuidCentroSalud = uuidCentroSalud;
-		this.fechaYHoraInicio = fechaYHoraInicio;
-		this.tamanoActual = tamanoActual;
-	}
-
-	/***
 	 * Método para la devolución del identificador del cupo.
 	 * 
 	 * @return uuidCupo; identificador del cupo.
@@ -155,16 +122,6 @@ public class Cupo implements Comparable<Cupo> {
 	}
 
 	/***
-	 * Método que nos da todo la información de la vacuna.
-	 */
-	
-	@Override
-	public String toString() {
-		return "Cupo [uuidCupo=" + uuidCupo + ", uuidCentroSalud=" + uuidCentroSalud + ", fechaYHoraInicio="
-				+ fechaYHoraInicio + ", tamanoActual=" + tamanoActual + "]";
-	}
-
-	/***
    	 * Método para la comparación de cupos.
    	 * 
    	 * @param o; cupo a comparar.
@@ -174,33 +131,4 @@ public class Cupo implements Comparable<Cupo> {
 	public int compareTo(Cupo o) {
 		return fechaYHoraInicio.compareTo(o.getFechaYHoraInicio());
 	}
-	
-	/***
-	 * Método que cifra la información mediante el algoritmo de hash.
-	 */
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(fechaYHoraInicio, tamanoActual, uuidCentroSalud, uuidCupo);
-	}
-
-	/***
-   	 * Método para la comparación de objetos.
-   	 * 
-   	 * @param obj; objeto a comparar.
-   	 */
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cupo other = (Cupo) obj;
-		return Objects.equals(fechaYHoraInicio, other.fechaYHoraInicio) && tamanoActual == other.tamanoActual
-				&& Objects.equals(uuidCentroSalud, other.uuidCentroSalud) && Objects.equals(uuidCupo, other.uuidCupo);
-	}
-
 }

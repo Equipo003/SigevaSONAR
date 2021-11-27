@@ -10,8 +10,6 @@ const ROL_USUARIO = 'Rol';
 
 export class TokenService {
 
-  constructor() { }
-
   setIdUsuario(idUsuario: string) {
     window.sessionStorage.removeItem(ID_USUARIO);
     window.sessionStorage.setItem(ID_USUARIO, idUsuario);

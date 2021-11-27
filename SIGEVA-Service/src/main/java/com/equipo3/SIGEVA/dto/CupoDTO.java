@@ -144,15 +144,6 @@ public class CupoDTO implements Comparable<CupoDTO> {
 		this.tamanoActual = tamanoActual;
 	}
 
-	/***
-	 * Método que nos da todo la información de la vacuna.
-	 */
-	
-	@Override
-	public String toString() {
-		return "CupoDTO [uuidCupo=" + uuidCupo + ", centroSalud=" + centroSalud + ", fechaYHoraInicio="
-				+ fechaYHoraInicio + ", tamanoActual=" + tamanoActual + "]";
-	}
 
 	/***
    	 * Método para la comparación de cupos.
@@ -201,34 +192,4 @@ public class CupoDTO implements Comparable<CupoDTO> {
 			tamanoActual--;
 		}
 	}
-
-	/***
-	 * Método que cifra la información mediante el algoritmo de hash.
-	 */
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(centroSalud, fechaYHoraInicio, tamanoActual, uuidCupo);
-	}
-
-	/***
-   	 * Método para la comparación de objetos.
-   	 * 
-   	 * @param obj; objeto a comparar.
-   	 */
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CupoDTO other = (CupoDTO) obj;
-		return Objects.equals(centroSalud, other.centroSalud)
-				&& Objects.equals(fechaYHoraInicio, other.fechaYHoraInicio) && tamanoActual == other.tamanoActual
-				&& Objects.equals(uuidCupo, other.uuidCupo);
-	}
-
 }

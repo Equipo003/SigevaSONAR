@@ -4,7 +4,6 @@ import { JsonService } from '../Service/json.service';
 import { HttpParams } from "@angular/common/http";
 import {CitaConObjetos} from "../Model/cita-con-objetos";
 import {Paciente} from "../Model/paciente";
-import {CupoCitas} from "../Model/cupo-citas";
 import {Rol} from "../Model/rol";
 import {Vacuna} from "../Model/vacuna";
 
@@ -29,10 +28,6 @@ export class SolicitarCitaComponent {
 		this.mensaje = "SOLICITAR CITA";
 		this.mensajeError = "";
 	}
-
-  ngOnInit(): void {
-
-  }
 
   solicitarCita() {
     let params = new HttpParams({

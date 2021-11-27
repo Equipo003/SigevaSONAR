@@ -100,7 +100,6 @@ public class CentroController {
 				throw new CentroInvalidoException("El centro de salud NO existe.");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 	}

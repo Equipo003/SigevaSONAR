@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,6 +37,8 @@ import com.equipo3.SIGEVA.model.Cupo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static java.util.logging.Logger.getLogger;
+
 @CrossOrigin
 @RestController
 @RequestMapping("cupo")
@@ -61,6 +64,8 @@ public class CupoController {
 
 	@Autowired
 	WrapperDTOtoModel wrapperDTOtoModel;
+
+	final Logger LOG = getLogger(com.equipo3.SIGEVA.controller.CitaController.class.toString()) ;
 
 	/**
 	 * El método ayudará a calcular cuáles son exactamente los cupos de un centro en
@@ -124,8 +129,6 @@ public class CupoController {
 		}
 		if (centroSaludDTO != null) {
 			List<CupoDTO> cuposDTO = calcularCupos(centroSaludDTO);
-			System.out.println("Cupos preparados: " + cuposDTO.size());
-			System.out.println("CentroSaludDTO: " + centroSaludDTO.getId());
 			List<Cupo> cupos = wrapperDTOtoModel.allCupoDTOtoCupo(cuposDTO);
 			for (int i = 0; i < cupos.size(); i++) {
 				cupoDao.save(cupos.get(i));
@@ -328,7 +331,6 @@ public class CupoController {
 		 * NullPointers que no tienen por qué ser necesarias corregir si esto se ordena
 		 * correctamente.
 		 */
-
 	}
 
 	/**
@@ -338,7 +340,7 @@ public class CupoController {
 	 * @param centroSaludDTO
 	 */
 	@PutMapping("/borrarCuposDelCentro")
-	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) throws CupoException {
 		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
 		for (int i = 0; i < cupos.size(); i++) {
 			this.eliminarCupo(cupos.get(i).getUuidCupo());
@@ -365,10 +367,6 @@ public class CupoController {
 	 * @param cupo
 	 */
 	public void crearCupo(CupoDTO cupo) {
-		try {
 			cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupo));
-		} catch (Exception e) {
-			System.out.println("error crear cupo: " + e.getMessage());
-		}
 	}
 }

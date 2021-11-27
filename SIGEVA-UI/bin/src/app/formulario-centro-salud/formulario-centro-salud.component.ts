@@ -37,7 +37,6 @@ export class FormularioCentroSaludComponent implements OnInit {
   }
 
   enviarDatosBack() {
-    // this.generandoCupos = "Generando cupos de citas y centro...";
     this.json.postJsonCrearCentro("user/newCentroSalud", this.centroSalud).subscribe(
       result => {
         this.errorMessage = "";
@@ -45,7 +44,6 @@ export class FormularioCentroSaludComponent implements OnInit {
         this.message = "Centro creado correctamente";
         console.log(result);
         this.generarCupos(result);
-        // setTimeout('document.location.reload()', 2000);
       }, err => {
         console.log(err);
         this.generandoCupos = "";
@@ -66,7 +64,6 @@ export class FormularioCentroSaludComponent implements OnInit {
         console.log("CUPOS GENERADOS");
       }, err => {
         this.errorMessage = err.error.message;
-        // setTimeout(function(){ self.errorMessage=""; }, 3000);
       });
   }
 }

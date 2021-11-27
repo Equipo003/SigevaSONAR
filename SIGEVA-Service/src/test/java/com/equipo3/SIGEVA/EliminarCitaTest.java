@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.equipo3.SIGEVA.exception.CupoException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,7 +117,7 @@ class EliminarCitaTest {
 	}
 
 	@Test
-	void eliminarCitasFuturasDelPaciente() {
+	void eliminarCitasFuturasDelPaciente() throws CupoException {
 		List<CitaDTO> listaFuturas1 = citaController.obtenerCitasFuturasDelPaciente(pacienteDTO.getIdUsuario());
 		assertTrue(listaFuturas1.size() > 0);
 

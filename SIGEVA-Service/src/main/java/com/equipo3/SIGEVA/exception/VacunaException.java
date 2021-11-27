@@ -7,9 +7,6 @@ public class VacunaException extends Exception {
 	 */
 	private static final long serialVersionUID = 6384881952086181657L;
 
-	public VacunaException() {
-	}
-
 	public VacunaException(String mensaje) {
 		super(mensaje);
 	}

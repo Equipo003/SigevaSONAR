@@ -125,15 +125,6 @@ public class CitaDTO implements Comparable<CitaDTO> {
 	}
 
 	/***
-	 * Método que nos da todo la información de la cita.
-	 */
-
-	@Override
-	public String toString() {
-		return "CitaDTO [uuidCita=" + uuidCita + ", cupo=" + cupo + ", paciente=" + paciente + ", dosis=" + dosis + "]";
-	}
-
-	/***
 	 * Método que compara si el cupo es idéntico al pasado por parámetro.
 	 * 
 	 * @param o; Cita con la que comparar.
@@ -143,23 +134,4 @@ public class CitaDTO implements Comparable<CitaDTO> {
 	public int compareTo(CitaDTO o) {
 		return this.cupo.compareTo(o.getCupo());
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(cupo, dosis, paciente, uuidCita);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CitaDTO other = (CitaDTO) obj;
-		return Objects.equals(cupo, other.cupo) && dosis == other.dosis && Objects.equals(paciente, other.paciente)
-				&& Objects.equals(uuidCita, other.uuidCita);
-	}
-
 }

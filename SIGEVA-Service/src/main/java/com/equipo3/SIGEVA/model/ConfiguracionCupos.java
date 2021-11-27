@@ -127,7 +127,7 @@ public class ConfiguracionCupos {
 	/***
 	* Método para la actualización de la duración en minutos de la jornada del cupo.
 	* 
-	* @param duracionJornadaHoras; Duración en minutos de la jornada del cupo.
+	* @param duracionJornadaMinutos; Duración en minutos de la jornada del cupo.
 	*/
 	
 	public void setDuracionJornadaMinutos(int duracionJornadaMinutos) {
@@ -155,7 +155,6 @@ public class ConfiguracionCupos {
 		try {
 			return formateador.parse(fechaInicio);
 		} catch (ParseException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

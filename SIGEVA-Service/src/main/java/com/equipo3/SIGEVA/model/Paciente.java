@@ -52,12 +52,4 @@ public class Paciente extends Usuario {
 		this.numDosisAplicadas = dosis;
 	}
 
-	/**
-	 * Información relativa al paciente.
-	 */
-	@Override
-	public String toString() {
-		return "Paciente [" + super.toString() + ", numDosisAplicadas=" + numDosisAplicadas + "]";
-	}
-
 }

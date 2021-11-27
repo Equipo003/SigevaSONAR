@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {CentroSalud} from '../Model/centro-salud';
 import {JsonService} from "../Service/json.service";
@@ -10,7 +10,7 @@ import {Vacuna} from "../Model/vacuna";
   templateUrl: './centro-salud.component.html',
   styleUrls: ['./centro-salud.component.css']
 })
-export class CentroSaludComponent implements OnInit {
+export class CentroSaludComponent {
   @Input() cs: CentroSalud;
   @Input() existeConfiguracion = false;
   idCentro: string;
@@ -25,9 +25,6 @@ export class CentroSaludComponent implements OnInit {
     this.message = "";
   }
 
-  ngOnInit(): void {
-  }
-
   openDialog() {
     let self = this;
     const dialogRef = this.dialog.open(VentanaEmergenteComponent, {
@@ -37,7 +34,7 @@ export class CentroSaludComponent implements OnInit {
       if (result) {
 
         this.json.postJson("user/deleteCentroSalud", this.cs).subscribe(
-          result => {
+          res => {
             this.message = "Centro eliminado correctamente.";
             this.centroEliminado = true;
           }, err => {
@@ -49,20 +46,16 @@ export class CentroSaludComponent implements OnInit {
 
 
         this.json.postJson("cupo/borrarCuposDelCentro", this.cs).subscribe(
-          result => {
+          res => {
             this.message = "";
-            // setTimeout(function(){ window.location.reload(); }, 3000);
           }, err => {
             this.errorMessage = err.error.message;
-            // setTimeout(function(){ self.errorMessage=""; }, 3000);
           });
       }
     });
   }
 
   enviarDatosBack() {
-
-    let self = this;
     this.openDialog();
   }
 }
