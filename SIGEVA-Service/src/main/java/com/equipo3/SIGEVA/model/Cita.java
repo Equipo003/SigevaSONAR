@@ -39,39 +39,6 @@ public class Cita {
 	}
 
 	/***
-	 * Constructor para la creación de citas pasando los diferentes valores de la
-	 * cita.
-	 * 
-	 * @param uuidCupo          	   Id del Cupo que va a tener la cita.
-	 * @param uuidPaciente             Id del Paciente que va a tener esta cita.
-	 * @param dosis				   	   Número de dosis que le toca al paciente en la cita.
-	 */
-	
-	public Cita(String uuidCupo, String uuidPaciente, int dosis) {
-		super();
-		this.uuidCupo = uuidCupo;
-		this.uuidPaciente = uuidPaciente;
-		this.dosis = dosis;
-	}
-
-	/***
-	 * Constructor para la creación de citas pasando los diferentes valores de la
-	 * cita.
-	 * 
-	 * @param uuidCita          	   Id que va a tener la cita.
-	 * @param uuidCupo          	   Id del Cupo que va a tener la cita.
-	 * @param uuidPaciente             Id del Paciente que va a tener esta cita.
-	 * @param dosis				   	   Número de dosis que le toca al paciente en la cita.
-	 */
-	
-	public Cita(String uuidCita, String uuidCupo, String uuidPaciente, int dosis) {
-		this.uuidCita = uuidCita;
-		this.uuidCupo = uuidCupo;
-		this.uuidPaciente = uuidPaciente;
-		this.dosis = dosis;
-	}
-
-	/***
 	 * Método para la devolución del identificador de la cita.
 	 * 
 	 * @return uuidCita; identificador.
@@ -150,15 +117,4 @@ public class Cita {
 	public void setDosis(int dosis) {
 		this.dosis = dosis;
 	}
-
-	/***
-	 * Método que nos da todo la información de la cita.
-	 */
-	
-	@Override
-	public String toString() {
-		return "Cita [uuidCita=" + uuidCita + ", uuidCupo=" + uuidCupo + ", uuidPaciente=" + uuidPaciente + ", dosis="
-				+ dosis + "]";
-	}
-
 }

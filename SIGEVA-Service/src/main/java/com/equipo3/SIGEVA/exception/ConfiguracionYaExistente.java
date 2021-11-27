@@ -7,9 +7,6 @@ public class ConfiguracionYaExistente extends Exception {
 	 */
 	private static final long serialVersionUID = 6384881952086181657L;
 
-	public ConfiguracionYaExistente() {
-	}
-
 	public ConfiguracionYaExistente(String mensaje) {
 		super(mensaje);
 	}

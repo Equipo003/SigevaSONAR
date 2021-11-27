@@ -13,12 +13,6 @@ public class TokenDTO {
     private String rol;
 
 
-	/***
-	 * Constructor para la creación del token sin argumentos.
-	 */
-    public TokenDTO() {
-    }
-    
     /***
 	 * Constructor para la creación del token con argumentos.
 	 * @param idUsuario          Id del usuario al que se le va a registrar el token.
@@ -39,17 +33,7 @@ public class TokenDTO {
     public String getIdUsuario() {
         return idUsuario;
     }
-    
-    /***
-	 * Método para la actualización del identificador del usuario.
-	 * 
-	 * @param IdUsuario Identificador nuevo del usuario.
-	 */
-    
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-    
+
     /***
 	 * Método para la devolución del rol del usuario.
 	 * 

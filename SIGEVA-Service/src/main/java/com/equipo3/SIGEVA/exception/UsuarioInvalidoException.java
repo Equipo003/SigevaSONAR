@@ -7,9 +7,6 @@ public class UsuarioInvalidoException extends Exception {
 	 */
 	private static final long serialVersionUID = -7940812683334331639L;
 
-	public UsuarioInvalidoException() {
-	}
-
 	public UsuarioInvalidoException(String mensaje) {
 		super(mensaje);
 	}

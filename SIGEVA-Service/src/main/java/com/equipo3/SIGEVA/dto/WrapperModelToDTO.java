@@ -36,18 +36,6 @@ public class WrapperModelToDTO {
 	
 	private static final String NO_ENCONTRADO = " no encontrado.";
 
-	public ConfiguracionCuposDTO getConfiguracionCuposDTOfromUuid(String uuidConfiguracionCupos)
-			throws IdentificadorException {
-		Optional<ConfiguracionCupos> optConfiguracionCupos = configuracionCuposDao.findById(uuidConfiguracionCupos);
-
-		if (optConfiguracionCupos.isPresent()) {
-			return configuracionCuposToConfiguracionCuposDTO(optConfiguracionCupos.get());
-		} else {
-			throw new IdentificadorException(
-					"Identificador ConfiguracionCupos " + uuidConfiguracionCupos + NO_ENCONTRADO);
-		}
-	}
-
 	public ConfiguracionCuposDTO configuracionCuposToConfiguracionCuposDTO(ConfiguracionCupos configuracionCupos) {
 		ConfiguracionCuposDTO configuracionCuposDTO = new ConfiguracionCuposDTO();
 
@@ -126,16 +114,6 @@ public class WrapperModelToDTO {
 
 		return vacunaDTO;
 	}
-
-	public List<VacunaDTO> allVacunaToVacunaDTO(List<Vacuna> lista) {
-		List<VacunaDTO> listaDTO = new ArrayList<>();
-		for (Vacuna vacuna : lista) {
-			listaDTO.add(vacunaToVacunaDTO(vacuna));
-		}
-		return listaDTO;
-	}
-
-	// --------------------------------------------------
 
 	@Autowired
 	CentroSaludDao centroSaludDao;

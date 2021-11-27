@@ -117,15 +117,4 @@ public class Vacuna {
 	public void setNumDosis(int numDosis) {
 		this.numDosis = numDosis;
 	}
-
-	/***
-	 * Método que nos da todo la información de la vacuna.
-	 */
-	
-	@Override
-	public String toString() {
-		return "Vacuna [id=" + id + ", nombre=" + nombre + ", diasEntreDosis=" + diasEntreDosis + ", numDosis="
-				+ numDosis + "]";
-	}
-
 }

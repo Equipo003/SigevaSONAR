@@ -47,48 +47,4 @@ public class PacienteDTO extends UsuarioDTO {
 	public String toString() {
 		return "PacienteDTO [" + super.toString() + ", numDosisAplicadas=" + numDosisAplicadas + "]";
 	}
-
-	/***
-	 * Incrementación de las dosis que tiene el paciente.
-	 * 
-	 * @throws PacienteYaVacunadoException Excepción que salta si el paciente esta
-	 *                                     vacunasdo y se intenta a aumnetar las
-	 *                                     dosis que tiene.
-	 */
-	public void incrementarNumDosisAplicadas() throws PacienteYaVacunadoException {
-		if (numDosisAplicadas == 2)
-			throw new PacienteYaVacunadoException("El paciente ya estaba vacunado de las dos dosis.");
-		else
-			numDosisAplicadas++;
-	}
-
-	/***
-	 * Método que devuelve si un paciente esta vacunado
-	 * 
-	 * @return Boolean si ya tiene las dos dosis.
-	 */
-	public boolean isTotalmenteVacunado() {
-		return numDosisAplicadas == 2;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(numDosisAplicadas);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PacienteDTO other = (PacienteDTO) obj;
-		return numDosisAplicadas == other.numDosisAplicadas;
-	}
-
 }
