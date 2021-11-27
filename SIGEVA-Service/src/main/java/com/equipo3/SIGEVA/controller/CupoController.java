@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,6 +37,8 @@ import com.equipo3.SIGEVA.model.Cupo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static java.util.logging.Logger.getLogger;
+
 @CrossOrigin
 @RestController
 @RequestMapping("cupo")
@@ -61,6 +64,8 @@ public class CupoController {
 
 	@Autowired
 	WrapperDTOtoModel wrapperDTOtoModel;
+
+	final Logger LOG = getLogger(com.equipo3.SIGEVA.controller.CitaController.class.toString()) ;
 
 	/**
 	 * El método ayudará a calcular cuáles son exactamente los cupos de un centro en
@@ -208,6 +213,7 @@ public class CupoController {
 			try {
 				pacienteDTO = wrapperModelToDTO.getPacienteDTOfromUuid(uuidPaciente);
 			} catch (IdentificadorException e) {
+				e.printStackTrace();
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado en BD.");
 			}
 			Date fechaInicio = CupoController.copia(fecha);
@@ -316,7 +322,7 @@ public class CupoController {
 	 * 
 	 * @param uuidCupo
 	 */
-	public void eliminarCupo(String uuidCupo) throws CupoException {
+	public void eliminarCupo(String uuidCupo) {
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
 		/*
@@ -325,7 +331,6 @@ public class CupoController {
 		 * NullPointers que no tienen por qué ser necesarias corregir si esto se ordena
 		 * correctamente.
 		 */
-
 	}
 
 	/**

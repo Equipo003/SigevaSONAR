@@ -1,6 +1,8 @@
 package com.equipo3.SIGEVA.controller;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,6 +41,8 @@ import com.equipo3.SIGEVA.model.Usuario;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static java.util.logging.Logger.getLogger;
+
 @CrossOrigin
 @RestController
 @RequestMapping("cita")
@@ -68,6 +72,8 @@ public class CitaController {
 	@Autowired
 	CentroSaludDao centroSaludDao;
 
+	final Logger LOG = getLogger(com.equipo3.SIGEVA.controller.CitaController.class.toString()) ;
+
 	private static final int PRIMERA_DOSIS = 1;
 	private static final int SEGUNDA_DOSIS = 2;
 
@@ -90,6 +96,7 @@ public class CitaController {
 		try {
 			pacienteDTO = wrapperModelToDTO.getPacienteDTOfromUuid(uuidPaciente);
 		} catch (IdentificadorException e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no contemplado en BBDD.");
 		}
 
@@ -285,6 +292,7 @@ public class CitaController {
 		try {
 			cupoDTO.incrementarTamanoActual(configuracionCupos.getNumeroPacientes());
 		} catch (CupoException e) {
+			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error del servidor. " + e);
 			// No debería saltar la excepción, salvo por cuestiones de concurrencia, porque
 			// solamente traemos cupos libres.
@@ -506,7 +514,7 @@ public class CitaController {
 	 */
 	@SuppressWarnings("static-access")
 	@DeleteMapping("/eliminarCita/{uuidCita}")
-	public void eliminarCita(@PathVariable String uuidCita) throws CupoException {
+	public void eliminarCita(@PathVariable String uuidCita) {
 		CitaDTO citaDTO = null;
 		try {
 			citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
@@ -518,7 +526,12 @@ public class CitaController {
 		int dosis = citaDTO.getDosis();
 
 		citaDao.deleteById(citaDTO.getUuidCita());
-		cupoController.decrementarTamanoActualCupo(citaDTO.getCupo().getUuidCupo());
+		try {
+			cupoController.decrementarTamanoActualCupo(citaDTO.getCupo().getUuidCupo());
+		} catch (CupoException e) {
+			// Cupo no existente en la BD.
+			LOG.log(Level.INFO, e.getMessage());
+		}
 
 		// Si se elimina la primera dosis, la segunda pasa a la primera.
 		// En caso de ser primera, y haber segunda cita programada, ésta pasa a primera:
@@ -546,7 +559,7 @@ public class CitaController {
 	 * 
 	 * @param citasDTO
 	 */
-	public void eliminarCitas(List<CitaDTO> citasDTO) throws CupoException {
+	public void eliminarCitas(List<CitaDTO> citasDTO) {
 		for (int i = 0; i < citasDTO.size(); i++) {
 			eliminarCita(citasDTO.get(i).getUuidCita());
 		}
@@ -559,7 +572,7 @@ public class CitaController {
 	 * @param paciente
 	 */
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
-	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) throws CupoException {
+	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) {
 		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente.getIdUsuario()));
 	}
 
@@ -584,21 +597,12 @@ public class CitaController {
 	 * 
 	 * @param uuidCupo
 	 */
-	public void eliminarTodasLasCitasDelCupo(String uuidCupo) throws CupoException{
+	public void eliminarTodasLasCitasDelCupo(String uuidCupo) {
 		citaDao.deleteAllByUuidCupo(uuidCupo);
-		cupoController.anularTamanoActual(uuidCupo);
-	}
-
-	/**
-	 * El método eliminará las citas de un paciente.
-	 * 
-	 * @param pacienteDTO
-	 */
-	public void eliminarAllCitasPaciente(PacienteDTO pacienteDTO) {
-		List<CitaDTO> citasDTO = wrapperModelToDTO
-				.allCitaToCitaDTO(citaDao.buscarCitasDelPaciente(pacienteDTO.getIdUsuario()));
-		for (int i = 0; i < citasDTO.size(); i++) {
-			citaDao.deleteById(citasDTO.get(i).getUuidCita());
+		try {
+			cupoController.anularTamanoActual(uuidCupo);
+		} catch (CupoException e) {
+			LOG.log(Level.INFO, e.getMessage());
 		}
 	}
 
@@ -678,6 +682,7 @@ public class CitaController {
 				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");
 			}
 		} catch (Exception e) {
+			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 
