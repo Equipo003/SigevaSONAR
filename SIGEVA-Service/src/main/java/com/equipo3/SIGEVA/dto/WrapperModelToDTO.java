@@ -165,7 +165,6 @@ public class WrapperModelToDTO {
 		try {
 			return getCentroSaludDTOfromUuid(centroSalud.getId());
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -207,7 +206,6 @@ public class WrapperModelToDTO {
 		try {
 			return getCupoDTOfromUuid(cupo.getUuidCupo());
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -310,7 +308,6 @@ public class WrapperModelToDTO {
 		try {
 			return getUsuarioDTOfromUuid(usuario.getIdUsuario());
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -367,7 +364,6 @@ public class WrapperModelToDTO {
 		try {
 			return getPacienteDTOfromUuid(usuario.getIdUsuario());
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -409,7 +405,6 @@ public class WrapperModelToDTO {
 		try {
 			return getCitaDTOfromUuid(cita.getUuidCita());
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -421,5 +416,4 @@ public class WrapperModelToDTO {
 		}
 		return listaDTO;
 	}
-
 }

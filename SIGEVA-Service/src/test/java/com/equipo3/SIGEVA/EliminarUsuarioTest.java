@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @SpringBootTest
-public class EliminarUsuarioTest {
+class EliminarUsuarioTest {
 
     public static CentroSaludDTO centroSaludDTO;
     public static CitaDTO citaDTO;
@@ -171,29 +171,25 @@ public class EliminarUsuarioTest {
     }
 
     @Test
-    void eliminarUsuarioPacienteConCitasFuturas() {
-        try {
-            centroSaludDTO.setNumVacunasDisponibles(55);
-            pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
-            pacienteDTO.setNumDosisAplicadas(0);
-            pacienteDTO.setCentroSalud(centroSaludDTO);
-            cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
-            centroController.crearCentroSalud(centroSaludDTO);
-            usuarioController.crearUsuarioPaciente(pacienteDTO);
-            cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
-            citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
+    void eliminarUsuarioPacienteConCitasFuturas() throws IdentificadorException{
 
-            usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
+        centroSaludDTO.setNumVacunasDisponibles(55);
+        pacienteDTO.setRol(utilidades.getRolByNombre("Paciente"));
+        pacienteDTO.setNumDosisAplicadas(0);
+        pacienteDTO.setCentroSalud(centroSaludDTO);
+        cupoDTO.setFechaYHoraInicio(new Date(121, 11, 23));
+        centroController.crearCentroSalud(centroSaludDTO);
+        usuarioController.crearUsuarioPaciente(pacienteDTO);
+        cupoDao.save(WrapperDTOtoModel.cupoDTOToCupo(cupoDTO));
+        citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
+        usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
-            Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+        Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
 
-            citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
-            cupoController.eliminarCupo(cupoDTO.getUuidCupo());
-            utilidades.eliminarUsuario(pacienteDTO.getUsername());
-            utilidades.eliminarCentro(centroSaludDTO.getId());
-
-        } catch (Exception e) {
-
-        }
+        usuarioController.crearUsuarioPaciente(pacienteDTO);
+        citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
+        cupoController.eliminarCupo(cupoDTO.getUuidCupo());
+        utilidades.eliminarUsuario(pacienteDTO.getUsername());
+        utilidades.eliminarCentro(centroSaludDTO.getId());
     }
 }

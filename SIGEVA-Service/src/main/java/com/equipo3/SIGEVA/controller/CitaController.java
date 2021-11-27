@@ -90,7 +90,6 @@ public class CitaController {
 		try {
 			pacienteDTO = wrapperModelToDTO.getPacienteDTOfromUuid(uuidPaciente);
 		} catch (IdentificadorException e) {
-			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no contemplado en BBDD.");
 		}
 
@@ -286,7 +285,6 @@ public class CitaController {
 		try {
 			cupoDTO.incrementarTamanoActual(configuracionCupos.getNumeroPacientes());
 		} catch (CupoException e) {
-			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error del servidor. " + e);
 			// No debería saltar la excepción, salvo por cuestiones de concurrencia, porque
 			// solamente traemos cupos libres.
@@ -508,7 +506,7 @@ public class CitaController {
 	 */
 	@SuppressWarnings("static-access")
 	@DeleteMapping("/eliminarCita/{uuidCita}")
-	public void eliminarCita(@PathVariable String uuidCita) {
+	public void eliminarCita(@PathVariable String uuidCita) throws CupoException {
 		CitaDTO citaDTO = null;
 		try {
 			citaDTO = wrapperModelToDTO.getCitaDTOfromUuid(uuidCita);
@@ -520,12 +518,7 @@ public class CitaController {
 		int dosis = citaDTO.getDosis();
 
 		citaDao.deleteById(citaDTO.getUuidCita());
-		try {
-			cupoController.decrementarTamanoActualCupo(citaDTO.getCupo().getUuidCupo());
-		} catch (CupoException e) {
-			// Cupo no existente en la BD.
-			e.printStackTrace();
-		}
+		cupoController.decrementarTamanoActualCupo(citaDTO.getCupo().getUuidCupo());
 
 		// Si se elimina la primera dosis, la segunda pasa a la primera.
 		// En caso de ser primera, y haber segunda cita programada, ésta pasa a primera:
@@ -553,7 +546,7 @@ public class CitaController {
 	 * 
 	 * @param citasDTO
 	 */
-	public void eliminarCitas(List<CitaDTO> citasDTO) {
+	public void eliminarCitas(List<CitaDTO> citasDTO) throws CupoException {
 		for (int i = 0; i < citasDTO.size(); i++) {
 			eliminarCita(citasDTO.get(i).getUuidCita());
 		}
@@ -566,7 +559,7 @@ public class CitaController {
 	 * @param paciente
 	 */
 	@PutMapping("/eliminarCitasFuturasDelPaciente")
-	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) {
+	public void eliminarCitasFuturasDelPaciente(@RequestBody PacienteDTO paciente) throws CupoException {
 		eliminarCitas(obtenerCitasFuturasDelPaciente(paciente.getIdUsuario()));
 	}
 
@@ -591,13 +584,9 @@ public class CitaController {
 	 * 
 	 * @param uuidCupo
 	 */
-	public void eliminarTodasLasCitasDelCupo(String uuidCupo) {
+	public void eliminarTodasLasCitasDelCupo(String uuidCupo) throws CupoException{
 		citaDao.deleteAllByUuidCupo(uuidCupo);
-		try {
-			cupoController.anularTamanoActual(uuidCupo);
-		} catch (CupoException e) {
-			e.printStackTrace();
-		}
+		cupoController.anularTamanoActual(uuidCupo);
 	}
 
 	/**

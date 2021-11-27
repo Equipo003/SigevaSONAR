@@ -208,7 +208,6 @@ public class CupoController {
 			try {
 				pacienteDTO = wrapperModelToDTO.getPacienteDTOfromUuid(uuidPaciente);
 			} catch (IdentificadorException e) {
-				e.printStackTrace();
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado en BD.");
 			}
 			Date fechaInicio = CupoController.copia(fecha);
@@ -317,7 +316,7 @@ public class CupoController {
 	 * 
 	 * @param uuidCupo
 	 */
-	public void eliminarCupo(String uuidCupo) {
+	public void eliminarCupo(String uuidCupo) throws CupoException {
 		citaController.eliminarTodasLasCitasDelCupo(uuidCupo);
 		cupoDao.deleteById(uuidCupo);
 		/*
@@ -336,7 +335,7 @@ public class CupoController {
 	 * @param centroSaludDTO
 	 */
 	@PutMapping("/borrarCuposDelCentro")
-	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) {
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) throws CupoException {
 		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
 		for (int i = 0; i < cupos.size(); i++) {
 			this.eliminarCupo(cupos.get(i).getUuidCupo());
