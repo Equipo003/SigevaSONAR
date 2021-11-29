@@ -38,6 +38,9 @@ public class UsuarioController {
 	private WrapperModelToDTO wrapperModelToDTO;
 
 	@Autowired
+	private WrapperDTOtoModel wrapperDTOtoModel;
+
+	@Autowired
 	private CitaController citaController;
 
 	private static final String FRASE_USUARIO_NO_EXISTE = "Usuario no existe en el sistema";
@@ -56,7 +59,7 @@ public class UsuarioController {
 	@PostMapping("/crearUsuarioAdministrador")
 	public void crearUsuarioAdministrador(@RequestBody AdministradorDTO administradorDTO) {
 		try {
-			Administrador administrador = WrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
+			Administrador administrador = this.wrapperDTOtoModel.administradorDTOtoAdministrador(administradorDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(administrador.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -78,7 +81,7 @@ public class UsuarioController {
 	@PostMapping("/crearUsuarioPaciente")
 	public void crearUsuarioPaciente(@RequestBody PacienteDTO pacienteDTO) {
 		try {
-			Paciente paciente = WrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
+			Paciente paciente = this.wrapperDTOtoModel.pacienteDTOtoPaciente(pacienteDTO);
 			Optional<Usuario> optUsuario = administradorDao.findByUsername(paciente.getUsername());
 			if (optUsuario.isPresent()) {
 				throw new UsuarioInvalidoException(FRASE_USUARIO_EXISTENTE);
@@ -225,10 +228,10 @@ public class UsuarioController {
 
 			switch (newUsuarioDTO.getRol().getNombre()) {
 			case ADMINISTRADOR:
-				administradorDao.save(WrapperDTOtoModel.administradorDTOtoAdministrador((AdministradorDTO) oldUsuario));
+				administradorDao.save(this.wrapperDTOtoModel.administradorDTOtoAdministrador((AdministradorDTO) oldUsuario));
 				break;
 			case PACIENTE:
-				administradorDao.save(WrapperDTOtoModel.pacienteDTOtoPaciente((PacienteDTO) oldUsuario));
+				administradorDao.save(this.wrapperDTOtoModel.pacienteDTOtoPaciente((PacienteDTO) oldUsuario));
 				break;
 			case SANITARIO:
 				administradorDao.save(WrapperDTOtoModel.sanitarioDTOtoSanitario((SanitarioDTO) oldUsuario));

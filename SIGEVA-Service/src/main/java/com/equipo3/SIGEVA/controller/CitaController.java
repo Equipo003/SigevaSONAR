@@ -292,7 +292,6 @@ public class CitaController {
 		try {
 			cupoDTO.incrementarTamanoActual(configuracionCupos.getNumeroPacientes());
 		} catch (CupoException e) {
-			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Error del servidor. " + e);
 			// No debería saltar la excepción, salvo por cuestiones de concurrencia, porque
 			// solamente traemos cupos libres.
@@ -682,7 +681,6 @@ public class CitaController {
 				throw new VacunaException("Las dosis del paciente no coinciden con la dosis supuesta para la cita");
 			}
 		} catch (Exception e) {
-			LOG.log(Level.INFO, e.getMessage());
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
 

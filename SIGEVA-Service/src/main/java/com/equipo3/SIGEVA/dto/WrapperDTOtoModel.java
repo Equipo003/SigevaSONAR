@@ -24,7 +24,7 @@ public class WrapperDTOtoModel {
 
 	private static final String UNDEFINED = "undefined";
 	
-	public static Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
+	public Administrador administradorDTOtoAdministrador(AdministradorDTO administradorDTO) {
 		Administrador administrador = new Administrador();
 		if (!administradorDTO.getIdUsuario().equals(UNDEFINED))
 			administrador.setIdUsuario(administradorDTO.getIdUsuario());
@@ -60,7 +60,7 @@ public class WrapperDTOtoModel {
 		return sanitario;
 	}
 
-	public static Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
+	public Paciente pacienteDTOtoPaciente(PacienteDTO pacienteDTO) {
 		Paciente paciente = new Paciente();
 		if (!pacienteDTO.getIdUsuario().equals(UNDEFINED))
 			paciente.setIdUsuario(pacienteDTO.getIdUsuario());

@@ -10,7 +10,7 @@ import com.equipo3.SIGEVA.dto.*;
 import com.equipo3.SIGEVA.exception.IdentificadorException;
 import com.equipo3.SIGEVA.utils.Utilidades;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +96,7 @@ class EliminarUsuarioTest {
 
             usuarioController.deleteUsuarioById(sanitarioDTO.getIdUsuario());
 
-            Assertions.assertNull(utilidades.getUsuarioById(sanitarioDTO.getIdUsuario()));
+            Assertions.assertThat(utilidades.getUsuarioById(sanitarioDTO.getIdUsuario())).isNull();
 
             utilidades.eliminarUsuario(sanitarioDTO.getUsername());
             utilidades.eliminarCentro(centroSaludDTO.getId());
@@ -118,7 +118,7 @@ class EliminarUsuarioTest {
             usuarioController.deleteUsuarioById(administradorDTO.getIdUsuario());
 
         } catch (Exception e) {
-            Assertions.assertNotNull(e);
+            Assertions.assertThat(e).isNotNull();
 
             utilidades.eliminarUsuario(administradorDTO.getUsername());
             utilidades.eliminarCentro(centroSaludDTO.getId());
@@ -137,7 +137,7 @@ class EliminarUsuarioTest {
 
         usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
-        Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+        Assertions.assertThat(utilidades.getUsuarioById(pacienteDTO.getIdUsuario())).isNull();
 
         utilidades.eliminarUsuario(pacienteDTO.getUsername());
         utilidades.eliminarCentro(centroSaludDTO.getId());
@@ -163,7 +163,7 @@ class EliminarUsuarioTest {
 
 
         } catch (Exception e) {
-            Assertions.assertEquals(e.getMessage(), "401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
+            Assertions.assertThat(e.getMessage()).isEqualTo("401 UNAUTHORIZED \"No puedes eliminar el usuario porque ya tiene aplicada 1 o más dosis\"");
 
             utilidades.eliminarUsuario(pacienteDTO.getUsername());
             utilidades.eliminarCentro(centroSaludDTO.getId());
@@ -184,7 +184,7 @@ class EliminarUsuarioTest {
         citaDao.save(WrapperDTOtoModel.citaDTOToCita(citaDTO));
         usuarioController.deleteUsuarioById(pacienteDTO.getIdUsuario());
 
-        Assertions.assertNull(utilidades.getUsuarioById(pacienteDTO.getIdUsuario()));
+        Assertions.assertThat(utilidades.getUsuarioById(pacienteDTO.getIdUsuario())).isNull();
 
         usuarioController.crearUsuarioPaciente(pacienteDTO);
         citaController.eliminarTodasLasCitasDelPaciente(pacienteDTO);
