@@ -1,13 +1,11 @@
 package com.equipo3.SIGEVA.model;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
 /***
