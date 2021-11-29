@@ -70,7 +70,6 @@ export class ListadoPacientesComponent implements OnInit {
           this.citasVacio = true;
         } else {
           this.citasVacio = false;
-          this.citasHoy();
         }
       }, error => {
         console.log(error);

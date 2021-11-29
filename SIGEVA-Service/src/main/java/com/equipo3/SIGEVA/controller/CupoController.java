@@ -340,7 +340,7 @@ public class CupoController {
 	 * @param centroSaludDTO
 	 */
 	@PutMapping("/borrarCuposDelCentro")
-	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO) throws CupoException {
+	public void borrarCuposDelCentro(@RequestBody CentroSaludDTO centroSaludDTO){
 		List<Cupo> cupos = cupoDao.findAllByUuidCentroSalud(centroSaludDTO.getId());
 		for (int i = 0; i < cupos.size(); i++) {
 			this.eliminarCupo(cupos.get(i).getUuidCupo());
