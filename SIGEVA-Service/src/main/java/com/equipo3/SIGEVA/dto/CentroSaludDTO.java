@@ -3,7 +3,6 @@ package com.equipo3.SIGEVA.dto;
 import com.equipo3.SIGEVA.exception.CentroSinStock;
 import com.equipo3.SIGEVA.exception.NumVacunasInvalido;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /***

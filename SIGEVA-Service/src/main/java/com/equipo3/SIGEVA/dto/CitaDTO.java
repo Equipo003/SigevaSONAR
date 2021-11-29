@@ -1,6 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /***

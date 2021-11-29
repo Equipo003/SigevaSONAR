@@ -1,7 +1,6 @@
 package com.equipo3.SIGEVA.dto;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 
 import com.equipo3.SIGEVA.exception.CupoException;
@@ -154,16 +153,6 @@ public class CupoDTO implements Comparable<CupoDTO> {
 	@Override
 	public int compareTo(CupoDTO o) {
 		return fechaYHoraInicio.compareTo(o.getFechaYHoraInicio());
-	}
-
-	/***
-   	 * Método para la comprobar si el cupo esta lleno de pacientes.
-   	 * 
-   	 * @param maximo; maximo con el que comparar si ha llegado.
-   	 */
-	
-	public boolean estaLleno(int maximo) { // configuracionCupos.getNumeroPacientes()
-		return tamanoActual == maximo;
 	}
 
 	/***

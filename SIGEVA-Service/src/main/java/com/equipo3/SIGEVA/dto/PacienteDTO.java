@@ -1,9 +1,5 @@
 package com.equipo3.SIGEVA.dto;
 
-import java.util.Objects;
-
-import com.equipo3.SIGEVA.exception.PacienteYaVacunadoException;
-
 /***
  * Objeto Paciente data transfer object, es el que se usa en las peticiones
  * entre front end y back end hereda de usuario.
